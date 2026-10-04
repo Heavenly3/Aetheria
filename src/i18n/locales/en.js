@@ -1,0 +1,632 @@
+export default {
+  app: { tagline: 'Idle Realms', openMenu: 'Open menu' },
+
+  common: {
+    gold: 'gold', nothing: 'Nothing', lvlShort: 'Lv {n}', raw: '{v}', notNow: 'Not now', buyFor: 'Buy for {price}',
+    cancel: 'Cancel', level: 'Level', levelN: 'Level {n}', seconds: '{n} s', add: 'Add', hp: 'HP', stop: 'Stop',
+    moveUp: 'Move up', moveDown: 'Move down', remove: 'Remove', always: 'always', locked: 'Locked', equip: 'Equip',
+    missingMaterials: 'Missing materials', notEnoughGold: 'Not enough gold', back: 'Back', next: 'Next',
+    delete: 'Delete', save: 'Save', bought: 'Bought: <b>{name}</b>', maxLevel: 'Max level',
+  },
+
+  time: { dh: '{d}d {h}h', hm: '{h}h {m}m', ms: '{m}m {s}s', s: '{s}s', hours: '{n} h' },
+
+  nav: {
+    hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
+    achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
+    settings: 'Settings', realm: 'Realm', town: 'Town',
+  },
+
+  heroMenu: { viewHero: 'View hero', saveNow: 'Save now', saved: 'Game saved', mainMenu: 'Main menu', label: 'Hero menu' },
+
+  title: {
+    continue: 'Continue', newGame: 'New game', newGameHint: 'Create a hero in a free slot', load: 'Load game',
+    slotsUsed: '{n} of {total} slots used', autosaveHint: 'Your progress is saved automatically every few seconds.',
+    chooseSlot: 'Choose a slot', overwriteTitle: 'Overwrite slot', overwriteMessage: 'Slot {n} holds {name}. Starting a new game here erases that hero for good.',
+    overwrite: 'Overwrite', deleteTitle: 'Delete game', deleteMessage: '{name} (hero level {level}) will be deleted. This cannot be undone.',
+    heroLevel: 'Hero level {n}', played: 'Played {time}', saved: 'saved {when}', justNow: 'just now', ago: '{time} ago',
+    loadOne: 'Load', emptySlot: 'Empty slot', createCharacter: 'Create a hero',
+    footer: 'Icons by game-icons.net (CC BY 3.0)',
+  },
+
+  creation: {
+    title: 'New hero', slot: 'Slot {n}',
+    steps: { identity: 'Identity', role: 'Role', difficulty: 'Difficulty', confirm: 'Confirm' },
+    name: 'Name', namePlaceholder: 'What will the legends call you?', randomName: 'Random name', portrait: 'Portrait', colour: 'Colour',
+    recommended: 'Recommended',
+    mult: { xp: 'XP ×{v}', monster: 'Monsters ×{v}', gold: 'Gold ×{v}', offline: 'Offline ×{v}' },
+    summary: 'All set. <b class="gold-text">{name}</b> will begin as a <b>{role}</b> on <b style="color:{color}">{difficulty}</b> difficulty.',
+    note: 'Difficulty cannot be changed later. Your game is saved automatically to slot {n}.',
+    begin: 'Begin the adventure', unnamed: 'Nameless', perks: 'Perks', startsWith: 'Starts with',
+  },
+
+  welcome: {
+    title: 'Welcome, {name}',
+    tips: [
+      'Pick a skill in the side menu and press <b>Start</b>. Actions repeat on their own.',
+      'Gathering skills feed the artisan ones: ore becomes bars, bars become gear.',
+      'Every level you earn also gives <b>hero XP</b>. Spend attribute and talent points in the Hero screen.',
+      'The game keeps going while you are away, up to the offline limit.',
+      'Hire staff at the <b>Tavern</b> to train skills for you in parallel.',
+      'Quests unlock new areas and bosses. Check the quest board often.',
+    ],
+    start: 'Let the adventure begin',
+  },
+
+  toast: {
+    levelUp: '<b>{skill}</b> reached level <b>{level}</b>', heroLevel: 'Hero level <b>{level}</b>!', heroLevelPlain: 'Hero level {level}',
+    pointsToSpend: 'You have points to spend', mastery: 'Mastery {level}: <b>{name}</b>', rare: 'Rare drop: <b>{item}</b>',
+    achievement: 'Achievement unlocked: <b>{name}</b>', quest: 'Quest complete: <b>{name}</b>', death: 'You were defeated by <b>{name}</b>',
+    expeditionOk: '<b>{name}</b> came back from {exp} with {gold} gold', expeditionFail: '<b>{name}</b> failed {exp} and came back hurt',
+    dungeon: '<b>{name}</b> cleared! {loot}',
+  },
+
+  notify: {
+    title: 'Aetheria', unpaid: '{name} stopped working: you cannot pay their wage',
+    expeditionOk: '{name} is back from {exp}', expeditionFail: '{name} came back hurt from {exp}',
+    queueDone: 'Your action queue is finished', event: 'Event: {event}',
+  },
+
+  event: { bought: 'Bought from the travelling merchant', offer: 'Offer ends in {time}', gone: 'The merchant has left' },
+
+  offline: {
+    idle: 'resting', training: 'training {skill} ({action})', tower: 'climbing the Tower', fighting: 'fighting {monster}',
+    title: 'Welcome back', away: 'You were away for <b>{time}</b>.', capped: 'Offline progress is capped at {h} h.',
+    kept: 'Meanwhile {name} kept {what}.', kills: 'Monsters defeated', towerTokens: 'Tower tokens', eaten: 'Food eaten',
+    experience: 'Experience', items: 'Items', collect: 'Collect',
+  },
+
+  stats: {
+    hitpoints: 'Hitpoints', combatLevel: 'Combat', totalLevel: 'Total level',
+    atk: 'Melee accuracy', str: 'Melee strength', def: 'Defence', rAtk: 'Ranged accuracy', rStr: 'Ranged strength', mAtk: 'Magic accuracy', mDmg: 'Magic damage',
+  },
+
+  hero: {
+    heroLevel: 'Hero level',
+    tabs: { overview: 'Overview', attributes: 'Attributes', talents: 'Talents' },
+    equipment: 'Equipment', clickToRemove: 'Click to unequip', empty: 'Empty', tools: 'Tools', toolTier: '{tool} · tier {n}',
+    noTool: 'No tool', gearBonuses: 'Gear bonuses', maxHitCurrent: 'Max hit (current style)', activeEffects: 'Active effects',
+    inCombat: '{name} (in combat)', grace: 'Grace +{v}% speed', elixir: 'Elixir +25% XP', skills: 'Skills', diary: 'Journal',
+    diaryEmpty: 'Your story starts here.', chronicle: 'Chronicle', playTime: 'Time adventuring', actions: 'Actions completed',
+    harvests: 'Harvests', kills: 'Monsters defeated', deaths: 'Defeats', goldEarned: 'Total gold earned', quests: 'Quests completed',
+    towerBest: 'Tower record', maxMastery: 'Highest mastery', offlineCap: 'Max offline progress',
+  },
+
+  attributes: {
+    respecTitle: 'Reset attributes', respecMessage: 'Every spent point comes back to you for {cost} gold.', respecConfirm: 'Reset',
+    respecDone: 'Attributes reset', points: '{n} attribute points', heroXp: 'Hero XP: {xp}', toNext: '{xp} XP to level {level}',
+    explain: 'Each hero level gives {points} attribute points, and every {every} levels a talent point.',
+    base: 'Base {base} · spent {spent}', addPoint: 'Add a point', respecButton: 'Reset points · {cost} gold',
+    str: { name: 'Strength', short: 'STR', desc: 'Melee damage plus Mining, Woodcutting and Smithing speed.' },
+    dex: { name: 'Dexterity', short: 'DEX', desc: 'Accuracy, ranged damage, thieving and Fishing and Fletching speed.' },
+    int: { name: 'Intellect', short: 'INT', desc: 'Magic damage and accuracy, plus Runecrafting, Herblore and Crafting XP.' },
+    vit: { name: 'Vitality', short: 'VIT', desc: '+1 max HP every 2 points, plus healing and defence.' },
+    wis: { name: 'Wisdom', short: 'WIS', desc: 'XP for every skill and mastery XP.' },
+    luck: { name: 'Luck', short: 'LCK', desc: 'Double resources, monster loot and gold.' },
+  },
+
+  talents: {
+    points: '{n} talent points', roleTitle: '{role} talents', generalTitle: 'General talents', learned: '<b>{name}</b> rank {rank}/{max}',
+    intro: 'You earn a talent point every {every} hero levels. Talents are permanent.', available: '{n} available',
+    perRank: '{effect} per rank', requiresHero: 'Requires hero level {n}', rank: 'Rank {rank}/{max}', maxed: 'Maxed', learn: 'Learn',
+    diligent: 'Diligence', scholar: 'Scholar', prospector: 'Prospector', thrifty: 'Deft Hands', iron_skin: 'Iron Skin', vigor: 'Vigour',
+    green: 'Green Thumb', harvester: 'Harvester', merchant: 'Merchant', fortune: 'Fortune Seeker', master: 'Master', dreamer: 'Dreamer',
+    berserker: 'Fury', warlord: 'Warlord', eagle_eye: 'Eagle Eye', quiver: 'Endless Quiver', arcane: 'Arcane Power', rune_saver: 'Rune Saver',
+    efficient: 'Efficiency', perfection: 'Perfection', nimble: 'Nimble Fingers', lucky: "Rogue's Luck", healer: 'Healer', devout: 'Devotion',
+  },
+
+  mods: {
+    xp: '+{v}% XP in every skill', speed: '+{v}% action speed', gold: '+{v}% gold', loot: '+{v}% loot chance',
+    double: '+{v}% double resources', preserve: '+{v}% chance to keep materials', mastery: '+{v}% mastery XP', heal: '+{v}% healing',
+    defense: '+{v}% defence', thieving: '-{v}% thieving failure', meleeDmg: '+{v}% melee damage', meleeAcc: '+{v}% melee accuracy',
+    rangedDmg: '+{v}% ranged damage', rangedAcc: '+{v}% ranged accuracy', magicDmg: '+{v}% magic damage', magicAcc: '+{v}% magic accuracy',
+    ammoSave: '+{v}% chance to save arrows', runeSave: '+{v}% chance to save runes', farmSpeed: 'Crops grow {v}% faster',
+    farmYield: '+{v} harvest per plot', offline: '+{v} h of offline progress', maxHp: '+{v} max HP', blessing: 'Blessings last {v}% longer',
+    speedSkill: '+{v}% {skill} speed', xpSkill: '+{v}% {skill} XP', doubleSkill: '+{v}% double {skill} resources',
+    speedGroup: '+{v}% {group} speed', xpGroup: '+{v}% {group} XP', doubleGroup: '+{v}% double {group} products',
+  },
+
+  roles: {
+    startGold: '+{n} starting gold',
+    warrior: { name: 'Warrior', desc: 'A wall of steel. Masters close combat and shrugs off punishment.' },
+    ranger: { name: 'Ranger', desc: 'Forest tracker. Deadly at range and a skilled gatherer.' },
+    mage: { name: 'Mage', desc: 'Scholar of the arcane. Destroys with spells and crafts their own runes.' },
+    artisan: { name: 'Artisan', desc: 'Master of the craft. Works faster and wastes less.' },
+    rogue: { name: 'Rogue', desc: "Lives by wit and other people's pockets. Fortune smiles on them." },
+    paladin: { name: 'Paladin', desc: 'Holy warrior. Tougher than anyone, and their prayers are heard.' },
+  },
+
+  difficulty: {
+    easy: { name: 'Adventurer', desc: 'Relaxed progress to enjoy the journey.' },
+    normal: { name: 'Veteran', desc: 'The recommended experience. Every level is earned.' },
+    hard: { name: 'Hero', desc: 'Tougher monsters, slower progress. Dying costs 5% of your gold.' },
+    legend: { name: 'Legend', desc: 'For legends only. Dying costs 15% of your gold.' },
+  },
+
+  tools: { pickaxe: 'Pickaxe', axe: 'Axe', rod: 'Fishing rod' },
+
+  skillCats: { gathering: 'Gathering', artisan: 'Artisan', support: 'Support', combat: 'Combat' },
+
+  skills: {
+    mining: { name: 'Mining', desc: 'Mine ore and essence from the rocks of the realm.' },
+    woodcutting: { name: 'Woodcutting', desc: 'Fell trees for logs of every kind.' },
+    fishing: { name: 'Fishing', desc: 'Catch fish in rivers and seas.' },
+    farming: { name: 'Farming', desc: 'Plant seeds and harvest crops and herbs.' },
+    thieving: { name: 'Thieving', desc: 'Pick pockets for gold and loot. Getting caught hurts.' },
+    smithing: { name: 'Smithing', desc: 'Smelt bars and forge weapons, armour and tools.' },
+    cooking: { name: 'Cooking', desc: 'Cook food that heals you in combat.' },
+    firemaking: { name: 'Firemaking', desc: 'Burn logs for experience.' },
+    fletching: { name: 'Fletching', desc: 'Make arrows, bows, fishing rods and staves.' },
+    crafting: { name: 'Crafting', desc: 'Tan hides, sew leather armour and cut gems.' },
+    herblore: { name: 'Herblore', desc: 'Brew potions from herbs.' },
+    runecrafting: { name: 'Runecrafting', desc: 'Bind essence into runes for spells.' },
+    agility: { name: 'Agility', desc: 'Run courses to move faster in everything you do.' },
+    prayer: { name: 'Prayer', desc: 'Bury bones to earn the favour of the gods.' },
+    attack: { name: 'Attack', desc: 'Melee accuracy.' },
+    strength: { name: 'Strength', desc: 'Melee damage.' },
+    defense: { name: 'Defence', desc: 'Lowers the chance of being hit.' },
+    hitpoints: { name: 'Hitpoints', desc: 'Your maximum health.' },
+    ranged: { name: 'Ranged', desc: 'Accuracy and damage with bows.' },
+    magic: { name: 'Magic', desc: 'Accuracy and damage with spells.' },
+    slayer: { name: 'Slayer', desc: 'Hunt assigned monsters for points and rare rewards.' },
+  },
+
+  skill: {
+    xpToNext: '{xp} XP to level {level}', maxLevel: 'Max level reached', xpMultTip: 'XP multiplier', speedTip: 'Action speed bonus',
+    speed: 'Speed', agilityBonus: 'Agility: +{v} speed in everything', requiresLevel: 'Requires level {n}', requiresTool: 'Requires {tool} tier {tier}',
+    xpPerHour: 'XP per hour', burnChance: '{v} burn chance', failChance: '{v} fail chance', doubleTip: 'Chance of a double result',
+    keepTip: 'Chance to keep the materials', keep: '{v} keep', possible: 'Possible', masteryTip: 'Mastery speeds up this action', mastery: 'Mastery',
+    masteryN: 'Mastery {n}', howToTrain: 'How to train {skill}',
+    combatHelp: {
+      attack: 'Use the Accurate style with a melee weapon.',
+      strength: 'Use the Aggressive style with a melee weapon.',
+      defense: 'Use the Defensive style. It also grows a little with any style as you take less damage.',
+      ranged: 'Equip a bow and arrows, then pick the Ranged style.',
+      magic: 'Pick the Magic style and a spell, and carry runes. Staves raise your damage.',
+      hitpoints: 'You earn Hitpoints XP for every point of damage you deal.',
+      slayer: 'Ask the slayer master for a task and defeat the assigned monsters.',
+    },
+    goSlayer: 'Go to the slayer master', goCombat: 'Go to combat', graceTitle: 'Grace rewards',
+    graceText: 'Trade marks of grace from the courses for permanent speed in every action. Now: <b class="gold-text">+{v}%</b> ({n}/{max}).',
+    graceUpgrade: 'Upgrade · {n} marks', graceDone: 'Complete', graceBought: 'Grace reward: <b>+{v}% speed</b> in everything',
+  },
+
+  filters: {
+    status: { all: 'All', ready: 'Available', unlocked: 'Unlocked', locked: 'Locked' },
+    sort: { lvl: 'By level', xph: 'Most XP per hour', name: 'By name', mastery: 'Most mastery' },
+    cards: 'Cards', list: 'List', view: 'View', searchIn: 'Search {skill}… (name or material)', section: 'Section', all: 'All',
+    material: 'Material', showing: 'Showing {n} of {total}', clear: 'Clear filters', noMatch: 'Nothing matches the filters.',
+  },
+
+  prestige: {
+    title: 'Prestige {skill}', confirm: 'Prestige',
+    message: 'Your level drops back to {lvl}. In return you get +{xp}% XP and +{speed}% speed in this skill for good, plus +{global}% XP in every skill.',
+    done: '<b>{skill}</b> is now prestige {n}', badge: 'Prestige {n}', button: 'Prestige',
+  },
+
+  queue: { added: 'Queued: {n}× {action}', addAria: 'Add {name} to the queue', add: 'Queue', howMany: 'How many times?', count: '{n} in queue' },
+
+  dock: {
+    tower: 'Endless Tower', boss: 'Boss', dungeon: 'Dungeon', combat: 'Combat', queueWaiting: '{n} queued actions waiting',
+    startQueue: 'Start queue', viewQueue: 'View queue', goTo: 'Go to', queue: 'Queue', clear: 'Clear', queueEmpty: 'The queue is empty.',
+  },
+
+  gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
+
+  log: {
+    start: '{name} begins their adventure as a {role}.', heroLevel: 'Reached hero level {level} (+{points} points).',
+    levelUp: '{skill} reached level {level}.', mastery: 'Mastery {level} in {name}.', found: 'Found: {item}.',
+    drop: '{monster} dropped {item}!', towerFloor: 'New Tower record: floor {floor}.', dungeonFirst: 'First clear of {dungeon}.',
+    bossFirst: 'First victory over {monster}.', death: 'Defeated by {monster}.', deathGold: 'Defeated by {monster}. Lost {gold} gold.',
+    slayerTask: 'Slayer task complete: {monster}.', quest: 'Quest complete: {quest}.', achievement: 'Achievement: {ach}.',
+    room: '{room} upgraded to level {level}.', prestige: '{skill} reached prestige {n}.', tavernLevel: 'Your tavern is now {tavern}.',
+    hired: 'Hired {name}, a {rarity} {spec}.', fired: '{name} has left your staff.', workerLevel: '{name} reached level {level} in {skill}.',
+    expeditionOk: '{name} returned from {exp} with {gold} gold.', expeditionFail: '{name} failed {exp} ({gold} gold).',
+    order: 'Order delivered: {n}× {item}.', lostChest: 'Found a lost chest: {gold} gold and {n}× {item}.',
+  },
+
+  msg: {
+    needLevel: 'You need {skill} level {lvl}', needTool: 'You need a {tool} of tier {tier}', noMaterials: 'You are missing materials',
+    faintedThieving: 'You were caught and passed out. Taking a break.', queueSkipMaterials: 'Skipped {action}: missing materials',
+    outOfMaterials: 'Out of materials for {action}', noSeeds: 'You have no {item}', needBow: 'You need a bow equipped',
+    noArrows: 'You have no arrows equipped', spellLevel: '{spell} needs Magic level {lvl}', noRunes: 'Not enough runes for {spell}',
+    bossLocked: 'Finish the required quest first', mercGold: 'Not enough gold for the mercenaries', areaLocked: 'This area is locked',
+    dungeonLocked: 'This dungeon is locked', diedDungeon: 'You fell in {dungeon}, room {room}. Lost {gold} gold.',
+    diedTower: 'You fell on floor {floor} (record {best}). Lost {gold} gold.', died: 'Defeated by {monster}. Lost {gold} gold.',
+    slayerDone: 'Task complete: +{pts} slayer points', queueSkip: 'Skipped {action}', queueDone: 'Queue finished',
+    prayerFaded: 'Out of bones: your prayer fades',
+  },
+
+  combat: {
+    tabs: { areas: 'Areas', bosses: 'Bosses', dungeons: 'Dungeons' },
+    respawning: 'Respawning…', accuracy: 'Your accuracy {v}', maxHit: 'Max hit {v}', hitsYou: 'Hits you {v}', weakTo: 'Weak to {style}',
+    types: { melee: 'melee', ranged: 'ranged', magic: 'magic' },
+    taskLeft: 'Task: {n} left', boss: 'Boss', room: 'Room {n}/{total}', clears: 'Cleared {n} times', prayerActive: 'Prayer active',
+    kills: '{n} kills', task: 'Task', maxHitLabel: 'Max hit', weakness: 'Weakness', defeated: 'Defeated', retreat: 'Retreat', fight: 'Fight',
+    spellOption: '{name} · max {max} · Lv {lvl}', style: 'Style', spell: 'Spell', castCost: 'Cost per cast', ammo: 'Ammo',
+    equipArrows: 'Equip arrows from your inventory', supplies: 'Supplies', autoFood: 'Food', noFood: 'No food', noFoodHint: 'Cook fish to heal in combat',
+    eatBelow: 'Eat below {n}% HP', autoPotion: 'Potion', noPotion: 'No potion', noPotionHint: 'Brew potions with Herblore',
+    prayerLabel: 'Prayer (uses {n} bones per minute)', noPrayer: 'No prayer', bonesLeft: '{n} bones left', potionActive: '{name} active',
+    recommended: 'Recommended: level {n}+', questReq: 'Quest: {quest}', areaLocked: 'Area locked',
+    dungeonIntro: 'Fight through several rooms in a row and beat the final boss to open its chest. Once cleared, the dungeon starts again on its own until you retreat or fall.',
+    roomTip: 'Room {n}: {monster}', bossTip: 'Boss: {monster}', chest: 'Chest:', enter: 'Enter', mercsTitle: 'Mercenaries',
+    mercsIntro: 'Hire allies before facing a boss. They attack alongside you and share the hits. You pay them when the fight starts and they stay until you retreat.',
+    hireCost: 'Hiring cost:', respawnIn: 'Respawns in {n} s',
+  },
+
+  loadouts: {
+    defaultName: 'Loadout {n}', saved: 'Loadout saved', missing: 'Missing: {items}', ready: '{name} equipped', title: 'Loadouts',
+    intro: 'Save your gear, food and style and switch between them in one click.', empty: 'Empty slot {n}', rename: 'Rename', name: 'Name', save: 'Save current',
+  },
+
+  farm: {
+    filters: { all: 'All', have: 'In stock', unlocked: 'Unlocked', herb: 'Herbs' },
+    unlockGreenhouse: 'Greenhouse level 3', unlockHero: 'hero level {n}', planted: 'Planted {n}× {crop}', harvested: 'Harvested {n}× {item}',
+    fertilized: 'Compost applied: growth halved', harvestedAll: 'Harvested {n} plots', title: 'Your plots',
+    intro: 'Crops keep growing while you are away.', auto: 'Replant automatically', plantEmpty: 'Plant empty plots', harvestN: 'Harvest ({n})',
+    plot: 'Plot {n}', fertilize: 'Compost ({n})', harvest: 'Harvest', plant: 'Plant', morePlots: 'More plots', unlockWith: 'Unlock with: {list}',
+    allPlots: 'Every plot unlocked', seeds: 'Seeds', search: 'Search seeds…', perHarvest: '{min}–{max} per harvest', noMatch: 'No seed matches.',
+    plantAllTitle: 'Plant in every empty plot', plantOneTitle: 'Plant in plot {n}', noSeeds: 'You have no seeds. Buy some at the shop.',
+  },
+
+  chart: { notEnough: 'Not enough data yet. A sample is saved every 5 minutes of play.', asTable: 'View as table', time: 'Time' },
+
+  inventory: {
+    filters: { all: 'All', resource: 'Resources', food: 'Food', equip: 'Gear', tool: 'Tools', potion: 'Potions', seed: 'Seeds', rune: 'Runes', other: 'Other' },
+    sold: 'Sold for <b>{gold}</b> gold', goldAmount: '{n} gold', opened: 'You get: <b>{items}</b>', sellShownTitle: 'Sell what you see',
+    sellShownMessage: '{n} item types will be sold for {gold} gold. Locked items are kept.', sell: 'Sell', junkSold: 'Junk sold for <b>{gold}</b> gold',
+    noJunk: 'You have no junk to sell', search: 'Search items…', totalValue: 'Total value: {gold} gold', sellJunk: 'Sell junk',
+    sellShown: 'Sell filtered · {gold}', empty: 'Your inventory is empty. Go gather some resources!', twoHanded: 'Two-handed', rare: 'Rare',
+    quantity: 'Quantity', unitValue: 'Unit value', market: "Today's market", highDemand: 'high demand', lowDemand: 'low demand', heals: 'Heals',
+    hp: '+{n} HP', boost: '+{flat} and +{pct}%', duration: 'Duration', equippedNow: 'Equipped now', effect: 'Effect', elixirEffect: '+25% XP · 30 min',
+    requires: 'Requires', equipped: 'Equipped', equipAmmo: 'Equip ammo', equipTool: 'Equip tool', eat: 'Eat', combatFood: 'Combat food',
+    useInCombat: 'Use in combat', drink: 'Drink', combatPotion: 'Combat potion', open: 'Open', locked: 'Locked', lock: 'Lock',
+    lockTip: 'Locked items cannot be sold', sellAll: 'Sell all · {gold} gold', lockedHint: 'Locked item: unlock it to sell it.',
+    select: 'Select an item to see its details.',
+  },
+
+  itemTypes: { resource: 'Resource', food: 'Food', equip: 'Gear', potion: 'Potion', seed: 'Seed', rune: 'Rune', junk: 'Junk', chest: 'Container', tool: 'Tool' },
+
+  slots: { weapon: 'Weapon', shield: 'Shield', head: 'Head', body: 'Body', legs: 'Legs', cape: 'Cape', amulet: 'Amulet', ammo: 'Ammo' },
+
+  slayer: {
+    current: 'Current task', left: '{n} of {total} left', hunt: 'Hunt now', viewArea: 'View area',
+    explain: 'Every task monster gives Slayer XP equal to its hitpoints. Finishing a task pays points and gold, and every 10 tasks in a row give 5× points.',
+    noTask: 'Master Vannaka will assign monsters that suit your combat level ({lvl}). There are {n} possible targets.',
+    newTask: 'Get a task', record: 'Your record', points: 'Slayer points', completed: 'Tasks completed', streak: 'Current streak',
+    nextBonus: 'Next 5× bonus', inTasks: 'in {n} tasks', shop: 'Guild shop', cost: '{n} points',
+  },
+
+  tower: {
+    title: 'Endless Tower', desc: 'Every floor is harder than the last. A ★ guardian and a checkpoint wait every 10 floors. If you fall, you go back to the last checkpoint.',
+    best: 'Record: floor {n}', startAt: 'You start on floor {n}', tokens: '{n} tokens', leave: 'Leave', enter: 'Enter the Tower',
+    next: 'Upcoming floors', floorN: 'Floor {n}', hp: '{n} HP', shop: 'Tower shop', monster: '{title} of floor {floor}',
+    titles: ['Sentinel', 'Warden', 'Champion', 'Revenant', 'Colossus', 'Archon', 'Titan'],
+  },
+
+  quests: {
+    filters: { open: 'In progress', done: 'Completed', all: 'All' },
+    status: { locked: 'Locked', available: 'Available', active: 'In progress', done: 'Completed', ready: 'Ready!' },
+    obj: { item: 'Hand in {n}× {item}', kill: 'Defeat {n}× {monster}', level: 'Reach {skill} level {lvl}', tower: 'Clear floor {floor} of the Tower', slayer: 'Complete {n} slayer tasks' },
+    intro: 'Help the people of the realm. Quests give gold, experience and items, and unlock new areas and bosses.',
+    summary: '{n} / {total} completed · {qp} QP', requires: 'Requires:', reward: 'Reward:', xp: '{n} {skill} XP', slayerPoints: '{n} slayer points',
+    qp: '{n} QP', accept: 'Accept quest', complete: 'Complete', empty: 'No quests in this list.',
+    first_steps: { name: 'First Steps', giver: 'Bram the miner', desc: 'Old Bram needs ore to fix the village forge.' },
+    cook_assistant: { name: "Cook's Assistant", giver: 'Martha the cook', desc: 'The inn expects a feast and Martha is short of hands.' },
+    goblin_trouble: { name: 'Goblin Trouble', giver: 'Captain Aldric', desc: 'Goblins are raiding the eastern farms. Teach them a lesson.' },
+    lumberjack: { name: 'The Lumberjack', giver: 'Hilda the carpenter', desc: 'Hilda is building a bridge and needs good timber.' },
+    smith_apprentice: { name: "Smith's Apprentice", giver: 'Bram the miner', desc: 'Prove you can work iron like a true smith.' },
+    green_thumb: { name: 'Green Thumb', giver: 'Granny Rose', desc: "Granny Rose wants to taste the new farmer's vegetables." },
+    wolf_hunt: { name: 'Wolf Hunt', giver: 'Freya the huntress', desc: 'A pack is threatening the shepherds of the Shadow Wood.' },
+    arcane_studies: { name: 'Arcane Studies', giver: 'Archmage Selene', desc: 'The wizard tower needs runes for its research.' },
+    thief_guild: { name: "The Thieves' Guild", giver: 'Shade', desc: 'To join the guild you must prove your light fingers.' },
+    herbalist: { name: 'The Herbalist', giver: 'Elm the druid', desc: 'Elm the druid wants to check the purity of your brews.' },
+    bone_collector: { name: 'The Bone Collector', giver: 'Brother Osric', desc: 'The monastery needs remains for an ancient rite.' },
+    undead_menace: { name: 'Undead Menace', giver: 'Captain Aldric', desc: 'Something is waking the dead in the Iron Caverns.' },
+    gemcutter: { name: 'The Gemcutter', giver: 'Orin the jeweller', desc: 'Orin is looking for an apprentice with an eye for gems.' },
+    agile_explorer: { name: 'Agile Explorer', giver: 'Kai the runner', desc: 'Kai collects marks of grace from the hardest courses.' },
+    slayer_initiate: { name: 'Slayer Initiate', giver: 'Master Vannaka', desc: "Complete slayer tasks to earn the guild's respect." },
+    sea_terror: { name: 'Terror of the Sea', giver: 'Admiral Corvin', desc: 'Fishers speak of enormous tentacles. Lure the beast out with bait.' },
+    tower_climber: { name: 'Tower Climber', giver: 'Tower Warden', desc: 'The Endless Tower tests the boldest.' },
+    dragon_threat: { name: 'The Dragon Threat', giver: 'King Edmund', desc: 'A dragon has been seen over the realm. The king needs a champion.' },
+    master_smith: { name: 'Master Smith', giver: 'Bram the miner', desc: "Forge a masterpiece and join the smiths' guild." },
+    abyss_gates: { name: 'The Gates of the Abyss', giver: 'Archmage Selene', desc: 'Selene has found a portal. She needs power to open it.' },
+    dragon_slayer: { name: 'Dragon Slayer', giver: 'King Edmund', desc: 'The Ancient Dragon stirs. Only a legend can stop it.' },
+  },
+
+  unlocks: { kraken: 'Boss: Kraken', lair: "Area: Dragon's Lair", abyss: 'Area: The Abyss', ancient_dragon: 'Boss: Ancient Dragon' },
+
+  achievements: { progress: 'Achievement progress' },
+
+  ach: {
+    total: { name: 'Total level {n}', desc: 'Reach total level {n}.' },
+    skill: { name: 'Expert {n}', desc: 'Raise any skill to level {n}.' },
+    kills: { name: 'Slayer of {n}', desc: 'Defeat {n} monsters.' },
+    gold: { name: 'Fortune {n}', desc: 'Earn {n} gold in total.' },
+    actions: { name: 'Tireless {n}', desc: 'Complete {n} skill actions.' },
+    quests: { name: 'Adventurer {n}', desc: 'Complete {n} quests.' },
+    questsAll: { name: 'Legend of the Realm', desc: 'Complete every quest.' },
+    tower: { name: 'Tower: floor {n}', desc: 'Clear floor {n} of the Endless Tower.' },
+    slayer: { name: 'Hunter {n}', desc: 'Complete {n} slayer tasks.' },
+    hero: { name: 'Hero level {n}', desc: 'Reach hero level {n}.' },
+    mastery: { name: 'Mastery {n}', desc: 'Raise the mastery of any action to level {n}.' },
+    harvest: { name: 'Farmer {n}', desc: 'Harvest {n} plots.' },
+    hire: { name: 'Employer', desc: 'Hire your first worker at the Tavern.' },
+    tavernMax: { name: 'Owner of the Golden Griffin', desc: 'Upgrade the Tavern to its highest level.' },
+    exp: { name: 'Explorer {n}', desc: 'Complete {n} expeditions.' },
+    orders: { name: 'Supplier {n}', desc: 'Deliver {n} Tavern orders.' },
+    dungeon: { name: 'Raider {n}', desc: 'Clear {n} dungeons.' },
+    graceMax: { name: 'Light Feet', desc: 'Earn every grace reward.' },
+    dice: { name: 'Hardened Gambler', desc: 'Play {n} games of dice.' },
+    prestige1: { name: 'Reborn', desc: 'Prestige a skill.' },
+    prestige5: { name: 'Transcendent', desc: 'Reach {n} prestiges in total.' },
+    firstDeath: { name: 'Lesson Learned', desc: 'Fall in battle for the first time.' },
+    burnt: { name: 'Rookie Chef', desc: 'Burn food for the first time.' },
+    rareDrop: { name: 'Stroke of Luck', desc: 'Get a rare item from a boss.' },
+    fullGear: { name: 'Armed to the Teeth', desc: 'Fill all {n} equipment slots.' },
+    house: { name: 'Lord of the Manor', desc: 'Build {n} room levels.' },
+    boss_goblin_king: { name: 'Regicide', desc: 'Defeat the Goblin King.' },
+    boss_troll_lord: { name: 'Troll Breaker', desc: 'Defeat the Troll Lord.' },
+    boss_kraken: { name: 'Tamer of Seas', desc: 'Defeat the Kraken.' },
+    boss_necromancer: { name: 'Light in the Dark', desc: 'Defeat the Eternal Necromancer.' },
+    boss_ancient_dragon: { name: 'Draconic Legend', desc: 'Defeat the Ancient Dragon.' },
+  },
+
+  home: {
+    intro: 'Your home grows with you. Every room needs gold and materials you gather and craft yourself, and gives permanent bonuses.',
+    level: 'Level {n} / {max}', notBuilt: 'Not built yet', next: 'Next: {effect}', upgrade: 'Upgrade', build: 'Build', upgraded: '<b>{room}</b> upgraded to level {n}',
+  },
+
+  rooms: {
+    tools: { name: 'Tool Shed', desc: 'Gathering {v}% faster' },
+    workshop: { name: 'Workshop', desc: 'Artisan skills {v}% faster' },
+    library: { name: 'Library', desc: '+{v}% XP in every skill' },
+    vault: { name: 'Vault', desc: '+{v}% gold' },
+    garden: { name: 'Greenhouse', desc: '+{v} farming plots' },
+    kitchen: { name: 'Royal Kitchen', desc: '-{burn}% burn chance · +{heal}% healing' },
+    trophy: { name: 'Trophy Hall', desc: '+{v}% combat damage' },
+    armory: { name: 'Armoury', desc: '+{v}% defence' },
+    chapel: { name: 'Chapel', desc: 'Blessings last {v}% longer' },
+    bedroom: { name: 'Bedroom', desc: 'Offline progress: {v} h' },
+  },
+
+  church: {
+    title: 'Church of Light', desc: 'Make an offering and receive a temporary blessing. Your Prayer level unlocks stronger blessings and lets you keep several at once. Time keeps running while you are away.',
+    active: 'Active {n} / {max}', duration: 'Duration {n} min', blessings: 'Blessings', remaining: '{time} left', renew: 'Renew · {gold} gold',
+    offer: 'Offering · {gold} gold', blessed: '<b>{name}</b> active for {n} minutes', maxActive: 'You already have the most blessings you can hold. Raise Prayer to keep more.',
+  },
+
+  blessings: {
+    wisdom: { name: 'Blessing of Wisdom', desc: '+10% XP' },
+    protection: { name: 'Blessing of Protection', desc: '+10% defence' },
+    fortune: { name: 'Blessing of Fortune', desc: '+15% gold' },
+    vigor: { name: 'Blessing of Vigour', desc: '+10% accuracy and damage' },
+    diligence: { name: 'Blessing of Diligence', desc: '+10% action speed' },
+    grace: { name: 'Divine Grace', desc: '+20% XP and +10% speed' },
+  },
+
+  shop: {
+    bought: 'Bought: <b>{n}× {item}</b>', intro: 'The merchant of Aetheria sells basic supplies. To sell your items, go to the inventory.',
+    marketTitle: "Today's market", marketIntro: 'Demand changes every day: these items sell for more or less today.', have: 'you have {n}',
+    cats: { supplies: 'Supplies', seeds: 'Seeds', runes: 'Runes', tools: 'Tools', gear: 'Gear' },
+  },
+
+  settings: {
+    language: 'Language', heroName: 'Hero name', preferences: 'Preferences', sound: 'Sound effects',
+    notify: 'Browser notifications while the tab is hidden (expeditions, queue, events)', notifyBlocked: 'The browser does not allow notifications here',
+    backup: 'Backup', backupIntro: 'Your game saves itself every 10 seconds to slot {n}. Export a code to move it to another browser; importing one replaces the game in this slot.',
+    pastePlaceholder: 'Paste a save code here to import it…', export: 'Export', import: 'Import', game: 'Game', slot: 'Slot', slotOf: '{n} of {total}',
+    role: 'Role', difficulty: 'Difficulty', saveAndExit: 'Save and return to menu', deleteGame: 'Delete this game', about: 'About Aetheria',
+    aboutText: 'A fantasy idle RPG inspired by <a href="https://github.com/tristinbaker/IdleFantasy" target="_blank" rel="noopener">Idle Fantasy</a> by Tristin Baker and by the RuneScape classics.',
+    interface: 'Interface', icons: 'Icons', offline: 'Offline progress', upTo: 'Up to {n} h',
+    credits: 'Icons by Lorc, Delapouite and the game-icons.net contributors, under the Creative Commons BY 3.0 licence.',
+    renamed: 'Name updated', copied: 'Save copied to the clipboard', copyManually: 'Copy the code from the text box', imported: 'Save imported',
+    invalidSave: 'That save code is not valid', deleteTitle: 'Delete game', deleteMessage: "{name}'s game in slot {n} will be deleted. This cannot be undone.",
+    deleteConfirm: 'Delete everything',
+  },
+
+  statsView: {
+    xpHour: 'XP per hour', goldHour: 'Gold per hour', killsHour: 'Monsters per hour', actionsHour: 'Actions per hour', lastHourAvg: 'last hour average',
+    last24: 'last 24 h', xpUnit: 'XP/h', goldUnit: 'gold/h', perHour: '/h', xpBySkill: 'Total XP by skill', skillTip: '{skill}: {xp} XP (level {lvl})',
+    counters: 'Counters', heroActions: 'Hero actions', staffActions: 'Staff actions', wages: 'Wages paid', expeditions: 'Expeditions',
+    orders: 'Orders delivered', dungeons: 'Dungeons cleared', dice: 'Dice balance',
+  },
+
+  tavern: {
+    maxLevel: 'Tavern at max level', intro: 'Hire staff who work for you in parallel, even while you are away. You pay their wages while they work.',
+    staffCount: 'Staff {n} / {max}', wages: 'Wages {n} gold/h', tokens: '{n} tavern tokens', upgradeTo: 'Upgrade to {name}',
+    upgradeHint: '+1 staff slot, more candidates, new specialities and rarities.', upgrade: 'Upgrade tavern', upgraded: 'Your tavern is now <b>{name}</b>!',
+    tabs: { staff: 'Staff', expeditions: 'Expeditions', orders: 'Orders', bar: 'Bar' },
+    yourStaff: 'Your staff', noStaff: 'You have not hired anyone yet. Pick someone from the board below.',
+    status: { idle: 'Idle', working: 'Working', nomat: 'No materials', unpaid: 'Unpaid', expedition: 'On expedition', injured: 'Injured' },
+    levelIn: 'Level {n} {skill}', efficiency: 'Efficiency {v}%', perHour: '{n} gold/h', onExpedition: 'On expedition to <b>{exp}</b> · back in {time}',
+    recovering: 'Recovering: {time}', assign: 'Assign a task…', adventurerHint: 'Adventurers go on expeditions from the Expeditions tab.',
+    made: 'Has produced {n} items', fire: 'Dismiss', fireTitle: 'Dismiss {name}', fireMessage: 'You will lose this worker and all their progress.',
+    joined: '<b>{name}</b> joins your staff', noSlots: 'No free slots. Upgrade the tavern or dismiss someone.',
+    board: 'Hiring board', boardHint: 'New candidates in {time}. Free slots: {n}.', rerollGold: 'Refresh · {n} gold', rerollToken: 'Refresh · 1 token',
+    wageHire: 'Wage {wage} gold/h · hire for {fee} gold', hire: 'Hire', adventurer: 'Adventurer', pickAdventurer: 'Pick a free adventurer first',
+    noAdventurers: 'Hire adventurers in the Staff tab', expeditionHint: 'Longer expeditions pay more per hour. If they fail, the adventurer comes back with little loot and stays injured for 30 min.',
+    power: 'Recommended power {n}', successChance: 'Success {v}', send: 'Send', departs: '<b>{name}</b> sets off for {exp}', reports: 'Latest reports',
+    noReports: 'No expedition has come back yet.', success: 'Success', failure: 'Failure',
+    ordersIntro: 'Every day the tavern regulars leave {n} orders. Deliver them for gold, XP and tavern tokens. New orders in {time}.',
+    youHave: 'You have {n} / {total}', deliver: 'Deliver', rerollOrder: 'Swap · 2 tokens', deliveredShort: 'Delivered', delivered: 'Order delivered',
+    drinks: 'Drinks', underEffect: 'Under the effect of <b>{name}</b>: {desc}', minutes: '{n} min', drank: 'You drink <b>{drink}</b> for 30 min',
+    oneDrink: 'Only one drink can be active: ordering another replaces it.', diceTitle: "Griffin's Dice",
+    diceRules: 'You and the barkeep each roll two dice. Roll higher to win your bet; double six pays triple. On a tie you get your bet back.',
+    you: 'You', vs: 'VS', barkeep: 'Barkeep', roll: { jackpot: 'Double six! You win triple', win: 'You win', lose: 'You lose', tie: 'Tie: you get your bet back' },
+    rollDice: 'Roll', badBet: 'Bet between 10 and the tavern maximum, without going over your gold',
+    diceStats: 'Max bet {max} · {n} games · balance {net} gold', mysteryTitle: 'Mystery chest', mysteryIntro: 'Trade {n} tavern tokens for a chest with random prizes.',
+    mysteryOpen: 'Open · {n} tokens', mysteryGot: 'Mystery chest: <b>{items}</b>', tokensHint: 'You earn tokens by delivering daily orders.',
+  },
+
+  tavernLevels: { 1: 'Humble Tavern', 2: 'Busy Tavern', 3: 'Griffin Inn', 4: 'Grand Inn', 5: 'Hall of the Golden Griffin' },
+  specs: {
+    miner: 'Miner', lumberjack: 'Lumberjack', fisher: 'Fisher', adventurer: 'Adventurer', cook: 'Cook', smith: 'Smith', thief: 'Pickpocket',
+    fletcher: 'Fletcher', crafter: 'Crafter', alchemist: 'Alchemist', runesmith: 'Runesmith',
+  },
+  rarities: { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary' },
+  traits: {
+    hardworking: { name: 'Hard-working', desc: '+15% speed' },
+    lazy: { name: 'Lazy', desc: '-10% speed, wage -20%' },
+    lucky: { name: 'Lucky', desc: '+6% double products' },
+    thrifty: { name: 'Thrifty', desc: '10% chance to save materials' },
+    learner: { name: 'Quick learner', desc: '+50% own XP' },
+    cheap: { name: 'Modest', desc: 'Wage -25%' },
+    greedy: { name: 'Greedy', desc: 'Wage +30%, +10% speed' },
+    brave: { name: 'Brave', desc: '+10% success and +20% loot on expeditions' },
+    tough: { name: 'Tough', desc: 'Never injured on expeditions' },
+    clumsy: { name: 'Clumsy', desc: '+10% failures (burning, thieving)' },
+  },
+  expeditions: {
+    meadows: 'Meadow Patrol', forest: 'Shadow Wood Sweep', caves: 'Cavern Exploration', swamp: 'Swamp Crossing',
+    peaks: 'Frozen Peaks Ascent', dragons: 'Raid on Dragon Lands',
+  },
+  drinks: {
+    ale: { name: 'House Ale', desc: '+10% action speed' },
+    mead: { name: 'Golden Mead', desc: '+10% XP' },
+    wine: { name: 'Wine of Fortune', desc: '+5% double resources and +10% loot' },
+    grog: { name: "Warrior's Grog", desc: '+10% damage with every style' },
+    special: { name: "Barkeep's Reserve", desc: '+20% XP and +10% speed' },
+  },
+
+  prayers: {
+    stone_skin: { name: 'Stone Skin', desc: '+8% defence' },
+    clarity: { name: 'Clarity', desc: '+6% accuracy' },
+    might: { name: 'Divine Might', desc: '+8% melee damage' },
+    hawk: { name: 'Hawk Eye', desc: '+10% ranged damage and +5% accuracy' },
+    mystic: { name: 'Mystic Will', desc: '+10% magic damage and +5% accuracy' },
+    protect: { name: 'Divine Protection', desc: '+20% defence' },
+    piety: { name: 'Piety', desc: '+15% melee damage, +10% accuracy and +10% defence' },
+  },
+
+  events: {
+    stars: { name: 'Starfall', desc: '+25% XP for 15 minutes.' },
+    goldrush: { name: 'Gold Rush', desc: '+50% gold for 10 minutes.' },
+    harvest: { name: 'Fertile Rain', desc: 'Crops grow 50% faster for 15 minutes.' },
+    merchant: { name: 'Travelling Merchant', desc: 'Sells one item at half price for 10 minutes.' },
+    chest: { name: 'Lost Chest', desc: 'You find an abandoned chest.' },
+    chestFound: 'Lost chest: <b>{gold} gold</b> and {n}× {item}', started: 'Event: <b>{event}</b>',
+  },
+
+  styles: {
+    attack: { name: 'Accurate', desc: '+3 effective attack' },
+    strength: { name: 'Aggressive', desc: '+3 effective strength' },
+    defense: { name: 'Defensive', desc: '+3 effective defence' },
+    ranged: { name: 'Ranged', desc: 'Requires a bow and arrows' },
+    magic: { name: 'Magic', desc: 'Requires runes' },
+  },
+
+  spells: {
+    wind_strike: 'Wind Strike', water_strike: 'Water Strike', earth_strike: 'Earth Strike', fire_strike: 'Fire Strike',
+    wind_bolt: 'Wind Bolt', water_bolt: 'Water Bolt', earth_bolt: 'Earth Bolt', fire_bolt: 'Fire Bolt',
+    wind_blast: 'Wind Blast', water_blast: 'Water Blast', earth_blast: 'Earth Blast', fire_blast: 'Fire Blast',
+    wind_wave: 'Wind Wave', water_wave: 'Water Wave', earth_wave: 'Earth Wave', fire_wave: 'Fire Wave',
+  },
+
+  monsters: {
+    chicken: 'Chicken', goblin: 'Goblin', cow: 'Cow', rat: 'Giant Rat', wolf: 'Grey Wolf', bandit: 'Bandit', skeleton: 'Skeleton',
+    golem: 'Rock Golem', troll: 'Rock Troll', snake: 'Swamp Serpent', scorpion: 'Giant Scorpion', werewolf: 'Werewolf',
+    specter: 'Spectral Knight', vampire: 'Vampire', gargoyle: 'Gargoyle', bear: 'Polar Bear', ice_golem: 'Ice Golem', ogre: 'Snow Ogre',
+    green_dragon: 'Green Dragon', red_dragon: 'Red Dragon', wyvern: 'Wyvern', minotaur: 'Minotaur', hydra: 'Hydra', demon: 'Abyssal Demon',
+    goblin_king: 'Goblin King', troll_lord: 'Troll Lord', kraken: 'Kraken', necromancer: 'Eternal Necromancer', ancient_dragon: 'Ancient Dragon',
+    warren_chief: 'Goblin Chieftain', skeleton_king: 'Skeleton King', naga: 'Great Naga', winter_queen: 'Winter Queen', bronze_wyrm: 'Bronze Wyrm',
+  },
+
+  areas: {
+    meadow: { name: 'Dawn Meadows', desc: 'Quiet fields, ideal for a fresh adventurer.' },
+    forest: { name: 'Shadow Wood', desc: 'Wolves, rats and bandits lurk among the trees.' },
+    caves: { name: 'Iron Caverns', desc: 'Damp tunnels full of undead, golems and trolls.' },
+    swamp: { name: 'Rotting Swamp', desc: 'Poisoned waters where ancient creatures crawl.' },
+    ruins: { name: 'Cursed Ruins', desc: 'The spirits of fallen knights still guard these stones.' },
+    peaks: { name: 'Frozen Peaks', desc: 'Endless blizzards and ice beasts up high.' },
+    lair: { name: "Dragon's Lair", desc: 'Only the bravest come back with scales and glory.' },
+    abyss: { name: 'The Abyss', desc: 'Beyond the portal, reality twists.' },
+  },
+
+  dungeons: {
+    goblin_warren: { name: 'Goblin Warren', desc: 'Tunnels crawling with goblins and rats.' },
+    crypt: { name: 'Forgotten Crypt', desc: 'The dead guard ancient treasures.' },
+    serpent_temple: { name: 'Serpent Temple', desc: 'A temple sunk into the swamp.' },
+    frost_keep: { name: 'Frost Keep', desc: 'The Winter Queen waits on her throne.' },
+    dragon_vault: { name: 'Dragon Vault', desc: 'The hoard of an age-old dragon.' },
+  },
+
+  mercs: {
+    squire: { name: 'Squire', desc: 'Soaks up hits and strikes reliably.' },
+    archer: { name: 'Elven Archer', desc: 'Steady damage from the back line.' },
+    mage: { name: 'Archmage', desc: 'Devastating spells against bosses.' },
+  },
+
+  slayerShop: {
+    skip: { name: 'Cancel task', desc: 'Drop the current task without losing your streak.' },
+    slayer_helm: { name: 'Slayer helm', desc: '+15% accuracy and damage against your target.' },
+    slayer_cape: { name: 'Slayer cape', desc: 'Bonuses to every style. Requires Slayer 50.' },
+    death_runes: { name: 'Sack of death runes', desc: '50 death runes.' },
+    herb_pack: { name: 'Rare seed pack', desc: '3 ranarr seeds and 2 kwuarm seeds.' },
+  },
+
+  towerShop: {
+    tower_cape: { name: 'Tower Cape', desc: '+4 to every combat bonus.' },
+    tower_cape2: { name: 'Cape of the Ascended', desc: '+10 to every bonus and +5% magic damage.' },
+    gem_chest: { name: 'Gem chest', desc: 'Holds uncut gems.' },
+    wisdom_elixir: { name: 'Elixir of Wisdom', desc: '+25% XP for 30 minutes.' },
+  },
+
+  groups: {
+    actions: 'Actions', smelting: 'Smelting', tools: 'Tools', forging: 'Forging', fish: 'Fish', dishes: 'Dishes', arrows: 'Arrows',
+    bows: 'Bows', rods: 'Fishing rods', leather: 'Leather', jewellery: 'Jewellery', staves: 'Staves',
+  },
+
+  nodes: {
+    copper_ore: 'Copper rock', tin_ore: 'Tin rock', rune_essence: 'Essence quarry', iron_ore: 'Iron rock', coal: 'Coal rock',
+    gold_ore: 'Gold rock', mithril_ore: 'Mithril rock', adamantite_ore: 'Adamantite rock', runite_ore: 'Runite rock', tree: 'Tree',
+  },
+  marks: {
+    man: 'Villager', farmer: 'Farmer', warrior: 'Warrior', rogue: 'Rogue', mfarmer: 'Master farmer', guard: 'Guard', knight: 'Knight',
+    paladin: 'Paladin', hero: 'Legendary hero',
+  },
+  courses: ['Forest trail', 'Village rooftops', 'Castle walls', 'Rope bridges', 'Icy summits', 'Abyss circuit'],
+  recipes: { tanLeather: 'Tan leather', tanDragonhide: 'Tan dragonhide' },
+
+  tpl: {
+    made: '{mat} {thing}', raw: 'Raw {fish}', cooked: '{fish}', seed: '{crop} seed', uncut: 'Uncut {gem}', amulet: '{gem} amulet',
+    burn: 'Burn {item}', cut: 'Cut {gem}', bury: 'Bury {item}', scatter: 'Scatter {item}',
+    wood: { logs: '{wood} logs', rod: '{wood} rod', bow: '{wood} bow', staff: '{wood} staff', tree: '{wood} tree' },
+  },
+  things: {
+    bar: 'bar', sword: 'sword', helm: 'helm', shield: 'shield', legs: 'platelegs', body: 'platebody', pickaxe: 'pickaxe', axe: 'axe',
+    arrowtips: 'arrowtips', arrow: 'arrow',
+  },
+  mats: { bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather' },
+  woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic' },
+  fish: { shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
+  crops: {
+    potato: 'Potato', onion: 'Onion', tomato: 'Tomato', strawberry: 'Strawberry', guam: 'Guam', marrentill: 'Marrentill', tarromin: 'Tarromin',
+    harralander: 'Harralander', ranarr: 'Ranarr', irit: 'Irit', kwuarm: 'Kwuarm', snapdragon: 'Snapdragon', torstol: 'Torstol',
+  },
+  gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
+
+  items: {
+    copper_ore: 'Copper ore', tin_ore: 'Tin ore', rune_essence: 'Rune essence', iron_ore: 'Iron ore', coal: 'Coal', gold_ore: 'Gold ore',
+    mithril_ore: 'Mithril ore', adamantite_ore: 'Adamantite ore', runite_ore: 'Runite ore', gold_bar: 'Gold bar', logs: 'Logs',
+    rod: 'Fishing rod', bow: 'Shortbow', arrow_shaft: 'Arrow shaft', headless_arrow: 'Headless arrow', feathers: 'Feathers',
+    burnt_food: 'Burnt food', baked_potato: 'Baked potato', stew: 'Vegetable stew', strawberry_pie: 'Strawberry pie',
+    bones: 'Bones', big_bones: 'Big bones', dragon_bones: 'Dragon bones', demon_ashes: 'Demonic ashes', ashes: 'Ashes',
+    cowhide: 'Cowhide', leather: 'Leather', leather_coif: 'Leather coif', leather_body: 'Leather body', leather_chaps: 'Leather chaps',
+    green_dhide: 'Green dragonhide', green_dleather: 'Dragon leather', dhide_body: 'Green dragonhide body', dhide_chaps: 'Green dragonhide chaps',
+    gold_amulet: 'Gold amulet', vial_water: 'Vial of water', attack_potion: 'Attack potion', strength_potion: 'Strength potion',
+    defense_potion: 'Defence potion', ranging_potion: 'Ranging potion', magic_potion: 'Magic potion', super_attack: 'Super attack',
+    super_strength: 'Super strength', super_defense: 'Super defence', overload: 'Overload', compost: 'Compost',
+    air_rune: 'Air rune', mind_rune: 'Mind rune', water_rune: 'Water rune', earth_rune: 'Earth rune', fire_rune: 'Fire rune',
+    chaos_rune: 'Chaos rune', nature_rune: 'Nature rune', death_rune: 'Death rune', blood_rune: 'Blood rune',
+    mark_of_grace: 'Mark of grace', bird_nest: 'Bird nest', coin_pouch: 'Coin pouch', gem_chest: 'Gem chest', wolf_pelt: 'Wolf pelt',
+    troll_tusk: 'Troll tusk', venom_sac: 'Venom sac', ectoplasm: 'Ectoplasm', ice_shard: 'Ice shard', apprentice_staff: 'Apprentice staff',
+    wizard_hat: 'Wizard hat', wizard_robe: 'Wizard robe', night_staff: 'Staff of Night', tide_bow: 'Bow of the Tides',
+    dragon_blade: 'Dragon blade', dragon_shield: 'Dragon shield', goblin_crown: "Goblin King's crown", troll_hammer: "Troll Lord's hammer",
+    slayer_helm: 'Slayer helm', slayer_cape: 'Slayer cape', tower_cape: 'Tower cape', tower_cape2: 'Cape of the Ascended', wisdom_elixir: 'Elixir of wisdom',
+  },
+  itemDesc: {
+    compost: 'Use it on a plot to halve the remaining growth time.',
+    slayer_helm: 'With an active task: +15% accuracy and damage against the target.',
+  },
+}

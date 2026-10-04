@@ -1,0 +1,632 @@
+export default {
+  app: { tagline: 'Reinos Idle', openMenu: 'Abrir menú' },
+
+  common: {
+    gold: 'oro', nothing: 'Nada', lvlShort: 'Nv {n}', raw: '{v}', notNow: 'Ahora no', buyFor: 'Comprar por {price}',
+    cancel: 'Cancelar', level: 'Nivel', levelN: 'Nivel {n}', seconds: '{n} s', add: 'Añadir', hp: 'PV', stop: 'Detener',
+    moveUp: 'Subir', moveDown: 'Bajar', remove: 'Quitar', always: 'siempre', locked: 'Bloqueado', equip: 'Equipar',
+    missingMaterials: 'Faltan materiales', notEnoughGold: 'No tienes oro suficiente', back: 'Atrás', next: 'Siguiente',
+    delete: 'Borrar', save: 'Guardar', bought: 'Comprado: <b>{name}</b>', maxLevel: 'Nivel máximo',
+  },
+
+  time: { dh: '{d} d {h} h', hm: '{h} h {m} min', ms: '{m} min {s} s', s: '{s} s', hours: '{n} h' },
+
+  nav: {
+    hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
+    achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
+    settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
+  },
+
+  heroMenu: { viewHero: 'Ver héroe', saveNow: 'Guardar ahora', saved: 'Partida guardada', mainMenu: 'Menú principal', label: 'Menú del héroe' },
+
+  title: {
+    continue: 'Continuar', newGame: 'Nueva partida', newGameHint: 'Crea un héroe en una ranura libre', load: 'Cargar partida',
+    slotsUsed: '{n} de {total} ranuras ocupadas', autosaveHint: 'Tu progreso se guarda solo cada pocos segundos.',
+    chooseSlot: 'Elige una ranura', overwriteTitle: 'Sobrescribir ranura', overwriteMessage: 'En la ranura {n} está {name}. Si empiezas aquí una partida nueva, ese héroe se borrará para siempre.',
+    overwrite: 'Sobrescribir', deleteTitle: 'Borrar partida', deleteMessage: 'Se borrará a {name} (héroe nivel {level}). No se puede deshacer.',
+    heroLevel: 'Héroe nivel {n}', played: 'Jugado {time}', saved: 'guardado {when}', justNow: 'ahora mismo', ago: 'hace {time}',
+    loadOne: 'Cargar', emptySlot: 'Ranura vacía', createCharacter: 'Crear un héroe',
+    footer: 'Iconos de game-icons.net (CC BY 3.0)',
+  },
+
+  creation: {
+    title: 'Nuevo héroe', slot: 'Ranura {n}',
+    steps: { identity: 'Identidad', role: 'Rol', difficulty: 'Dificultad', confirm: 'Confirmar' },
+    name: 'Nombre', namePlaceholder: '¿Cómo te llamarán las leyendas?', randomName: 'Nombre al azar', portrait: 'Retrato', colour: 'Color',
+    recommended: 'Recomendada',
+    mult: { xp: 'XP ×{v}', monster: 'Monstruos ×{v}', gold: 'Oro ×{v}', offline: 'Offline ×{v}' },
+    summary: 'Todo listo. <b class="gold-text">{name}</b> empezará como <b>{role}</b> en dificultad <b style="color:{color}">{difficulty}</b>.',
+    note: 'La dificultad no se puede cambiar después. Tu partida se guardará automáticamente en la ranura {n}.',
+    begin: 'Comenzar la aventura', unnamed: 'Sin nombre', perks: 'Ventajas', startsWith: 'Comienza con',
+  },
+
+  welcome: {
+    title: 'Bienvenido, {name}',
+    tips: [
+      'Elige una habilidad en el menú lateral y pulsa <b>Empezar</b>. Las acciones se repiten solas.',
+      'Las habilidades de recolección alimentan a las de artesanía: el mineral se convierte en barras y las barras en equipo.',
+      'Cada nivel que ganas también da <b>XP de héroe</b>. Reparte puntos de atributo y talento en la pantalla del héroe.',
+      'El juego sigue avanzando mientras no estás, hasta el límite offline.',
+      'Contrata personal en la <b>Taberna</b> para que entrene habilidades por ti en paralelo.',
+      'Las misiones desbloquean zonas y jefes nuevos. Revisa el tablón a menudo.',
+    ],
+    start: 'Que empiece la aventura',
+  },
+
+  toast: {
+    levelUp: '<b>{skill}</b> alcanza el nivel <b>{level}</b>', heroLevel: '¡Héroe nivel <b>{level}</b>!', heroLevelPlain: 'Héroe nivel {level}',
+    pointsToSpend: 'Tienes puntos por repartir', mastery: 'Maestría {level}: <b>{name}</b>', rare: 'Botín raro: <b>{item}</b>',
+    achievement: 'Logro desbloqueado: <b>{name}</b>', quest: 'Misión completada: <b>{name}</b>', death: 'Has caído ante <b>{name}</b>',
+    expeditionOk: '<b>{name}</b> vuelve de {exp} con {gold} de oro', expeditionFail: '<b>{name}</b> fracasa en {exp} y vuelve herido',
+    dungeon: '¡<b>{name}</b> completada! {loot}',
+  },
+
+  notify: {
+    title: 'Aetheria', unpaid: '{name} ha dejado de trabajar: no puedes pagar su sueldo',
+    expeditionOk: '{name} ha vuelto de {exp}', expeditionFail: '{name} vuelve herido de {exp}',
+    queueDone: 'Tu cola de acciones ha terminado', event: 'Evento: {event}',
+  },
+
+  event: { bought: 'Comprado al mercader ambulante', offer: 'La oferta termina en {time}', gone: 'El mercader se ha marchado' },
+
+  offline: {
+    idle: 'descansando', training: 'entrenando {skill} ({action})', tower: 'subiendo la Torre', fighting: 'luchando contra {monster}',
+    title: 'Bienvenido de nuevo', away: 'Has estado fuera <b>{time}</b>.', capped: 'El progreso offline tiene un límite de {h} h.',
+    kept: 'Mientras tanto, {name} siguió {what}.', kills: 'Monstruos derrotados', towerTokens: 'Fichas de la Torre', eaten: 'Comida consumida',
+    experience: 'Experiencia', items: 'Objetos', collect: 'Recoger',
+  },
+
+  stats: {
+    hitpoints: 'Vida', combatLevel: 'Combate', totalLevel: 'Nivel total',
+    atk: 'Precisión cuerpo a cuerpo', str: 'Fuerza cuerpo a cuerpo', def: 'Defensa', rAtk: 'Precisión a distancia', rStr: 'Fuerza a distancia', mAtk: 'Precisión mágica', mDmg: 'Daño mágico',
+  },
+
+  hero: {
+    heroLevel: 'Nivel de héroe',
+    tabs: { overview: 'Resumen', attributes: 'Atributos', talents: 'Talentos' },
+    equipment: 'Equipo', clickToRemove: 'Clic para quitar', empty: 'Vacío', tools: 'Herramientas', toolTier: '{tool} · nivel {n}',
+    noTool: 'Sin herramienta', gearBonuses: 'Bonos de equipo', maxHitCurrent: 'Golpe máximo (estilo actual)', activeEffects: 'Efectos activos',
+    inCombat: '{name} (en combate)', grace: 'Gracia +{v}% velocidad', elixir: 'Elixir +25% XP', skills: 'Habilidades', diary: 'Diario',
+    diaryEmpty: 'Tu historia empieza aquí.', chronicle: 'Crónica', playTime: 'Tiempo de aventura', actions: 'Acciones completadas',
+    harvests: 'Cosechas', kills: 'Monstruos derrotados', deaths: 'Derrotas', goldEarned: 'Oro ganado en total', quests: 'Misiones completadas',
+    towerBest: 'Récord en la Torre', maxMastery: 'Maestría más alta', offlineCap: 'Progreso offline máximo',
+  },
+
+  attributes: {
+    respecTitle: 'Reiniciar atributos', respecMessage: 'Recuperas todos los puntos gastados a cambio de {cost} de oro.', respecConfirm: 'Reiniciar',
+    respecDone: 'Atributos reiniciados', points: '{n} puntos de atributo', heroXp: 'XP de héroe: {xp}', toNext: '{xp} XP para el nivel {level}',
+    explain: 'Cada nivel de héroe da {points} puntos de atributo y, cada {every} niveles, un punto de talento.',
+    base: 'Base {base} · invertidos {spent}', addPoint: 'Añadir un punto', respecButton: 'Reiniciar puntos · {cost} oro',
+    str: { name: 'Fuerza', short: 'FUE', desc: 'Daño cuerpo a cuerpo y velocidad en Minería, Tala y Herrería.' },
+    dex: { name: 'Destreza', short: 'DES', desc: 'Precisión, daño a distancia, robo y velocidad en Pesca y Flechería.' },
+    int: { name: 'Inteligencia', short: 'INT', desc: 'Daño y precisión mágicos, y XP de Runas, Herbología y Artesanía.' },
+    vit: { name: 'Vitalidad', short: 'VIT', desc: '+1 PV máximo cada 2 puntos, curación y defensa.' },
+    wis: { name: 'Sabiduría', short: 'SAB', desc: 'XP de todas las habilidades y XP de maestría.' },
+    luck: { name: 'Suerte', short: 'SUE', desc: 'Recursos dobles, botín de monstruos y oro.' },
+  },
+
+  talents: {
+    points: '{n} puntos de talento', roleTitle: 'Talentos de {role}', generalTitle: 'Talentos generales', learned: '<b>{name}</b> rango {rank}/{max}',
+    intro: 'Ganas un punto de talento cada {every} niveles de héroe. Los talentos son permanentes.', available: '{n} disponibles',
+    perRank: '{effect} por rango', requiresHero: 'Requiere héroe nivel {n}', rank: 'Rango {rank}/{max}', maxed: 'Al máximo', learn: 'Aprender',
+    diligent: 'Diligencia', scholar: 'Erudito', prospector: 'Prospector', thrifty: 'Manos expertas', iron_skin: 'Piel de hierro', vigor: 'Vigor',
+    green: 'Pulgar verde', harvester: 'Cosechador', merchant: 'Mercader', fortune: 'Buscafortunas', master: 'Maestro', dreamer: 'Soñador',
+    berserker: 'Furia', warlord: 'Señor de la guerra', eagle_eye: 'Ojo de águila', quiver: 'Carcaj infinito', arcane: 'Poder arcano', rune_saver: 'Ahorro rúnico',
+    efficient: 'Eficiencia', perfection: 'Perfección', nimble: 'Dedos ágiles', lucky: 'Suerte del pícaro', healer: 'Sanador', devout: 'Devoción',
+  },
+
+  mods: {
+    xp: '+{v}% XP en todas las habilidades', speed: '+{v}% velocidad de acciones', gold: '+{v}% oro', loot: '+{v}% probabilidad de botín',
+    double: '+{v}% recursos dobles', preserve: '+{v}% de conservar materiales', mastery: '+{v}% XP de maestría', heal: '+{v}% curación',
+    defense: '+{v}% defensa', thieving: '-{v}% fallos al robar', meleeDmg: '+{v}% daño cuerpo a cuerpo', meleeAcc: '+{v}% precisión cuerpo a cuerpo',
+    rangedDmg: '+{v}% daño a distancia', rangedAcc: '+{v}% precisión a distancia', magicDmg: '+{v}% daño mágico', magicAcc: '+{v}% precisión mágica',
+    ammoSave: '+{v}% de no gastar flechas', runeSave: '+{v}% de no gastar runas', farmSpeed: 'Cultivos un {v}% más rápidos',
+    farmYield: '+{v} cosecha por parcela', offline: '+{v} h de progreso offline', maxHp: '+{v} PV máximos', blessing: 'Bendiciones un {v}% más largas',
+    speedSkill: '+{v}% velocidad de {skill}', xpSkill: '+{v}% XP de {skill}', doubleSkill: '+{v}% recursos dobles en {skill}',
+    speedGroup: '+{v}% velocidad de {group}', xpGroup: '+{v}% XP de {group}', doubleGroup: '+{v}% productos dobles de {group}',
+  },
+
+  roles: {
+    startGold: '+{n} de oro inicial',
+    warrior: { name: 'Guerrero', desc: 'Un muro de acero. Domina el combate cuerpo a cuerpo y aguanta castigo.' },
+    ranger: { name: 'Explorador', desc: 'Rastreador del bosque. Letal a distancia y experto recolector.' },
+    mage: { name: 'Mago', desc: 'Erudito de lo arcano. Destruye con hechizos y fabrica sus propias runas.' },
+    artisan: { name: 'Artesano', desc: 'Maestro del oficio. Fabrica más rápido y desperdicia menos.' },
+    rogue: { name: 'Pícaro', desc: 'Vive del ingenio y de los bolsillos ajenos. La fortuna le sonríe.' },
+    paladin: { name: 'Paladín', desc: 'Guerrero sagrado. Resiste como nadie y sus plegarias son escuchadas.' },
+  },
+
+  difficulty: {
+    easy: { name: 'Aventurero', desc: 'Progreso relajado para disfrutar de la historia.' },
+    normal: { name: 'Veterano', desc: 'La experiencia recomendada. Cada nivel cuesta.' },
+    hard: { name: 'Héroe', desc: 'Monstruos más duros y progreso lento. Morir cuesta el 5% de tu oro.' },
+    legend: { name: 'Leyenda', desc: 'Solo para leyendas. Morir cuesta el 15% de tu oro.' },
+  },
+
+  tools: { pickaxe: 'Pico', axe: 'Hacha', rod: 'Caña de pescar' },
+
+  skillCats: { gathering: 'Recolección', artisan: 'Artesanía', support: 'Apoyo', combat: 'Combate' },
+
+  skills: {
+    mining: { name: 'Minería', desc: 'Extrae mineral y esencia de las rocas del reino.' },
+    woodcutting: { name: 'Tala', desc: 'Corta árboles para conseguir troncos de todo tipo.' },
+    fishing: { name: 'Pesca', desc: 'Pesca en ríos y mares.' },
+    farming: { name: 'Agricultura', desc: 'Planta semillas y cosecha cultivos y hierbas.' },
+    thieving: { name: 'Robo', desc: 'Vacía bolsillos para conseguir oro y botín. Si te pillan, duele.' },
+    smithing: { name: 'Herrería', desc: 'Funde barras y forja armas, armaduras y herramientas.' },
+    cooking: { name: 'Cocina', desc: 'Cocina comida que te cura en combate.' },
+    firemaking: { name: 'Fuego', desc: 'Quema troncos para ganar experiencia.' },
+    fletching: { name: 'Flechería', desc: 'Fabrica flechas, arcos, cañas de pescar y bastones.' },
+    crafting: { name: 'Artesanía', desc: 'Curte pieles, cose armaduras de cuero y talla gemas.' },
+    herblore: { name: 'Herbología', desc: 'Prepara pociones con hierbas.' },
+    runecrafting: { name: 'Runas', desc: 'Convierte la esencia en runas para los hechizos.' },
+    agility: { name: 'Agilidad', desc: 'Recorre circuitos para ser más rápido en todo lo que haces.' },
+    prayer: { name: 'Plegaria', desc: 'Entierra huesos para ganarte el favor de los dioses.' },
+    attack: { name: 'Ataque', desc: 'Precisión cuerpo a cuerpo.' },
+    strength: { name: 'Fuerza', desc: 'Daño cuerpo a cuerpo.' },
+    defense: { name: 'Defensa', desc: 'Reduce la probabilidad de recibir golpes.' },
+    hitpoints: { name: 'Vitalidad', desc: 'Tu vida máxima.' },
+    ranged: { name: 'Distancia', desc: 'Precisión y daño con arcos.' },
+    magic: { name: 'Magia', desc: 'Precisión y daño con hechizos.' },
+    slayer: { name: 'Cazador', desc: 'Caza los monstruos asignados a cambio de puntos y recompensas raras.' },
+  },
+
+  skill: {
+    xpToNext: '{xp} XP para el nivel {level}', maxLevel: 'Nivel máximo alcanzado', xpMultTip: 'Multiplicador de XP', speedTip: 'Bono de velocidad de acciones',
+    speed: 'Velocidad', agilityBonus: 'Agilidad: +{v} de velocidad en todo', requiresLevel: 'Requiere nivel {n}', requiresTool: 'Requiere {tool} de nivel {tier}',
+    xpPerHour: 'XP por hora', burnChance: '{v} de quemar', failChance: '{v} de fallar', doubleTip: 'Probabilidad de resultado doble',
+    keepTip: 'Probabilidad de conservar los materiales', keep: '{v} conservar', possible: 'Posibles', masteryTip: 'La maestría acelera esta acción', mastery: 'Maestría',
+    masteryN: 'Maestría {n}', howToTrain: 'Cómo entrenar {skill}',
+    combatHelp: {
+      attack: 'Usa el estilo Precisión con un arma cuerpo a cuerpo.',
+      strength: 'Usa el estilo Agresivo con un arma cuerpo a cuerpo.',
+      defense: 'Usa el estilo Defensivo. También sube un poco con cualquier estilo al recibir menos daño.',
+      ranged: 'Equipa un arco y flechas, y elige el estilo Distancia.',
+      magic: 'Elige el estilo Magia y un hechizo, y lleva runas. Los bastones aumentan tu daño.',
+      hitpoints: 'Ganas XP de Vitalidad con cada punto de daño que infliges.',
+      slayer: 'Pide un encargo al maestro cazador y derrota a los monstruos asignados.',
+    },
+    goSlayer: 'Ir al maestro cazador', goCombat: 'Ir al combate', graceTitle: 'Recompensas de gracia',
+    graceText: 'Cambia las marcas de gracia de los circuitos por velocidad permanente en todas las acciones. Ahora: <b class="gold-text">+{v}%</b> ({n}/{max}).',
+    graceUpgrade: 'Mejorar · {n} marcas', graceDone: 'Completado', graceBought: 'Recompensa de gracia: <b>+{v}% velocidad</b> en todo',
+  },
+
+  filters: {
+    status: { all: 'Todas', ready: 'Disponibles', unlocked: 'Desbloqueadas', locked: 'Bloqueadas' },
+    sort: { lvl: 'Por nivel', xph: 'Más XP por hora', name: 'Por nombre', mastery: 'Más maestría' },
+    cards: 'Tarjetas', list: 'Lista', view: 'Vista', searchIn: 'Buscar en {skill}… (nombre o material)', section: 'Sección', all: 'Todo',
+    material: 'Material', showing: 'Mostrando {n} de {total}', clear: 'Limpiar filtros', noMatch: 'Nada coincide con los filtros.',
+  },
+
+  prestige: {
+    title: 'Prestigio de {skill}', confirm: 'Hacer prestigio',
+    message: 'Tu nivel vuelve a {lvl}. A cambio obtienes para siempre +{xp}% XP y +{speed}% velocidad en esta habilidad, y +{global}% XP en todas las demás.',
+    done: '<b>{skill}</b> ahora tiene prestigio {n}', badge: 'Prestigio {n}', button: 'Prestigio',
+  },
+
+  queue: { added: 'En cola: {n}× {action}', addAria: 'Añadir {name} a la cola', add: 'A la cola', howMany: '¿Cuántas veces?', count: '{n} en cola' },
+
+  dock: {
+    tower: 'Torre infinita', boss: 'Jefe', dungeon: 'Mazmorra', combat: 'Combate', queueWaiting: '{n} acciones esperando en cola',
+    startQueue: 'Iniciar cola', viewQueue: 'Ver cola', goTo: 'Ir', queue: 'Cola', clear: 'Vaciar', queueEmpty: 'La cola está vacía.',
+  },
+
+  gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
+
+  log: {
+    start: '{name} empieza su aventura como {role}.', heroLevel: 'Nivel de héroe {level} (+{points} puntos).',
+    levelUp: '{skill} sube a nivel {level}.', mastery: 'Maestría {level} en {name}.', found: 'Encontrado: {item}.',
+    drop: '¡{monster} suelta {item}!', towerFloor: 'Nuevo récord en la Torre: piso {floor}.', dungeonFirst: 'Primera vez que completas {dungeon}.',
+    bossFirst: 'Primera victoria contra {monster}.', death: 'Derrotado por {monster}.', deathGold: 'Derrotado por {monster}. Pierdes {gold} de oro.',
+    slayerTask: 'Encargo de caza completado: {monster}.', quest: 'Misión completada: {quest}.', achievement: 'Logro: {ach}.',
+    room: '{room} mejorada a nivel {level}.', prestige: '{skill} alcanza el prestigio {n}.', tavernLevel: 'Tu taberna ahora es {tavern}.',
+    hired: 'Contratas a {name} ({spec}, {rarity}).', fired: '{name} deja tu personal.', workerLevel: '{name} alcanza el nivel {level} de {skill}.',
+    expeditionOk: '{name} vuelve de {exp} con {gold} de oro.', expeditionFail: '{name} fracasa en {exp} ({gold} de oro).',
+    order: 'Encargo entregado: {n}× {item}.', lostChest: 'Encuentras un cofre perdido: {gold} de oro y {n}× {item}.',
+  },
+
+  msg: {
+    needLevel: 'Necesitas nivel {lvl} de {skill}', needTool: 'Necesitas {tool} de nivel {tier}', noMaterials: 'Te faltan materiales',
+    faintedThieving: 'Te han pillado y te has desmayado. Toca descansar.', queueSkipMaterials: 'Se salta {action}: faltan materiales',
+    outOfMaterials: 'Sin materiales para {action}', noSeeds: 'No tienes {item}', needBow: 'Necesitas un arco equipado',
+    noArrows: 'No tienes flechas equipadas', spellLevel: '{spell} requiere Magia {lvl}', noRunes: 'No tienes runas para {spell}',
+    bossLocked: 'Completa antes la misión necesaria', mercGold: 'No tienes oro para los mercenarios', areaLocked: 'Esta zona está bloqueada',
+    dungeonLocked: 'Esta mazmorra está bloqueada', diedDungeon: 'Has caído en {dungeon}, sala {room}. Pierdes {gold} de oro.',
+    diedTower: 'Has caído en el piso {floor} (récord {best}). Pierdes {gold} de oro.', died: 'Derrotado por {monster}. Pierdes {gold} de oro.',
+    slayerDone: 'Encargo completado: +{pts} puntos de cazador', queueSkip: 'Se salta {action}', queueDone: 'Cola terminada',
+    prayerFaded: 'Sin huesos: tu plegaria se desvanece',
+  },
+
+  combat: {
+    tabs: { areas: 'Zonas', bosses: 'Jefes', dungeons: 'Mazmorras' },
+    respawning: 'Reapareciendo…', accuracy: 'Tu precisión {v}', maxHit: 'Golpe máx. {v}', hitsYou: 'Te acierta {v}', weakTo: 'Débil a {style}',
+    types: { melee: 'cuerpo a cuerpo', ranged: 'distancia', magic: 'magia' },
+    taskLeft: 'Encargo: quedan {n}', boss: 'Jefe', room: 'Sala {n}/{total}', clears: 'Completada {n} veces', prayerActive: 'Plegaria activa',
+    kills: '{n} bajas', task: 'Encargo', maxHitLabel: 'Golpe máx.', weakness: 'Debilidad', defeated: 'Derrotados', retreat: 'Retirarse', fight: 'Luchar',
+    spellOption: '{name} · máx. {max} · Nv {lvl}', style: 'Estilo', spell: 'Hechizo', castCost: 'Coste por lanzamiento', ammo: 'Munición',
+    equipArrows: 'Equipa flechas desde el inventario', supplies: 'Suministros', autoFood: 'Comida', noFood: 'Sin comida', noFoodHint: 'Cocina pescado para curarte en combate',
+    eatBelow: 'Comer por debajo del {n}% de vida', autoPotion: 'Poción', noPotion: 'Sin poción', noPotionHint: 'Prepara pociones con Herbología',
+    prayerLabel: 'Plegaria (gasta {n} huesos por minuto)', noPrayer: 'Sin plegaria', bonesLeft: 'Quedan {n} huesos', potionActive: '{name} activa',
+    recommended: 'Recomendado: nivel {n}+', questReq: 'Misión: {quest}', areaLocked: 'Zona bloqueada',
+    dungeonIntro: 'Recorre varias salas seguidas y derrota al jefe final para abrir su cofre. Al terminar, la mazmorra vuelve a empezar sola hasta que te retires o caigas.',
+    roomTip: 'Sala {n}: {monster}', bossTip: 'Jefe: {monster}', chest: 'Cofre:', enter: 'Entrar', mercsTitle: 'Mercenarios',
+    mercsIntro: 'Contrata aliados antes de enfrentarte a un jefe. Atacan contigo y reparten los golpes del enemigo. Se pagan al empezar el combate y te acompañan hasta que te retires.',
+    hireCost: 'Coste de contratación:', respawnIn: 'Reaparece en {n} s',
+  },
+
+  loadouts: {
+    defaultName: 'Equipo {n}', saved: 'Equipo guardado', missing: 'Falta: {items}', ready: '{name} equipado', title: 'Equipos guardados',
+    intro: 'Guarda tu equipo, comida y estilo y cambia entre ellos con un clic.', empty: 'Hueco vacío {n}', rename: 'Renombrar', name: 'Nombre', save: 'Guardar el actual',
+  },
+
+  farm: {
+    filters: { all: 'Todas', have: 'Tengo', unlocked: 'Desbloqueadas', herb: 'Hierbas' },
+    unlockGreenhouse: 'Invernadero nivel 3', unlockHero: 'héroe nivel {n}', planted: 'Plantadas {n}× {crop}', harvested: 'Cosechas {n}× {item}',
+    fertilized: 'Abono aplicado: crecimiento a la mitad', harvestedAll: 'Cosechadas {n} parcelas', title: 'Tus parcelas',
+    intro: 'Los cultivos siguen creciendo mientras no juegas.', auto: 'Replantar automáticamente', plantEmpty: 'Plantar vacías', harvestN: 'Cosechar ({n})',
+    plot: 'Parcela {n}', fertilize: 'Abonar ({n})', harvest: 'Cosechar', plant: 'Plantar', morePlots: 'Más parcelas', unlockWith: 'Se desbloquean con: {list}',
+    allPlots: 'Todas las parcelas desbloqueadas', seeds: 'Semillas', search: 'Buscar semillas…', perHarvest: '{min}–{max} por cosecha', noMatch: 'Ninguna semilla coincide.',
+    plantAllTitle: 'Plantar en todas las parcelas vacías', plantOneTitle: 'Plantar en la parcela {n}', noSeeds: 'No tienes semillas. Cómpralas en la tienda.',
+  },
+
+  chart: { notEnough: 'Aún no hay datos suficientes. Se guarda una muestra cada 5 minutos de juego.', asTable: 'Ver como tabla', time: 'Hora' },
+
+  inventory: {
+    filters: { all: 'Todo', resource: 'Recursos', food: 'Comida', equip: 'Equipo', tool: 'Herramientas', potion: 'Pociones', seed: 'Semillas', rune: 'Runas', other: 'Otros' },
+    sold: 'Vendido por <b>{gold}</b> de oro', goldAmount: '{n} de oro', opened: 'Obtienes: <b>{items}</b>', sellShownTitle: 'Vender lo que ves',
+    sellShownMessage: 'Se venderán {n} tipos de objeto por {gold} de oro. Los objetos protegidos no se venden.', sell: 'Vender', junkSold: 'Basura vendida por <b>{gold}</b> de oro',
+    noJunk: 'No tienes basura que vender', search: 'Buscar objeto…', totalValue: 'Valor total: {gold} de oro', sellJunk: 'Vender basura',
+    sellShown: 'Vender lo filtrado · {gold}', empty: 'Tu inventario está vacío. ¡Ve a recolectar recursos!', twoHanded: 'A dos manos', rare: 'Raro',
+    quantity: 'Cantidad', unitValue: 'Valor unitario', market: 'Mercado de hoy', highDemand: 'alta demanda', lowDemand: 'baja demanda', heals: 'Cura',
+    hp: '+{n} PV', boost: '+{flat} y +{pct}%', duration: 'Duración', equippedNow: 'Equipado ahora', effect: 'Efecto', elixirEffect: '+25% XP · 30 min',
+    requires: 'Requiere', equipped: 'Equipada', equipAmmo: 'Equipar munición', equipTool: 'Equipar herramienta', eat: 'Comer', combatFood: 'Comida de combate',
+    useInCombat: 'Usar en combate', drink: 'Beber', combatPotion: 'Poción de combate', open: 'Abrir', locked: 'Protegido', lock: 'Proteger',
+    lockTip: 'Los objetos protegidos no se pueden vender', sellAll: 'Vender todo · {gold} de oro', lockedHint: 'Objeto protegido: quítale la protección para venderlo.',
+    select: 'Selecciona un objeto para ver sus detalles.',
+  },
+
+  itemTypes: { resource: 'Recurso', food: 'Comida', equip: 'Equipo', potion: 'Poción', seed: 'Semilla', rune: 'Runa', junk: 'Basura', chest: 'Contenedor', tool: 'Herramienta' },
+
+  slots: { weapon: 'Arma', shield: 'Escudo', head: 'Cabeza', body: 'Torso', legs: 'Piernas', cape: 'Capa', amulet: 'Amuleto', ammo: 'Munición' },
+
+  slayer: {
+    current: 'Encargo actual', left: 'Quedan {n} de {total}', hunt: 'Cazar ahora', viewArea: 'Ver zona',
+    explain: 'Cada monstruo del encargo da XP de Cazador igual a su vida. Al terminar recibes puntos y oro; cada 10 encargos seguidos, puntos ×5.',
+    noTask: 'El maestro Vannaka te asignará monstruos adecuados a tu nivel de combate ({lvl}). Hay {n} posibles objetivos.',
+    newTask: 'Pedir encargo', record: 'Tu historial', points: 'Puntos de cazador', completed: 'Encargos completados', streak: 'Racha actual',
+    nextBonus: 'Próximo bonus ×5', inTasks: 'en {n} encargos', shop: 'Tienda del gremio', cost: '{n} puntos',
+  },
+
+  tower: {
+    title: 'Torre infinita', desc: 'Cada piso es más duro que el anterior. Cada 10 pisos te espera un guardián ★ y un punto de control. Si caes, vuelves al último punto de control.',
+    best: 'Récord: piso {n}', startAt: 'Empiezas en el piso {n}', tokens: '{n} fichas', leave: 'Abandonar', enter: 'Entrar en la Torre',
+    next: 'Próximos pisos', floorN: 'Piso {n}', hp: '{n} PV', shop: 'Tienda de la Torre', monster: '{title} del piso {floor}',
+    titles: ['Centinela', 'Guardián', 'Campeón', 'Aparecido', 'Coloso', 'Arconte', 'Titán'],
+  },
+
+  quests: {
+    filters: { open: 'En curso', done: 'Completadas', all: 'Todas' },
+    status: { locked: 'Bloqueada', available: 'Disponible', active: 'En curso', done: 'Completada', ready: '¡Lista!' },
+    obj: { item: 'Entregar {n}× {item}', kill: 'Derrotar {n}× {monster}', level: 'Alcanzar nivel {lvl} de {skill}', tower: 'Superar el piso {floor} de la Torre', slayer: 'Completar {n} encargos de cazador' },
+    intro: 'Ayuda a los habitantes del reino. Las misiones dan oro, experiencia y objetos, y desbloquean zonas y jefes.',
+    summary: '{n} / {total} completadas · {qp} PM', requires: 'Requiere:', reward: 'Recompensa:', xp: '{n} XP de {skill}', slayerPoints: '{n} puntos de cazador',
+    qp: '{n} PM', accept: 'Aceptar misión', complete: 'Completar', empty: 'No hay misiones en esta lista.',
+    first_steps: { name: 'Primeros pasos', giver: 'Bram, el minero', desc: 'El viejo Bram necesita mineral para reparar la herrería del pueblo.' },
+    cook_assistant: { name: 'Ayudante de cocina', giver: 'Marta, la cocinera', desc: 'La posada espera un banquete y a Marta le faltan manos.' },
+    goblin_trouble: { name: 'Problemas goblin', giver: 'Capitán Aldric', desc: 'Los goblins asaltan las granjas del este. Dales una lección.' },
+    lumberjack: { name: 'El leñador', giver: 'Hilda, la carpintera', desc: 'Hilda está construyendo un puente y necesita madera de calidad.' },
+    smith_apprentice: { name: 'Aprendiz de herrero', giver: 'Bram, el minero', desc: 'Demuestra que puedes trabajar el hierro como un verdadero herrero.' },
+    green_thumb: { name: 'Mano verde', giver: 'Abuela Rosa', desc: 'La abuela Rosa quiere probar las verduras del nuevo granjero.' },
+    wolf_hunt: { name: 'Cacería de lobos', giver: 'Cazadora Freya', desc: 'Una manada amenaza a los pastores del Bosque Sombrío.' },
+    arcane_studies: { name: 'Estudios arcanos', giver: 'Archimaga Selene', desc: 'La torre de magos necesita runas para su investigación.' },
+    thief_guild: { name: 'El gremio de ladrones', giver: 'Sombra', desc: 'Para entrar al gremio debes demostrar tus dedos ligeros.' },
+    herbalist: { name: 'La herbolaria', giver: 'Druida Elm', desc: 'El druida Elm quiere comprobar la pureza de tus brebajes.' },
+    bone_collector: { name: 'El coleccionista de huesos', giver: 'Hermano Osric', desc: 'El monasterio necesita restos para un antiguo ritual.' },
+    undead_menace: { name: 'Amenaza no-muerta', giver: 'Capitán Aldric', desc: 'Algo despierta a los muertos en las Cavernas de Hierro.' },
+    gemcutter: { name: 'El tallador', giver: 'Joyero Orin', desc: 'Orin busca un aprendiz con buen ojo para las gemas.' },
+    agile_explorer: { name: 'Explorador ágil', giver: 'Corredora Kai', desc: 'Kai colecciona marcas de gracia de los circuitos más difíciles.' },
+    slayer_initiate: { name: 'Iniciado cazador', giver: 'Maestro Vannaka', desc: 'Completa encargos de caza para ganarte el respeto del gremio.' },
+    sea_terror: { name: 'Terror en el mar', giver: 'Almirante Corvin', desc: 'Los pescadores hablan de tentáculos enormes. Atrae a la bestia con cebo.' },
+    tower_climber: { name: 'Escalador de la torre', giver: 'Guardián de la Torre', desc: 'La Torre infinita pone a prueba a los más audaces.' },
+    dragon_threat: { name: 'La amenaza del dragón', giver: 'Rey Edmund', desc: 'Un dragón ha sido visto sobre el reino. El rey necesita un campeón.' },
+    master_smith: { name: 'Maestro herrero', giver: 'Bram, el minero', desc: 'Forja una obra maestra y entra en el gremio de herreros.' },
+    abyss_gates: { name: 'Las Puertas del Abismo', giver: 'Archimaga Selene', desc: 'Selene ha descubierto un portal. Necesita poder para abrirlo.' },
+    dragon_slayer: { name: 'Matadragones', giver: 'Rey Edmund', desc: 'El Dragón Ancestral despierta. Solo una leyenda puede detenerlo.' },
+  },
+
+  unlocks: { kraken: 'Jefe: Kraken', lair: 'Zona: Guarida del Dragón', abyss: 'Zona: El Abismo', ancient_dragon: 'Jefe: Dragón Ancestral' },
+
+  achievements: { progress: 'Progreso de logros' },
+
+  ach: {
+    total: { name: 'Nivel total {n}', desc: 'Alcanza nivel total {n}.' },
+    skill: { name: 'Experto nivel {n}', desc: 'Lleva cualquier habilidad a nivel {n}.' },
+    kills: { name: 'Verdugo {n}', desc: 'Derrota {n} monstruos.' },
+    gold: { name: 'Fortuna {n}', desc: 'Gana {n} de oro en total.' },
+    actions: { name: 'Incansable {n}', desc: 'Completa {n} acciones de habilidad.' },
+    quests: { name: 'Aventurero {n}', desc: 'Completa {n} misiones.' },
+    questsAll: { name: 'Leyenda del reino', desc: 'Completa todas las misiones.' },
+    tower: { name: 'Torre: piso {n}', desc: 'Supera el piso {n} de la Torre infinita.' },
+    slayer: { name: 'Cazador {n}', desc: 'Completa {n} encargos de caza.' },
+    hero: { name: 'Héroe nivel {n}', desc: 'Alcanza el nivel de héroe {n}.' },
+    mastery: { name: 'Maestría {n}', desc: 'Lleva la maestría de cualquier acción a nivel {n}.' },
+    harvest: { name: 'Granjero {n}', desc: 'Cosecha {n} parcelas.' },
+    hire: { name: 'Patrón', desc: 'Contrata a tu primer trabajador en la Taberna.' },
+    tavernMax: { name: 'Dueño del Grifo Dorado', desc: 'Mejora la Taberna al nivel máximo.' },
+    exp: { name: 'Explorador {n}', desc: 'Completa {n} expediciones.' },
+    orders: { name: 'Proveedor {n}', desc: 'Entrega {n} encargos de la Taberna.' },
+    dungeon: { name: 'Saqueador {n}', desc: 'Completa {n} mazmorras.' },
+    graceMax: { name: 'Pies ligeros', desc: 'Consigue todas las recompensas de gracia.' },
+    dice: { name: 'Jugador empedernido', desc: 'Juega {n} partidas de dados.' },
+    prestige1: { name: 'Renacido', desc: 'Haz prestigio en una habilidad.' },
+    prestige5: { name: 'Trascendente', desc: 'Acumula {n} prestigios.' },
+    firstDeath: { name: 'Lección aprendida', desc: 'Cae derrotado por primera vez.' },
+    burnt: { name: 'Chef novato', desc: 'Quema comida por primera vez.' },
+    rareDrop: { name: 'Golpe de suerte', desc: 'Consigue un objeto raro de un jefe.' },
+    fullGear: { name: 'Armado hasta los dientes', desc: 'Ten las {n} casillas de equipo ocupadas.' },
+    house: { name: 'Señor del hogar', desc: 'Construye {n} niveles de habitaciones.' },
+    boss_goblin_king: { name: 'Regicida', desc: 'Derrota al Rey Goblin.' },
+    boss_troll_lord: { name: 'Rompe-trolls', desc: 'Derrota al Señor Troll.' },
+    boss_kraken: { name: 'Domador de mares', desc: 'Derrota al Kraken.' },
+    boss_necromancer: { name: 'Luz en la oscuridad', desc: 'Derrota al Nigromante Eterno.' },
+    boss_ancient_dragon: { name: 'Leyenda dracónica', desc: 'Derrota al Dragón Ancestral.' },
+  },
+
+  home: {
+    intro: 'Tu hogar crece contigo. Cada habitación necesita oro y materiales que tú mismo recolectas y fabricas, y da bonos permanentes.',
+    level: 'Nivel {n} / {max}', notBuilt: 'Aún sin construir', next: 'Siguiente: {effect}', upgrade: 'Mejorar', build: 'Construir', upgraded: '<b>{room}</b> mejorada a nivel {n}',
+  },
+
+  rooms: {
+    tools: { name: 'Cobertizo de herramientas', desc: 'Recolección un {v}% más rápida' },
+    workshop: { name: 'Taller', desc: 'Artesanía un {v}% más rápida' },
+    library: { name: 'Biblioteca', desc: '+{v}% XP en todas las habilidades' },
+    vault: { name: 'Bóveda', desc: '+{v}% oro' },
+    garden: { name: 'Invernadero', desc: '+{v} parcelas de cultivo' },
+    kitchen: { name: 'Cocina real', desc: '-{burn}% probabilidad de quemar · +{heal}% curación' },
+    trophy: { name: 'Sala de trofeos', desc: '+{v}% daño en combate' },
+    armory: { name: 'Armería', desc: '+{v}% defensa' },
+    chapel: { name: 'Capilla', desc: 'Bendiciones un {v}% más largas' },
+    bedroom: { name: 'Dormitorio', desc: 'Progreso offline: {v} h' },
+  },
+
+  church: {
+    title: 'Iglesia de la Luz', desc: 'Haz una ofrenda y recibe una bendición temporal. Tu nivel de Plegaria desbloquea bendiciones más poderosas y permite mantener varias a la vez. El tiempo también corre mientras no juegas.',
+    active: 'Activas {n} / {max}', duration: 'Duración {n} min', blessings: 'Bendiciones', remaining: 'Quedan {time}', renew: 'Renovar · {gold} de oro',
+    offer: 'Ofrenda · {gold} de oro', blessed: '<b>{name}</b> activa durante {n} minutos', maxActive: 'Ya tienes el máximo de bendiciones activas. Sube Plegaria para tener más.',
+  },
+
+  blessings: {
+    wisdom: { name: 'Bendición de sabiduría', desc: '+10% XP' },
+    protection: { name: 'Bendición de protección', desc: '+10% defensa' },
+    fortune: { name: 'Bendición de fortuna', desc: '+15% oro' },
+    vigor: { name: 'Bendición de vigor', desc: '+10% precisión y daño' },
+    diligence: { name: 'Bendición de diligencia', desc: '+10% velocidad de acciones' },
+    grace: { name: 'Gracia divina', desc: '+20% XP y +10% velocidad' },
+  },
+
+  shop: {
+    bought: 'Comprado: <b>{n}× {item}</b>', intro: 'El mercader de Aetheria vende suministros básicos. Para vender tus objetos, ve al inventario.',
+    marketTitle: 'Mercado del día', marketIntro: 'Cada día cambia la demanda: estos objetos se venden hoy más caros o más baratos.', have: 'tienes {n}',
+    cats: { supplies: 'Suministros', seeds: 'Semillas', runes: 'Runas', tools: 'Herramientas', gear: 'Equipo' },
+  },
+
+  settings: {
+    language: 'Idioma', heroName: 'Nombre del héroe', preferences: 'Preferencias', sound: 'Efectos de sonido',
+    notify: 'Avisos del navegador con la pestaña oculta (expediciones, cola, eventos)', notifyBlocked: 'El navegador no permite notificaciones aquí',
+    backup: 'Copia de seguridad', backupIntro: 'Tu partida se guarda sola cada 10 segundos en la ranura {n}. Exporta un código para llevarla a otro navegador; al importarlo se sustituye la partida de esta ranura.',
+    pastePlaceholder: 'Pega aquí un código de partida para importarla…', export: 'Exportar', import: 'Importar', game: 'Partida', slot: 'Ranura', slotOf: '{n} de {total}',
+    role: 'Rol', difficulty: 'Dificultad', saveAndExit: 'Guardar y volver al menú', deleteGame: 'Borrar esta partida', about: 'Acerca de Aetheria',
+    aboutText: 'RPG idle de fantasía inspirado en <a href="https://github.com/tristinbaker/IdleFantasy" target="_blank" rel="noopener">Idle Fantasy</a> de Tristin Baker y en los clásicos de RuneScape.',
+    interface: 'Interfaz', icons: 'Iconos', offline: 'Progreso offline', upTo: 'Hasta {n} h',
+    credits: 'Iconos de Lorc, Delapouite y colaboradores de game-icons.net, bajo licencia Creative Commons BY 3.0.',
+    renamed: 'Nombre actualizado', copied: 'Partida copiada al portapapeles', copyManually: 'Copia el código del cuadro de texto', imported: 'Partida importada',
+    invalidSave: 'El código de partida no es válido', deleteTitle: 'Borrar partida', deleteMessage: 'Se borrará la partida de {name} de la ranura {n}. Esta acción no se puede deshacer.',
+    deleteConfirm: 'Borrar todo',
+  },
+
+  statsView: {
+    xpHour: 'XP por hora', goldHour: 'Oro por hora', killsHour: 'Monstruos por hora', actionsHour: 'Acciones por hora', lastHourAvg: 'media de la última hora',
+    last24: 'últimas 24 h', xpUnit: 'XP/h', goldUnit: 'oro/h', perHour: '/h', xpBySkill: 'XP total por habilidad', skillTip: '{skill}: {xp} XP (nivel {lvl})',
+    counters: 'Contadores', heroActions: 'Acciones del héroe', staffActions: 'Acciones del personal', wages: 'Sueldos pagados', expeditions: 'Expediciones',
+    orders: 'Encargos entregados', dungeons: 'Mazmorras completadas', dice: 'Balance en los dados',
+  },
+
+  tavern: {
+    maxLevel: 'Taberna al máximo', intro: 'Contrata personal que trabaja para ti en paralelo, incluso cuando no juegas. Pagas su sueldo mientras trabajan.',
+    staffCount: 'Personal {n} / {max}', wages: 'Sueldos {n} oro/h', tokens: '{n} fichas de taberna', upgradeTo: 'Mejorar a {name}',
+    upgradeHint: '+1 puesto, más candidatos, especialidades y rarezas nuevas.', upgrade: 'Mejorar taberna', upgraded: '¡Tu taberna ahora es <b>{name}</b>!',
+    tabs: { staff: 'Personal', expeditions: 'Expediciones', orders: 'Encargos', bar: 'Barra' },
+    yourStaff: 'Tu personal', noStaff: 'Todavía no has contratado a nadie. Elige a alguien del tablón de abajo.',
+    status: { idle: 'Sin tarea', working: 'Trabajando', nomat: 'Sin materiales', unpaid: 'Sin sueldo', expedition: 'De expedición', injured: 'Herido' },
+    levelIn: 'Nivel {n} de {skill}', efficiency: 'Eficiencia {v}%', perHour: '{n} oro/h', onExpedition: 'De expedición en <b>{exp}</b> · vuelve en {time}',
+    recovering: 'Recuperándose: {time}', assign: 'Asignar una tarea…', adventurerHint: 'Los aventureros van de expedición desde la pestaña Expediciones.',
+    made: 'Ha producido {n} objetos', fire: 'Despedir', fireTitle: 'Despedir a {name}', fireMessage: 'Perderás a este trabajador y todo su progreso.',
+    joined: '<b>{name}</b> se une a tu personal', noSlots: 'No tienes puestos libres. Mejora la taberna o despide a alguien.',
+    board: 'Tablón de contratación', boardHint: 'Nuevos candidatos en {time}. Puestos libres: {n}.', rerollGold: 'Renovar · {n} oro', rerollToken: 'Renovar · 1 ficha',
+    wageHire: 'Sueldo {wage} oro/h · contratar por {fee} oro', hire: 'Contratar', adventurer: 'Aventurero', pickAdventurer: 'Elige primero a un aventurero libre',
+    noAdventurers: 'Contrata aventureros en la pestaña Personal', expeditionHint: 'Las expediciones largas rinden más por hora. Si fracasan, el aventurero vuelve con poco botín y herido durante 30 min.',
+    power: 'Poder recomendado {n}', successChance: 'Éxito {v}', send: 'Enviar', departs: '<b>{name}</b> parte hacia {exp}', reports: 'Últimos informes',
+    noReports: 'Aún no ha vuelto ninguna expedición.', success: 'Éxito', failure: 'Fracaso',
+    ordersIntro: 'Cada día los clientes de la taberna dejan {n} pedidos. Entrégalos para ganar oro, XP y fichas de taberna. Nuevos encargos en {time}.',
+    youHave: 'Tienes {n} / {total}', deliver: 'Entregar', rerollOrder: 'Cambiar · 2 fichas', deliveredShort: 'Entregado', delivered: 'Encargo entregado',
+    drinks: 'Bebidas', underEffect: 'Bajo los efectos de <b>{name}</b>: {desc}', minutes: '{n} min', drank: 'Bebes <b>{drink}</b> durante 30 min',
+    oneDrink: 'Solo puedes tener una bebida activa: si pides otra, sustituye a la anterior.', diceTitle: 'Dados del Grifo',
+    diceRules: 'Tú y el tabernero tiráis dos dados. Si sacas más, ganas tu apuesta; con doble seis, el triple. Empate: recuperas lo apostado.',
+    you: 'Tú', vs: 'VS', barkeep: 'Tabernero', roll: { jackpot: '¡Doble seis! Ganas el triple', win: 'Ganas', lose: 'Pierdes', tie: 'Empate: recuperas tu apuesta' },
+    rollDice: 'Tirar', badBet: 'Apuesta entre 10 y el máximo de la taberna, sin superar tu oro',
+    diceStats: 'Apuesta máxima {max} · {n} partidas · balance {net} de oro', mysteryTitle: 'Cofre misterioso', mysteryIntro: 'Cambia {n} fichas de taberna por un cofre con premios al azar.',
+    mysteryOpen: 'Abrir · {n} fichas', mysteryGot: 'Cofre misterioso: <b>{items}</b>', tokensHint: 'Consigues fichas entregando encargos diarios.',
+  },
+
+  tavernLevels: { 1: 'Taberna humilde', 2: 'Taberna concurrida', 3: 'Posada del Grifo', 4: 'Gran posada', 5: 'Salón del Grifo Dorado' },
+  specs: {
+    miner: 'Minero', lumberjack: 'Leñador', fisher: 'Pescador', adventurer: 'Aventurero', cook: 'Cocinero', smith: 'Herrero', thief: 'Ratero',
+    fletcher: 'Flechero', crafter: 'Artesano', alchemist: 'Alquimista', runesmith: 'Runista',
+  },
+  rarities: { common: 'Común', rare: 'Raro', epic: 'Épico', legendary: 'Legendario' },
+  traits: {
+    hardworking: { name: 'Trabajador', desc: '+15% velocidad' },
+    lazy: { name: 'Perezoso', desc: '-10% velocidad, sueldo -20%' },
+    lucky: { name: 'Afortunado', desc: '+6% productos dobles' },
+    thrifty: { name: 'Ahorrador', desc: '10% de no gastar materiales' },
+    learner: { name: 'Aprende rápido', desc: '+50% XP propia' },
+    cheap: { name: 'Modesto', desc: 'Sueldo -25%' },
+    greedy: { name: 'Codicioso', desc: 'Sueldo +30%, +10% velocidad' },
+    brave: { name: 'Valiente', desc: '+10% éxito y +20% botín en expediciones' },
+    tough: { name: 'Duro', desc: 'No se lesiona en expediciones' },
+    clumsy: { name: 'Torpe', desc: '+10% de fallos (quemar, robar)' },
+  },
+  expeditions: {
+    meadows: 'Patrulla por los Prados', forest: 'Batida en el Bosque Sombrío', caves: 'Exploración de las Cavernas', swamp: 'Travesía del Pantano',
+    peaks: 'Ascenso a los Picos Helados', dragons: 'Incursión en tierras de dragones',
+  },
+  drinks: {
+    ale: { name: 'Cerveza de la casa', desc: '+10% velocidad de acciones' },
+    mead: { name: 'Hidromiel dorado', desc: '+10% XP' },
+    wine: { name: 'Vino de la fortuna', desc: '+5% recursos dobles y +10% botín' },
+    grog: { name: 'Grog del guerrero', desc: '+10% daño con todos los estilos' },
+    special: { name: 'Reserva del tabernero', desc: '+20% XP y +10% velocidad' },
+  },
+
+  prayers: {
+    stone_skin: { name: 'Piel de piedra', desc: '+8% defensa' },
+    clarity: { name: 'Claridad', desc: '+6% precisión' },
+    might: { name: 'Fuerza divina', desc: '+8% daño cuerpo a cuerpo' },
+    hawk: { name: 'Vista de halcón', desc: '+10% daño y +5% precisión a distancia' },
+    mystic: { name: 'Voluntad mística', desc: '+10% daño y +5% precisión mágicos' },
+    protect: { name: 'Protección divina', desc: '+20% defensa' },
+    piety: { name: 'Piedad', desc: '+15% daño, +10% precisión y +10% defensa cuerpo a cuerpo' },
+  },
+
+  events: {
+    stars: { name: 'Lluvia de estrellas', desc: '+25% XP durante 15 minutos.' },
+    goldrush: { name: 'Fiebre del oro', desc: '+50% oro durante 10 minutos.' },
+    harvest: { name: 'Lluvia fértil', desc: 'Cultivos un 50% más rápidos durante 15 minutos.' },
+    merchant: { name: 'Mercader ambulante', desc: 'Vende un objeto a mitad de precio durante 10 minutos.' },
+    chest: { name: 'Cofre perdido', desc: 'Encuentras un cofre abandonado.' },
+    chestFound: 'Cofre perdido: <b>{gold} de oro</b> y {n}× {item}', started: 'Evento: <b>{event}</b>',
+  },
+
+  styles: {
+    attack: { name: 'Precisión', desc: '+3 ataque efectivo' },
+    strength: { name: 'Agresivo', desc: '+3 fuerza efectiva' },
+    defense: { name: 'Defensivo', desc: '+3 defensa efectiva' },
+    ranged: { name: 'Distancia', desc: 'Requiere arco y flechas' },
+    magic: { name: 'Magia', desc: 'Requiere runas' },
+  },
+
+  spells: {
+    wind_strike: 'Golpe de viento', water_strike: 'Golpe de agua', earth_strike: 'Golpe de tierra', fire_strike: 'Golpe de fuego',
+    wind_bolt: 'Saeta de viento', water_bolt: 'Saeta de agua', earth_bolt: 'Saeta de tierra', fire_bolt: 'Saeta de fuego',
+    wind_blast: 'Ráfaga de viento', water_blast: 'Ráfaga de agua', earth_blast: 'Ráfaga de tierra', fire_blast: 'Ráfaga de fuego',
+    wind_wave: 'Ola de viento', water_wave: 'Ola de agua', earth_wave: 'Ola de tierra', fire_wave: 'Ola de fuego',
+  },
+
+  monsters: {
+    chicken: 'Gallina', goblin: 'Goblin', cow: 'Vaca', rat: 'Rata gigante', wolf: 'Lobo gris', bandit: 'Bandido', skeleton: 'Esqueleto',
+    golem: 'Gólem de roca', troll: 'Troll de roca', snake: 'Serpiente del pantano', scorpion: 'Escorpión gigante', werewolf: 'Hombre lobo',
+    specter: 'Caballero espectral', vampire: 'Vampiro', gargoyle: 'Gárgola', bear: 'Oso polar', ice_golem: 'Gólem de hielo', ogre: 'Ogro de las nieves',
+    green_dragon: 'Dragón verde', red_dragon: 'Dragón rojo', wyvern: 'Guiverno', minotaur: 'Minotauro', hydra: 'Hidra', demon: 'Demonio abisal',
+    goblin_king: 'Rey Goblin', troll_lord: 'Señor Troll', kraken: 'Kraken', necromancer: 'Nigromante Eterno', ancient_dragon: 'Dragón Ancestral',
+    warren_chief: 'Cacique goblin', skeleton_king: 'Rey esqueleto', naga: 'Gran naga', winter_queen: 'Reina del invierno', bronze_wyrm: 'Sierpe de bronce',
+  },
+
+  areas: {
+    meadow: { name: 'Prados del Alba', desc: 'Campos tranquilos ideales para un aventurero novato.' },
+    forest: { name: 'Bosque Sombrío', desc: 'Lobos, ratas y bandidos acechan entre los árboles.' },
+    caves: { name: 'Cavernas de Hierro', desc: 'Túneles húmedos repletos de no-muertos, gólems y trolls.' },
+    swamp: { name: 'Pantano Pútrido', desc: 'Aguas venenosas donde reptan criaturas antiguas.' },
+    ruins: { name: 'Ruinas Malditas', desc: 'Los espíritus de antiguos caballeros aún vigilan estas piedras.' },
+    peaks: { name: 'Picos Helados', desc: 'Ventiscas eternas y bestias de hielo en las alturas.' },
+    lair: { name: 'Guarida del Dragón', desc: 'Solo los más valientes regresan con escamas y gloria.' },
+    abyss: { name: 'El Abismo', desc: 'Más allá del portal, la realidad se retuerce.' },
+  },
+
+  dungeons: {
+    goblin_warren: { name: 'Madriguera Goblin', desc: 'Túneles infestados de goblins y ratas.' },
+    crypt: { name: 'Cripta olvidada', desc: 'Los muertos guardan tesoros antiguos.' },
+    serpent_temple: { name: 'Templo de la serpiente', desc: 'Un templo hundido en el pantano.' },
+    frost_keep: { name: 'Fortaleza helada', desc: 'La reina del invierno espera en su trono.' },
+    dragon_vault: { name: 'Cámara del dragón', desc: 'El tesoro de un dragón milenario.' },
+  },
+
+  mercs: {
+    squire: { name: 'Escudero', desc: 'Absorbe golpes y ataca con fiabilidad.' },
+    archer: { name: 'Arquera élfica', desc: 'Daño constante desde la retaguardia.' },
+    mage: { name: 'Archimago', desc: 'Hechizos devastadores contra jefes.' },
+  },
+
+  slayerShop: {
+    skip: { name: 'Cancelar encargo', desc: 'Descarta el encargo actual sin perder tu racha.' },
+    slayer_helm: { name: 'Casco de cazador', desc: '+15% precisión y daño contra tu objetivo.' },
+    slayer_cape: { name: 'Capa de cazador', desc: 'Bonos a todos los estilos. Requiere Cazador 50.' },
+    death_runes: { name: 'Saco de runas de muerte', desc: '50 runas de muerte.' },
+    herb_pack: { name: 'Paquete de semillas raras', desc: '3 semillas de ranarr y 2 de kwuarm.' },
+  },
+
+  towerShop: {
+    tower_cape: { name: 'Capa de la Torre', desc: '+4 a todos los bonos de combate.' },
+    tower_cape2: { name: 'Capa del Ascendido', desc: '+10 a todos los bonos y +5% daño mágico.' },
+    gem_chest: { name: 'Cofre de gemas', desc: 'Contiene gemas sin tallar.' },
+    wisdom_elixir: { name: 'Elixir de sabiduría', desc: '+25% XP durante 30 minutos.' },
+  },
+
+  groups: {
+    actions: 'Acciones', smelting: 'Fundición', tools: 'Herramientas', forging: 'Forja', fish: 'Pescado', dishes: 'Platos', arrows: 'Flechas',
+    bows: 'Arcos', rods: 'Cañas de pescar', leather: 'Cuero', jewellery: 'Joyería', staves: 'Bastones',
+  },
+
+  nodes: {
+    copper_ore: 'Veta de cobre', tin_ore: 'Veta de estaño', rune_essence: 'Cantera de esencia', iron_ore: 'Veta de hierro', coal: 'Veta de carbón',
+    gold_ore: 'Veta de oro', mithril_ore: 'Veta de mithril', adamantite_ore: 'Veta de adamantita', runite_ore: 'Veta de runita', tree: 'Árbol',
+  },
+  marks: {
+    man: 'Aldeano', farmer: 'Granjero', warrior: 'Guerrera', rogue: 'Pícaro', mfarmer: 'Maestro granjero', guard: 'Guardia', knight: 'Caballero',
+    paladin: 'Paladín', hero: 'Héroe legendario',
+  },
+  courses: ['Sendero del bosque', 'Tejados de la aldea', 'Murallas del castillo', 'Puentes colgantes', 'Cumbres heladas', 'Circuito del abismo'],
+  recipes: { tanLeather: 'Curtir cuero', tanDragonhide: 'Curtir piel de dragón' },
+
+  tpl: {
+    made: '{thing} de {mat}', raw: '{fish} sin cocinar', cooked: '{fish}', seed: '{crop} (semilla)', uncut: '{gem} sin tallar', amulet: 'Amuleto de {gem}',
+    burn: 'Quemar {item}', cut: 'Tallar {gem}', bury: 'Enterrar {item}', scatter: 'Esparcir {item}',
+    wood: { logs: 'Troncos de {wood}', rod: 'Caña de {wood}', bow: 'Arco de {wood}', staff: 'Bastón de {wood}', tree: 'Árbol de {wood}' },
+  },
+  things: {
+    bar: 'Barra', sword: 'Espada', helm: 'Yelmo', shield: 'Escudo', legs: 'Grebas', body: 'Coraza', pickaxe: 'Pico', axe: 'Hacha',
+    arrowtips: 'Puntas', arrow: 'Flecha',
+  },
+  mats: { bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero' },
+  woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia' },
+  fish: { shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
+  crops: {
+    potato: 'Patata', onion: 'Cebolla', tomato: 'Tomate', strawberry: 'Fresa', guam: 'Guam', marrentill: 'Marrentill', tarromin: 'Tarromin',
+    harralander: 'Harralander', ranarr: 'Ranarr', irit: 'Irit', kwuarm: 'Kwuarm', snapdragon: 'Snapdragon', torstol: 'Torstol',
+  },
+  gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
+
+  items: {
+    copper_ore: 'Mineral de cobre', tin_ore: 'Mineral de estaño', rune_essence: 'Esencia rúnica', iron_ore: 'Mineral de hierro', coal: 'Carbón', gold_ore: 'Mineral de oro',
+    mithril_ore: 'Mineral de mithril', adamantite_ore: 'Mineral de adamantita', runite_ore: 'Mineral de runita', gold_bar: 'Barra de oro', logs: 'Troncos',
+    rod: 'Caña de pescar', bow: 'Arco corto', arrow_shaft: 'Astil de flecha', headless_arrow: 'Flecha sin punta', feathers: 'Plumas',
+    burnt_food: 'Comida quemada', baked_potato: 'Patata asada', stew: 'Estofado de verduras', strawberry_pie: 'Tarta de fresa',
+    bones: 'Huesos', big_bones: 'Huesos grandes', dragon_bones: 'Huesos de dragón', demon_ashes: 'Cenizas demoníacas', ashes: 'Cenizas',
+    cowhide: 'Piel de vaca', leather: 'Cuero', leather_coif: 'Cofia de cuero', leather_body: 'Jubón de cuero', leather_chaps: 'Zahones de cuero',
+    green_dhide: 'Piel de dragón verde', green_dleather: 'Cuero de dragón', dhide_body: 'Coraza de dragón verde', dhide_chaps: 'Zahones de dragón verde',
+    gold_amulet: 'Amuleto de oro', vial_water: 'Vial de agua', attack_potion: 'Poción de ataque', strength_potion: 'Poción de fuerza',
+    defense_potion: 'Poción de defensa', ranging_potion: 'Poción de puntería', magic_potion: 'Poción mágica', super_attack: 'Superpoción de ataque',
+    super_strength: 'Superpoción de fuerza', super_defense: 'Superpoción de defensa', overload: 'Sobrecarga', compost: 'Abono',
+    air_rune: 'Runa de aire', mind_rune: 'Runa mental', water_rune: 'Runa de agua', earth_rune: 'Runa de tierra', fire_rune: 'Runa de fuego',
+    chaos_rune: 'Runa del caos', nature_rune: 'Runa natural', death_rune: 'Runa de muerte', blood_rune: 'Runa de sangre',
+    mark_of_grace: 'Marca de gracia', bird_nest: 'Nido de pájaro', coin_pouch: 'Saco de monedas', gem_chest: 'Cofre de gemas', wolf_pelt: 'Piel de lobo',
+    troll_tusk: 'Colmillo de troll', venom_sac: 'Saco de veneno', ectoplasm: 'Ectoplasma', ice_shard: 'Fragmento de hielo', apprentice_staff: 'Báculo de aprendiz',
+    wizard_hat: 'Sombrero de mago', wizard_robe: 'Túnica de mago', night_staff: 'Báculo de la Noche', tide_bow: 'Arco de las Mareas',
+    dragon_blade: 'Espada dracónica', dragon_shield: 'Escudo dracónico', goblin_crown: 'Corona del Rey Goblin', troll_hammer: 'Martillo del Señor Troll',
+    slayer_helm: 'Casco de cazador', slayer_cape: 'Capa de cazador', tower_cape: 'Capa de la Torre', tower_cape2: 'Capa del Ascendido', wisdom_elixir: 'Elixir de sabiduría',
+  },
+  itemDesc: {
+    compost: 'Úsalo en una parcela para reducir a la mitad el tiempo que falta.',
+    slayer_helm: 'Con un encargo activo: +15% precisión y daño contra el objetivo.',
+  },
+}

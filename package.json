@@ -1,0 +1,30 @@
+{
+  "name": "aetheria",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A fantasy idle RPG for the browser built with Vue 3 and PrimeVue.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/build-icons.mjs && vite build",
+    "build:single": "node scripts/build-icons.mjs && vite build --mode single",
+    "preview": "vite preview",
+    "icons": "node scripts/build-icons.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs"
+  },
+  "dependencies": {
+    "@primeuix/themes": "^3.0.1",
+    "primeicons": "^8.0.2",
+    "primevue": "^4.5.5",
+    "vue": "^3.5.43",
+    "vue-i18n": "^11.4.13",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@iconify-json/game-icons": "^1.2.4",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "vite": "^8.3.2",
+    "vite-plugin-singlefile": "^2.3.3"
+  }
+}
