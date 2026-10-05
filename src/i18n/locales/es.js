@@ -15,7 +15,7 @@ export default {
     hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
-    pets: 'Mascotas', forge: 'Forja',
+    pets: 'Mascotas', forge: 'Forja', bestiary: 'Bestiario',
     ascension: 'Renacimiento',
     skills: 'Habilidades', more: 'Menú', main: 'Navegación principal',
   },
@@ -226,7 +226,7 @@ export default {
   log: {
     start: '{name} empieza su aventura como {role}.', heroLevel: 'Nivel de héroe {level} (+{points} puntos).',
     levelUp: '{skill} sube a nivel {level}.', mastery: 'Maestría {level} en {name}.', found: 'Encontrado: {item}.',
-    drop: '¡{monster} suelta {item}!', towerFloor: 'Nuevo récord en la Torre: piso {floor}.', dungeonFirst: 'Primera vez que completas {dungeon}.',
+    bestiaryGroup: 'Grupo del bestiario completado: {group}.', drop: '¡{monster} suelta {item}!', towerFloor: 'Nuevo récord en la Torre: piso {floor}.', dungeonFirst: 'Primera vez que completas {dungeon}.',
     bossFirst: 'Primera victoria contra {monster}.', death: 'Derrotado por {monster}.', deathGold: 'Derrotado por {monster}. Pierdes {gold} de oro.',
     slayerTask: 'Encargo de caza completado: {monster}.', quest: 'Misión completada: {quest}.', achievement: 'Logro: {ach}.',
     room: '{room} mejorada a nivel {level}.', prestige: '{skill} alcanza el prestigio {n}.', tavernLevel: 'Tu taberna ahora es {tavern}.',
@@ -390,6 +390,10 @@ export default {
     enchant: { name: 'Encantador +{n}', desc: 'Encanta cualquier casilla de equipo a +{n}.' },
     streak: { name: 'Constante {n}', desc: 'Alcanza una racha diaria de {n} días.' },
     dailies: { name: 'Cumplidor {n}', desc: 'Reclama {n} tareas diarias o semanales.' },
+    beasts: { name: 'Naturalista {n}', desc: 'Registra {n} criaturas en el bestiario.' },
+    beastsAll: { name: 'Enciclopedia viviente', desc: 'Registra todas las criaturas del bestiario.' },
+    hunted: { name: 'Maestro cazador {n}', desc: 'Domina {n} criaturas del bestiario.' },
+    setFull: { name: 'Vestido para la ocasión', desc: 'Lleva puestas todas las piezas de un conjunto.' },
     boss_void_emperor: { name: 'Rompevacíos', desc: 'Derrota al Emperador del Vacío.' },
     boss_aether_sovereign: { name: 'Más allá de las estrellas', desc: 'Derrota al Soberano del Éter.' },
   },
@@ -452,6 +456,21 @@ export default {
     invalidSave: 'El código de partida no es válido', deleteTitle: 'Borrar partida', deleteMessage: 'Se borrará la partida de {name} de la ranura {n}. Esta acción no se puede deshacer.',
     deleteConfirm: 'Borrar todo',
     autoChain: 'Fabricar automáticamente los materiales que falten', autoChainHint: 'Si a una receta se le acaban los materiales, primero fabrica sus ingredientes (minar, fundir…) y después vuelve a ella.',
+  },
+
+  sets: {
+    title: 'Bonificaciones de conjunto', worn: '{n}/{total} puestas', pieces: '{n} piezas', metal: 'Armadura de {mat}',
+    leather: 'Cazador de cuero', dragonhide: 'Piel de dragón', wizard: 'Atuendo de aprendiz', slayer: 'Atuendo de cazador',
+    dragonbane: 'Azote de dragones', regalia: 'Regalía de las Eras',
+  },
+
+  bestiary: {
+    intro: 'Aquí queda registrada cada criatura que derrotas. Sigue cazando para conocer su botín y domínala para ganar +{pct}% de precisión y daño contra ella. Estudia todas las criaturas de un grupo para reclamar su recompensa.',
+    tiers: { seen: 'Vista', studied: 'Estudiada', hunted: 'Dominada' },
+    tierHints: { seen: 'estadísticas y debilidad', studied: 'todo su botín y su probabilidad', hunted: '+{pct}% de precisión y daño' },
+    reward: 'Recompensa', complete: 'Has estudiado todas las criaturas de este grupo.', claim: 'Reclamar recompensa', claimed: 'Recompensa del bestiario reclamada: <b>{group}</b>',
+    kills: '{n} derrotas', unknown: 'Aún no la has encontrado', vsThis: 'contra ella', undiscovered: 'Botín sin descubrir', next: 'Siguiente: {tier}',
+    groups: { dungeons: 'Señores de las mazmorras', bosses: 'Jefes del mundo' },
   },
 
   tutorial: {

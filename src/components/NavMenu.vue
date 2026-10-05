@@ -21,6 +21,7 @@ const realm = computed(() => [
   { to: '/tower', icon: 'stone-tower', key: 'nav.tower', pulse: inCombat('tower') },
   { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: questsReady.value + G.tasksReady() || null },
   { to: '/achievements', icon: 'trophy-cup', key: 'nav.achievements' },
+  { to: '/bestiary', icon: 'open-book', key: 'nav.bestiary', badge: G.claimableGroups() || null },
   { to: '/pets', icon: 'paw-print', key: 'nav.pets' },
   { to: '/ascension', icon: 'ankh', key: 'nav.ascension', badge: G.canAscend() && !state.ascension.count ? '!' : null },
   { to: '/stats', icon: 'histogram', key: 'nav.stats' },

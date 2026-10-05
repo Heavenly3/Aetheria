@@ -15,7 +15,7 @@ export default {
     hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
     settings: 'Settings', realm: 'Realm', town: 'Town',
-    pets: 'Pets', forge: 'Forge',
+    pets: 'Pets', forge: 'Forge', bestiary: 'Bestiary',
     ascension: 'Ascension',
     skills: 'Skills', more: 'Menu', main: 'Main navigation',
   },
@@ -226,7 +226,7 @@ export default {
   log: {
     start: '{name} begins their adventure as a {role}.', heroLevel: 'Reached hero level {level} (+{points} points).',
     levelUp: '{skill} reached level {level}.', mastery: 'Mastery {level} in {name}.', found: 'Found: {item}.',
-    drop: '{monster} dropped {item}!', towerFloor: 'New Tower record: floor {floor}.', dungeonFirst: 'First clear of {dungeon}.',
+    bestiaryGroup: 'Bestiary group completed: {group}.', drop: '{monster} dropped {item}!', towerFloor: 'New Tower record: floor {floor}.', dungeonFirst: 'First clear of {dungeon}.',
     bossFirst: 'First victory over {monster}.', death: 'Defeated by {monster}.', deathGold: 'Defeated by {monster}. Lost {gold} gold.',
     slayerTask: 'Slayer task complete: {monster}.', quest: 'Quest complete: {quest}.', achievement: 'Achievement: {ach}.',
     room: '{room} upgraded to level {level}.', prestige: '{skill} reached prestige {n}.', tavernLevel: 'Your tavern is now {tavern}.',
@@ -390,6 +390,10 @@ export default {
     enchant: { name: 'Enchanter +{n}', desc: 'Enchant any equipment slot to +{n}.' },
     streak: { name: 'Devoted {n}', desc: 'Reach a {n}-day daily streak.' },
     dailies: { name: 'Taskmaster {n}', desc: 'Claim {n} daily or weekly tasks.' },
+    beasts: { name: 'Naturalist {n}', desc: 'Record {n} creatures in the bestiary.' },
+    beastsAll: { name: 'Living Encyclopedia', desc: 'Record every creature in the bestiary.' },
+    hunted: { name: 'Master Hunter {n}', desc: 'Master {n} creatures in the bestiary.' },
+    setFull: { name: 'Dressed for the Part', desc: 'Wear every piece of an equipment set.' },
     boss_void_emperor: { name: 'Voidbreaker', desc: 'Defeat the Void Emperor.' },
     boss_aether_sovereign: { name: 'Above the Stars', desc: 'Defeat the Aether Sovereign.' },
   },
@@ -452,6 +456,21 @@ export default {
     invalidSave: 'That save code is not valid', deleteTitle: 'Delete game', deleteMessage: "{name}'s game in slot {n} will be deleted. This cannot be undone.",
     deleteConfirm: 'Delete everything',
     autoChain: 'Craft missing materials automatically', autoChainHint: 'If a recipe runs out, make its ingredients first (mining, smelting…) and then go back to it.',
+  },
+
+  sets: {
+    title: 'Set bonuses', worn: '{n}/{total} worn', pieces: '{n} pieces', metal: '{mat} armour',
+    leather: 'Leather hunter', dragonhide: 'Dragonhide', wizard: "Apprentice's regalia", slayer: "Slayer's garb",
+    dragonbane: 'Dragonbane', regalia: 'Regalia of the Ages',
+  },
+
+  bestiary: {
+    intro: 'Every creature you defeat is recorded here. Keep hunting to learn its drops, and master it for +{pct}% accuracy and damage against it. Study every creature in a group to claim its reward.',
+    tiers: { seen: 'Seen', studied: 'Studied', hunted: 'Mastered' },
+    tierHints: { seen: 'stats and weakness', studied: 'every drop and its chance', hunted: '+{pct}% accuracy and damage' },
+    reward: 'Reward', complete: 'Every creature in this group has been studied.', claim: 'Claim reward', claimed: 'Bestiary reward claimed: <b>{group}</b>',
+    kills: '{n} defeated', unknown: 'Not encountered yet', vsThis: 'against it', undiscovered: 'Undiscovered drop', next: 'Next: {tier}',
+    groups: { dungeons: 'Dungeon lords', bosses: 'World bosses' },
   },
 
   tutorial: {

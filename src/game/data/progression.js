@@ -108,6 +108,10 @@ export const ACHIEVEMENTS = [
   ...tiers('enchant', [[5, 2000], [10, 50000]], 'upgrade', (G, n) => G.maxEnchant() >= n),
   ...tiers('streak', [[3, 1000], [7, 5000], [30, 50000]], 'flame', (G, n) => (G.s.daily?.bestStreak || 0) >= n),
   ...tiers('dailies', [[10, 2000], [100, 25000]], 'calendar', (G, n) => (G.s.daily?.claimed || 0) >= n),
+  ...tiers('beasts', [[10, 2000], [25, 20000]], 'open-book', (G, n) => G.bestiaryProgress().seen >= n),
+  ach('beasts_all', 'beastsAll', 'all', 'open-book', G => G.bestiaryProgress().seen >= G.bestiaryProgress().total, 150000),
+  ...tiers('hunted', [[1, 2500], [10, 40000]], 'archery-target', (G, n) => G.huntedCount() >= n),
+  ach('set_full', 'setFull', 1, 'breastplate', G => G.activeSets().some(x => x.worn === x.set.pieces.length), 3000),
 ]
 
 /* ---------------- Home ---------------- */

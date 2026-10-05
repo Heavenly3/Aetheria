@@ -14,6 +14,7 @@ import {
 import { systems, extraState } from './systems.js'
 import { meta, metaState } from './meta.js'
 import { ascension, ascensionState } from './ascension.js'
+import { collection, collectionState } from './collection.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
 
@@ -87,6 +88,7 @@ export function newState(profile = {}) {
     ...extraState(),
     ...metaState(),
     ...ascensionState(),
+    ...collectionState(),
   }
 }
 
@@ -237,6 +239,8 @@ export const G = {
   // Fill in whatever older saves are missing
   migrateState() {
     const st = this.s
+    // The bestiary keeps its own lifetime kill count; saves from before it start from the current one
+    if (!Object.keys(st.bestiary.kills).length) st.bestiary.kills = { ...st.killsBy }
     if (!ROLES[st.role]) st.role = 'warrior'
     if (!DIFFICULTIES[st.difficulty]) st.difficulty = 'normal'
     if ((st.version || 2) < 3) {
@@ -339,7 +343,7 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -812,6 +816,9 @@ export const G = {
     let accMult = 1 + (this.blessed('vigor') ? 0.1 : 0) + this.mod(type + 'Acc')
     let dmgMult = 1 + (this.blessed('vigor') ? 0.1 : 0) + this.room('trophy') * 0.04 + this.mod(type + 'Dmg')
     if (this.s.equipment.head === 'slayer_helm' && this.onTask(m)) { accMult += 0.15; dmgMult += 0.15 }
+    const hunt = this.huntBonus(m)
+    accMult += hunt
+    dmgMult += hunt
     const effDef = this.boosted('defense') + 8 + (st === 'defense' ? 3 : 0)
     return {
       accRoll: acc * accMult,
@@ -952,6 +959,7 @@ export const G = {
     const st = this.s
     st.stats.kills++
     st.killsBy[m.id] = (st.killsBy[m.id] || 0) + 1
+    this.countBeast(m.id)
     act.runKills++
     if (this.tracker) this.tracker.kills[m.id] = (this.tracker.kills[m.id] || 0) + 1
     const gold = this.addGold(rand(m.gold[0], m.gold[1]), true)
@@ -961,6 +969,7 @@ export const G = {
       if (Math.random() < Math.min(1, d.chance * lootMult)) {
         const n = rand(d.qty[0], d.qty[1])
         this.addItem(d.item, n)
+        this.recordDrop(m.id, d.item)
         loot.push({ item: d.item, n })
         if (d.chance < 0.05) {
           if (ITEMS[d.item].rare) st.stats.rares++
@@ -1228,6 +1237,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension)
+Object.assign(G, systems, meta, ascension, collection)
 
 export { SKILLS, ITEMS }

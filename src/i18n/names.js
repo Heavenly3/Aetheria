@@ -9,6 +9,8 @@ import { ROLES } from '../game/data/character.js'
 import { SPECIALTIES, RARITIES, EXPEDITIONS, DRINKS, TAVERN_LEVELS } from '../game/data/tavern.js'
 import { PRAYERS, EVENTS } from '../game/data/extras.js'
 import { PET_MAP } from '../game/data/pets.js'
+import { BESTIARY } from '../game/data/bestiary.js'
+import { SET_MAP } from '../game/data/sets.js'
 
 const byId = list => id => list.find(x => x.id === id)?.name ?? id
 const allMonsters = id => MONSTERS[id]?.name ?? BOSSES.find(b => b.id === id)?.name ?? DUNGEONS.find(d => d.boss.id === id)?.boss.name ?? id
@@ -28,6 +30,8 @@ registerNames('prayer', byId(PRAYERS))
 registerNames('event', byId(EVENTS))
 registerNames('crop', byId(CROPS))
 registerNames('pet', id => PET_MAP[id]?.name ?? id)
+registerNames('beasts', byId(BESTIARY))
+registerNames('set', id => SET_MAP[id]?.name ?? id)
 registerNames('slot', id => SLOTS[id]?.name ?? id)
 registerNames('spec', id => SPECIALTIES[id]?.name ?? id)
 registerNames('rarity', id => RARITIES[id]?.name ?? id)

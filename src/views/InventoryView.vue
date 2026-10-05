@@ -9,6 +9,8 @@ import InputIcon from 'primevue/inputicon'
 import Button from 'primevue/button'
 import { G, state } from '../game/engine.js'
 import { ITEMS, SLOTS, STAT_LABELS } from '../game/data/items.js'
+import { SET_OF } from '../game/data/sets.js'
+import SetBonuses from '../components/SetBonuses.vue'
 import { SKILLS } from '../game/data/skills.js'
 import { POTION_DURATION } from '../game/data/items.js'
 import { fmt, fmtClock } from '../game/format.js'
@@ -125,6 +127,7 @@ function sellJunk() {
         <div v-if="it.elixir" class="kv"><span>{{ $t('inventory.effect') }}</span><b class="ok-text">{{ $t('inventory.elixirEffect') }}</b></div>
         <template v-if="it.stats">
           <div v-for="(v, k) in it.stats" :key="k" class="kv"><span>{{ STAT_LABELS[k] }}</span><b class="ok-text">+{{ k === 'mDmg' ? Math.round(v * 100) + '%' : v }}</b></div>
+          <SetBonuses v-if="SET_OF[selected]" :set="SET_OF[selected]" pieces style="margin-top:10px" />
         </template>
         <div v-for="(l, sk) in it.req || {}" :key="sk" class="kv"><span>{{ $t('inventory.requires') }}</span><b :class="G.level(sk) >= l ? 'ok-text' : 'bad-text'">{{ SKILLS[sk].name }} {{ l }}</b></div>
         <p v-if="it.desc" class="small muted">{{ it.desc }}</p>

@@ -12,6 +12,7 @@ const routes = [
   { path: '/quests', name: 'quests', component: () => import('./views/QuestsView.vue'), meta: { titleKey: 'nav.quests' } },
   { path: '/achievements', name: 'achievements', component: () => import('./views/AchievementsView.vue'), meta: { titleKey: 'nav.achievements' } },
   { path: '/ascension', name: 'ascension', component: () => import('./views/AscensionView.vue'), meta: { titleKey: 'nav.ascension' } },
+  { path: '/bestiary', name: 'bestiary', component: () => import('./views/BestiaryView.vue'), meta: { titleKey: 'nav.bestiary' } },
   { path: '/pets', name: 'pets', component: () => import('./views/PetsView.vue'), meta: { titleKey: 'nav.pets' } },
   { path: '/forge', name: 'forge', component: () => import('./views/ForgeView.vue'), meta: { titleKey: 'nav.forge' } },
   { path: '/stats', name: 'stats', component: () => import('./views/StatsView.vue'), meta: { titleKey: 'nav.stats' } },

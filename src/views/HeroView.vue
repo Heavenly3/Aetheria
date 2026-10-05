@@ -19,6 +19,7 @@ import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import AttributesPanel from '../components/AttributesPanel.vue'
 import TalentsPanel from '../components/TalentsPanel.vue'
+import SetBonuses from '../components/SetBonuses.vue'
 
 const tab = ref('overview')
 const b = computed(() => G.bonuses())
@@ -28,6 +29,7 @@ const drink = computed(() => (state.tavern.drink ? DRINKS.find(d => d.id === sta
 const prayer = computed(() => PRAYERS.find(p => p.id === state.prayer) || null)
 const ev = computed(() => G.currentEvent())
 const anyEffect = computed(() => activeBlessings.value.length || state.buffs.potion || state.buffs.elixir > 0 || drink.value || prayer.value || (ev.value && state.event) || state.grace)
+const sets = computed(() => G.activeSets().filter(x => x.worn >= x.set.bonuses[0].n))
 const statRows = computed(() => Object.entries(STAT_LABELS).map(([k, l]) => ({ k, l, v: k === 'mDmg' ? `+${Math.round(b.value[k] * 100)}%` : `+${b.value[k]}` })))
 const role = computed(() => ROLES[state.role])
 const diff = computed(() => DIFFICULTIES[state.difficulty])
@@ -98,6 +100,10 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <h3 class="panel-title"><GameIcon name="checked-shield" /> {{ $t('hero.gearBonuses') }}</h3>
               <div v-for="r in statRows" :key="r.k" class="kv"><span>{{ r.l }}</span><b>{{ r.v }}</b></div>
               <div class="kv"><span>{{ $t('hero.maxHitCurrent') }}</span><b class="gold-text">{{ ps.maxHit }}</b></div>
+              <template v-if="sets.length">
+                <div class="section-title" style="margin:18px 0 10px">{{ $t('sets.title') }}</div>
+                <div class="stack" style="gap:8px"><SetBonuses v-for="x in sets" :key="x.set.id" :set="x.set" pieces /></div>
+              </template>
             </div>
           </div>
 
