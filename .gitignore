@@ -5,3 +5,6 @@ dist-single/
 .DS_Store
 .vscode/
 .idea/
+
+# itch.io page material (kept locally)
+docs/itch/
