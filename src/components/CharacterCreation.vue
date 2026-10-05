@@ -162,10 +162,10 @@ function create() {
 </template>
 
 <style scoped>
-.creator { position: relative; z-index: 1; width: 100%; max-width: 1080px; }
+.creator { position: relative; z-index: 1; width: 100%; max-width: 1080px; min-width: 0; }
 .cc-title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 34px; background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.cc-layout { display: grid; grid-template-columns: 1fr 330px; gap: 18px; align-items: start; }
-.cc-stepper { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; backdrop-filter: blur(14px); }
+.cc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 18px; align-items: start; }
+.cc-stepper { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; backdrop-filter: blur(14px); }
 .cc-stepper :deep(.p-steppanels) { background: transparent; padding: 18px 2px 0; }
 .cc-stepper :deep(.p-steppanel) { background: transparent; }
 .cc-nav { display: flex; justify-content: space-between; margin-top: 22px; }
@@ -186,5 +186,20 @@ function create() {
 .attr-row { display: flex; align-items: center; gap: 8px; margin: 7px 0; font-size: 13px; }
 .attr-short { width: 32px; color: var(--muted); font-weight: 700; }
 .perks { margin: 0; padding-inline-start: 18px; color: var(--muted); font-size: 14px; line-height: 1.6; }
-@media (max-width: 900px) { .cc-layout { grid-template-columns: 1fr; } .preview { position: static; } .roles { grid-template-columns: 1fr; } .avatars { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 900px) { .cc-layout { grid-template-columns: minmax(0, 1fr); } .preview { position: static; } .roles { grid-template-columns: 1fr; } .avatars { grid-template-columns: repeat(4, 1fr); } }
+/* Phones: only the current step keeps its label, the rest shrink to their number */
+@media (max-width: 600px) {
+  .cc-title { font-size: 28px; }
+  .cc-stepper { padding: 14px 12px; }
+  .cc-stepper :deep(.p-steplist) { gap: 4px; }
+  .cc-stepper :deep(.p-step:not(.p-step-active) .p-step-title) { display: none; }
+  .cc-stepper :deep(.p-step-header) { padding: 0; gap: 6px; }
+  .cc-stepper :deep(.p-step) { flex: 0 0 auto; }
+  .cc-stepper :deep(.p-stepper-separator) { flex: 1 1 0; min-width: 4px; }
+  .cc-stepper :deep(.p-steppanels) { padding-top: 14px; }
+  .avatars { gap: 6px; }
+  .av { padding: 2px; }
+  .role { padding: 12px; gap: 10px; }
+  .preview.pad { padding: 16px; }
+}
 </style>
