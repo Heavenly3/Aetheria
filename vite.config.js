@@ -10,5 +10,15 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: mode === 'single' ? 'dist-single' : 'dist',
     chunkSizeWarningLimit: 2000,
+    // Keep the game code in its own long-lived chunk
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            { name: 'game', test: /src[\\/](game|i18n[\\/](index|bind|mods|names|locales[\\/]en))/ },
+          ],
+        },
+      },
+    },
   },
 }))

@@ -1,14 +1,13 @@
 import { createI18n } from 'vue-i18n'
 import en from './locales/en.js'
-import es from './locales/es.js'
 
 export const LOCALES = {
   en: { name: 'English', intl: 'en-US' },
-  es: { name: 'Español', intl: 'es-ES' },
+  es: { name: 'Español', intl: 'es-ES', load: () => import('./locales/es.js') },
 }
 const STORAGE_KEY = 'aetheria-locale'
 
-function detectLocale() {
+export function detectLocale() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved && LOCALES[saved]) return saved
@@ -20,9 +19,10 @@ function detectLocale() {
 export const i18n = createI18n({
   legacy: false,
   globalInjection: true,
-  locale: detectLocale(),
+  // English is always bundled (it is the fallback); other languages load on demand, see setLocale
+  locale: 'en',
   fallbackLocale: 'en',
-  messages: { en, es },
+  messages: { en },
   warnHtmlMessage: false,
   missingWarn: false,
   fallbackWarn: false,
@@ -39,8 +39,9 @@ export function applyDocumentLocale() {
   document.documentElement.lang = loc
 }
 
-export function setLocale(loc) {
+export async function setLocale(loc) {
   if (!LOCALES[loc]) return
+  if (!i18n.global.availableLocales.includes(loc)) i18n.global.setLocaleMessage(loc, (await LOCALES[loc].load()).default)
   i18n.global.locale.value = loc
   try { localStorage.setItem(STORAGE_KEY, loc) } catch { /* storage unavailable */ }
   applyDocumentLocale()

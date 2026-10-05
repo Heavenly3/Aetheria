@@ -434,7 +434,7 @@ export default {
     backup: 'Copia de seguridad', backupIntro: 'Tu partida se guarda sola cada 10 segundos en la ranura {n}. Exporta un código para llevarla a otro navegador; al importarlo se sustituye la partida de esta ranura.',
     pastePlaceholder: 'Pega aquí un código de partida para importarla…', export: 'Exportar', import: 'Importar', game: 'Partida', slot: 'Ranura', slotOf: '{n} de {total}',
     role: 'Rol', difficulty: 'Dificultad', saveAndExit: 'Guardar y volver al menú', deleteGame: 'Borrar esta partida', about: 'Acerca de Aetheria',
-    aboutText: 'RPG idle de fantasía inspirado en <a href="https://github.com/tristinbaker/IdleFantasy" target="_blank" rel="noopener">Idle Fantasy</a> de Tristin Baker y en los clásicos de RuneScape.',
+    aboutText: 'RPG idle de fantasía en el que entrenas habilidades, fabricas, derrotas jefes y llevas una taberna, incluso cuando no estás.',
     interface: 'Interfaz', icons: 'Iconos', offline: 'Progreso offline', upTo: 'Hasta {n} h',
     credits: 'Iconos de Lorc, Delapouite y colaboradores de game-icons.net, bajo licencia Creative Commons BY 3.0.',
     renamed: 'Nombre actualizado', copied: 'Partida copiada al portapapeles', copyManually: 'Copia el código del cuadro de texto', imported: 'Partida importada',

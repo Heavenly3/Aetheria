@@ -10,6 +10,8 @@
     "build": "node scripts/build-icons.mjs && vite build",
     "build:single": "node scripts/build-icons.mjs && vite build --mode single",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "icons": "node scripts/build-icons.mjs",
     "check:i18n": "node scripts/check-i18n.mjs",
     "balance": "node scripts/balance-report.mjs"
@@ -26,6 +28,7 @@
     "@iconify-json/game-icons": "^1.2.4",
     "@vitejs/plugin-vue": "^6.0.9",
     "vite": "^8.3.2",
-    "vite-plugin-singlefile": "^2.3.3"
+    "vite-plugin-singlefile": "^2.3.3",
+    "vitest": "^5.0.3"
   }
 }

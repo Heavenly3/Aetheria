@@ -8,14 +8,14 @@ import './styles/main.css'
 import App from './App.vue'
 import router, { initialRoute } from './router.js'
 import { AetheriaPreset } from './theme.js'
-import { i18n, applyDocumentLocale } from './i18n/index.js'
+import { i18n, setLocale, detectLocale } from './i18n/index.js'
 import { G } from './game/engine.js'
 
 // Expose the engine for debugging from the console in development builds
 if (import.meta.env.DEV) window.__G = G
 
 document.documentElement.classList.add('app-dark')
-applyDocumentLocale()
+await setLocale(detectLocale())
 
 const app = createApp(App)
   .use(PrimeVue, { theme: { preset: AetheriaPreset, options: { darkModeSelector: '.app-dark', cssLayer: false } }, ripple: true })

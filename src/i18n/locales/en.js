@@ -434,7 +434,7 @@ export default {
     backup: 'Backup', backupIntro: 'Your game saves itself every 10 seconds to slot {n}. Export a code to move it to another browser; importing one replaces the game in this slot.',
     pastePlaceholder: 'Paste a save code here to import it…', export: 'Export', import: 'Import', game: 'Game', slot: 'Slot', slotOf: '{n} of {total}',
     role: 'Role', difficulty: 'Difficulty', saveAndExit: 'Save and return to menu', deleteGame: 'Delete this game', about: 'About Aetheria',
-    aboutText: 'A fantasy idle RPG inspired by <a href="https://github.com/tristinbaker/IdleFantasy" target="_blank" rel="noopener">Idle Fantasy</a> by Tristin Baker and by the RuneScape classics.',
+    aboutText: 'A fantasy idle RPG where you train skills, craft, fight bosses and run a tavern, even while you are away.',
     interface: 'Interface', icons: 'Icons', offline: 'Offline progress', upTo: 'Up to {n} h',
     credits: 'Icons by Lorc, Delapouite and the game-icons.net contributors, under the Creative Commons BY 3.0 licence.',
     renamed: 'Name updated', copied: 'Save copied to the clipboard', copyManually: 'Copy the code from the text box', imported: 'Save imported',

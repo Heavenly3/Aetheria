@@ -92,7 +92,7 @@ function reset() {
     </div>
     <div class="panel pad" style="align-self:start">
       <h3 class="panel-title"><GameIcon name="open-book" /> {{ $t('settings.about') }}</h3>
-      <p class="muted" style="margin-top:0" v-html="$t('settings.aboutText')" />
+      <p class="muted" style="margin-top:0">{{ $t('settings.aboutText') }}</p>
       <div class="kv"><span>{{ $t('settings.interface') }}</span><b>Vue 3 + PrimeVue 4</b></div>
       <div class="kv"><span>{{ $t('settings.icons') }}</span><b><a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> · CC BY 3.0</b></div>
       <div class="kv"><span>{{ $t('settings.offline') }}</span><b>{{ $t('settings.upTo', { n: +G.offlineCapHours().toFixed(1) }) }}</b></div>

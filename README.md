@@ -1,8 +1,31 @@
 # Aetheria
 
-A fantasy idle RPG for the browser, inspired by [Idle Fantasy](https://github.com/tristinbaker/IdleFantasy). Built with Vue 3, PrimeVue 4 and Vite.
+[![CI](https://github.com/Heavenly3/Aetheria/actions/workflows/ci.yml/badge.svg)](https://github.com/Heavenly3/Aetheria/actions/workflows/ci.yml)
+![Vue 3](https://img.shields.io/badge/Vue-3-42b883)
+![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+
+A fantasy idle RPG for the browser. Built with Vue 3, PrimeVue 4 and Vite.
+
+![Combat in Aetheria](docs/screenshots/combat.gif)
 
 Available in **English** and **Spanish** (switch from the title screen or Settings).
+
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/title.png" alt="Title screen"></td>
+    <td><img src="docs/screenshots/skill.png" alt="Smithing with filters and an action in progress"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/combat.png" alt="Fighting a red dragon"></td>
+    <td><img src="docs/screenshots/tavern.png" alt="Tavern staff working in parallel"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/hero.png" alt="Hero overview with enchanted gear"></td>
+    <td><img src="docs/screenshots/ascension.png" alt="Ascension upgrade tree"></td>
+  </tr>
+</table>
 
 ## Getting started
 
@@ -10,6 +33,7 @@ Available in **English** and **Spanish** (switch from the title screen or Settin
 npm install
 npm run dev            # dev server at http://localhost:5173
 npm run build          # production build in dist/
+npm test               # engine tests (Vitest)
 npm run build:single   # one self-contained HTML file in dist-single/
 npm run icons          # regenerate src/game/icons.json and validate icon names
 npm run check:i18n     # make sure every language has every key
@@ -48,6 +72,7 @@ Requires Node.js 18 or newer.
 - `src/i18n/`: vue-i18n setup and the `en` / `es` message files. Game data only stores ids; names are looked up at render time, so the journal and notifications follow the selected language.
 - `src/components/` and `src/views/`: the UI.
 - `scripts/`: icon extraction, the translation checker and the balance report.
+- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, pets, enchanting, daily tasks, ascension and translations.
 
 ## Adding a language
 
@@ -58,7 +83,6 @@ Requires Node.js 18 or newer.
 ## Credits
 
 - Icons from [game-icons.net](https://game-icons.net) by Lorc, Delapouite and contributors, licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
-- Inspired by [Idle Fantasy](https://github.com/tristinbaker/IdleFantasy) by Tristin Baker.
 
 ## License
 
