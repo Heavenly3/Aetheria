@@ -11,7 +11,8 @@
     "build:single": "node scripts/build-icons.mjs && vite build --mode single",
     "preview": "vite preview",
     "icons": "node scripts/build-icons.mjs",
-    "check:i18n": "node scripts/check-i18n.mjs"
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "balance": "node scripts/balance-report.mjs"
   },
   "dependencies": {
     "@primeuix/themes": "^3.0.1",

@@ -1,7 +1,7 @@
 import { reactive, toRaw } from 'vue'
 import { SKILLS, XP_TABLE, MAX_LEVEL } from './data/skills.js'
 import { ITEMS, SLOTS, CROPS, GEMS, POTION_DURATION } from './data/items.js'
-import { findAction } from './data/actions.js'
+import { ACTIONS, findAction } from './data/actions.js'
 import {
   PLAYER_ATTACK_SPEED, COMBAT_STYLES, SPELLS, MONSTERS, AREAS, BOSSES, MERCENARIES,
   SLAYER_SHOP, TOWER_SHOP, towerMonster, monsterLevel, DUNGEONS,
@@ -13,6 +13,7 @@ import {
 } from './data/character.js'
 import { systems, extraState } from './systems.js'
 import { meta, metaState } from './meta.js'
+import { ascension, ascensionState } from './ascension.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
 
@@ -21,9 +22,11 @@ const META_KEY = 'aetheria-meta'
 const LEGACY_KEY = 'aetheria-save-v2'
 const RESPAWN_TIME = 1.5
 const HP_REGEN = 3          // seconds per HP outside combat
-const HP_REGEN_COMBAT = 12  // seconds per HP while fighting
+const HP_REGEN_COMBAT = 6   // seconds per HP while fighting
 const ELIXIR_DURATION = 1800
 const LOG_SIZE = 40
+const CHAIN_DEPTH = 3   // how many steps down the chained crafting may go
+const CHAIN_BATCH = 10  // batches to prepare for an endless action
 
 const GATHERING = ['mining', 'woodcutting', 'fishing', 'farming', 'thieving']
 const ARTISAN = ['smithing', 'cooking', 'firemaking', 'fletching', 'crafting', 'herblore', 'runecrafting', 'prayer']
@@ -81,6 +84,7 @@ export function newState(profile = {}) {
     log: [],
     ...extraState(),
     ...metaState(),
+    ...ascensionState(),
   }
 }
 
@@ -202,6 +206,7 @@ export const G = {
     this.save()
   },
 
+  freshState(profile) { return newState(profile) },
   setupCharacter() {
     const role = ROLES[this.s.role]
     Object.entries(role.skills).forEach(([k, l]) => (this.s.skills[k].xp = XP_TABLE[l]))
@@ -323,7 +328,7 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -574,8 +579,52 @@ export const G = {
     if (cur && cur.type === 'skill' && cur.skill === skill && cur.action === actionId) return this.stop()
     if (this.level(skill) < a.lvl) return this.toast('padlock', 'msg.needLevel', { lvl: a.lvl, skill: '@skill:' + skill }, 'warn')
     if (!this.hasTool(a)) return this.toast(TOOL_TYPES[a.tool.type].icon, 'msg.needTool', { tool: TOOL_TYPES[a.tool.type].name, tier: a.tool.tier }, 'warn')
-    if (!this.hasItems(a.in)) return this.toast('knapsack', 'msg.noMaterials', {}, 'warn')
+    if (!this.hasItems(a.in) && !this.canChain(a)) return this.toast('knapsack', 'msg.noMaterials', {}, 'warn')
     this.s.activity = { type: 'skill', skill, action: actionId, progress: 0 }
+    this.emit('activity')
+  },
+
+  /* ---------- chained crafting ---------- */
+  // An action the player can run that produces `item`, following missing inputs a few steps down
+  producerFor(item, depth = 0) {
+    if (depth >= CHAIN_DEPTH) return null
+    let best = null
+    for (const [skill, list] of Object.entries(ACTIONS)) {
+      for (const a of list) {
+        if (!a.out[item] || this.level(skill) < a.lvl || !this.hasTool(a)) continue
+        if (best && a.lvl <= best.a.lvl) continue
+        if (Object.entries(a.in).every(([k, q]) => this.qty(k) >= q || this.producerFor(k, depth + 1))) best = { skill, a }
+      }
+    }
+    return best
+  },
+  canChain(a) {
+    return !!this.s.settings.autoChain && Object.entries(a.in).every(([k, q]) => this.qty(k) >= q || this.producerFor(k))
+  },
+  canStart(skill, a) { return this.level(skill) >= a.lvl && this.hasTool(a) && (this.hasItems(a.in) || this.canChain(a)) },
+  // Switch to making the first missing material; the current action is resumed afterwards
+  tryChain(act, a) {
+    if (!this.s.settings.autoChain || act.noChain) return false
+    let depth = 0
+    for (let p = act.parent; p; p = p.parent) depth++
+    if (depth >= CHAIN_DEPTH) return false
+    const batches = act.limit ? act.limit - act.done : CHAIN_BATCH
+    const item = Object.keys(a.in).find(k => this.qty(k) < a.in[k])
+    const p = item && this.producerFor(item, depth)
+    if (!p) return false
+    const need = a.in[item] * batches - this.qty(item)
+    this.s.activity = {
+      type: 'skill', skill: p.skill, action: p.a.id, progress: 0, done: 0,
+      limit: Math.max(1, Math.ceil(need / p.a.out[item])),
+      parent: { skill: act.skill, action: act.action, limit: act.limit, done: act.done || 0, parent: act.parent },
+    }
+    this.emit('activity')
+    return true
+  },
+  // Back to the action that asked for the materials; if nothing was made, don't chain again
+  resumeParent(act) {
+    const p = act.parent
+    this.s.activity = { type: 'skill', skill: p.skill, action: p.action, progress: 0, limit: p.limit, done: p.done, parent: p.parent, noChain: act.done === 0 }
     this.emit('activity')
   },
 
@@ -644,6 +693,8 @@ export const G = {
     const dur = this.actionTime(act.skill, a)
     while (act.progress >= dur && this.s.activity === act) {
       if (!this.canDo(act.skill, a)) {
+        if (this.level(act.skill) >= a.lvl && this.tryChain(act, a)) return
+        if (act.parent) return this.resumeParent(act)
         if (this.s.queue.length) {
           this.toast('hourglass', 'msg.queueSkipMaterials', { action: `@action:${act.skill}/${a.id}` }, 'warn')
           return this.queueFinished()
@@ -652,7 +703,7 @@ export const G = {
       }
       act.progress -= dur
       this.completeAction(act.skill, a)
-      if (act.limit && ++act.done >= act.limit && this.s.activity === act) return this.queueFinished()
+      if (act.limit && ++act.done >= act.limit && this.s.activity === act) return act.parent ? this.resumeParent(act) : this.queueFinished()
     }
   },
 
@@ -849,7 +900,7 @@ export const G = {
       if (type === 'ranged' && Math.random() >= this.mod('ammoSave')) this.removeItem(this.s.equipment.ammo, 1)
       if (type === 'magic' && Math.random() >= this.mod('runeSave')) Object.entries(this.currentSpell().runes).forEach(([r, q]) => this.removeItem(r, q))
       const hit = Math.random() < this.hitChance(ps.accRoll, mr.defRoll)
-      const dmg = hit ? rand(0, ps.maxHit) : 0
+      const dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
       const dealt = Math.min(dmg, act.mHp)
       act.mHp -= dealt
       if (type === 'magic') this.addXp('magic', this.currentSpell().xp + dealt * 2)
@@ -1166,6 +1217,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta)
+Object.assign(G, systems, meta, ascension)
 
 export { SKILLS, ITEMS }

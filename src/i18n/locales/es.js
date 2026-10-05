@@ -16,6 +16,7 @@ export default {
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
     pets: 'Mascotas', forge: 'Forja',
+    ascension: 'Renacimiento',
   },
 
   heroMenu: { viewHero: 'Ver héroe', saveNow: 'Guardar ahora', saved: 'Partida guardada', mainMenu: 'Menú principal', label: 'Menú del héroe' },
@@ -126,6 +127,7 @@ export default {
     farmYield: '+{v} cosecha por parcela', offline: '+{v} h de progreso offline', maxHp: '+{v} PV máximos', blessing: 'Bendiciones un {v}% más largas',
     speedSkill: '+{v}% velocidad de {skill}', xpSkill: '+{v}% XP de {skill}', doubleSkill: '+{v}% recursos dobles en {skill}',
     speedGroup: '+{v}% velocidad de {group}', xpGroup: '+{v}% XP de {group}', doubleGroup: '+{v}% productos dobles de {group}',
+    petChance: '+{v}% probabilidad de mascota', enchantChance: '+{v}% éxito al encantar', startSkills: 'Las habilidades de recolección y artesanía empiezan a nivel {v}', startGold: '+{v} de oro inicial',
   },
 
   roles: {
@@ -211,6 +213,7 @@ export default {
   dock: {
     tower: 'Torre infinita', boss: 'Jefe', dungeon: 'Mazmorra', combat: 'Combate', queueWaiting: '{n} acciones esperando en cola',
     startQueue: 'Iniciar cola', viewQueue: 'Ver cola', goTo: 'Ir', queue: 'Cola', clear: 'Vaciar', queueEmpty: 'La cola está vacía.',
+    chainFor: 'para {action}',
   },
 
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
@@ -226,6 +229,7 @@ export default {
     expeditionOk: '{name} vuelve de {exp} con {gold} de oro.', expeditionFail: '{name} fracasa en {exp} ({gold} de oro).',
     order: 'Encargo entregado: {n}× {item}.', lostChest: 'Encuentras un cofre perdido: {gold} de oro y {n}× {item}.',
     pet: '¡Una nueva mascota se une a ti: {pet}!', enchant: '{slot} encantado a +{n}.', streak: 'Racha diaria: {n} días.',
+    ascend: 'Renacimiento {n}: renaces con {shards} fragmentos de éter.',
   },
 
   msg: {
@@ -436,6 +440,7 @@ export default {
     renamed: 'Nombre actualizado', copied: 'Partida copiada al portapapeles', copyManually: 'Copia el código del cuadro de texto', imported: 'Partida importada',
     invalidSave: 'El código de partida no es válido', deleteTitle: 'Borrar partida', deleteMessage: 'Se borrará la partida de {name} de la ranura {n}. Esta acción no se puede deshacer.',
     deleteConfirm: 'Borrar todo',
+    autoChain: 'Fabricar automáticamente los materiales que falten', autoChainHint: 'Si a una receta se le acaban los materiales, primero fabrica sus ingredientes (minar, fundir…) y después vuelve a ella.',
   },
 
   statsView: {
@@ -604,7 +609,7 @@ export default {
     man: 'Aldeano', farmer: 'Granjero', warrior: 'Guerrera', rogue: 'Pícaro', mfarmer: 'Maestro granjero', guard: 'Guardia', knight: 'Caballero',
     paladin: 'Paladín', hero: 'Héroe legendario',
   },
-  courses: ['Sendero del bosque', 'Tejados de la aldea', 'Murallas del castillo', 'Puentes colgantes', 'Cumbres heladas', 'Circuito del abismo'],
+  courses: ['Sendero del bosque', 'Tejados de la aldea', 'Murallas del castillo', 'Puentes colgantes', 'Cumbres heladas', 'Circuito del abismo', 'Agujas estelares'],
   recipes: { tanLeather: 'Curtir cuero', tanDragonhide: 'Curtir piel de dragón' },
 
   tpl: {
@@ -702,5 +707,24 @@ export default {
     },
     reward: '{gold} de oro · fichas de taberna ×{tokens}', chest: 'cofre de gemas', claim: 'Reclamar', claimed: 'Reclamado: {gold} de oro · fichas ×{tokens}',
     allBonus: 'Completar todas las diarias también da sacos de monedas, y un cofre de gemas cada 7 días de racha.',
+  },
+
+  ascension: {
+    title: 'Renacimiento', desc: 'Vuelve a empezar tu héroe desde cero a cambio de fragmentos de éter. Los fragmentos compran mejoras permanentes que hacen cada nueva vida más rápida.',
+    shards: '{n} fragmentos de éter', shardsWord: 'fragmentos de éter', count: 'Renacimientos: {n}', total: 'Fragmentos ganados: {n}',
+    ascendTitle: 'Renacer', formula: 'Los fragmentos crecen con el nivel total, el nivel de héroe, los puntos de misión y cada jefe derrotado en esta vida.',
+    ascendNow: 'Renacer ahora', locked: 'Alcanza nivel total {n} para renacer.',
+    rulesTitle: 'Qué ocurre', keepLabel: 'Conservas:', keep: 'nombre, rol y dificultad, logros, mascotas, estadísticas, racha diaria y el árbol de renacimiento.',
+    loseLabel: 'Pierdes:', lose: 'niveles de habilidad, nivel de héroe, oro, objetos, equipo y encantamientos, misiones, habitaciones del hogar, taberna, récord de la torre y prestigio de habilidades.',
+    treeTitle: 'Árbol de renacimiento', resetTree: 'Recuperar todo', resetTitle: 'Recuperar el árbol', resetMessage: 'Recuperas todos los fragmentos gastados para volver a planificar el árbol.', resetConfirm: 'Recuperar',
+    refunded: '{n} fragmentos recuperados', now: 'Ahora: {effect}', requires: 'Requiere {name}', buy: 'Mejorar · {n} fragmentos', bought: '<b>{name}</b> rango {rank}',
+    confirmTitle: '¿Renacer?', confirmMessage: 'Tu héroe vuelve a empezar desde cero y recibes {n} fragmentos de éter. No se puede deshacer.',
+    done: '¡Has renacido! +{n} fragmentos de éter (renacimiento {count})',
+    branches: { wisdom: 'Sabiduría', fortune: 'Fortuna', war: 'Guerra' },
+    upgrades: {
+      echoes: 'Ecos del saber', memory: 'Memoria muscular', ancestry: 'Linaje', dreams: 'Sueños eternos', quickened: 'Alma acelerada',
+      gilded: 'Alma dorada', keen_eye: 'Ojo avizor', inheritance: 'Herencia', beast_bond: 'Vínculo animal', bountiful: 'Abundancia',
+      battle_echo: 'Eco de batalla', ironbound: 'Espíritu de hierro', undying: 'Inmortal', forgemaster: 'Maestro forjador', warlord: 'Señor de la guerra eterno',
+    },
   },
 }

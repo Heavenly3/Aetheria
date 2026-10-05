@@ -66,6 +66,7 @@ function reset() {
       <div class="panel pad">
         <h3 class="panel-title"><GameIcon name="cog" /> {{ $t('settings.preferences') }}</h3>
         <div class="pref"><span class="grow">{{ $t('settings.language') }}</span><LanguageSelect input-id="settings-language" /></div>
+        <label class="pref" for="pref-chain"><span class="grow">{{ $t('settings.autoChain') }}<span class="small faint" style="display:block">{{ $t('settings.autoChainHint') }}</span></span><ToggleSwitch v-model="state.settings.autoChain" inputId="pref-chain" /></label>
         <label class="pref" for="pref-sound"><span class="grow">{{ $t('settings.sound') }}</span><ToggleSwitch inputId="pref-sound" :modelValue="state.settings.sound" @update:modelValue="toggleSound" /></label>
         <label class="pref" for="pref-notify"><span class="grow">{{ $t('settings.notify') }}</span><ToggleSwitch inputId="pref-notify" :modelValue="state.settings.notify" @update:modelValue="toggleNotify" /></label>
       </div>

@@ -105,17 +105,17 @@ export const AREAS = [
   {
     id: 'void', icon: 'vortex', recLvl: 90, reqQuest: 'void_herald',
     monsters: [
-      mon('void_stalker', 'shadow-follower', 300, 150, 130, 29, 2.4, [500, 1100], [d('void_essence', 0.35), d('aetherium_ore', 0.25, 1, 2), d('blood_rune', 0.2, 3, 8), d('eternity_amulet', 0.002)], { weak: 'magic' }),
-      mon('star_wraith', 'spectre', 340, 158, 145, 31, 2.6, [600, 1300], [d('void_essence', 0.5), d('starlight_shard', 0.05), d('death_rune', 0.3, 10, 20), d('uncut_diamond', 0.04)], { weak: 'melee' }),
-      mon('abyssal_titan', 'daemon-skull', 420, 165, 160, 34, 3, [800, 1700], [d('aetherium_ore', 0.6, 2, 4), d('void_essence', 0.6, 1, 2), d('gem_chest', 0.02), d('void_blade', 0.003)], { weak: 'ranged', slayer: 90 }),
+      mon('void_stalker', 'shadow-follower', 255, 150, 130, 29, 2.4, [500, 1100], [d('void_essence', 0.35), d('aetherium_ore', 0.25, 1, 2), d('blood_rune', 0.2, 3, 8), d('eternity_amulet', 0.002)], { weak: 'magic' }),
+      mon('star_wraith', 'spectre', 290, 158, 145, 31, 2.6, [600, 1300], [d('void_essence', 0.5), d('starlight_shard', 0.05), d('death_rune', 0.3, 10, 20), d('uncut_diamond', 0.04)], { weak: 'melee' }),
+      mon('abyssal_titan', 'daemon-skull', 360, 165, 160, 34, 3, [800, 1700], [d('aetherium_ore', 0.6, 2, 4), d('void_essence', 0.6, 1, 2), d('gem_chest', 0.02), d('void_blade', 0.003)], { weak: 'ranged', slayer: 90 }),
     ],
   },
   {
     id: 'celestial', icon: 'sun', recLvl: 105, reqQuest: 'heavens_fall',
     monsters: [
-      mon('seraph', 'angel-outfit', 450, 180, 165, 36, 2.6, [1000, 2200], [d('starlight_shard', 0.3), d('void_essence', 0.4, 1, 2), d('astral_bow', 0.003)], { weak: 'ranged' }),
-      mon('astral_golem', 'golem-head', 560, 175, 195, 35, 3, [1100, 2400], [d('aetherium_ore', 0.8, 2, 5), d('starlight_shard', 0.25), d('celestial_aegis', 0.003)], { weak: 'magic' }),
-      mon('elder_wyrm', 'dragon-spiral', 520, 192, 175, 39, 2.8, [1400, 3000], [d('dragon_bones', 1, 3, 5), d('starlight_shard', 0.4, 1, 2), d('eclipse_staff', 0.003), d('gem_chest', 0.04)], { weak: 'ranged', slayer: 95 }),
+      mon('seraph', 'angel-outfit', 380, 180, 165, 36, 2.6, [1000, 2200], [d('starlight_shard', 0.3), d('void_essence', 0.4, 1, 2), d('astral_bow', 0.003)], { weak: 'ranged' }),
+      mon('astral_golem', 'golem-head', 470, 175, 195, 35, 3, [1100, 2400], [d('aetherium_ore', 0.8, 2, 5), d('starlight_shard', 0.25), d('celestial_aegis', 0.003)], { weak: 'magic' }),
+      mon('elder_wyrm', 'dragon-spiral', 440, 192, 175, 39, 2.8, [1400, 3000], [d('dragon_bones', 1, 3, 5), d('starlight_shard', 0.4, 1, 2), d('eclipse_staff', 0.003), d('gem_chest', 0.04)], { weak: 'ranged', slayer: 95 }),
     ],
   },
 ]

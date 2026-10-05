@@ -42,7 +42,7 @@ export const extraState = () => ({
   grace: 0,
   event: null,
   history: [],
-  settings: { sound: true, notify: false },
+  settings: { sound: true, notify: false, autoChain: true },
   dungeonsBy: {},
 })
 
@@ -338,7 +338,7 @@ export const systems = {
     while (this.s.queue.length) {
       const it = this.s.queue.shift()
       const a = findAction(it.skill, it.action)
-      if (a && this.canDo(it.skill, a)) {
+      if (a && this.canStart(it.skill, a)) {
         this.s.activity = { type: 'skill', skill: it.skill, action: it.action, progress: 0, limit: it.count, done: 0 }
         this.emit('activity')
         return true

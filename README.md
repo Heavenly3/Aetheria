@@ -13,6 +13,7 @@ npm run build          # production build in dist/
 npm run build:single   # one self-contained HTML file in dist-single/
 npm run icons          # regenerate src/game/icons.json and validate icon names
 npm run check:i18n     # make sure every language has every key
+npm run balance        # XP/hour, gold/hour and combat estimates for every level
 ```
 
 Requires Node.js 18 or newer.
@@ -30,8 +31,9 @@ Requires Node.js 18 or newer.
 - **Pets**: 23 very rare companions from skilling, bosses, slayer tasks and dice. Every pet you own adds a small permanent bonus.
 - **Enchanting**: raise each equipment slot from +1 to +10. Higher levels can fail and drop a level unless protected with a starlight shard.
 - **Daily and weekly tasks** with a day streak that boosts rewards.
+- **Ascension**: start the whole hero over for Aether shards and spend them in a three-branch tree of permanent upgrades.
 - **Tavern**: hire staff (11 specialities, 4 rarities, traits and levels) who work in parallel for a wage. Includes 1/4/8 h expeditions, daily orders, drinks, dice and a mystery chest.
-- **Action queue** that moves on to the next task by itself.
+- **Action queue** that moves on to the next task by itself, and **chained crafting**: when a recipe runs out, the game makes the missing materials first (mine, smelt, then forge) and goes back to it.
 - **Quality of life**: search and filters on every skill, item locking, bulk selling, a daily market, random events, charts, sound and browser notifications.
 - **Offline progress** up to a cap that grows as you play.
 
@@ -41,10 +43,11 @@ Requires Node.js 18 or newer.
 - `src/game/engine.js`: reactive state and core logic (XP, actions, combat, quests, prestige, offline simulation).
 - `src/game/systems.js`: tavern, staff, expeditions, orders, queue, loadouts, prayers, market, events and history.
 - `src/game/meta.js`: pets, gear enchanting and daily / weekly tasks.
+- `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/loop.js`: game loop, offline progress and autosave.
 - `src/i18n/`: vue-i18n setup and the `en` / `es` message files. Game data only stores ids; names are looked up at render time, so the journal and notifications follow the selected language.
 - `src/components/` and `src/views/`: the UI.
-- `scripts/`: icon extraction and the translation checker.
+- `scripts/`: icon extraction, the translation checker and the balance report.
 
 ## Adding a language
 

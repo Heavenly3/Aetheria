@@ -16,6 +16,7 @@ export default {
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
     settings: 'Settings', realm: 'Realm', town: 'Town',
     pets: 'Pets', forge: 'Forge',
+    ascension: 'Ascension',
   },
 
   heroMenu: { viewHero: 'View hero', saveNow: 'Save now', saved: 'Game saved', mainMenu: 'Main menu', label: 'Hero menu' },
@@ -126,6 +127,7 @@ export default {
     farmYield: '+{v} harvest per plot', offline: '+{v} h of offline progress', maxHp: '+{v} max HP', blessing: 'Blessings last {v}% longer',
     speedSkill: '+{v}% {skill} speed', xpSkill: '+{v}% {skill} XP', doubleSkill: '+{v}% double {skill} resources',
     speedGroup: '+{v}% {group} speed', xpGroup: '+{v}% {group} XP', doubleGroup: '+{v}% double {group} products',
+    petChance: '+{v}% pet chance', enchantChance: '+{v}% enchant success', startSkills: 'Gathering and artisan skills start at level {v}', startGold: '+{v} starting gold',
   },
 
   roles: {
@@ -211,6 +213,7 @@ export default {
   dock: {
     tower: 'Endless Tower', boss: 'Boss', dungeon: 'Dungeon', combat: 'Combat', queueWaiting: '{n} queued actions waiting',
     startQueue: 'Start queue', viewQueue: 'View queue', goTo: 'Go to', queue: 'Queue', clear: 'Clear', queueEmpty: 'The queue is empty.',
+    chainFor: 'for {action}',
   },
 
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
@@ -226,6 +229,7 @@ export default {
     expeditionOk: '{name} returned from {exp} with {gold} gold.', expeditionFail: '{name} failed {exp} ({gold} gold).',
     order: 'Order delivered: {n}× {item}.', lostChest: 'Found a lost chest: {gold} gold and {n}× {item}.',
     pet: 'A new pet joins you: {pet}!', enchant: '{slot} enchanted to +{n}.', streak: 'Daily streak: {n} days.',
+    ascend: 'Ascension {n}: reborn with {shards} Aether shards.',
   },
 
   msg: {
@@ -436,6 +440,7 @@ export default {
     renamed: 'Name updated', copied: 'Save copied to the clipboard', copyManually: 'Copy the code from the text box', imported: 'Save imported',
     invalidSave: 'That save code is not valid', deleteTitle: 'Delete game', deleteMessage: "{name}'s game in slot {n} will be deleted. This cannot be undone.",
     deleteConfirm: 'Delete everything',
+    autoChain: 'Craft missing materials automatically', autoChainHint: 'If a recipe runs out, make its ingredients first (mining, smelting…) and then go back to it.',
   },
 
   statsView: {
@@ -604,7 +609,7 @@ export default {
     man: 'Villager', farmer: 'Farmer', warrior: 'Warrior', rogue: 'Rogue', mfarmer: 'Master farmer', guard: 'Guard', knight: 'Knight',
     paladin: 'Paladin', hero: 'Legendary hero',
   },
-  courses: ['Forest trail', 'Village rooftops', 'Castle walls', 'Rope bridges', 'Icy summits', 'Abyss circuit'],
+  courses: ['Forest trail', 'Village rooftops', 'Castle walls', 'Rope bridges', 'Icy summits', 'Abyss circuit', 'Starlit spires'],
   recipes: { tanLeather: 'Tan leather', tanDragonhide: 'Tan dragonhide' },
 
   tpl: {
@@ -702,5 +707,24 @@ export default {
     },
     reward: '{gold} gold · tavern tokens ×{tokens}', chest: 'gem chest', claim: 'Claim', claimed: 'Claimed {gold} gold · tavern tokens ×{tokens}',
     allBonus: 'Completing every daily task also gives coin pouches, and a gem chest every 7 days of streak.',
+  },
+
+  ascension: {
+    title: 'Ascension', desc: 'Start your hero over from the very beginning in exchange for Aether shards. Shards buy permanent upgrades that make every new life faster.',
+    shards: '{n} Aether shards', shardsWord: 'Aether shards', count: 'Ascensions: {n}', total: 'Shards earned: {n}',
+    ascendTitle: 'Ascend', formula: 'Shards grow with total level, hero level, quest points and every boss defeated in this life.',
+    ascendNow: 'Ascend now', locked: 'Reach total level {n} to ascend.',
+    rulesTitle: 'What happens', keepLabel: 'You keep:', keep: 'name, role and difficulty, achievements, pets, statistics, daily streak and the Ascension tree.',
+    loseLabel: 'You lose:', lose: 'skill levels, hero level, gold, items, gear and enchantments, quests, home rooms, tavern, tower record and skill prestige.',
+    treeTitle: 'Ascension tree', resetTree: 'Refund all', resetTitle: 'Refund the tree', resetMessage: 'Every shard spent comes back so you can plan the tree again.', resetConfirm: 'Refund',
+    refunded: '{n} shards refunded', now: 'Now: {effect}', requires: 'Requires {name}', buy: 'Upgrade · {n} shards', bought: '<b>{name}</b> rank {rank}',
+    confirmTitle: 'Ascend?', confirmMessage: 'Your hero starts over from scratch and you receive {n} Aether shards. This cannot be undone.',
+    done: 'Reborn! +{n} Aether shards (ascension {count})',
+    branches: { wisdom: 'Wisdom', fortune: 'Fortune', war: 'War' },
+    upgrades: {
+      echoes: 'Echoes of Knowledge', memory: 'Muscle Memory', ancestry: 'Ancestry', dreams: 'Timeless Dreams', quickened: 'Quickened Soul',
+      gilded: 'Gilded Soul', keen_eye: 'Keen Eye', inheritance: 'Inheritance', beast_bond: 'Beast Bond', bountiful: 'Bountiful',
+      battle_echo: 'Battle Echo', ironbound: 'Ironbound Spirit', undying: 'Undying', forgemaster: 'Forgemaster', warlord: 'Eternal Warlord',
+    },
   },
 }

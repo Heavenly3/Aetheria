@@ -28,6 +28,7 @@ const info = computed(() => {
     return {
       icon: action.icon, tint: action.tint, color: SKILLS[a.skill].color,
       title: `${SKILLS[a.skill].name} · ${action.name}`,
+      chainFor: a.parent ? G.getAction(a.parent.skill, a.parent.action)?.name : null,
       progress: Math.max(0, a.progress) / G.actionTime(a.skill, action),
       to: '/skill/' + a.skill,
     }
@@ -77,7 +78,7 @@ onUnmounted(() => offs.forEach(f => f()))
       </button>
       <div class="grow">
         <div class="row" style="margin-bottom:7px">
-          <b class="grow ellipsis">{{ info.title }}<span v-if="act.limit" class="muted tnum"> · {{ act.done || 0 }}/{{ act.limit }}</span></b>
+          <b class="grow ellipsis">{{ info.title }}<span v-if="act.limit" class="muted tnum"> · {{ act.done || 0 }}/{{ act.limit }}</span><span v-if="info.chainFor" class="chain small"> · {{ $t('dock.chainFor', { action: info.chainFor }) }}</span></b>
           <span class="muted small tnum ellipsis gain">{{ gainText || (act.type === 'combat' ? `${state.hp}/${G.maxHp()} ${$t('common.hp')}` : '') }}</span>
         </div>
         <div class="bar" :style="{ '--c': info.color }"><i :style="{ width: Math.min(100, info.progress * 100) + '%' }" /></div>
@@ -108,4 +109,5 @@ onUnmounted(() => offs.forEach(f => f()))
 .gain { max-width: 55%; }
 .qpanel { width: 340px; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .qrow { display: flex; align-items: center; gap: 6px; }
+.chain { color: #c58cff; font-weight: 500; }
 </style>

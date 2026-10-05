@@ -68,7 +68,7 @@ export const meta = {
   rollPet(match, scale = 1) {
     for (const p of PETS) {
       if (this.hasPet(p.id) || !match(p.source)) continue
-      if (Math.random() < p.chance * scale * (1 + this.mod('loot') * 0.5)) this.awardPet(p)
+      if (Math.random() < p.chance * scale * (1 + this.mod('loot') * 0.5 + this.mod('petChance'))) this.awardPet(p)
     }
   },
   awardPet(p) {
@@ -89,7 +89,7 @@ export const meta = {
   maxEnchant() { return Math.max(0, ...ENCHANT_SLOTS.map(s => this.enchantLevel(s))) },
   enchantMult(slot) { return 1 + this.enchantLevel(slot) * ENCHANT_PER_LEVEL },
   enchantCost(slot) { return enchantCost(this.enchantLevel(slot)) },
-  enchantChance(slot) { return SUCCESS[this.enchantLevel(slot)] ?? 0 },
+  enchantChance(slot) { const base = SUCCESS[this.enchantLevel(slot)]; return base === undefined ? 0 : Math.min(1, base + this.mod('enchantChance')) },
   enchantRisky(slot) { return this.enchantLevel(slot) >= DROP_FROM },
   canEnchant(slot) {
     if (this.enchantLevel(slot) >= ENCHANT_MAX) return false
@@ -153,6 +153,13 @@ export const meta = {
     return { cur: Math.min(cur, t.target), max: t.target }
   },
   taskDone(t) { return this.taskProgress(t).cur >= t.target },
+  // Keep task progress across an ascension, when the counters they read are reset
+  taskSnapshot() { const d = this.s.daily; return d ? [d.tasks, d.weekly].map(list => (list || []).map(t => this.taskProgress(t).cur)) : null },
+  restoreTasks(snap) {
+    const d = this.s.daily
+    if (!d || !snap) return
+    ;[d.tasks, d.weekly].forEach((list, i) => (list || []).forEach((t, j) => { t.base = TASKS[t.type].read(this, t) - (snap[i][j] || 0) }))
+  },
   // The streak only counts while yesterday (or today) was completed
   currentStreak() {
     const d = this.s.daily

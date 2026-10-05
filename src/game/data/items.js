@@ -115,8 +115,8 @@ export const FISH = [
   { id: 'trout',     icon: 'circling-fish', lvl: 20, xp: 50,  time: 4,   value: 10,  heal: 7,  cookLvl: 15, cookXp: 70 },
   { id: 'salmon',    icon: 'double-fish',   lvl: 30, xp: 70,  time: 4.5, value: 16,  heal: 9,  cookLvl: 25, cookXp: 90 },
   { id: 'lobster',   icon: 'crab-claw',     lvl: 40, xp: 90,  time: 5,   value: 30,  heal: 12, cookLvl: 40, cookXp: 120 },
-  { id: 'swordfish', icon: 'angler-fish',   lvl: 50, xp: 100, time: 6,   value: 50,  heal: 14, cookLvl: 45, cookXp: 140 },
-  { id: 'shark',     icon: 'shark-fin',     lvl: 76, xp: 110, time: 7,   value: 100, heal: 20, cookLvl: 80, cookXp: 210 },
+  { id: 'swordfish', icon: 'angler-fish',   lvl: 50, xp: 125, time: 6,   value: 50,  heal: 14, cookLvl: 45, cookXp: 140 },
+  { id: 'shark',     icon: 'shark-fin',     lvl: 76, xp: 175, time: 7,   value: 100, heal: 20, cookLvl: 80, cookXp: 210 },
 ]
 FISH.forEach(f => {
   named(f, `fish.${f.id}`)
@@ -145,7 +145,8 @@ export const CROPS = [
 const GROW = { potato: 180, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700 }
 CROPS.forEach(c => {
   c.grow = GROW[c.id]
-  c.harvestXp = Math.round(c.xp * 3)
+  // Higher crops grow slowly, so their harvest pays more per point of base XP
+  c.harvestXp = Math.round(c.xp * (3 + c.lvl / 10))
   named(c, `crops.${c.id}`)
   def(c.id + '_seed', { icon: 'plant-seed', value: c.seedValue, tint: c.tint, type: 'seed', name: () => t('tpl.seed', { crop: t(`crops.${c.id}`) }) })
   def(c.id, { icon: c.icon, value: c.value, tint: c.tint, name: `crops.${c.id}`, ...(c.food ? { type: 'food', heal: c.food } : {}) })
@@ -177,10 +178,10 @@ export const RUNES = [
   { id: 'water_rune',  lvl: 5,  xp: 6,    value: 5,   tint: '#4a90e2', icon: 'water-drop' },
   { id: 'earth_rune',  lvl: 9,  xp: 6.5,  value: 5,   tint: '#8b6b3a', icon: 'earth-crack' },
   { id: 'fire_rune',   lvl: 14, xp: 7,    value: 6,   tint: '#e8572a', icon: 'fire' },
-  { id: 'chaos_rune',  lvl: 35, xp: 8.5,  value: 40,  tint: '#e0a030', icon: 'magic-swirl' },
-  { id: 'nature_rune', lvl: 44, xp: 9,    value: 90,  tint: '#3aa05a', icon: 'sprout' },
-  { id: 'death_rune',  lvl: 65, xp: 10,   value: 180, tint: '#d0d0d0', icon: 'death-skull' },
-  { id: 'blood_rune',  lvl: 77, xp: 10.5, value: 300, tint: '#c0102a', icon: 'blood' },
+  { id: 'chaos_rune',  lvl: 35, xp: 12,  value: 40,  tint: '#e0a030', icon: 'magic-swirl' },
+  { id: 'nature_rune', lvl: 44, xp: 16,   value: 90,  tint: '#3aa05a', icon: 'sprout' },
+  { id: 'death_rune',  lvl: 65, xp: 27,   value: 180, tint: '#d0d0d0', icon: 'death-skull' },
+  { id: 'blood_rune',  lvl: 77, xp: 42,   value: 300, tint: '#c0102a', icon: 'blood' },
 ]
 RUNES.forEach(r => def(r.id, { icon: r.icon, value: r.value, tint: r.tint, type: 'rune' }))
 
