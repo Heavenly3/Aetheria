@@ -1,0 +1,44 @@
+name: Release
+
+# Push a tag such as v1.0.0-beta.1 to publish a release.
+# Tags with a hyphen (beta, rc…) are marked as pre-releases.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run check:i18n
+      - run: npm test
+
+      # Web build: index.html at the root of the zip, ready for itch.io or any static host
+      - run: npm run build
+      - run: cd dist && zip -qr "../aetheria-web-${GITHUB_REF_NAME}.zip" .
+
+      # Single self-contained HTML file that can be opened straight from disk
+      - run: npm run build:single
+      - run: cp dist-single/index.html "aetheria-${GITHUB_REF_NAME}.html"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="docs/releases/${GITHUB_REF_NAME}.md"
+          args=(--title "Aetheria ${GITHUB_REF_NAME#v}")
+          if [ -f "$notes" ]; then args+=(--notes-file "$notes"); else args+=(--generate-notes); fi
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then args+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" "${args[@]}" \
+            "aetheria-web-${GITHUB_REF_NAME}.zip" "aetheria-${GITHUB_REF_NAME}.html"
