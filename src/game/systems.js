@@ -22,7 +22,7 @@ const msg = (key, params = {}) => ({ key, params })
 const HISTORY_MAX = 288 // 24 h with one sample every 5 minutes
 
 // Seeded PRNG used for the daily market and daily orders
-function seeded(str) {
+export function seeded(str) {
   let h = 1779033703 ^ str.length
   for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19) }
   return () => {
@@ -308,6 +308,7 @@ export const systems = {
     if (delta > 0) this.s.stats.goldEarned += delta
     const dc = this.s.tavern.dice
     dc.played++; if (delta > 0) dc.won++; dc.net += delta
+    this.rollPet(src => src.dice)
     return { p, h, delta, kind }
   },
   openMystery() {

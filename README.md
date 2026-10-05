@@ -25,7 +25,11 @@ Requires Node.js 18 or newer.
 - **Hero level (1–100)** fed by 25% of all skill XP. Every level grants attribute points (STR, DEX, INT, VIT, WIS, LCK) and every 2 levels a talent point.
 - **Tools**: tiered pickaxes, axes and fishing rods gate advanced resources.
 - **Farming**: plots grow in real time, even offline, with optional auto-replant.
-- **Combat**: 8 areas, 5 bosses with mercenaries, 5 multi-room dungeons, an endless tower, slayer tasks, prayers and loadouts.
+- **Combat**: 10 areas, 7 bosses with mercenaries, 6 multi-room dungeons, an endless tower, slayer tasks, prayers and loadouts.
+- **Endgame beyond the Abyss**: the Void Rift and the Celestial Spire, aether gear forged at level 90 and boss-only uniques.
+- **Pets**: 23 very rare companions from skilling, bosses, slayer tasks and dice. Every pet you own adds a small permanent bonus.
+- **Enchanting**: raise each equipment slot from +1 to +10. Higher levels can fail and drop a level unless protected with a starlight shard.
+- **Daily and weekly tasks** with a day streak that boosts rewards.
 - **Tavern**: hire staff (11 specialities, 4 rarities, traits and levels) who work in parallel for a wage. Includes 1/4/8 h expeditions, daily orders, drinks, dice and a mystery chest.
 - **Action queue** that moves on to the next task by itself.
 - **Quality of life**: search and filters on every skill, item locking, bulk selling, a daily market, random events, charts, sound and browser notifications.
@@ -36,6 +40,7 @@ Requires Node.js 18 or newer.
 - `src/game/data/`: all game content (skills, items, actions, monsters, quests, achievements, home, tavern). Balance and new content live here.
 - `src/game/engine.js`: reactive state and core logic (XP, actions, combat, quests, prestige, offline simulation).
 - `src/game/systems.js`: tavern, staff, expeditions, orders, queue, loadouts, prayers, market, events and history.
+- `src/game/meta.js`: pets, gear enchanting and daily / weekly tasks.
 - `src/game/loop.js`: game loop, offline progress and autosave.
 - `src/i18n/`: vue-i18n setup and the `en` / `es` message files. Game data only stores ids; names are looked up at render time, so the journal and notifications follow the selected language.
 - `src/components/` and `src/views/`: the UI.

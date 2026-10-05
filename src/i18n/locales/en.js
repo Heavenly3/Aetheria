@@ -15,6 +15,7 @@ export default {
     hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
     settings: 'Settings', realm: 'Realm', town: 'Town',
+    pets: 'Pets', forge: 'Forge',
   },
 
   heroMenu: { viewHero: 'View hero', saveNow: 'Save now', saved: 'Game saved', mainMenu: 'Main menu', label: 'Hero menu' },
@@ -59,6 +60,7 @@ export default {
     achievement: 'Achievement unlocked: <b>{name}</b>', quest: 'Quest complete: <b>{name}</b>', death: 'You were defeated by <b>{name}</b>',
     expeditionOk: '<b>{name}</b> came back from {exp} with {gold} gold', expeditionFail: '<b>{name}</b> failed {exp} and came back hurt',
     dungeon: '<b>{name}</b> cleared! {loot}',
+    pet: 'New pet: <b>{name}</b>!', petPlain: 'You found a pet: {name}', streak: 'All dailies done! Streak: <b>{n} days</b>',
   },
 
   notify: {
@@ -223,6 +225,7 @@ export default {
     hired: 'Hired {name}, a {rarity} {spec}.', fired: '{name} has left your staff.', workerLevel: '{name} reached level {level} in {skill}.',
     expeditionOk: '{name} returned from {exp} with {gold} gold.', expeditionFail: '{name} failed {exp} ({gold} gold).',
     order: 'Order delivered: {n}× {item}.', lostChest: 'Found a lost chest: {gold} gold and {n}× {item}.',
+    pet: 'A new pet joins you: {pet}!', enchant: '{slot} enchanted to +{n}.', streak: 'Daily streak: {n} days.',
   },
 
   msg: {
@@ -332,9 +335,12 @@ export default {
     master_smith: { name: 'Master Smith', giver: 'Bram the miner', desc: "Forge a masterpiece and join the smiths' guild." },
     abyss_gates: { name: 'The Gates of the Abyss', giver: 'Archmage Selene', desc: 'Selene has found a portal. She needs power to open it.' },
     dragon_slayer: { name: 'Dragon Slayer', giver: 'King Edmund', desc: 'The Ancient Dragon stirs. Only a legend can stop it.' },
+    story: 'Story quests',
+    void_herald: { name: 'Herald of the Void', giver: 'Archmage Selene', desc: 'Beyond the Abyss, a rift has opened. Prove you can survive what crawls out of it.' },
+    heavens_fall: { name: 'When Heaven Falls', giver: 'The Last Oracle', desc: 'The rift leads upward, to a spire among the stars. Forge aether and climb.' },
   },
 
-  unlocks: { kraken: 'Boss: Kraken', lair: "Area: Dragon's Lair", abyss: 'Area: The Abyss', ancient_dragon: 'Boss: Ancient Dragon' },
+  unlocks: { kraken: 'Boss: Kraken', lair: "Area: Dragon's Lair", abyss: 'Area: The Abyss', ancient_dragon: 'Boss: Ancient Dragon', void: 'Area: Void Rift', celestial: 'Area: Celestial Spire' },
 
   achievements: { progress: 'Achievement progress' },
 
@@ -370,6 +376,13 @@ export default {
     boss_kraken: { name: 'Tamer of Seas', desc: 'Defeat the Kraken.' },
     boss_necromancer: { name: 'Light in the Dark', desc: 'Defeat the Eternal Necromancer.' },
     boss_ancient_dragon: { name: 'Draconic Legend', desc: 'Defeat the Ancient Dragon.' },
+    pets: { name: 'Pet Keeper {n}', desc: 'Own {n} pets.' },
+    petsAll: { name: 'Menagerie', desc: 'Find every pet.' },
+    enchant: { name: 'Enchanter +{n}', desc: 'Enchant any equipment slot to +{n}.' },
+    streak: { name: 'Devoted {n}', desc: 'Reach a {n}-day daily streak.' },
+    dailies: { name: 'Taskmaster {n}', desc: 'Claim {n} daily or weekly tasks.' },
+    boss_void_emperor: { name: 'Voidbreaker', desc: 'Defeat the Void Emperor.' },
+    boss_aether_sovereign: { name: 'Above the Stars', desc: 'Defeat the Aether Sovereign.' },
   },
 
   home: {
@@ -530,6 +543,8 @@ export default {
     green_dragon: 'Green Dragon', red_dragon: 'Red Dragon', wyvern: 'Wyvern', minotaur: 'Minotaur', hydra: 'Hydra', demon: 'Abyssal Demon',
     goblin_king: 'Goblin King', troll_lord: 'Troll Lord', kraken: 'Kraken', necromancer: 'Eternal Necromancer', ancient_dragon: 'Ancient Dragon',
     warren_chief: 'Goblin Chieftain', skeleton_king: 'Skeleton King', naga: 'Great Naga', winter_queen: 'Winter Queen', bronze_wyrm: 'Bronze Wyrm',
+    void_stalker: 'Void Stalker', star_wraith: 'Star Wraith', abyssal_titan: 'Abyssal Titan', seraph: 'Fallen Seraph', astral_golem: 'Astral Golem',
+    elder_wyrm: 'Elder Wyrm', void_emperor: 'Void Emperor', aether_sovereign: 'Aether Sovereign', rift_warden: 'Rift Warden',
   },
 
   areas: {
@@ -541,6 +556,8 @@ export default {
     peaks: { name: 'Frozen Peaks', desc: 'Endless blizzards and ice beasts up high.' },
     lair: { name: "Dragon's Lair", desc: 'Only the bravest come back with scales and glory.' },
     abyss: { name: 'The Abyss', desc: 'Beyond the portal, reality twists.' },
+    void: { name: 'Void Rift', desc: 'A wound in the world, where the stars bleed into darkness.' },
+    celestial: { name: 'Celestial Spire', desc: 'A tower of light above the sky. Its guardians do not forgive.' },
   },
 
   dungeons: {
@@ -549,6 +566,7 @@ export default {
     serpent_temple: { name: 'Serpent Temple', desc: 'A temple sunk into the swamp.' },
     frost_keep: { name: 'Frost Keep', desc: 'The Winter Queen waits on her throne.' },
     dragon_vault: { name: 'Dragon Vault', desc: 'The hoard of an age-old dragon.' },
+    void_sanctum: { name: 'Void Sanctum', desc: 'The heart of the rift, guarded by its warden.' },
   },
 
   mercs: {
@@ -580,6 +598,7 @@ export default {
   nodes: {
     copper_ore: 'Copper rock', tin_ore: 'Tin rock', rune_essence: 'Essence quarry', iron_ore: 'Iron rock', coal: 'Coal rock',
     gold_ore: 'Gold rock', mithril_ore: 'Mithril rock', adamantite_ore: 'Adamantite rock', runite_ore: 'Runite rock', tree: 'Tree',
+    aetherium_ore: 'Aetherium vein',
   },
   marks: {
     man: 'Villager', farmer: 'Farmer', warrior: 'Warrior', rogue: 'Rogue', mfarmer: 'Master farmer', guard: 'Guard', knight: 'Knight',
@@ -597,7 +616,7 @@ export default {
     bar: 'bar', sword: 'sword', helm: 'helm', shield: 'shield', legs: 'platelegs', body: 'platebody', pickaxe: 'pickaxe', axe: 'axe',
     arrowtips: 'arrowtips', arrow: 'arrow',
   },
-  mats: { bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather' },
+  mats: { bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather', aether: 'Aether' },
   woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic' },
   fish: { shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
   crops: {
@@ -624,9 +643,64 @@ export default {
     wizard_hat: 'Wizard hat', wizard_robe: 'Wizard robe', night_staff: 'Staff of Night', tide_bow: 'Bow of the Tides',
     dragon_blade: 'Dragon blade', dragon_shield: 'Dragon shield', goblin_crown: "Goblin King's crown", troll_hammer: "Troll Lord's hammer",
     slayer_helm: 'Slayer helm', slayer_cape: 'Slayer cape', tower_cape: 'Tower cape', tower_cape2: 'Cape of the Ascended', wisdom_elixir: 'Elixir of wisdom',
+    aetherium_ore: 'Aetherium ore', void_essence: 'Void essence', starlight_shard: 'Starlight shard', void_blade: 'Void blade', astral_bow: 'Astral bow',
+    eclipse_staff: 'Eclipse staff', celestial_aegis: 'Celestial aegis', crown_of_ages: 'Crown of Ages', sovereign_cape: "Sovereign's cape", eternity_amulet: 'Amulet of Eternity',
   },
   itemDesc: {
     compost: 'Use it on a plot to halve the remaining growth time.',
     slayer_helm: 'With an active task: +15% accuracy and damage against the target.',
+    starlight_shard: 'Protects an enchantment from dropping a level when it fails.',
+  },
+
+  pets: {
+    intro: 'Pets are very rare companions found while training, fighting bosses, finishing slayer tasks or playing dice. Every pet you own grants its bonus for good.',
+    unknown: 'Not found yet. Keep at it.',
+    oddsTip: 'Average number of tries. Loot bonuses improve your luck a little.',
+    odds: { actions: '~1 in {n} actions', kills: '1 in {n} kills', harvests: '1 in {n} harvests', tasks: '1 in {n} tasks', games: '1 in {n} games' },
+    source: { harvest: 'Farming harvests', skill: 'Training {skill}', monster: 'Defeating {monster}', slayer: 'Finishing slayer tasks', dice: 'Playing dice at the tavern' },
+    rock_golem: { name: 'Rock Golem', desc: 'A pebble that refuses to stay still.' },
+    beaver: { name: 'Beaver', desc: 'Judges every tree you cut.' },
+    heron: { name: 'Heron', desc: 'Steals the occasional fish, but points out the best spots.' },
+    squirrel: { name: 'Squirrel', desc: 'Buries seeds everywhere. Some of them sprout.' },
+    fox: { name: 'Fox', desc: 'Light paws and lighter morals.' },
+    anvil_imp: { name: 'Anvil Imp', desc: 'Loves sparks. Hates water.' },
+    hedgehog: { name: 'Hedgehog', desc: 'Tastes everything before you eat it.' },
+    ember_sprite: { name: 'Ember Sprite', desc: 'A spark that learned to dance.' },
+    owl: { name: 'Owl', desc: 'Watches every feather you trim.' },
+    butterfly: { name: 'Butterfly', desc: 'Its wings shimmer like cut gems.' },
+    herb_snail: { name: 'Herb Snail', desc: 'Slow, but knows every herb by smell.' },
+    rune_fairy: { name: 'Rune Fairy', desc: 'Hums in the old tongue of runes.' },
+    hummingbird: { name: 'Hummingbird', desc: 'Makes you feel slow, so you hurry.' },
+    bone_raven: { name: 'Bone Raven', desc: 'Never far from an offering.' },
+    goblin_whelp: { name: 'Goblin Whelp', desc: 'Already counting your coins.' },
+    troll_pup: { name: 'Troll Pup', desc: 'Small, stubborn and made of rock.' },
+    baby_kraken: { name: 'Baby Kraken', desc: 'Eight tiny arms, all of them busy.' },
+    little_lich: { name: 'Little Lich', desc: 'Its spells are small, its grudges are not.' },
+    hatchling: { name: 'Dragon Hatchling', desc: 'Breathes sparks when it sneezes.' },
+    void_wisp: { name: 'Void Wisp', desc: 'A speck of the rift that likes shiny things.' },
+    star_cub: { name: 'Star Cub', desc: 'Leaves a trail of light wherever it goes.' },
+    slayer_bat: { name: 'Slayer Bat', desc: 'Finds your next target before you do.' },
+    lucky_cat: { name: 'Lucky Cat', desc: 'Waves at fortune, and fortune waves back.' },
+  },
+
+  forge: {
+    title: 'Enchanting Forge',
+    desc: 'Enchant your equipment slots up to +{max}. Each level adds {v}% to the stats of the item in that slot. From +6 on, a failed attempt drops the slot one level.',
+    protect: 'Use a {item} to protect risky attempts',
+    next: 'Next:', chance: 'Success {v}', protected: 'Protected', risk: 'Fails lose a level',
+    enchant: 'Enchant to +{n}', maxed: 'Fully enchanted',
+    note: 'Enchantments belong to the slot, not the item: they stay when you swap gear. Void essence comes from the Void Rift.',
+    success: '<b>{slot}</b> is now <b>+{n}</b>!', drop: 'The enchantment slipped: <b>{slot}</b> fell to +{n}', fail: 'The enchantment on <b>{slot}</b> failed',
+  },
+
+  daily: {
+    streak: '{n}-day streak', noStreak: 'No streak yet', streakHint: 'Finish all daily tasks each day to grow your streak. Rewards +{v}% (max at {cap} days).',
+    best: 'Best: {n} days', claimedTotal: '{n} tasks claimed', dailyTitle: 'Daily tasks', weeklyTitle: 'Weekly tasks', resets: 'Resets in {time}',
+    task: {
+      xp: 'Earn {n} {skill} XP', actions: 'Complete {n} skill actions', kills: 'Defeat {n} monsters', gold: 'Earn {n} gold',
+      harvest: 'Harvest {n} plots', dungeon: 'Clear {n} dungeons', orders: 'Deliver {n} tavern orders', slayer: 'Complete {n} slayer tasks',
+    },
+    reward: '{gold} gold · tavern tokens ×{tokens}', chest: 'gem chest', claim: 'Claim', claimed: 'Claimed {gold} gold · tavern tokens ×{tokens}',
+    allBonus: 'Completing every daily task also gives coin pouches, and a gem chest every 7 days of streak.',
   },
 }

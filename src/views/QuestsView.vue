@@ -12,6 +12,7 @@ import { SKILLS } from '../game/data/skills.js'
 import { fmt } from '../game/format.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
+import DailyTasks from '../components/DailyTasks.vue'
 
 const { t } = useI18n()
 const filter = ref('open')
@@ -42,6 +43,8 @@ const reqText = q => [
 
 <template>
   <div>
+    <DailyTasks />
+    <div class="section-title" style="margin-top:0">{{ $t('quests.story') }}</div>
     <div class="row wrap" style="margin-bottom:18px">
       <p class="intro grow" style="margin:0">{{ $t('quests.intro') }}</p>
       <span class="tag gold">{{ $t('quests.summary', { n: G.questsDone(), total: QUESTS.length, qp: G.questPoints() }) }}</span>

@@ -54,6 +54,12 @@ export const QUESTS = [
   { id: 'dragon_slayer', icon: 'sea-dragon',
     req: { quests: ['abyss_gates'] }, obj: [kill('demon', 40), kill('wyvern', 30)],
     reward: { gold: 100000, xp: { attack: 50000, strength: 50000, defense: 50000, hitpoints: 50000 }, qp: 6, unlock: 'unlocks.ancient_dragon' } },
+  { id: 'void_herald', icon: 'vortex',
+    req: { quests: ['dragon_slayer'], levels: { slayer: 70 } }, obj: [kill('demon', 60), kill('hydra', 30), item('blood_rune', 200)],
+    reward: { gold: 150000, xp: { slayer: 60000, magic: 40000 }, qp: 6, unlock: 'unlocks.void' } },
+  { id: 'heavens_fall', icon: 'sun',
+    req: { quests: ['void_herald'] }, obj: [kill('abyssal_titan', 40), item('aether_bar', 20), item('void_essence', 50)],
+    reward: { gold: 300000, xp: { attack: 100000, strength: 100000, defense: 100000, ranged: 100000, magic: 100000 }, qp: 8, unlock: 'unlocks.celestial' } },
 ]
 QUESTS.forEach(q => {
   named(q, `quests.${q.id}.name`, `quests.${q.id}.desc`)
@@ -75,7 +81,7 @@ export const ACHIEVEMENTS = [
   ...tiers('gold', [[1000, 100], [100000, 5000], [1000000, 50000], [10000000, 250000]], 'coins-pile', (G, n) => G.s.stats.goldEarned >= n),
   ...tiers('actions', [[100, 50], [1000, 500], [10000, 5000], [100000, 40000]], 'hourglass', (G, n) => G.s.stats.actions >= n),
   ...tiers('quests', [[1, 100], [5, 2000], [10, 10000]], 'scroll-unfurled', (G, n) => G.questsDone() >= n),
-  ach('quests_21', 'questsAll', 21, 'scroll-unfurled', G => G.questsDone() >= 21, 100000),
+  ach('quests_21', 'questsAll', QUESTS.length, 'scroll-unfurled', G => G.questsDone() >= QUESTS.length, 100000),
   ...tiers('tower', [[10, 1000], [50, 10000], [100, 50000]], 'stone-tower', (G, n) => G.s.tower.best >= n),
   ...tiers('slayer', [[1, 200], [10, 3000], [50, 25000]], 'death-skull', (G, n) => G.s.slayer.completed >= n),
   ...tiers('hero', [[10, 1000], [25, 10000], [50, 75000], [100, 1000000]], 'laurel-crown', (G, n) => G.heroLevel() >= n),
@@ -95,8 +101,13 @@ export const ACHIEVEMENTS = [
   ach('rare_drop', 'rareDrop', 1, 'open-treasure-chest', G => G.s.stats.rares >= 1, 5000),
   ach('full_gear', 'fullGear', 8, 'chest-armor', G => Object.values(G.s.equipment).every(Boolean), 2500),
   ach('house_10', 'house', 10, 'family-house', G => Object.values(G.s.rooms).reduce((a, b) => a + b, 0) >= 10, 10000),
-  ...['goblin_king', 'troll_lord', 'kraken', 'necromancer', 'ancient_dragon'].map((b, i) =>
-    ach('boss_' + b, 'boss_' + b, 1, 'trophy', G => (G.s.killsBy[b] || 0) >= 1, [1000, 5000, 15000, 30000, 100000][i])),
+  ...['goblin_king', 'troll_lord', 'kraken', 'necromancer', 'ancient_dragon', 'void_emperor', 'aether_sovereign'].map((b, i) =>
+    ach('boss_' + b, 'boss_' + b, 1, 'trophy', G => (G.s.killsBy[b] || 0) >= 1, [1000, 5000, 15000, 30000, 100000, 250000, 500000][i])),
+  ...tiers('pets', [[1, 1000], [5, 10000], [10, 50000]], 'paw-print', (G, n) => G.petCount() >= n),
+  ach('pets_all', 'petsAll', 'all', 'paw-print', G => G.petCount() >= G.petTotal(), 250000),
+  ...tiers('enchant', [[5, 2000], [10, 50000]], 'upgrade', (G, n) => G.maxEnchant() >= n),
+  ...tiers('streak', [[3, 1000], [7, 5000], [30, 50000]], 'flame', (G, n) => (G.s.daily?.bestStreak || 0) >= n),
+  ...tiers('dailies', [[10, 2000], [100, 25000]], 'calendar', (G, n) => (G.s.daily?.claimed || 0) >= n),
 ]
 
 /* ---------------- Home ---------------- */

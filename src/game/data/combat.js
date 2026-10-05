@@ -102,6 +102,22 @@ export const AREAS = [
       mon('demon', 'devil-mask', 220, 120, 110, 26, 2.6, [450, 1000], [d('demon_ashes', 1), d('death_rune', 0.3, 5, 15), d('gem_chest', 0.01)], { weak: 'melee', slayer: 85 }),
     ],
   },
+  {
+    id: 'void', icon: 'vortex', recLvl: 90, reqQuest: 'void_herald',
+    monsters: [
+      mon('void_stalker', 'shadow-follower', 300, 150, 130, 29, 2.4, [500, 1100], [d('void_essence', 0.35), d('aetherium_ore', 0.25, 1, 2), d('blood_rune', 0.2, 3, 8), d('eternity_amulet', 0.002)], { weak: 'magic' }),
+      mon('star_wraith', 'spectre', 340, 158, 145, 31, 2.6, [600, 1300], [d('void_essence', 0.5), d('starlight_shard', 0.05), d('death_rune', 0.3, 10, 20), d('uncut_diamond', 0.04)], { weak: 'melee' }),
+      mon('abyssal_titan', 'daemon-skull', 420, 165, 160, 34, 3, [800, 1700], [d('aetherium_ore', 0.6, 2, 4), d('void_essence', 0.6, 1, 2), d('gem_chest', 0.02), d('void_blade', 0.003)], { weak: 'ranged', slayer: 90 }),
+    ],
+  },
+  {
+    id: 'celestial', icon: 'sun', recLvl: 105, reqQuest: 'heavens_fall',
+    monsters: [
+      mon('seraph', 'angel-outfit', 450, 180, 165, 36, 2.6, [1000, 2200], [d('starlight_shard', 0.3), d('void_essence', 0.4, 1, 2), d('astral_bow', 0.003)], { weak: 'ranged' }),
+      mon('astral_golem', 'golem-head', 560, 175, 195, 35, 3, [1100, 2400], [d('aetherium_ore', 0.8, 2, 5), d('starlight_shard', 0.25), d('celestial_aegis', 0.003)], { weak: 'magic' }),
+      mon('elder_wyrm', 'dragon-spiral', 520, 192, 175, 39, 2.8, [1400, 3000], [d('dragon_bones', 1, 3, 5), d('starlight_shard', 0.4, 1, 2), d('eclipse_staff', 0.003), d('gem_chest', 0.04)], { weak: 'ranged', slayer: 95 }),
+    ],
+  },
 ]
 AREAS.forEach(a => named(a, `areas.${a.id}.name`, `areas.${a.id}.desc`))
 
@@ -121,6 +137,10 @@ export const BOSSES = [
     [d('night_staff', 0.04), d('death_rune', 1, 20, 40), d('uncut_diamond', 0.25), d('gem_chest', 0.1)], { recLvl: 70, weak: 'melee', respawn: 14 }),
   mon('ancient_dragon', 'sea-dragon', 2500, 130, 130, 30, 3, [8000, 15000],
     [d('dragon_blade', 0.03), d('dragon_shield', 0.03), d('dragon_bones', 1, 5, 10), d('gem_chest', 0.2, 1, 2)], { recLvl: 90, weak: 'ranged', respawn: 18, reqQuest: 'dragon_slayer' }),
+  mon('void_emperor', 'evil-wings', 4000, 170, 160, 37, 2.8, [15000, 30000],
+    [d('crown_of_ages', 0.03), d('void_blade', 0.02), d('void_essence', 1, 5, 10), d('gem_chest', 0.3, 1, 2)], { recLvl: 100, weak: 'magic', respawn: 20, reqQuest: 'void_herald' }),
+  mon('aether_sovereign', 'sun-priest', 6500, 210, 195, 45, 3, [30000, 60000],
+    [d('sovereign_cape', 0.03), d('astral_bow', 0.02), d('eclipse_staff', 0.02), d('celestial_aegis', 0.02), d('starlight_shard', 1, 5, 10)], { recLvl: 115, weak: 'melee', respawn: 24, reqQuest: 'heavens_fall' }),
 ]
 BOSSES.forEach(b => (b.boss = true))
 
@@ -190,6 +210,10 @@ export const DUNGEONS = [
     rooms: ['green_dragon', 'wyvern', 'red_dragon'],
     boss: mon('bronze_wyrm', 'dragon-breath', 620, 108, 106, 22, 2.8, [1500, 3200], [d('dragon_bones', 1, 3, 5), d('dragon_shield', 0.01)], { boss: true, weak: 'ranged' }),
     chest: [d('coin_pouch', 1, 6, 10), d('rune_bar', 0.4, 1, 3), d('dragon_bones', 1, 3, 6), d('gem_chest', 0.25), d('torstol_seed', 0.15)] },
+  { id: 'void_sanctum', icon: 'magic-portal', recLvl: 95, reqQuest: 'void_herald',
+    rooms: ['void_stalker', 'star_wraith', 'void_stalker', 'abyssal_titan'],
+    boss: mon('rift_warden', 'tentacles-skull', 1500, 165, 155, 34, 2.8, [4000, 8000], [d('void_essence', 1, 3, 6), d('eternity_amulet', 0.02)], { boss: true, weak: 'ranged' }),
+    chest: [d('coin_pouch', 1, 8, 12), d('aetherium_ore', 0.6, 3, 6), d('void_essence', 1, 2, 4), d('starlight_shard', 0.2), d('gem_chest', 0.3)] },
 ]
 DUNGEONS.forEach(dg => {
   dg.boss.dungeon = dg.id

@@ -15,6 +15,7 @@ export default {
     hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
+    pets: 'Mascotas', forge: 'Forja',
   },
 
   heroMenu: { viewHero: 'Ver héroe', saveNow: 'Guardar ahora', saved: 'Partida guardada', mainMenu: 'Menú principal', label: 'Menú del héroe' },
@@ -59,6 +60,7 @@ export default {
     achievement: 'Logro desbloqueado: <b>{name}</b>', quest: 'Misión completada: <b>{name}</b>', death: 'Has caído ante <b>{name}</b>',
     expeditionOk: '<b>{name}</b> vuelve de {exp} con {gold} de oro', expeditionFail: '<b>{name}</b> fracasa en {exp} y vuelve herido',
     dungeon: '¡<b>{name}</b> completada! {loot}',
+    pet: '¡Nueva mascota: <b>{name}</b>!', petPlain: 'Has encontrado una mascota: {name}', streak: '¡Diarias completadas! Racha: <b>{n} días</b>',
   },
 
   notify: {
@@ -223,6 +225,7 @@ export default {
     hired: 'Contratas a {name} ({spec}, {rarity}).', fired: '{name} deja tu personal.', workerLevel: '{name} alcanza el nivel {level} de {skill}.',
     expeditionOk: '{name} vuelve de {exp} con {gold} de oro.', expeditionFail: '{name} fracasa en {exp} ({gold} de oro).',
     order: 'Encargo entregado: {n}× {item}.', lostChest: 'Encuentras un cofre perdido: {gold} de oro y {n}× {item}.',
+    pet: '¡Una nueva mascota se une a ti: {pet}!', enchant: '{slot} encantado a +{n}.', streak: 'Racha diaria: {n} días.',
   },
 
   msg: {
@@ -332,9 +335,12 @@ export default {
     master_smith: { name: 'Maestro herrero', giver: 'Bram, el minero', desc: 'Forja una obra maestra y entra en el gremio de herreros.' },
     abyss_gates: { name: 'Las Puertas del Abismo', giver: 'Archimaga Selene', desc: 'Selene ha descubierto un portal. Necesita poder para abrirlo.' },
     dragon_slayer: { name: 'Matadragones', giver: 'Rey Edmund', desc: 'El Dragón Ancestral despierta. Solo una leyenda puede detenerlo.' },
+    story: 'Misiones de historia',
+    void_herald: { name: 'Heraldo del Vacío', giver: 'Archimaga Selene', desc: 'Más allá del Abismo se ha abierto una grieta. Demuestra que puedes sobrevivir a lo que sale de ella.' },
+    heavens_fall: { name: 'Cuando cae el cielo', giver: 'La Última Oráculo', desc: 'La grieta lleva hacia arriba, a una aguja entre las estrellas. Forja éter y sube.' },
   },
 
-  unlocks: { kraken: 'Jefe: Kraken', lair: 'Zona: Guarida del Dragón', abyss: 'Zona: El Abismo', ancient_dragon: 'Jefe: Dragón Ancestral' },
+  unlocks: { kraken: 'Jefe: Kraken', lair: 'Zona: Guarida del Dragón', abyss: 'Zona: El Abismo', ancient_dragon: 'Jefe: Dragón Ancestral', void: 'Zona: Grieta del Vacío', celestial: 'Zona: Aguja Celestial' },
 
   achievements: { progress: 'Progreso de logros' },
 
@@ -370,6 +376,13 @@ export default {
     boss_kraken: { name: 'Domador de mares', desc: 'Derrota al Kraken.' },
     boss_necromancer: { name: 'Luz en la oscuridad', desc: 'Derrota al Nigromante Eterno.' },
     boss_ancient_dragon: { name: 'Leyenda dracónica', desc: 'Derrota al Dragón Ancestral.' },
+    pets: { name: 'Cuidador {n}', desc: 'Consigue {n} mascotas.' },
+    petsAll: { name: 'Casa de fieras', desc: 'Encuentra todas las mascotas.' },
+    enchant: { name: 'Encantador +{n}', desc: 'Encanta cualquier casilla de equipo a +{n}.' },
+    streak: { name: 'Constante {n}', desc: 'Alcanza una racha diaria de {n} días.' },
+    dailies: { name: 'Cumplidor {n}', desc: 'Reclama {n} tareas diarias o semanales.' },
+    boss_void_emperor: { name: 'Rompevacíos', desc: 'Derrota al Emperador del Vacío.' },
+    boss_aether_sovereign: { name: 'Más allá de las estrellas', desc: 'Derrota al Soberano del Éter.' },
   },
 
   home: {
@@ -530,6 +543,8 @@ export default {
     green_dragon: 'Dragón verde', red_dragon: 'Dragón rojo', wyvern: 'Guiverno', minotaur: 'Minotauro', hydra: 'Hidra', demon: 'Demonio abisal',
     goblin_king: 'Rey Goblin', troll_lord: 'Señor Troll', kraken: 'Kraken', necromancer: 'Nigromante Eterno', ancient_dragon: 'Dragón Ancestral',
     warren_chief: 'Cacique goblin', skeleton_king: 'Rey esqueleto', naga: 'Gran naga', winter_queen: 'Reina del invierno', bronze_wyrm: 'Sierpe de bronce',
+    void_stalker: 'Acechador del vacío', star_wraith: 'Espectro estelar', abyssal_titan: 'Titán abisal', seraph: 'Serafín caído', astral_golem: 'Gólem astral',
+    elder_wyrm: 'Sierpe anciana', void_emperor: 'Emperador del Vacío', aether_sovereign: 'Soberano del Éter', rift_warden: 'Guardián de la grieta',
   },
 
   areas: {
@@ -541,6 +556,8 @@ export default {
     peaks: { name: 'Picos Helados', desc: 'Ventiscas eternas y bestias de hielo en las alturas.' },
     lair: { name: 'Guarida del Dragón', desc: 'Solo los más valientes regresan con escamas y gloria.' },
     abyss: { name: 'El Abismo', desc: 'Más allá del portal, la realidad se retuerce.' },
+    void: { name: 'Grieta del Vacío', desc: 'Una herida en el mundo donde las estrellas sangran oscuridad.' },
+    celestial: { name: 'Aguja Celestial', desc: 'Una torre de luz sobre el cielo. Sus guardianes no perdonan.' },
   },
 
   dungeons: {
@@ -549,6 +566,7 @@ export default {
     serpent_temple: { name: 'Templo de la serpiente', desc: 'Un templo hundido en el pantano.' },
     frost_keep: { name: 'Fortaleza helada', desc: 'La reina del invierno espera en su trono.' },
     dragon_vault: { name: 'Cámara del dragón', desc: 'El tesoro de un dragón milenario.' },
+    void_sanctum: { name: 'Santuario del Vacío', desc: 'El corazón de la grieta, custodiado por su guardián.' },
   },
 
   mercs: {
@@ -580,6 +598,7 @@ export default {
   nodes: {
     copper_ore: 'Veta de cobre', tin_ore: 'Veta de estaño', rune_essence: 'Cantera de esencia', iron_ore: 'Veta de hierro', coal: 'Veta de carbón',
     gold_ore: 'Veta de oro', mithril_ore: 'Veta de mithril', adamantite_ore: 'Veta de adamantita', runite_ore: 'Veta de runita', tree: 'Árbol',
+    aetherium_ore: 'Veta de eterio',
   },
   marks: {
     man: 'Aldeano', farmer: 'Granjero', warrior: 'Guerrera', rogue: 'Pícaro', mfarmer: 'Maestro granjero', guard: 'Guardia', knight: 'Caballero',
@@ -597,7 +616,7 @@ export default {
     bar: 'Barra', sword: 'Espada', helm: 'Yelmo', shield: 'Escudo', legs: 'Grebas', body: 'Coraza', pickaxe: 'Pico', axe: 'Hacha',
     arrowtips: 'Puntas', arrow: 'Flecha',
   },
-  mats: { bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero' },
+  mats: { bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero', aether: 'éter' },
   woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia' },
   fish: { shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
   crops: {
@@ -624,9 +643,64 @@ export default {
     wizard_hat: 'Sombrero de mago', wizard_robe: 'Túnica de mago', night_staff: 'Báculo de la Noche', tide_bow: 'Arco de las Mareas',
     dragon_blade: 'Espada dracónica', dragon_shield: 'Escudo dracónico', goblin_crown: 'Corona del Rey Goblin', troll_hammer: 'Martillo del Señor Troll',
     slayer_helm: 'Casco de cazador', slayer_cape: 'Capa de cazador', tower_cape: 'Capa de la Torre', tower_cape2: 'Capa del Ascendido', wisdom_elixir: 'Elixir de sabiduría',
+    aetherium_ore: 'Mineral de eterio', void_essence: 'Esencia del vacío', starlight_shard: 'Fragmento estelar', void_blade: 'Hoja del vacío', astral_bow: 'Arco astral',
+    eclipse_staff: 'Bastón del eclipse', celestial_aegis: 'Égida celestial', crown_of_ages: 'Corona de las Eras', sovereign_cape: 'Capa del Soberano', eternity_amulet: 'Amuleto de la Eternidad',
   },
   itemDesc: {
     compost: 'Úsalo en una parcela para reducir a la mitad el tiempo que falta.',
     slayer_helm: 'Con un encargo activo: +15% precisión y daño contra el objetivo.',
+    starlight_shard: 'Evita que un encantamiento fallido baje de nivel.',
+  },
+
+  pets: {
+    intro: 'Las mascotas son compañeros muy raros que se encuentran entrenando, derrotando jefes, terminando encargos de cazador o jugando a los dados. Cada mascota que tienes da su bono para siempre.',
+    unknown: 'Aún no la has encontrado. Sigue intentándolo.',
+    oddsTip: 'Número medio de intentos. Los bonos de botín mejoran un poco tu suerte.',
+    odds: { actions: '~1 de cada {n} acciones', kills: '1 de cada {n} bajas', harvests: '1 de cada {n} cosechas', tasks: '1 de cada {n} encargos', games: '1 de cada {n} partidas' },
+    source: { harvest: 'Cosechas de la granja', skill: 'Entrenando {skill}', monster: 'Derrotando a {monster}', slayer: 'Terminando encargos de cazador', dice: 'Jugando a los dados en la taberna' },
+    rock_golem: { name: 'Gólem de roca', desc: 'Un guijarro que se niega a estarse quieto.' },
+    beaver: { name: 'Castor', desc: 'Juzga cada árbol que talas.' },
+    heron: { name: 'Garza', desc: 'Roba algún pez, pero te señala los mejores sitios.' },
+    squirrel: { name: 'Ardilla', desc: 'Entierra semillas por todas partes. Algunas brotan.' },
+    fox: { name: 'Zorro', desc: 'Patas ligeras y moral más ligera aún.' },
+    anvil_imp: { name: 'Diablillo del yunque', desc: 'Adora las chispas. Odia el agua.' },
+    hedgehog: { name: 'Erizo', desc: 'Lo prueba todo antes de que te lo comas.' },
+    ember_sprite: { name: 'Duende de brasa', desc: 'Una chispa que aprendió a bailar.' },
+    owl: { name: 'Búho', desc: 'Vigila cada pluma que recortas.' },
+    butterfly: { name: 'Mariposa', desc: 'Sus alas brillan como gemas talladas.' },
+    herb_snail: { name: 'Caracol herbolario', desc: 'Lento, pero reconoce cada hierba por el olor.' },
+    rune_fairy: { name: 'Hada rúnica', desc: 'Tararea en la antigua lengua de las runas.' },
+    hummingbird: { name: 'Colibrí', desc: 'Te hace sentir lento, así que te das prisa.' },
+    bone_raven: { name: 'Cuervo de hueso', desc: 'Nunca anda lejos de una ofrenda.' },
+    goblin_whelp: { name: 'Cría de goblin', desc: 'Ya está contando tus monedas.' },
+    troll_pup: { name: 'Cachorro de troll', desc: 'Pequeño, testarudo y hecho de roca.' },
+    baby_kraken: { name: 'Kraken bebé', desc: 'Ocho bracitos, todos ocupados.' },
+    little_lich: { name: 'Pequeño liche', desc: 'Sus hechizos son pequeños; sus rencores, no.' },
+    hatchling: { name: 'Cría de dragón', desc: 'Echa chispas cuando estornuda.' },
+    void_wisp: { name: 'Fuego fatuo del vacío', desc: 'Una mota de la grieta a la que le gusta lo brillante.' },
+    star_cub: { name: 'Cachorro estelar', desc: 'Deja un rastro de luz allá donde va.' },
+    slayer_bat: { name: 'Murciélago cazador', desc: 'Encuentra tu siguiente objetivo antes que tú.' },
+    lucky_cat: { name: 'Gato de la suerte', desc: 'Saluda a la fortuna, y la fortuna le devuelve el saludo.' },
+  },
+
+  forge: {
+    title: 'Forja de encantamientos',
+    desc: 'Encanta tus casillas de equipo hasta +{max}. Cada nivel suma un {v}% a las estadísticas del objeto de esa casilla. Desde +6, un intento fallido baja la casilla un nivel.',
+    protect: 'Usar un {item} para proteger los intentos arriesgados',
+    next: 'Siguiente:', chance: 'Éxito {v}', protected: 'Protegido', risk: 'Si falla, pierde un nivel',
+    enchant: 'Encantar a +{n}', maxed: 'Encantamiento completo',
+    note: 'Los encantamientos pertenecen a la casilla, no al objeto: se mantienen al cambiar de equipo. La esencia del vacío se consigue en la Grieta del Vacío.',
+    success: '¡<b>{slot}</b> ahora es <b>+{n}</b>!', drop: 'El encantamiento se escapó: <b>{slot}</b> baja a +{n}', fail: 'El encantamiento de <b>{slot}</b> ha fallado',
+  },
+
+  daily: {
+    streak: 'Racha de {n} días', noStreak: 'Aún no tienes racha', streakHint: 'Completa todas las tareas diarias cada día para aumentar tu racha. Recompensas +{v}% (máximo a los {cap} días).',
+    best: 'Mejor: {n} días', claimedTotal: '{n} tareas reclamadas', dailyTitle: 'Tareas diarias', weeklyTitle: 'Tareas semanales', resets: 'Se renueva en {time}',
+    task: {
+      xp: 'Gana {n} XP de {skill}', actions: 'Completa {n} acciones de habilidad', kills: 'Derrota {n} monstruos', gold: 'Gana {n} de oro',
+      harvest: 'Cosecha {n} parcelas', dungeon: 'Completa {n} mazmorras', orders: 'Entrega {n} encargos de la taberna', slayer: 'Completa {n} encargos de cazador',
+    },
+    reward: '{gold} de oro · fichas de taberna ×{tokens}', chest: 'cofre de gemas', claim: 'Reclamar', claimed: 'Reclamado: {gold} de oro · fichas ×{tokens}',
+    allBonus: 'Completar todas las diarias también da sacos de monedas, y un cofre de gemas cada 7 días de racha.',
   },
 }

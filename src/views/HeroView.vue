@@ -71,7 +71,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
                 <template v-for="(s, slot) in SLOTS" :key="slot">
                   <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="$t('hero.clickToRemove')" @click="G.unequip(slot)">
                     <ItemTile :item="state.equipment[slot]" size="sm" :tip="false" :qty="ITEMS[state.equipment[slot]].stackEquip ? G.qty(state.equipment[slot]) : null" />
-                    <div class="grow"><div class="slot-name">{{ s.name }}</div><div class="slot-item">{{ ITEMS[state.equipment[slot]].name }}</div></div>
+                    <div class="grow"><div class="slot-name">{{ s.name }}</div><div class="slot-item">{{ ITEMS[state.equipment[slot]].name }}<b v-if="G.enchantLevel(slot)" class="ench"> +{{ G.enchantLevel(slot) }}</b></div></div>
                   </button>
                   <div v-else class="equip-slot">
                     <ItemTile :icon="s.icon" size="sm" empty :tip="false" />
@@ -175,6 +175,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
   background: rgba(255, 255, 255, 0.025); border: 1px dashed rgba(255, 255, 255, 0.1); min-width: 0; }
 .equip-slot.filled { border-style: solid; cursor: pointer; transition: border-color 0.18s; }
 .equip-slot.filled:hover { border-color: var(--danger); }
+.ench { color: #c58cff; }
 .slot-name { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
 .slot-item { font-size: 13px; font-weight: 500; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }

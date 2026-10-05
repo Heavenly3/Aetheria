@@ -19,14 +19,16 @@ const realm = computed(() => [
   { to: '/combat', icon: 'crossed-swords', key: 'nav.combat', pulse: inCombat('area') || inCombat('boss') || inCombat('dungeon') },
   { to: '/slayer', icon: 'death-skull', key: 'nav.slayer', badge: state.slayer.task ? state.slayer.task.left : null },
   { to: '/tower', icon: 'stone-tower', key: 'nav.tower', pulse: inCombat('tower') },
-  { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: questsReady.value || null },
+  { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: questsReady.value + G.tasksReady() || null },
   { to: '/achievements', icon: 'trophy-cup', key: 'nav.achievements' },
+  { to: '/pets', icon: 'paw-print', key: 'nav.pets' },
   { to: '/stats', icon: 'histogram', key: 'nav.stats' },
 ])
 const town = computed(() => [
   { to: '/tavern', icon: 'beer-horn', key: 'nav.tavern', badge: state.tavern.orders.filter(o => !o.done && G.qty(o.item) >= o.qty).length || null,
     pulse: state.tavern.workers.some(w => w.status === 'working' || w.exp) },
   { to: '/home', icon: 'family-house', key: 'nav.home' },
+  { to: '/forge', icon: 'anvil-impact', key: 'nav.forge' },
   { to: '/church', icon: 'church', key: 'nav.church' },
   { to: '/shop', icon: 'shop', key: 'nav.shop' },
   { to: '/settings', icon: 'cog', key: 'nav.settings' },

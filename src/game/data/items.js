@@ -30,6 +30,7 @@ def('gold_ore',       { icon: 'gold-nuggets', value: 40, tint: '#e3b23c' })
 def('mithril_ore',    { icon: 'ore', value: 30,  tint: '#4c5fd5' })
 def('adamantite_ore', { icon: 'ore', value: 60,  tint: '#3e8e5e' })
 def('runite_ore',     { icon: 'ore', value: 150, tint: '#3fb6c6' })
+def('aetherium_ore',  { icon: 'ore', value: 400, tint: '#c58cff' })
 def('gold_bar',       { icon: 'gold-bar', value: 90, tint: '#e3b23c' })
 
 export const METALS = [
@@ -39,6 +40,8 @@ export const METALS = [
   { id: 'mithril', lvl: 50, ore: { mithril_ore: 1, coal: 4 },    xp: 30, tint: '#5b6ee1', req: 30, arrowStr: 22 },
   { id: 'adamant', lvl: 70, ore: { adamantite_ore: 1, coal: 6 }, xp: 38, tint: '#3e9e6a', req: 40, arrowStr: 31 },
   { id: 'rune',    lvl: 85, ore: { runite_ore: 1, coal: 8 },     xp: 50, tint: '#3fb6c6', req: 50, arrowStr: 49 },
+  // Endgame metal: forged from ore found beyond the Abyss; its gear hits harder than its tier suggests
+  { id: 'aether',  lvl: 90, ore: { aetherium_ore: 1, coal: 10 }, xp: 70, tint: '#c58cff', req: 90, arrowStr: 64, power: 9 },
 ]
 
 export const PIECES = [
@@ -61,7 +64,7 @@ METALS.forEach((m, i) => {
   def(m.id + '_bar', { icon: 'metal-bar', value: m.barValue, tint: m.tint, name: made('bar', m.id) })
   PIECES.forEach(p => def(m.id + '_' + p.id, {
     icon: p.icon, type: 'equip', slot: p.slot, style: 'melee', name: made(p.id, m.id),
-    value: Math.round(m.barValue * p.bars * 1.6), tint: m.tint, stats: p.stats(tier), req: { [p.reqSkill]: m.req },
+    value: Math.round(m.barValue * p.bars * 1.6), tint: m.tint, stats: p.stats(m.power || tier), req: { [p.reqSkill]: m.req },
   }))
   def(m.id + '_pickaxe', { icon: 'war-pick', type: 'tool', toolType: 'pickaxe', tier, value: m.barValue * 2 + 10, tint: m.tint, req: { mining: m.req }, name: made('pickaxe', m.id) })
   def(m.id + '_axe', { icon: 'wood-axe', type: 'tool', toolType: 'axe', tier, value: m.barValue * 2 + 10, tint: m.tint, req: { woodcutting: m.req }, name: made('axe', m.id) })
@@ -236,6 +239,17 @@ def('slayer_cape',   { icon: 'vampire-cape', type: 'equip', slot: 'cape', value:
 def('tower_cape',    { icon: 'cape', type: 'equip', slot: 'cape', value: 0, tint: '#f0c040', stats: { atk: 4, str: 4, def: 4, rAtk: 4, mAtk: 4 }, req: {} })
 def('tower_cape2',   { icon: 'cape', type: 'equip', slot: 'cape', value: 0, tint: '#ff7ad9', stats: { atk: 10, str: 10, def: 10, rAtk: 10, rStr: 6, mAtk: 10, mDmg: 0.05 }, req: {} })
 def('wisdom_elixir', { icon: 'bubbling-flask', type: 'potion', value: 0, tint: '#f0c040', elixir: true })
+
+/* ---------------- Beyond the Abyss ---------------- */
+def('void_essence',    { icon: 'black-hole-bolas', value: 800,  tint: '#8a5cff' })
+def('starlight_shard', { icon: 'floating-crystal', value: 1500, tint: '#ffe08a', hasDesc: true })
+def('void_blade',      { icon: 'energy-sword',    type: 'equip', slot: 'weapon', style: 'melee', value: 120000, tint: '#9b5cff', stats: { atk: 128, str: 120 }, req: { attack: 90 }, rare: true })
+def('astral_bow',      { icon: 'high-shot',       type: 'equip', slot: 'weapon', style: 'ranged', twoHanded: true, value: 130000, tint: '#7ad7ff', stats: { rAtk: 130, rStr: 34 }, req: { ranged: 90 }, rare: true })
+def('eclipse_staff',   { icon: 'crystal-wand',    type: 'equip', slot: 'weapon', style: 'magic', twoHanded: true, value: 130000, tint: '#ffb347', stats: { mAtk: 110, mDmg: 0.45 }, req: { magic: 90 }, rare: true })
+def('celestial_aegis', { icon: 'shield-reflect',  type: 'equip', slot: 'shield', value: 110000, tint: '#f5e6a8', stats: { def: 105 }, req: { defense: 90 }, rare: true })
+def('crown_of_ages',   { icon: 'crown-of-thorns', type: 'equip', slot: 'head', value: 90000, tint: '#f0c040', stats: { def: 40, atk: 10, str: 10, rAtk: 10, mAtk: 10 }, req: { defense: 90 }, rare: true })
+def('sovereign_cape',  { icon: 'cape-armor',      type: 'equip', slot: 'cape', value: 150000, tint: '#ffd36e', stats: { atk: 16, str: 16, def: 16, rAtk: 16, rStr: 8, mAtk: 16, mDmg: 0.08 }, req: {}, rare: true })
+def('eternity_amulet', { icon: 'eye-of-horus',    type: 'equip', slot: 'amulet', value: 80000, tint: '#5ee6c8', stats: { atk: 14, str: 14, def: 10, rAtk: 14, mAtk: 14 }, req: {}, rare: true })
 
 // Attach localized names: an explicit `name` (key or function) or the default "items.<id>" key
 Object.values(ITEMS).forEach(it => {

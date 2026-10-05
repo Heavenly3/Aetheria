@@ -12,6 +12,7 @@ import {
   TALENT_POINT_EVERY, MASTERY, masteryXpPerAction, TOOL_TYPES, TOOL_SPEED_PER_TIER,
 } from './data/character.js'
 import { systems, extraState } from './systems.js'
+import { meta, metaState } from './meta.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
 
@@ -79,6 +80,7 @@ export function newState(profile = {}) {
     stats: { actions: 0, kills: 0, goldEarned: 0, deaths: 0, burnt: 0, rares: 0, playTime: 0, harvests: 0 },
     log: [],
     ...extraState(),
+    ...metaState(),
   }
 }
 
@@ -321,7 +323,7 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -473,9 +475,11 @@ export const G = {
   /* ================= equipment and tools ================= */
   bonuses() {
     const b = { atk: 0, str: 0, def: 0, rAtk: 0, rStr: 0, mAtk: 0, mDmg: 0 }
-    Object.values(this.s.equipment).forEach(id => {
+    // Enchant levels belong to the slot, so they scale whatever is equipped there
+    Object.entries(this.s.equipment).forEach(([slot, id]) => {
       if (!id || !ITEMS[id]) return
-      Object.entries(ITEMS[id].stats || {}).forEach(([k, v]) => (b[k] += v))
+      const mult = slot === 'ammo' ? 1 : this.enchantMult(slot)
+      Object.entries(ITEMS[id].stats || {}).forEach(([k, v]) => (b[k] += k === 'mDmg' ? v * mult : Math.round(v * mult)))
     })
     return b
   },
@@ -591,6 +595,7 @@ export const G = {
     }
     this.s.stats.actions++
     this.addMastery(skill, a.id, masteryXpPerAction(a.time))
+    this.rollSkillPet(skill, a.time)
 
     if (a.fail && Math.random() < this.failChance(skill, a)) {
       const dmg = rand(a.fail.dmg[0], a.fail.dmg[1])
@@ -686,6 +691,7 @@ export const G = {
     this.addXp('farming', c.harvestXp)
     this.addMastery('farming', c.id, 10 + c.grow / 30)
     this.s.stats.harvests = (this.s.stats.harvests || 0) + 1
+    this.rollSkillPet('farming')
     this.s.farm.plots[i] = null
     if (replant && this.qty(c.id + '_seed') > 0 && this.level('farming') >= c.lvl) this.plant(i, c.id)
     return { item: c.id, n }
@@ -932,6 +938,7 @@ export const G = {
       }
     } else act.respawn = m.boss ? m.respawn : RESPAWN_TIME
     if (m.boss && !m.dungeon && st.killsBy[m.id] === 1) this.log('trophy', 'log.bossFirst', { monster: '@monster:' + m.id })
+    if (m.boss) this.rollMonsterPet(m.id)
     this.emit('kill', { monster: m, gold, loot })
   },
 
@@ -974,6 +981,7 @@ export const G = {
     this.log('death-skull', 'log.slayerTask', { monster: '@monster:' + m.id })
     this.toast('death-skull', 'msg.slayerDone', { pts, gold }, 'success')
     sl.task = null
+    this.rollPet(src => src.slayer)
   },
   buySlayer(id) {
     const it = SLAYER_SHOP.find(x => x.id === id)
@@ -1107,6 +1115,7 @@ export const G = {
     if (st.buffs.elixir > 0) st.buffs.elixir = Math.max(0, st.buffs.elixir - dt)
     this.updateFarm(dt)
     this.updateSystems(dt)
+    this.ensureTasks()
 
     const act = st.activity
     if (act && act.type === 'skill') this.updateSkill(dt)
@@ -1157,6 +1166,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems)
+Object.assign(G, systems, meta)
 
 export { SKILLS, ITEMS }

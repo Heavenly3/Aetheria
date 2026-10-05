@@ -26,7 +26,7 @@ const GEM_DROPS = [
 ;[
   ['copper_ore', 1, 17.5, 3, 1], ['tin_ore', 1, 17.5, 3, 1], ['rune_essence', 1, 5, 2.4, 1], ['iron_ore', 15, 35, 3.5, 1],
   ['coal', 30, 50, 4.5, 2], ['gold_ore', 40, 65, 5, 2], ['mithril_ore', 55, 80, 5.5, 3], ['adamantite_ore', 70, 95, 6.5, 4],
-  ['runite_ore', 85, 125, 8, 5],
+  ['runite_ore', 85, 125, 8, 5], ['aetherium_ore', 92, 160, 9, 6],
 ].forEach(([id, lvl, xp, time, tier]) => add('mining', {
   id, nameKey: `nodes.${id}`, icon: ITEMS[id].icon, tint: ITEMS[id].tint, lvl, xp, time, out: { [id]: 1 }, extra: GEM_DROPS, tool: { type: 'pickaxe', tier },
 }))
@@ -113,7 +113,7 @@ add('fletching', { id: 'arrow_shaft', icon: 'wood-stick', tint: '#a07845', group
 add('fletching', { id: 'headless_arrow', icon: 'arrow-flights', tint: '#d8c7a0', group: 'groups.arrows', lvl: 1, xp: 15, time: 2.4, in: { arrow_shaft: 15, feathers: 15 }, out: { headless_arrow: 15 } })
 METALS.forEach((m, i) => add('fletching', {
   id: m.id + '_arrow', icon: 'arrow-flights', tint: m.tint, group: 'groups.arrows',
-  lvl: [1, 15, 30, 45, 60, 75][i], xp: [20, 38, 75, 112, 150, 187][i], time: 2.4,
+  lvl: [1, 15, 30, 45, 60, 75, 90][i], xp: [20, 38, 75, 112, 150, 187, 225][i], time: 2.4,
   in: { headless_arrow: 15, [m.id + '_arrowtips']: 15 }, out: { [m.id + '_arrow']: 15 },
 }))
 WOODS.forEach(w => add('fletching', {
