@@ -6,6 +6,8 @@
 
 A fantasy idle RPG for the browser. Built with Vue 3, PrimeVue 4 and Vite.
 
+**[▶ Play in your browser](https://heavenly3.github.io/Aetheria/)**: no download needed. It can also be installed as an app (the install button in the address bar, or "Add to Home Screen" on mobile) and keeps working offline.
+
 ![Combat in Aetheria](docs/screenshots/combat.gif)
 
 Available in **English** and **Spanish** (switch from the title screen or Settings).
@@ -71,6 +73,7 @@ Requires Node.js 18 or newer.
 - `src/game/loop.js`: game loop, offline progress and autosave.
 - `src/i18n/`: vue-i18n setup and the `en` / `es` message files. Game data only stores ids; names are looked up at render time, so the journal and notifications follow the selected language.
 - `src/components/` and `src/views/`: the UI.
+- `public/`: app manifest, service worker (offline play) and icons.
 - `scripts/`: icon extraction, the translation checker and the balance report.
 - `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, pets, enchanting, daily tasks, ascension and translations.
 

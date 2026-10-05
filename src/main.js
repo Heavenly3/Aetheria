@@ -28,3 +28,10 @@ const app = createApp(App)
 // Restore the last visited screen (memory history always starts at "/")
 router.replace(initialRoute()).catch(() => router.replace('/'))
 app.mount('#app')
+
+// Installable and playable offline in production builds
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  const register = () => navigator.serviceWorker.register('./sw.js').catch(() => {})
+  if (document.readyState === 'complete') register()
+  else window.addEventListener('load', register)
+}

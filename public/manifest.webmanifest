@@ -1,0 +1,17 @@
+{
+  "name": "Aetheria",
+  "short_name": "Aetheria",
+  "description": "A fantasy idle RPG: train skills, craft, fight bosses and run a tavern, even while you are away.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0c0b14",
+  "theme_color": "#0c0b14",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
