@@ -19,7 +19,7 @@ const kills = computed(() => state.killsBy[m.value.id] || 0)
 </script>
 
 <template>
-  <div class="card" :class="{ active: fighting, locked: locked || slayerLocked }" style="--c:#e0554b">
+  <div class="card" :data-tut="'monster:' + m.id" :class="{ active: fighting, locked: locked || slayerLocked }" style="--c:#e0554b">
     <div class="row">
       <ItemTile :icon="m.icon" :tint="m.boss ? '#c0392b' : '#7a2a32'" size="lg" :tip="false" />
       <div class="grow">

@@ -165,6 +165,6 @@ function harvestAll() {
 .plot-empty:hover { color: var(--gold-hi); background: rgba(226, 182, 90, 0.06); }
 .seed-pop { width: 280px; max-height: 360px; overflow-y: auto; }
 .seed-opt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border-radius: 10px; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; text-align: start; }
-.seed-opt:hover:not(:disabled) { background: rgba(255, 255, 255, 0.05); }
+.seed-opt:hover:not(:disabled) { background: var(--tint-2); }
 .seed-opt:disabled { opacity: 0.45; cursor: not-allowed; }
 </style>

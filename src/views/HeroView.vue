@@ -49,7 +49,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div class="hero-name">{{ state.name }}</div>
               <div class="row" style="justify-content:center;gap:6px;margin:6px 0 14px">
                 <span class="tag" :style="{ color: role.color }"><GameIcon :name="role.icon" :size="13" /> {{ role.name }}</span>
-                <span class="tag" :style="{ color: diff.color }">{{ diff.name }}</span>
+                <span class="tag hue" :style="{ '--hue': diff.color }">{{ diff.name }}</span>
               </div>
               <div class="row small" style="margin-bottom:6px">
                 <span class="grow muted">{{ $t('hero.heroLevel') }} <b class="gold-text">{{ G.heroLevel() }}</b></span>
@@ -172,10 +172,10 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
 .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .equip-grid.tools { grid-template-columns: 1fr; }
 .equip-slot { display: flex; align-items: center; gap: 10px; padding: 9px; border-radius: 12px; text-align: start; color: inherit; font: inherit;
-  background: rgba(255, 255, 255, 0.025); border: 1px dashed rgba(255, 255, 255, 0.1); min-width: 0; }
+  background: var(--tint-1); border: 1px dashed var(--tint-border); min-width: 0; }
 .equip-slot.filled { border-style: solid; cursor: pointer; transition: border-color 0.18s; }
 .equip-slot.filled:hover { border-color: var(--danger); }
-.ench { color: #c58cff; }
+.ench { color: var(--violet); }
 .slot-name { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
 .slot-item { font-size: 13px; font-weight: 500; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }

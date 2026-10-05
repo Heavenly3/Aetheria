@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import { useConfirm } from 'primevue/useconfirm'
@@ -12,10 +12,13 @@ import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'
 import CharacterCreation from './CharacterCreation.vue'
 import LanguageSelect from './LanguageSelect.vue'
+import ThemeSelect from './ThemeSelect.vue'
+import { decodeAny, pickFile, takeLinkCode } from '../game/transfer.js'
 
 const { t } = useI18n()
 const confirm = useConfirm()
-const mode = ref('menu') // menu | load | new | create
+const mode = ref('menu') // menu | load | new | create | import
+const pending = ref(null) // a save waiting to be placed in a slot
 const slots = ref(G.listSlots())
 const last = ref(G.lastSlot())
 const createSlot = ref(null)
@@ -35,7 +38,41 @@ const ago = ts => {
 }
 const activityLabel = a => (!a ? '' : a.skill ? SKILLS[a.skill]?.name : t('nav.combat'))
 
+// Saves arriving from a transfer link or a file are placed in a slot chosen by the player
+async function readLink() {
+  const code = takeLinkCode()
+  if (!code) return
+  try { offerImport(await decodeAny(code)) } catch { G.toast('cross-mark', 'settings.invalidSave', {}, 'warn') }
+}
+onMounted(() => { readLink(); window.addEventListener('hashchange', readLink) })
+onUnmounted(() => window.removeEventListener('hashchange', readLink))
+function offerImport(save) { pending.value = { save, info: G.summarize(save) }; mode.value = 'import' }
+async function importFile() {
+  try { const save = await pickFile(); if (save) offerImport(save) }
+  catch { G.toast('cross-mark', 'settings.invalidSave', {}, 'warn') }
+}
+function placeImport(i) {
+  const write = () => {
+    if (!G.writeSlot(i, pending.value.save)) { G.toast('cross-mark', 'title.importFailed', {}, 'warn'); return }
+    G.toast('scroll-unfurled', 'title.imported', { name: pending.value.info.name, n: i + 1 }, 'success')
+    pending.value = null
+    refresh()
+    mode.value = 'load'
+  }
+  const s = slots.value[i]
+  if (!s) return write()
+  confirm.require({
+    header: t('title.overwriteTitle'),
+    message: t('title.overwriteMessage', { n: i + 1, name: s.name }),
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: t('title.overwrite'), rejectLabel: t('common.cancel'),
+    acceptProps: { severity: 'danger' }, rejectProps: { severity: 'secondary', outlined: true },
+    accept: write,
+  })
+}
+
 function pickSlot(i) {
+  if (mode.value === 'import') return placeImport(i)
   const s = slots.value[i]
   if (mode.value === 'load') { if (s) continueGame(i); return }
   if (!s) { createSlot.value = i; mode.value = 'create'; return }
@@ -73,7 +110,7 @@ function created(profile) { startNewGame(createSlot.value, profile) }
       <span v-for="(e, i) in embers" :key="i" class="ember"
         :style="{ left: e.left + '%', animationDelay: e.delay + 's', animationDuration: e.dur + 's', width: e.size + 'px', height: e.size + 'px' }" />
     </div>
-    <div class="ts-lang"><LanguageSelect input-id="title-language" /></div>
+    <div class="ts-lang"><ThemeSelect /><LanguageSelect input-id="title-language" /></div>
 
     <CharacterCreation v-if="mode === 'create'" :slot="createSlot" @cancel="mode = hasAny ? 'new' : 'menu'" @create="created" />
 
@@ -98,13 +135,24 @@ function created(profile) { startNewGame(createSlot.value, profile) }
             <span class="menu-label"><GameIcon name="locked-chest" :size="20" /> {{ $t('title.load') }}</span>
             <span class="menu-meta">{{ $t('title.slotsUsed', { n: slots.filter(Boolean).length, total: slots.length }) }}</span>
           </button>
+          <button class="ts-btn" @click="importFile">
+            <span class="menu-label"><GameIcon name="open-treasure-chest" :size="20" /> {{ $t('title.importSave') }}</span>
+            <span class="menu-meta">{{ $t('title.importHint') }}</span>
+          </button>
           <p class="hint">{{ $t('title.autosaveHint') }}</p>
         </div>
 
         <div v-else key="slots" class="slots-wrap">
           <div class="row" style="margin-bottom:14px">
-            <h2 class="slots-title grow">{{ mode === 'load' ? $t('title.load') : $t('title.chooseSlot') }}</h2>
-            <Button :label="$t('common.back')" icon="pi pi-arrow-left" text @click="mode = 'menu'" />
+            <h2 class="slots-title grow">{{ mode === 'load' ? $t('title.load') : mode === 'import' ? $t('title.importWhere') : $t('title.chooseSlot') }}</h2>
+            <Button :label="$t('common.back')" icon="pi pi-arrow-left" text @click="mode = 'menu'; pending = null" />
+          </div>
+          <div v-if="mode === 'import' && pending" class="import-card">
+            <ItemTile :icon="pending.info.avatar" :tint="pending.info.tint" size="md" :tip="false" />
+            <div class="grow">
+              <b>{{ pending.info.name }}</b>
+              <div class="small muted">{{ ROLES[pending.info.role]?.name }} · {{ $t('title.heroLevel', { n: pending.info.heroLevel }) }} · {{ $t('stats.totalLevel') }} {{ pending.info.totalLevel }} · {{ $t('title.played', { time: fmtTime(pending.info.playTime) }) }}</div>
+            </div>
           </div>
           <div class="slots">
             <div v-for="(s, i) in slots" :key="i" class="slot" :class="{ empty: !s, last: i === last }">
@@ -118,13 +166,13 @@ function created(profile) { startNewGame(createSlot.value, profile) }
                   <span class="slot-num">{{ i + 1 }}</span>
                 </div>
                 <div class="row wrap" style="gap:6px;margin-top:12px">
-                  <span class="tag" :style="{ color: DIFFICULTIES[s.difficulty]?.color }">{{ DIFFICULTIES[s.difficulty]?.name }}</span>
+                  <span class="tag hue" :style="{ '--hue': DIFFICULTIES[s.difficulty]?.color }">{{ DIFFICULTIES[s.difficulty]?.name }}</span>
                   <span class="tag">{{ $t('stats.totalLevel') }} {{ s.totalLevel }}</span>
                   <span class="tag gold">{{ fmt(s.gold) }} {{ $t('common.gold') }}</span>
                 </div>
                 <div class="small faint" style="margin-top:10px">{{ $t('title.played', { time: fmtTime(s.playTime) }) }} · {{ $t('title.saved', { when: ago(s.lastTick) }) }}<span v-if="s.activity"> · {{ activityLabel(s.activity) }}</span></div>
                 <div class="row" style="margin-top:14px">
-                  <Button class="grow" :label="mode === 'load' ? $t('title.loadOne') : $t('title.overwrite')" :icon="mode === 'load' ? 'pi pi-play' : 'pi pi-refresh'"
+                  <Button class="grow" :label="mode === 'load' ? $t('title.loadOne') : mode === 'import' ? $t('title.replaceHere') : $t('title.overwrite')" :icon="mode === 'load' ? 'pi pi-play' : 'pi pi-refresh'"
                     :severity="mode === 'load' ? undefined : 'secondary'" @click="pickSlot(i)" />
                   <Button icon="pi pi-trash" severity="danger" text :aria-label="$t('title.deleteTitle')" v-tooltip.top="$t('common.delete')" @click="removeSlot(i)" />
                 </div>
@@ -132,7 +180,7 @@ function created(profile) { startNewGame(createSlot.value, profile) }
               <button v-else class="slot-empty" :disabled="mode === 'load'" @click="pickSlot(i)">
                 <span class="slot-num">{{ i + 1 }}</span>
                 <GameIcon name="quill-ink" :size="30" />
-                <b>{{ mode === 'load' ? $t('title.emptySlot') : $t('title.createCharacter') }}</b>
+                <b>{{ mode === 'load' ? $t('title.emptySlot') : mode === 'import' ? $t('title.placeHere') : $t('title.createCharacter') }}</b>
               </button>
             </div>
           </div>
@@ -147,14 +195,15 @@ function created(profile) { startNewGame(createSlot.value, profile) }
 .title-screen { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 16px 60px; overflow: hidden; }
 .ts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background: radial-gradient(ellipse 60% 50% at 50% 38%, rgba(226, 182, 90, 0.14), transparent 70%), radial-gradient(ellipse 90% 60% at 50% 110%, rgba(224, 85, 75, 0.12), transparent 70%); }
-.ts-lang { position: absolute; top: 16px; inset-inline-end: 16px; z-index: 2; }
+.ts-lang { position: absolute; top: 16px; inset-inline-end: 16px; z-index: 2; display: flex; gap: 8px; align-items: center; }
+.import-card { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--gold) 10%, var(--panel)); border: 1px solid var(--line-hi); }
 .ember { position: absolute; bottom: -10px; border-radius: 50%; background: #ffcf7a; box-shadow: 0 0 8px 2px rgba(255, 170, 70, 0.7); opacity: 0; animation: rise linear infinite; }
 @keyframes rise { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 0.9; } 100% { transform: translate(40px, -105vh); opacity: 0; } }
 .ts-content { position: relative; z-index: 1; width: 100%; max-width: 980px; display: flex; flex-direction: column; align-items: center; gap: 34px; }
 .logo { text-align: center; animation: logoIn 1s cubic-bezier(0.2, 0.9, 0.3, 1) both; }
 @keyframes logoIn { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
-.logo-mark { width: 76px; height: 76px; margin: 0 auto 14px; border-radius: 22px; display: grid; place-items: center; color: #1a1206; background: var(--gold-grad);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset, 0 0 60px -6px rgba(226, 182, 90, 0.7); }
+.logo-mark { width: 76px; height: 76px; margin: 0 auto 14px; border-radius: 22px; display: grid; place-items: center; color: var(--on-gold); background: var(--gold-grad);
+  box-shadow: 0 0 0 1px var(--tint-border) inset, 0 0 60px -6px rgba(226, 182, 90, 0.7); }
 .logo-name { margin: 0; font-family: 'Marcellus SC', Georgia, serif; font-weight: 400; font-size: clamp(52px, 10vw, 96px); letter-spacing: 0.12em; line-height: 1; direction: ltr;
   background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 6px 30px rgba(226, 182, 90, 0.35)); }
 .logo-sub { margin-top: 10px; font-size: 14px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--muted); }
@@ -163,7 +212,7 @@ function created(profile) { startNewGame(createSlot.value, profile) }
   background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(14px); transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
 .ts-btn:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--line-hi); box-shadow: 0 16px 40px -18px rgba(226, 182, 90, 0.6); }
 .ts-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.ts-btn.primary { background: linear-gradient(135deg, rgba(226, 182, 90, 0.2), rgba(24, 22, 37, 0.85)); border-color: rgba(226, 182, 90, 0.45); }
+.ts-btn.primary { background: linear-gradient(135deg, rgba(226, 182, 90, 0.2), var(--panel)); border-color: rgba(226, 182, 90, 0.45); }
 .menu-label { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 20px; letter-spacing: 0.04em; }
 .menu-label .gi { color: var(--gold); }
 .menu-meta { font-size: 13.5px; color: var(--muted); padding-inline-start: 30px; }
@@ -185,4 +234,5 @@ function created(profile) { startNewGame(createSlot.value, profile) }
 .fade-enter-active, .fade-leave-active { transition: opacity 0.25s, transform 0.25s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(6px); }
 @media (max-width: 700px) { .slots { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .title-screen { justify-content: flex-start; } .ts-lang { position: static; align-self: flex-end; margin: -24px 0 24px; } }
 </style>

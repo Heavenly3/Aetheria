@@ -1,5 +1,5 @@
 export default {
-  app: { tagline: 'Reinos Idle', openMenu: 'Abrir menú' },
+  app: { tagline: 'Reinos Idle' },
 
   common: {
     gold: 'oro', nothing: 'Nada', lvlShort: 'Nv {n}', raw: '{v}', notNow: 'Ahora no', buyFor: 'Comprar por {price}',
@@ -17,6 +17,7 @@ export default {
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
     pets: 'Mascotas', forge: 'Forja',
     ascension: 'Renacimiento',
+    skills: 'Habilidades', more: 'Menú', main: 'Navegación principal',
   },
 
   heroMenu: { viewHero: 'Ver héroe', saveNow: 'Guardar ahora', saved: 'Partida guardada', mainMenu: 'Menú principal', label: 'Menú del héroe' },
@@ -29,6 +30,9 @@ export default {
     heroLevel: 'Héroe nivel {n}', played: 'Jugado {time}', saved: 'guardado {when}', justNow: 'ahora mismo', ago: 'hace {time}',
     loadOne: 'Cargar', emptySlot: 'Ranura vacía', createCharacter: 'Crear un héroe',
     footer: 'Iconos de game-icons.net (CC BY 3.0)',
+    importSave: 'Importar una partida', importHint: 'Desde un archivo descargado en Ajustes',
+    importWhere: '¿Dónde va este héroe?', placeHere: 'Poner el héroe aquí', replaceHere: 'Sustituir por la importada',
+    imported: '<b>{name}</b> está ahora en la ranura {n}', importFailed: 'El navegador no ha dejado guardar la partida',
   },
 
   creation: {
@@ -53,6 +57,7 @@ export default {
       'Las misiones desbloquean zonas y jefes nuevos. Revisa el tablón a menudo.',
     ],
     start: 'Que empiece la aventura',
+    tutorial: 'Una pequeña guía en la parte de arriba te acompañará en tus primeros pasos. Puedes ocultarla o saltarla cuando quieras.',
   },
 
   toast: {
@@ -431,7 +436,13 @@ export default {
   settings: {
     language: 'Idioma', heroName: 'Nombre del héroe', preferences: 'Preferencias', sound: 'Efectos de sonido',
     notify: 'Avisos del navegador con la pestaña oculta (expediciones, cola, eventos)', notifyBlocked: 'El navegador no permite notificaciones aquí',
-    backup: 'Copia de seguridad', backupIntro: 'Tu partida se guarda sola cada 10 segundos en la ranura {n}. Exporta un código para llevarla a otro navegador; al importarlo se sustituye la partida de esta ranura.',
+    backup: 'Copia y traspaso', backupIntro: 'Tu partida se guarda sola cada 10 segundos en la ranura {n} de este navegador. Para guardar una copia o seguir en otro dispositivo, descarga un archivo o envíate un enlace de traspaso.',
+    downloadFile: 'Descargar archivo', loadFile: 'Cargar archivo', copyLink: 'Copiar enlace de traspaso', shareLink: 'Compartir enlace de traspaso',
+    linkHint: 'Abre el enlace en el móvil o en otro ordenador y elige una ranura para el héroe. El enlace lleva una copia de la partida tal como está ahora.',
+    shareText: 'El héroe de {name} en Aetheria', linkCopied: 'Enlace de traspaso copiado al portapapeles', downloaded: 'Archivo de partida descargado',
+    replaceTitle: 'Sustituir esta partida', replaceMessage: 'La partida de {current} en la ranura {n} se sustituirá por {name}. Descarga antes un archivo si quieres conservarla.', replaceConfirm: 'Sustituir',
+    theme: 'Tema', themes: { system: 'Igual que el dispositivo', dark: 'Oscuro', light: 'Claro' },
+    tutorial: 'Tutorial guiado', tutorialHint: 'Vuelve a mostrar los primeros pasos en la parte de arriba.', tutorialRestart: 'Reiniciar', tutorialRestarted: 'Tutorial reiniciado',
     pastePlaceholder: 'Pega aquí un código de partida para importarla…', export: 'Exportar', import: 'Importar', game: 'Partida', slot: 'Ranura', slotOf: '{n} de {total}',
     role: 'Rol', difficulty: 'Dificultad', saveAndExit: 'Guardar y volver al menú', deleteGame: 'Borrar esta partida', about: 'Acerca de Aetheria',
     aboutText: 'RPG idle de fantasía en el que entrenas habilidades, fabricas, derrotas jefes y llevas una taberna, incluso cuando no estás.',
@@ -441,6 +452,26 @@ export default {
     invalidSave: 'El código de partida no es válido', deleteTitle: 'Borrar partida', deleteMessage: 'Se borrará la partida de {name} de la ranura {n}. Esta acción no se puede deshacer.',
     deleteConfirm: 'Borrar todo',
     autoChain: 'Fabricar automáticamente los materiales que falten', autoChainHint: 'Si a una receta se le acaban los materiales, primero fabrica sus ingredientes (minar, fundir…) y después vuelve a ella.',
+  },
+
+  tutorial: {
+    step: 'Paso {n} de {total}', skip: 'Saltar tutorial', keep: 'Seguir', expand: 'Mostrar detalles', collapse: 'Ocultar detalles',
+    skipTitle: '¿Saltar el tutorial?', skipMessage: 'Puedes volver a empezarlo desde Ajustes cuando quieras.',
+    finished: '¡Tutorial completado! Aquí tienes <b>{gold} de oro</b> para el camino.',
+    steps: {
+      openMining: { title: 'Abre Minería', text: 'Las habilidades son donde trabaja tu héroe. Abre <b>Minería</b> en el menú (la pestaña Habilidades en el móvil).' },
+      startMining: { title: 'Empieza a minar', text: 'Pulsa <b>Veta de cobre</b> o <b>Veta de estaño</b>. Las acciones se repiten solas hasta que las detengas.' },
+      gatherOre: { title: 'Reúne mineral', text: 'Deja que tu héroe mine un rato. Cada acción da XP, objetos y maestría de ese mineral.' },
+      openSmithing: { title: 'Abre Herrería', text: 'Las habilidades de recolección alimentan a las de artesanía. Abre <b>Herrería</b> para convertir el mineral en lingotes.' },
+      smeltBar: { title: 'Funde un lingote de bronce', text: 'Un <b>Lingote de bronce</b> necesita un cobre y un estaño. Si falta algo, tu héroe lo mina primero.' },
+      openInventory: { title: 'Mira tu inventario', text: 'Todo lo que fabricas acaba aquí. Pulsa un objeto para equiparlo, venderlo o ver para qué sirve.' },
+      openCombat: { title: 'Ve a Combate', text: 'Luchar entrena Ataque, Fuerza, Defensa y Vida, y los monstruos sueltan oro y botín.' },
+      startFight: { title: 'Elige un rival', text: 'Empieza por algo fácil en los <b>Prados del Alba</b>, como una gallina. Lleva comida cuando te enfrentes a enemigos más duros.' },
+      winFights: { title: 'Gana tres combates', text: 'Los combates son automáticos. Vigila tu vida en la barra de arriba.' },
+      openHero: { title: 'Conoce a tu héroe', text: 'Los niveles dan XP de héroe y puntos de atributos y talentos. Gástalos aquí y cambia tu equipo.' },
+      openQuests: { title: 'Lee el tablón de misiones', text: 'Las misiones desbloquean zonas y jefes nuevos, y las tareas diarias dan premios cada día.' },
+      openTavern: { title: 'Visita la taberna', text: 'Contrata personal que entrena habilidades por ti, incluso cuando no estás. ¡Y con esto termina la guía!' },
+    },
   },
 
   statsView: {

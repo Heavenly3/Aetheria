@@ -91,12 +91,12 @@ function enchant(slot) {
 .ench.maxed { border-color: rgba(197, 140, 255, 0.5); }
 @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 .slot-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
-.lvl { font-family: var(--font-display); font-size: 28px; color: #c58cff; }
+.lvl { font-family: var(--font-display); font-size: 28px; color: var(--violet); }
 .pips { display: flex; gap: 4px; }
-.pips i { flex: 1; height: 5px; border-radius: 5px; background: rgba(255, 255, 255, 0.07); }
+.pips i { flex: 1; height: 5px; border-radius: 5px; background: var(--tint-3); }
 .pips i.risky { background: rgba(224, 85, 75, 0.12); }
 .pips i.on { background: linear-gradient(90deg, #8a5cff, #e0a8ff); box-shadow: 0 0 8px rgba(197, 140, 255, 0.6); }
-.cost { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 13px; padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.2); }
+.cost { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 13px; padding: 8px 10px; border-radius: 10px; background: var(--well); }
 .cost-i { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; }
 .cost-i .gi { color: var(--gold); }
 .cost-i.miss { color: var(--danger); }

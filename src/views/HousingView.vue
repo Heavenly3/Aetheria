@@ -55,7 +55,7 @@ function build(r) {
 <style scoped>
 .room { display: flex; flex-direction: column; gap: 12px; }
 .pips { display: flex; gap: 4px; }
-.pips i { flex: 1; height: 5px; border-radius: 5px; background: rgba(255, 255, 255, 0.07); }
+.pips i { flex: 1; height: 5px; border-radius: 5px; background: var(--tint-3); }
 .pips i.on { background: var(--gold-grad); box-shadow: 0 0 8px rgba(226, 182, 90, 0.5); }
-.cost { display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.2); margin-top: auto; }
+.cost { display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 10px; background: var(--well); margin-top: auto; }
 </style>

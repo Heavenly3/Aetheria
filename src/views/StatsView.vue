@@ -111,7 +111,7 @@ const counters = computed(() => [
 .xp-bars { display: flex; flex-direction: column; gap: 6px; }
 .xp-row { display: grid; grid-template-columns: 130px 1fr 70px; align-items: center; gap: 10px; font-size: 13px; }
 .xp-name { display: flex; align-items: center; gap: 6px; color: var(--muted); white-space: nowrap; overflow: hidden; }
-.xp-track { height: 10px; border-radius: 4px; background: rgba(255, 255, 255, 0.04); overflow: hidden; }
+.xp-track { height: 10px; border-radius: 4px; background: var(--tint-2); overflow: hidden; }
 .xp-track i { display: block; height: 100%; border-start-end-radius: 4px; border-end-end-radius: 4px; }
 .xp-val { text-align: end; color: var(--ink); }
 .counters { columns: 2; column-gap: 24px; }

@@ -1,5 +1,5 @@
 export default {
-  app: { tagline: 'Idle Realms', openMenu: 'Open menu' },
+  app: { tagline: 'Idle Realms' },
 
   common: {
     gold: 'gold', nothing: 'Nothing', lvlShort: 'Lv {n}', raw: '{v}', notNow: 'Not now', buyFor: 'Buy for {price}',
@@ -17,6 +17,7 @@ export default {
     settings: 'Settings', realm: 'Realm', town: 'Town',
     pets: 'Pets', forge: 'Forge',
     ascension: 'Ascension',
+    skills: 'Skills', more: 'Menu', main: 'Main navigation',
   },
 
   heroMenu: { viewHero: 'View hero', saveNow: 'Save now', saved: 'Game saved', mainMenu: 'Main menu', label: 'Hero menu' },
@@ -29,6 +30,9 @@ export default {
     heroLevel: 'Hero level {n}', played: 'Played {time}', saved: 'saved {when}', justNow: 'just now', ago: '{time} ago',
     loadOne: 'Load', emptySlot: 'Empty slot', createCharacter: 'Create a hero',
     footer: 'Icons by game-icons.net (CC BY 3.0)',
+    importSave: 'Import a save', importHint: 'From a file downloaded in Settings',
+    importWhere: 'Where should this hero go?', placeHere: 'Place the hero here', replaceHere: 'Replace with the import',
+    imported: '<b>{name}</b> is now in slot {n}', importFailed: 'The browser did not let the game store the save',
   },
 
   creation: {
@@ -53,6 +57,7 @@ export default {
       'Quests unlock new areas and bosses. Check the quest board often.',
     ],
     start: 'Let the adventure begin',
+    tutorial: 'A short guide at the top of the screen will walk you through your first steps. You can hide or skip it at any time.',
   },
 
   toast: {
@@ -431,7 +436,13 @@ export default {
   settings: {
     language: 'Language', heroName: 'Hero name', preferences: 'Preferences', sound: 'Sound effects',
     notify: 'Browser notifications while the tab is hidden (expeditions, queue, events)', notifyBlocked: 'The browser does not allow notifications here',
-    backup: 'Backup', backupIntro: 'Your game saves itself every 10 seconds to slot {n}. Export a code to move it to another browser; importing one replaces the game in this slot.',
+    backup: 'Backup and transfer', backupIntro: 'Your game saves itself every 10 seconds to slot {n} of this browser. To keep a copy or continue on another device, download a file or send yourself a transfer link.',
+    downloadFile: 'Download file', loadFile: 'Load file', copyLink: 'Copy transfer link', shareLink: 'Share transfer link',
+    linkHint: 'Open the link on your phone or another computer and choose a slot for the hero. The link holds a copy of the save as it is now.',
+    shareText: "{name}'s hero in Aetheria", linkCopied: 'Transfer link copied to the clipboard', downloaded: 'Save file downloaded',
+    replaceTitle: 'Replace this game', replaceMessage: 'The game of {current} in slot {n} will be replaced by {name}. Download a file first if you want to keep it.', replaceConfirm: 'Replace',
+    theme: 'Theme', themes: { system: 'Same as the device', dark: 'Dark', light: 'Light' },
+    tutorial: 'Guided tutorial', tutorialHint: 'Shows the first steps again at the top of the screen.', tutorialRestart: 'Restart', tutorialRestarted: 'Tutorial restarted',
     pastePlaceholder: 'Paste a save code here to import it…', export: 'Export', import: 'Import', game: 'Game', slot: 'Slot', slotOf: '{n} of {total}',
     role: 'Role', difficulty: 'Difficulty', saveAndExit: 'Save and return to menu', deleteGame: 'Delete this game', about: 'About Aetheria',
     aboutText: 'A fantasy idle RPG where you train skills, craft, fight bosses and run a tavern, even while you are away.',
@@ -441,6 +452,26 @@ export default {
     invalidSave: 'That save code is not valid', deleteTitle: 'Delete game', deleteMessage: "{name}'s game in slot {n} will be deleted. This cannot be undone.",
     deleteConfirm: 'Delete everything',
     autoChain: 'Craft missing materials automatically', autoChainHint: 'If a recipe runs out, make its ingredients first (mining, smelting…) and then go back to it.',
+  },
+
+  tutorial: {
+    step: 'Step {n} of {total}', skip: 'Skip tutorial', keep: 'Keep going', expand: 'Show details', collapse: 'Hide details',
+    skipTitle: 'Skip the tutorial?', skipMessage: 'You can start it again from Settings whenever you like.',
+    finished: 'Tutorial complete! Here are <b>{gold} gold</b> for the road.',
+    steps: {
+      openMining: { title: 'Open Mining', text: 'Skills are where your hero works. Open <b>Mining</b> from the menu (the Skills tab on a phone).' },
+      startMining: { title: 'Start mining', text: 'Press <b>Copper rock</b> or <b>Tin rock</b>. Actions repeat on their own until you stop them.' },
+      gatherOre: { title: 'Gather ore', text: 'Let your hero mine for a moment. Each action gives XP, items and mastery for that ore.' },
+      openSmithing: { title: 'Open Smithing', text: 'Gathering skills feed the artisan ones. Open <b>Smithing</b> to turn ore into bars.' },
+      smeltBar: { title: 'Smelt a bronze bar', text: 'A <b>Bronze bar</b> needs one copper and one tin. If something is missing, your hero mines it first.' },
+      openInventory: { title: 'Check your inventory', text: 'Everything you make ends up here. Click an item to equip it, sell it or see what it is for.' },
+      openCombat: { title: 'Head to Combat', text: 'Fighting trains Attack, Strength, Defence and Hitpoints, and monsters drop gold and loot.' },
+      startFight: { title: 'Pick a fight', text: 'Start with something easy in the <b>Dawn Meadows</b>, like a chicken. Bring food once you face tougher foes.' },
+      winFights: { title: 'Win three fights', text: 'Fights are automatic. Keep an eye on your hitpoints in the top bar.' },
+      openHero: { title: 'Meet your hero', text: 'Levels give hero XP and points for attributes and talents. Spend them here, and change your gear.' },
+      openQuests: { title: 'Read the quest board', text: 'Quests unlock new areas and bosses, and daily tasks pay out every day.' },
+      openTavern: { title: 'Visit the tavern', text: 'Hire staff who train skills for you, even while you are away. That is the guide done!' },
+    },
   },
 
   statsView: {

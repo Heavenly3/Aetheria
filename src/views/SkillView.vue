@@ -164,21 +164,21 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
 
 <style scoped>
 .filters { position: sticky; top: 76px; z-index: 5; margin: 20px 0 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
-  background: rgba(20, 19, 31, 0.92); backdrop-filter: blur(18px); }
+  background: var(--glass); backdrop-filter: blur(18px); }
 .search { min-width: 220px; }
 .sort { min-width: 170px; }
 .chips-row { display: flex; align-items: center; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
 .chips-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin-inline-end: 4px; flex-shrink: 0; }
 .fchip { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; font: inherit; font-size: 13px; cursor: pointer;
-  color: var(--muted); background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); transition: all 0.15s; }
+  color: var(--muted); background: var(--tint-1); border: 1px solid var(--line); transition: all 0.15s; }
 .fchip i { font-style: normal; font-size: 11px; color: var(--faint); font-variant-numeric: tabular-nums; }
-.fchip:hover { color: var(--ink); border-color: rgba(255, 255, 255, 0.18); }
+.fchip:hover { color: var(--ink); border-color: var(--tint-border); }
 .fchip.on { color: var(--ink); border-color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }
 .fchip.on i { color: var(--ink); }
 .rows { display: flex; flex-direction: column; gap: 6px; }
 .grace { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
 .pips { display: flex; gap: 4px; margin-top: 8px; max-width: 320px; }
-.pips i { flex: 1; height: 5px; border-radius: 5px; background: rgba(255, 255, 255, 0.07); }
+.pips i { flex: 1; height: 5px; border-radius: 5px; background: var(--tint-3); }
 .pips i.on { background: var(--gold-grad); }
 @media (max-width: 900px) { .filters { position: static; } }
 </style>

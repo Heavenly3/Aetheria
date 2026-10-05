@@ -29,7 +29,7 @@ const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q
 </script>
 
 <template>
-  <button class="card action" :class="{ locked: locked || noTool, active, missing }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
+  <button class="card action" :data-tut="'action:' + a.id" :class="{ locked: locked || noTool, active, missing }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
     <div class="row">
       <ItemTile :icon="a.icon" :tint="a.tint" size="md" :tip="false" />
       <div class="grow">
@@ -83,7 +83,7 @@ const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q
 .tags { margin-top: 12px; gap: 6px; }
 .io { margin-top: 12px; display: flex; flex-direction: column; gap: 5px; font-size: 13.5px; }
 .io-row { display: flex; align-items: center; gap: 8px; color: var(--muted); }
-.io-row b { font-weight: 600; font-variant-numeric: tabular-nums; color: #d8d1c2; }
+.io-row b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink-2); }
 .extra { margin-top: 10px; gap: 5px; }
 .mastery { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
 .card.missing:not(.locked) { border-style: dashed; }

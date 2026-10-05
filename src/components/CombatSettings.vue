@@ -120,16 +120,16 @@ const ammo = computed(() => state.equipment.ammo)
 <style scoped>
 .styles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .style-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 12px 6px; border-radius: 12px; text-align: center; cursor: pointer;
-  border: 1px solid var(--line); background: rgba(255, 255, 255, 0.02); color: var(--ink); font: inherit; transition: all 0.18s; }
+  border: 1px solid var(--line); background: var(--tint-1); color: var(--ink); font: inherit; transition: all 0.18s; }
 .style-btn .gi { color: var(--muted); }
 .style-btn b { font-size: 13.5px; }
 .style-btn span { font-size: 11px; color: var(--muted); line-height: 1.25; }
-.style-btn:hover { border-color: rgba(255, 255, 255, 0.2); }
+.style-btn:hover { border-color: var(--tint-border); }
 .style-btn.active { border-color: var(--gold); background: rgba(226, 182, 90, 0.08); box-shadow: inset 0 0 0 1px rgba(226, 182, 90, 0.3); }
 .style-btn.active .gi { color: var(--gold); }
 .w-full { width: 100%; }
 .sets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.set { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.025); border: 1px solid var(--line); }
+.set { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: var(--tint-1); border: 1px solid var(--line); }
 @media (max-width: 900px) { .sets { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .styles { grid-template-columns: repeat(3, 1fr); } }
 </style>

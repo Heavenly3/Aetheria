@@ -172,11 +172,11 @@ function create() {
 .avatars { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
 .av { padding: 4px; border-radius: 14px; border: 2px solid transparent; background: none; cursor: pointer; display: grid; place-items: center; }
 .av.on { border-color: var(--gold); box-shadow: 0 0 18px -4px rgba(226, 182, 90, 0.6); }
-.swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.15); cursor: pointer; }
-.swatch.on { border-color: #fff; box-shadow: 0 0 0 3px rgba(226, 182, 90, 0.5); }
+.swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--tint-border); cursor: pointer; }
+.swatch.on { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(226, 182, 90, 0.5); }
 .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .role { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 14px; text-align: start; color: var(--ink); font: inherit; cursor: pointer;
-  background: rgba(255, 255, 255, 0.025); border: 1px solid var(--line); transition: all 0.18s; }
+  background: var(--tint-1); border: 1px solid var(--line); transition: all 0.18s; }
 .role:hover { border-color: color-mix(in srgb, var(--c) 45%, transparent); }
 .role.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent); }
 .role b { font-size: 16px; }

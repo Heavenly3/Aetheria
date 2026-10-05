@@ -82,6 +82,8 @@ export function newState(profile = {}) {
     tower: { best: 0, tokens: 0 },
     stats: { actions: 0, kills: 0, goldEarned: 0, deaths: 0, burnt: 0, rares: 0, playTime: 0, harvests: 0 },
     log: [],
+    // Old saves load with the tutorial finished; only new characters get it
+    tutorial: { step: 0, done: true, base: null },
     ...extraState(),
     ...metaState(),
     ...ascensionState(),
@@ -183,6 +185,7 @@ export const G = {
     replaceState(newState(profile))
     this.slot = i
     this.setupCharacter()
+    this.s.tutorial = { step: 0, done: false, base: null }
     this.log(ROLES[this.s.role].icon, 'log.start', { name: this.s.name, role: '@role:' + this.s.role })
     this.save()
   },
@@ -201,9 +204,17 @@ export const G = {
   importSave(str) {
     const s = JSON.parse(decodeURIComponent(escape(atob(str.trim()))))
     if (!s || !s.skills) throw new Error('Invalid save')
-    replaceState(s)
+    this.loadSave(s)
+  },
+  // Replace the game in the current slot with a save object (from a file or a transfer code)
+  loadSave(s) {
+    replaceState(JSON.parse(JSON.stringify(s)))
     this.migrateState()
     this.save()
+  },
+  // Store a save object straight into a slot, from the title screen
+  writeSlot(i, s) {
+    return store.set(SLOT_KEY(i), JSON.stringify(s))
   },
 
   freshState(profile) { return newState(profile) },

@@ -22,6 +22,8 @@ import ActivityDock from './components/ActivityDock.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
 import TitleScreen from './components/TitleScreen.vue'
+import BottomNav from './components/BottomNav.vue'
+import TutorialCoach from './components/TutorialCoach.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -79,6 +81,8 @@ const offlineWhat = computed(() => {
 })
 function startAdventure() {
   session.welcome = false
+  // New characters follow the guided tutorial from the hero screen
+  if (!state.tutorial.done) { router.push('/'); return }
   const start = { warrior: '/combat', ranger: '/skill/woodcutting', mage: '/skill/runecrafting', artisan: '/skill/mining', rogue: '/skill/thieving', paladin: '/skill/prayer' }
   router.push(start[state.role] || '/skill/mining')
 }
@@ -101,7 +105,6 @@ function startAdventure() {
 
       <main class="main">
         <header class="topbar">
-          <Button class="menu-btn" icon="pi pi-bars" text rounded :aria-label="$t('app.openMenu')" @click="drawer = true" />
           <div class="topbar-title">{{ title }}</div>
           <div class="chips">
             <span class="chip" v-tooltip.bottom="$t('stats.hitpoints')">
@@ -132,6 +135,7 @@ function startAdventure() {
         </header>
 
         <section class="view">
+          <TutorialCoach />
           <router-view v-slot="{ Component }">
             <transition name="page" mode="out-in">
               <component :is="Component" :key="route.fullPath" />
@@ -142,6 +146,7 @@ function startAdventure() {
     </div>
 
     <ActivityDock />
+    <BottomNav @menu="drawer = true" />
 
     <Drawer v-model:visible="drawer" header="Aetheria" class="nav-drawer">
       <NavMenu @navigate="drawer = false" />
@@ -213,21 +218,24 @@ function startAdventure() {
     <div class="row" style="margin-bottom:14px">
       <ItemTile :icon="state.avatar" :tint="state.tint" size="lg" :tip="false" />
       <div>
-        <b>{{ ROLES[state.role].name }}</b> · <span :style="{ color: DIFFICULTIES[state.difficulty].color }">{{ DIFFICULTIES[state.difficulty].name }}</span>
+        <b>{{ ROLES[state.role].name }}</b> · <span class="hue" :style="{ '--hue': DIFFICULTIES[state.difficulty].color }">{{ DIFFICULTIES[state.difficulty].name }}</span>
         <div class="small muted">{{ ROLES[state.role].desc }}</div>
       </div>
     </div>
     <ul class="muted" style="padding-inline-start:18px;line-height:1.7;margin:0">
       <li v-for="i in 6" :key="i" v-html="$t(`welcome.tips.${i - 1}`)" />
     </ul>
+    <p v-if="!state.tutorial.done" class="welcome-guide"><GameIcon name="treasure-map" :size="20" /><span v-html="$t('welcome.tutorial')" /></p>
     <template #footer><Button :label="$t('welcome.start')" icon="pi pi-arrow-right" iconPos="right" @click="startAdventure" /></template>
   </Dialog>
 </template>
 
 <style>
 .nav-drawer { width: min(300px, 86vw) !important; }
+.welcome-guide { display: flex; align-items: center; gap: 10px; margin: 16px 0 0; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--gold) 10%, transparent); border: 1px solid var(--line-hi); }
+.welcome-guide .gi { color: var(--gold); flex-shrink: 0; }
 .nav-drawer .p-drawer-title { font-family: var(--font-display); font-weight: 400; color: var(--gold); }
-.event-chip { border-color: rgba(179, 140, 255, 0.5) !important; color: #d6c4ff; cursor: pointer; font: inherit; font-weight: 700; animation: evGlow 2s infinite; }
+.event-chip { border-color: rgba(179, 140, 255, 0.5) !important; color: var(--violet); cursor: pointer; font: inherit; font-weight: 700; animation: evGlow 2s infinite; }
 .event-chip .gi { color: #b38cff; }
 @keyframes evGlow { 50% { box-shadow: 0 0 14px -2px rgba(179, 140, 255, 0.6); } }
 .hero-chip { display: flex; align-items: center; gap: 10px; padding-block: 5px; padding-inline: 5px 10px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line);

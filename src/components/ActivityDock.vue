@@ -109,5 +109,5 @@ onUnmounted(() => offs.forEach(f => f()))
 .gain { max-width: 55%; }
 .qpanel { width: 340px; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .qrow { display: flex; align-items: center; gap: 6px; }
-.chain { color: #c58cff; font-weight: 500; }
+.chain { color: var(--violet); font-weight: 500; }
 </style>

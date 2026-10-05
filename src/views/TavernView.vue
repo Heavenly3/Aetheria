@@ -368,7 +368,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 <style scoped>
 .up-card { display: flex; flex-direction: column; gap: 8px; width: 290px; padding: 14px; }
 .cost { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13px; }
-.cost-i { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; color: #d8d1c2; }
+.cost-i { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; color: var(--ink-2); }
 .cost-i .gi { color: var(--gold); }
 .cost-i.miss { color: var(--danger); }
 .worker, .cand { display: flex; flex-direction: column; gap: 10px; }
@@ -376,7 +376,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 .report { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed var(--line); }
 .report:last-child { border-bottom: 0; }
 .report > .gi { color: var(--gold); margin-top: 2px; }
-.dice-table { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 14px; border-radius: 14px; background: rgba(0, 0, 0, 0.25); }
+.dice-table { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 14px; border-radius: 14px; background: var(--well); }
 .dice-side { text-align: center; }
 .dice { display: flex; justify-content: center; gap: 8px; color: var(--ink); margin-top: 6px; }
 .dice.rolling { animation: shakeDice 0.18s infinite; }

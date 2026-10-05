@@ -23,7 +23,7 @@ const out = computed(() => Object.entries(a.value.out)[0])
 </script>
 
 <template>
-  <button class="arow" :class="{ locked: locked || noTool, active }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
+  <button class="arow" :data-tut="'action:' + a.id" :class="{ locked: locked || noTool, active }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
     <ItemTile :icon="a.icon" :tint="a.tint" size="sm" :tip="false" />
     <div class="name">
       <b>{{ a.name }}</b>

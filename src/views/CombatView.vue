@@ -130,5 +130,5 @@ function fightBoss(b) {
 .room { border-radius: 9px; padding: 2px; border: 1px solid transparent; }
 .room.past { opacity: 0.4; }
 .room.cur { border-color: var(--gold); box-shadow: 0 0 12px -2px rgba(226, 182, 90, 0.6); }
-.merc { padding: 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.025); border: 1px solid var(--line); }
+.merc { padding: 12px; border-radius: 12px; background: var(--tint-1); border: 1px solid var(--line); }
 </style>

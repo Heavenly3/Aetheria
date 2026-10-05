@@ -81,8 +81,8 @@ function claim(i, weekly) {
 <style scoped>
 .daily { margin-bottom: 26px; }
 .streak-card { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-.flame { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; color: var(--faint); background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); }
-.flame.lit { color: #ff9a3c; background: rgba(255, 140, 60, 0.12); border-color: rgba(255, 140, 60, 0.4); box-shadow: 0 0 26px -6px rgba(255, 140, 60, 0.7); }
+.flame { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; color: var(--faint); background: var(--tint-2); border: 1px solid var(--line); }
+.flame.lit { color: var(--ember); background: rgba(255, 140, 60, 0.12); border-color: rgba(255, 140, 60, 0.4); box-shadow: 0 0 26px -6px rgba(255, 140, 60, 0.7); }
 .streak-n { font-family: var(--font-display); font-size: 22px; }
 .task { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); }
 .task.ready { border-color: rgba(98, 193, 126, 0.55); box-shadow: 0 0 20px -10px rgba(98, 193, 126, 0.8); }

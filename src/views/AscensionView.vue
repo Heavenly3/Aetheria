@@ -103,7 +103,7 @@ function ascend() {
 </template>
 
 <style scoped>
-.gain { font-family: var(--font-display); font-size: 40px; color: #7ad7ff; line-height: 1.1; }
+.gain { font-family: var(--font-display); font-size: 40px; color: var(--sky); line-height: 1.1; }
 .tree { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .branch { display: flex; flex-direction: column; gap: 10px; }
 .branch-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 18px; color: var(--c); padding-bottom: 6px; border-bottom: 1px solid color-mix(in srgb, var(--c) 35%, transparent); }

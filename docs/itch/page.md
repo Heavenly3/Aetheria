@@ -28,6 +28,6 @@ A fantasy idle RPG: train 21 skills, forge gear, fight bosses and run a tavern, 
 
 **Collect and grow.** 23 rare pets, gear enchanting from +1 to +10, daily and weekly tasks with a streak, achievements, and an Ascension tree that makes every new life faster.
 
-**Plays anywhere.** Four save slots, offline progress, English and Spanish, and it can be installed as an app.
+**Plays anywhere.** Four save slots, offline progress, a light and a dark theme, a phone layout, English and Spanish. Move your hero between devices with a save file or a transfer link, and install it as an app.
 
 Icons by Lorc, Delapouite and the game-icons.net contributors (CC BY 3.0).
