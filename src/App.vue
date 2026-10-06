@@ -25,6 +25,7 @@ import TitleScreen from './components/TitleScreen.vue'
 import BottomNav from './components/BottomNav.vue'
 import TutorialCoach from './components/TutorialCoach.vue'
 import { titled, cosmeticsForAch } from './game/data/cosmetics.js'
+import { RARITY_TINT } from './game/data/omens.js'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -65,13 +66,15 @@ onMounted(() => {
     push(d.dg.icon, t('toast.dungeon', { name: d.dg.name, loot }), 'success', 5000)
   })
   G.on('event', e => { play('rare'); push(e.ev.icon, tm(e.msg), 'rare', 7000) })
+  G.on('omenSign', e => push('crystal-ball', tm(e.msg), 'info', 7000))
+  G.on('boon', b => { play('quest'); push('sparkles', t('toast.boon', { name: t(`omens.boons.${b.id}.name`) }), 'success', 6000) })
+  G.on('wish', w => { play('rare'); push('burning-meteor', t('toast.wish', { wish: t(`omens.wishes.${w.id}`) }), 'rare', 7000) })
   G.on('notify', n => notify(t('notify.title'), tm(n)))
 })
 
 const off = computed(() => session.offline)
 const ev = computed(() => G.currentEvent())
-const offerOpen = ref(false)
-function buyOffer() { if (G.buyOffer()) { play('coin'); offerOpen.value = false; G.toast('shopping-bag', 'event.bought', {}, 'success') } }
+const omenSign = computed(() => G.omenSign())
 const offlineXp = computed(() => Object.entries(off.value?.xp || {}).filter(([k, v]) => SKILLS[k] && v >= 1).sort((a, b) => b[1] - a[1]))
 const offlineItems = computed(() => Object.entries(off.value?.items || {}).filter(([k, v]) => ITEMS[k] && v !== 0).sort((a, b) => b[1] - a[1]))
 const offlineKills = computed(() => Object.values(off.value?.kills || {}).reduce((a, b) => a + b, 0))
@@ -117,9 +120,10 @@ function startAdventure() {
             </span>
             <span class="chip" v-tooltip.bottom="$t('stats.combatLevel')"><GameIcon name="crossed-swords" :size="15" />{{ G.combatLevel() }}</span>
             <span class="chip" v-tooltip.bottom="$t('stats.totalLevel')"><GameIcon name="star-medal" :size="15" />{{ G.totalLevel() }}</span>
-            <button v-if="ev && state.event" class="chip event-chip" v-tooltip.bottom="ev.desc" @click="ev.offer ? (offerOpen = true) : null">
+            <router-link v-if="omenSign" to="/omens" class="chip omen-chip sign" v-tooltip.bottom="$t(`omens.signs.${omenSign}`)"><GameIcon name="crystal-ball" :size="15" />…</router-link>
+            <router-link v-else-if="ev && state.event" to="/omens" class="chip omen-chip" :style="{ '--c': RARITY_TINT[ev.rarity] }" v-tooltip.bottom="ev.desc">
               <GameIcon :name="ev.icon" :size="15" />{{ ev.name }} · {{ fmtClock(state.event.t) }}
-            </button>
+            </router-link>
             <router-link v-if="fest" to="/festival" class="chip fest-chip" :style="{ '--c': fest.tint }" v-tooltip.bottom="fest.name"><GameIcon :name="fest.icon" :size="15" />{{ fmt(G.festivalState().tokens) }}</router-link>
             <span class="chip gold" v-tooltip.bottom="$t('common.gold')"><GameIcon name="two-coins" :size="15" />{{ fmt(state.gold) }}</span>
           </div>
@@ -202,22 +206,6 @@ function startAdventure() {
     <template #footer><Button :label="$t('offline.collect')" icon="pi pi-check" @click="session.offline = null" /></template>
   </Dialog>
 
-  <Dialog v-model:visible="offerOpen" modal :header="$t('events.merchant.name')" style="width: min(420px, calc(100vw - 32px))">
-    <template v-if="state.event?.offer">
-      <div class="row">
-        <ItemTile :item="state.event.offer.item" size="lg" :qty="state.event.offer.qty" />
-        <div class="grow">
-          <b>{{ state.event.offer.qty }}× {{ ITEMS[state.event.offer.item].name }}</b>
-          <div class="small muted">{{ $t('event.offer', { time: fmtClock(state.event.t) }) }}</div>
-        </div>
-      </div>
-    </template>
-    <div v-else class="small muted">{{ $t('event.gone') }}</div>
-    <template #footer>
-      <Button :label="$t('common.notNow')" severity="secondary" text @click="offerOpen = false" />
-      <Button v-if="state.event?.offer" :label="$t('common.buyFor', { price: fmt(state.event.offer.price) })" icon="pi pi-shopping-cart" :disabled="state.gold < state.event.offer.price" @click="buyOffer" />
-    </template>
-  </Dialog>
 
   <Dialog :visible="session.inGame && session.welcome" modal :header="$t('welcome.title', { name: state.name })" style="width: min(540px, calc(100vw - 32px))" @update:visible="session.welcome = false">
     <div class="row" style="margin-bottom:14px">
@@ -245,11 +233,12 @@ function startAdventure() {
 .welcome-guide { display: flex; align-items: center; gap: 10px; margin: 16px 0 0; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--gold) 10%, transparent); border: 1px solid var(--line-hi); }
 .welcome-guide .gi { color: var(--gold); flex-shrink: 0; }
 .nav-drawer .p-drawer-title { font-family: var(--font-display); font-weight: 400; color: var(--gold); }
-.event-chip { border-color: rgba(179, 140, 255, 0.5) !important; color: var(--violet); cursor: pointer; font: inherit; font-weight: 700; animation: evGlow 2s infinite; }
-.event-chip .gi { color: #b38cff; }
+.omen-chip { --c: #b38cff; color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 55%, transparent) !important; animation: evGlow 2.2s infinite; }
+.omen-chip .gi { color: var(--c); }
+.omen-chip.sign { color: var(--muted); letter-spacing: 0.2em; }
 .fest-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 55%, transparent) !important; }
 .fest-chip .gi { color: var(--c); }
-@keyframes evGlow { 50% { box-shadow: 0 0 14px -2px rgba(179, 140, 255, 0.6); } }
+@keyframes evGlow { 50% { box-shadow: 0 0 14px -2px color-mix(in srgb, var(--c) 70%, transparent); } }
 .hero-chip { display: flex; align-items: center; gap: 10px; padding-block: 5px; padding-inline: 5px 10px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line);
   color: var(--ink); font: inherit; cursor: pointer; transition: border-color 0.2s; }
 .hero-chip:hover { border-color: var(--line-hi); }

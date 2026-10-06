@@ -112,6 +112,10 @@ export const ACHIEVEMENTS = [
   ach('beasts_all', 'beastsAll', 'all', 'open-book', G => G.bestiaryProgress().seen >= G.bestiaryProgress().total, 150000),
   ...tiers('hunted', [[1, 2500], [10, 40000]], 'archery-target', (G, n) => G.huntedCount() >= n),
   ...tiers('ascend', [[1, 5000], [5, 100000]], 'ankh', (G, n) => (G.s.ascension?.count || 0) >= n),
+  ...tiers('omens', [[5, 2000], [25, 20000], [100, 100000]], 'crystal-ball', (G, n) => G.omensSeen() >= n),
+  ach('omens_all', 'omensAll', 'all', 'all-seeing-eye', G => G.omensSeenKinds() >= G.omenKinds(), 250000),
+  ...tiers('wishes', [[1, 5000], [10, 50000]], 'burning-meteor', (G, n) => G.wishCount() >= n),
+  ach('relic_mythic', 'relicMythic', 1, 'floating-crystal', G => (G.s.omens.relics.mythic || 0) >= 1, 50000),
   ach('set_full', 'setFull', 1, 'breastplate', G => G.activeSets().some(x => x.worn === x.set.pieces.length), 3000),
 ]
 

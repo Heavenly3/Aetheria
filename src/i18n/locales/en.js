@@ -15,7 +15,7 @@ export default {
     hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
     settings: 'Settings', realm: 'Realm', town: 'Town',
-    pets: 'Pets', forge: 'Forge', bestiary: 'Bestiary', festival: 'Festival',
+    pets: 'Pets', forge: 'Forge', bestiary: 'Bestiary', festival: 'Festival', omens: 'Omens',
     groups: { hero: 'Hero', adventure: 'Adventure', progress: 'Progress', town: 'Town' },
     ascension: 'Ascension',
     skills: 'Skills', more: 'Menu', main: 'Main navigation',
@@ -67,6 +67,7 @@ export default {
     achievement: 'Achievement unlocked: <b>{name}</b>', quest: 'Quest complete: <b>{name}</b>', death: 'You were defeated by <b>{name}</b>',
     expeditionOk: '<b>{name}</b> came back from {exp} with {gold} gold', expeditionFail: '<b>{name}</b> failed {exp} and came back hurt',
     dungeon: '<b>{name}</b> cleared! {loot}',
+    boon: 'The sky grants you a boon: <b>{name}</b>', wish: 'A wish is granted: <b>{wish}</b>, forever',
     pet: 'New pet: <b>{name}</b>!', petPlain: 'You found a pet: {name}', streak: 'All dailies done! Streak: <b>{n} days</b>',
   },
 
@@ -217,7 +218,7 @@ export default {
   queue: { added: 'Queued: {n}× {action}', addAria: 'Add {name} to the queue', add: 'Queue', howMany: 'How many times?', count: '{n} in queue' },
 
   dock: {
-    tower: 'Endless Tower', boss: 'Boss', dungeon: 'Dungeon', combat: 'Combat', queueWaiting: '{n} queued actions waiting',
+    tower: 'Endless Tower', omen: 'Omen', boss: 'Boss', dungeon: 'Dungeon', combat: 'Combat', queueWaiting: '{n} queued actions waiting',
     startQueue: 'Start queue', viewQueue: 'View queue', goTo: 'Go to', queue: 'Queue', clear: 'Clear', queueEmpty: 'The queue is empty.',
     chainFor: 'for {action}',
   },
@@ -233,7 +234,9 @@ export default {
     room: '{room} upgraded to level {level}.', prestige: '{skill} reached prestige {n}.', tavernLevel: 'Your tavern is now {tavern}.',
     hired: 'Hired {name}, a {rarity} {spec}.', fired: '{name} has left your staff.', workerLevel: '{name} reached level {level} in {skill}.',
     expeditionOk: '{name} returned from {exp} with {gold} gold.', expeditionFail: '{name} failed {exp} ({gold} gold).',
-    order: 'Order delivered: {n}× {item}.', lostChest: 'Found a lost chest: {gold} gold and {n}× {item}.',
+    order: 'Order delivered: {n}× {item}.', lostChest: 'Found a lost chest: {gold} gold and {n}× {item}.', chestOmen: 'Found a lost chest: {gold} gold and {dust} stardust.',
+    omen: 'Omen: {omen}.', goblinCaught: 'You caught the Gilded Goblin!', goblinEscaped: 'The Gilded Goblin got away.', wish: 'A wish is granted: {wish}.',
+    relic: 'A relic appears: {item}.', boon: 'Boon received: {boon}.', offering: 'You made an offering to the stars.',
     pet: 'A new pet joins you: {pet}!', enchant: '{slot} enchanted to +{n}.', streak: 'Daily streak: {n} days.',
     ascend: 'Ascension {n}: reborn with {shards} Aether shards.',
   },
@@ -396,6 +399,10 @@ export default {
     hunted: { name: 'Master Hunter {n}', desc: 'Master {n} creatures in the bestiary.' },
     setFull: { name: 'Dressed for the Part', desc: 'Wear every piece of an equipment set.' },
     ascend: { name: 'Reborn {n}', desc: 'Ascend {n} times.' },
+    omens: { name: 'Stargazer {n}', desc: 'Witness {n} omens.' },
+    omensAll: { name: 'Keeper of the Chronicle', desc: 'Witness every omen.' },
+    wishes: { name: 'Wishmaker {n}', desc: 'Receive {n} wishes from the comet.' },
+    relicMythic: { name: 'Touched by Myth', desc: 'Find a relic of mythic quality.' },
     boss_void_emperor: { name: 'Voidbreaker', desc: 'Defeat the Void Emperor.' },
     boss_aether_sovereign: { name: 'Above the Stars', desc: 'Defeat the Aether Sovereign.' },
   },
@@ -461,11 +468,13 @@ export default {
   },
 
   cosmetics: {
-    title: 'Appearance', edit: 'Appearance and title', intro: 'Titles, portraits and colours are unlocked by achievements and festivals.',
+    title: 'Appearance', edit: 'Appearance and title', intro: 'Titles, portraits and colours are unlocked by achievements, omens and festivals.',
     tabs: { title: 'Titles', avatar: 'Portraits', tint: 'Colours' }, noTitle: 'No title',
     titled: '{name}, {title}', titledOf: '{name} {title}',
+    fromOmen: 'Witness {name} {n}×', fromCreature: 'Defeat {name} {n}×', fromWishes: 'Receive {n} wishes', fromUnknownOmen: 'Hidden in an omen not yet witnessed',
     fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
     titles: {
+      starborn: 'Starborn', goldcatcher: 'Goldcatcher', blood_moon: 'of the Blood Moon', riftbreaker: 'Riftbreaker', wishbearer: 'Wishbearer', eye_witness: 'Witness of the Eye',
       apprentice: 'the Apprentice', goblin_hunter: 'Goblin Hunter', dragonslayer: 'Dragonslayer', voidwalker: 'Voidwalker', unbound: 'the Unbound',
       spire_climber: 'Spire Climber', naturalist: 'the Naturalist', beastbane: 'Beastbane', wild_heart: 'Wild Heart', twice_born: 'the Twice-Born',
       many_lives: 'of Many Lives', goldhand: 'Goldhand', hope: 'Hope of the Realm', ten_runes: 'of the Ten Runes', unfailing: 'the Unfailing',
@@ -492,6 +501,40 @@ export default {
     shop: 'Festival shop', buy: 'Buy', owned: 'Owned', bought: 'Bought: <b>{item}</b>',
     kinds: { title: 'Festival title', avatar: 'Festival portrait', tint: 'Festival colour', avatarHint: 'A portrait for your hero, chosen in Appearance.', tintHint: 'A colour for your portrait, chosen in Appearance.' },
     none: 'No festival right now', next: 'Next: {name}, in {time}.', calendar: 'Festival calendar',
+  },
+
+  omens: {
+    rarity: { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' },
+    signs: {
+      common: 'A strange breeze crosses the realm…', rare: 'The birds fall silent all at once…', epic: 'The sky darkens without a single cloud…',
+      legendary: 'A new light burns among the stars…', mythic: 'Everything stops. Something is watching.',
+    },
+    signTitle: 'A sign in the sky', signSoon: 'Whatever it is arrives in {time}.',
+    taking: 'You are taking part', notTaking: 'Train a skill or fight to take part',
+    defeated: 'Defeated: {n}', huntBtn: { gilded_goblin: 'Chase it', rift_horror: 'Enter the rift' },
+    creatures: {
+      gilded_goblin: 'Gilded Goblin', gilded_goblinDesc: 'Hard to hit and harmless, but it carries a fortune. It flees when the omen ends.',
+      rift_horror: 'Rift Horror', rift_horrorDesc: 'It grows as strong as you are. Each one may drop a relic.',
+    },
+    caravan: 'The Veiled Caravan', mysteryRelic: 'Sealed relic', mysteryRelicHint: 'Its quality is only revealed when you open it.', sold: 'Sold',
+    bought: 'The caravan hands you {item}', calmTitle: 'Calm skies',
+    calm: 'Nothing stirs. Omens arrive when they please, while you play. Stardust offered to the stars may hurry them along, and draw rarer ones.',
+    offeringMade: 'The stars have heard your offering. Something will answer soon.', offer: 'Offer {n} stardust', offered: 'You scatter stardust to the sky. It glitters, and waits.',
+    boonTitle: 'Boon', boonHint: 'Take part in an omen and, when it ends, the sky grants you a boon. Most are modest. Some are not.',
+    wishTitle: 'Wishes {n}/{max}', wishHint: 'Wishes granted by the comet stay with you forever.', wishUnknown: 'Some omens leave gifts that never fade.',
+    chronicle: 'Chronicle of omens', chronicleIntro: 'Every omen you witness is written here. The rest remain a mystery.',
+    witnessed: 'witnessed {n}×', unseen: 'Not witnessed yet', secretPet: 'A companion that only appears during this omen',
+    relics: 'Relics', relicsIntro: 'Relics appear in the rift, in lost chests and at the caravan. Their quality is rolled when they appear, and better quality means much stronger stats.',
+    jackpot: 'A rich vein! <b>+{gold} gold</b>', closed: 'The omen fades and the way closes', gone: 'That omen has already passed',
+    boons: {
+      swift_wind: { name: 'Swift Wind' }, scholar: { name: "Scholar's Insight" }, fortune: { name: "Fortune's Favour" }, fools_luck: { name: "Fool's Luck" },
+    },
+    wishes: { xp: '+0.5% XP', gold: '+0.5% gold', loot: '+0.5% loot', speed: '+0.3% speed', double: '+0.3% double resources', mastery: '+1% mastery XP', heal: '+1% healing', vigour: '+1 max HP' },
+  },
+
+  relics: {
+    astral_charm: 'Astral Charm', veil_mantle: 'Veil Mantle', moonlit_aegis: 'Moonlit Aegis',
+    desc: 'A relic from an omen. No two are quite alike: its quality was decided the moment it appeared.',
   },
 
   sets: {
@@ -604,12 +647,32 @@ export default {
   },
 
   events: {
-    stars: { name: 'Starfall', desc: '+25% XP for 15 minutes.' },
-    goldrush: { name: 'Gold Rush', desc: '+50% gold for 10 minutes.' },
-    harvest: { name: 'Fertile Rain', desc: 'Crops grow 50% faster for 15 minutes.' },
-    merchant: { name: 'Travelling Merchant', desc: 'Sells one item at half price for 10 minutes.' },
-    chest: { name: 'Lost Chest', desc: 'You find an abandoned chest.' },
-    chestFound: 'Lost chest: <b>{gold} gold</b> and {n}× {item}', started: 'Event: <b>{event}</b>',
+    stars: { name: 'Starfall', desc: '+25% XP, and actions and fights shake loose stardust.',
+      lore: 'The sky comes apart in silver threads. Where they land, the ground hums for days.' },
+    goldrush: { name: 'Gold Fever', desc: '+50% gold, and now and then a vein worth ten times as much.',
+      lore: 'Someone in the tavern swears the river ran yellow at dawn. By noon, everyone has a pan.' },
+    harvest: { name: 'Fertile Rain', desc: 'Crops grow 50% faster and every plot gives one more harvest.',
+      lore: 'A warm rain that smells of bread. The old farmers take their hats off to it.' },
+    chest: { name: 'Lost Chest', desc: 'An abandoned chest with gold, stardust and, sometimes, a relic.',
+      lore: 'Half buried, its lock long rusted away. Whoever left it was in a hurry.' },
+    aurora: { name: 'Aurora of the Ancients', desc: 'Gathering yields double far more often, and mastery grows 50% faster.',
+      lore: 'Green fire rolls over the peaks. In its light, every vein of ore and every fish shows itself.' },
+    merchant: { name: 'The Veiled Caravan', desc: 'A caravan that sells what no shop in the realm has, for gold or stardust.',
+      lore: 'No one sees it arrive. Silk tents, masked traders and goods that should not exist.' },
+    gilded_goblin: { name: 'The Gilded Goblin', desc: 'A goblin covered in gold runs across the realm. Catch it before it vanishes.',
+      lore: 'It laughs, it jingles, it is very fast. Legends say it never stays more than two minutes.' },
+    blood_moon: { name: 'Blood Moon', desc: 'Monsters are 30% stronger, but loot doubles and rare drops are three times as likely.',
+      lore: 'The moon turns red and the beasts stop sleeping. Brave hunters grow rich. The others do not come back.' },
+    eclipse: { name: 'Arcane Eclipse', desc: '+50% magic damage, half the runes are kept, and runecrafting and magic learn faster.',
+      lore: 'The sun goes black and every spell in the realm burns twice as bright.' },
+    rift: { name: 'The Wandering Rift', desc: 'A tear in the world releases a horror that grows with you. It guards relics.',
+      lore: 'The air splits like old cloth. Something on the other side has been waiting.' },
+    comet: { name: 'Comet of Wishes', desc: '+50% XP, and every action or fight may grant a permanent wish.',
+      lore: 'Once in a lifetime, they say. Whisper your wish as it passes and the sky may answer.' },
+    eye: { name: 'The Eye Opens', desc: 'Everything triples: XP, gold and loot, with faster actions. Its gaze leaves a gift for those who were there.',
+      lore: 'The stars go still. An eye as old as the world opens above the realm, and looks at you.' },
+    started: 'An omen: <b>{event}</b>', hunt: 'An omen: <b>{event}</b>. Hunt it before it is gone!',
+    chestFound: 'Lost chest: <b>{gold} gold</b> and {dust} stardust', chestRelic: 'Lost chest: <b>{gold} gold</b>, {dust} stardust and <b>{relic}</b>!',
   },
 
   styles: {
@@ -699,6 +762,7 @@ export default {
   recipes: { tanLeather: 'Tan leather', tanDragonhide: 'Tan dragonhide' },
 
   tpl: {
+    relic: '{relic} ({quality})',
     made: '{mat} {thing}', raw: 'Raw {fish}', cooked: '{fish}', seed: '{crop} seed', uncut: 'Uncut {gem}', amulet: '{gem} amulet',
     burn: 'Burn {item}', cut: 'Cut {gem}', bury: 'Bury {item}', scatter: 'Scatter {item}',
     wood: { logs: '{wood} logs', rod: '{wood} rod', bow: '{wood} bow', staff: '{wood} staff', tree: '{wood} tree' },
@@ -717,6 +781,7 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    stardust: 'Stardust',
     copper_ore: 'Copper ore', tin_ore: 'Tin ore', rune_essence: 'Rune essence', iron_ore: 'Iron ore', coal: 'Coal', gold_ore: 'Gold ore',
     mithril_ore: 'Mithril ore', adamantite_ore: 'Adamantite ore', runite_ore: 'Runite ore', gold_bar: 'Gold bar', logs: 'Logs',
     rod: 'Fishing rod', bow: 'Shortbow', arrow_shaft: 'Arrow shaft', headless_arrow: 'Headless arrow', feathers: 'Feathers',
@@ -738,6 +803,7 @@ export default {
     eclipse_staff: 'Eclipse staff', celestial_aegis: 'Celestial aegis', crown_of_ages: 'Crown of Ages', sovereign_cape: "Sovereign's cape", eternity_amulet: 'Amulet of Eternity',
   },
   itemDesc: {
+    stardust: 'Falls from the sky during some omens. The Veiled Caravan accepts it, and so do the stars.',
     compost: 'Use it on a plot to halve the remaining growth time.',
     slayer_helm: 'With an active task: +15% accuracy and damage against the target.',
     starlight_shard: 'Protects an enchantment from dropping a level when it fails.',
@@ -748,7 +814,8 @@ export default {
     unknown: 'Not found yet. Keep at it.',
     oddsTip: 'Average number of tries. Loot bonuses improve your luck a little.',
     odds: { actions: '~1 in {n} actions', kills: '1 in {n} kills', harvests: '1 in {n} harvests', tasks: '1 in {n} tasks', games: '1 in {n} games' },
-    source: { harvest: 'Farming harvests', skill: 'Training {skill}', monster: 'Defeating {monster}', slayer: 'Finishing slayer tasks', dice: 'Playing dice at the tavern', festival: 'Festival shop: {name}' },
+    source: { harvest: 'Farming harvests', skill: 'Training {skill}', monster: 'Defeating {monster}', slayer: 'Finishing slayer tasks', dice: 'Playing dice at the tavern', festival: 'Festival shop: {name}', omen: 'During the omen {name}', omenUnknown: 'During an omen not yet witnessed' },
+    omenOnly: 'Only during its omen',
     festivalOnly: 'Sold during its festival',
     rock_golem: { name: 'Rock Golem', desc: 'A pebble that refuses to stay still.' },
     beaver: { name: 'Beaver', desc: 'Judges every tree you cut.' },
@@ -776,6 +843,13 @@ export default {
     mushling: { name: 'Mushling', desc: 'Sprouted in a pumpkin patch and never left your side.' },
     frost_cub: { name: 'Frost Cub', desc: 'Warm as a stove, cold as a snowdrift.' },
     spring_chick: { name: 'Spring Chick', desc: 'Hatched on the first warm morning of the year.' },
+    astral_wisp: { name: 'Astral Wisp', desc: 'A spark that fell with the stars and decided to stay.' },
+    gilded_imp: { name: 'Gilded Imp', desc: 'The goblin left this one behind. It still counts coins in its sleep.' },
+    crimson_pup: { name: 'Crimson Pup', desc: 'Born under a red moon. Its eyes glow when danger is near.' },
+    eclipse_orb: { name: 'Eclipse Orb', desc: 'A sliver of the dark sun that orbits your head and hums with magic.' },
+    rift_gargoyle: { name: 'Rift Gargoyle', desc: 'Crawled out of the rift and chose you as its master.' },
+    comet_sprite: { name: 'Comet Sprite', desc: 'Leaves a trail of sparks wherever it flies.' },
+    wandering_eye: { name: 'Wandering Eye', desc: 'A small eye that watches over you. Something larger watches through it.' },
     sunfox: { name: 'Sunfox', desc: 'Its tail glows like the last embers of a bonfire.' },
   },
 

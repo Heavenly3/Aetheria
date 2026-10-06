@@ -32,7 +32,7 @@ const activeBlessings = computed(() => BLESSINGS.filter(x => G.blessed(x.id)))
 const drink = computed(() => (state.tavern.drink ? DRINKS.find(d => d.id === state.tavern.drink.id) : null))
 const prayer = computed(() => PRAYERS.find(p => p.id === state.prayer) || null)
 const ev = computed(() => G.currentEvent())
-const anyEffect = computed(() => activeBlessings.value.length || state.buffs.potion || state.buffs.elixir > 0 || drink.value || prayer.value || (ev.value && state.event) || state.grace)
+const anyEffect = computed(() => !!state.omens.boon || activeBlessings.value.length || state.buffs.potion || state.buffs.elixir > 0 || drink.value || prayer.value || (ev.value && state.event) || state.grace)
 const sets = computed(() => G.activeSets().filter(x => x.worn >= x.set.bonuses[0].n))
 const statRows = computed(() => Object.entries(STAT_LABELS).map(([k, l]) => ({ k, l, v: k === 'mDmg' ? `+${Math.round(b.value[k] * 100)}%` : `+${b.value[k]}` })))
 const role = computed(() => ROLES[state.role])
@@ -122,6 +122,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
                 <span v-if="state.buffs.potion" class="tag arcane"><GameIcon name="round-potion" :size="13" /> {{ ITEMS[state.buffs.potion.id].name }} · {{ fmtClock(state.buffs.potion.t) }}</span>
                 <span v-if="drink" class="tag gold"><GameIcon :name="drink.icon" :size="13" /> {{ drink.name }} · {{ fmtClock(state.tavern.drink.t) }}</span>
                 <span v-if="prayer" class="tag ok"><GameIcon :name="prayer.icon" :size="13" /> {{ $t('hero.inCombat', { name: prayer.name }) }}</span>
+                <span v-if="state.omens.boon" class="tag ok"><GameIcon name="sparkles" :size="13" /> {{ $t(`omens.boons.${state.omens.boon.id}.name`) }} · {{ fmtClock(state.omens.boon.t) }}</span>
                 <span v-if="ev && state.event" class="tag arcane"><GameIcon :name="ev.icon" :size="13" /> {{ ev.name }} · {{ fmtClock(state.event.t) }}</span>
                 <span v-if="state.grace" class="tag ok"><GameIcon name="star-swirl" :size="13" /> {{ $t('hero.grace', { v: Math.round(state.grace * GRACE_SPEED * 100) }) }}</span>
                 <span v-if="state.buffs.elixir > 0" class="tag gold"><GameIcon name="bubbling-flask" :size="13" /> {{ $t('hero.elixir') }} · {{ fmtClock(state.buffs.elixir) }}</span>

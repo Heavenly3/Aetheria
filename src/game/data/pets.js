@@ -35,6 +35,14 @@ export const PETS = [
   pet('star_cub',     'unicorn',        '#ffe08a', { monster: 'aether_sovereign' }, 1 / 300, { xp: 0.03 }),
   pet('slayer_bat',   'bat',            '#b5179e', { slayer: true },                1 / 150, { 'xp.slayer': 0.08 }),
   pet('lucky_cat',    'cat',            '#f0c040', { dice: true },                  1 / 400, { double: 0.01 }),
+  // Omen pets: only rolled while their omen is on (or by defeating its creature)
+  pet('astral_wisp',   'sparkles',        '#9db8ff', { omen: 'stars' },          1 / 2500, { xp: 0.02 }),
+  pet('gilded_imp',    'goblin',          '#f0c040', { omen: 'gilded_goblin' },  1 / 12,   { gold: 0.04 }),
+  pet('crimson_pup',   'wolf-head',       '#c0152f', { omen: 'blood_moon' },     1 / 400,  { meleeDmg: 0.02, rangedDmg: 0.02, magicDmg: 0.02 }),
+  pet('eclipse_orb',   'crystal-ball',    '#7b4dff', { omen: 'eclipse' },        1 / 1500, { runeSave: 0.05 }),
+  pet('rift_gargoyle', 'gargoyle',        '#5d6b8a', { omen: 'rift' },           1 / 60,   { defense: 0.04 }),
+  pet('comet_sprite',  'angel-wings',     '#ffb347', { omen: 'comet' },          1 / 600,  { loot: 0.03 }),
+  pet('wandering_eye', 'eye-target',      '#3fe0c5', { omen: 'eye' },            0,        { xp: 0.03, gold: 0.03, loot: 0.03 }),
   // Festival pets are bought in the festival shop, never rolled
   pet('mushling',     'mushroom',       '#d9772b', { festival: 'harvest' },         0, { loot: 0.02 }),
   pet('frost_cub',    'polar-bear',     '#8fd0f2', { festival: 'winter' },          0, { maxHp: 3 }),

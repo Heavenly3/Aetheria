@@ -88,6 +88,12 @@ export const collection = {
   cosmeticUnlocked(c, kind) {
     if (c.ach) return !!this.s.achievements[c.ach]
     if (c.festival) return !!this.s.cosmetics.owned[`${kind}:${c.id}`]
+    if (c.omen) {
+      const o = c.omen, om = this.s.omens
+      if (o.seen) return (om.seen[o.seen] || 0) >= o.n
+      if (o.kill) return (om.kills[o.kill] || 0) >= o.n
+      return this.wishCount() >= o.wishes
+    }
     return true
   },
   titlesUnlocked() { return TITLES.filter(t => this.cosmeticUnlocked(t, 'title')) },

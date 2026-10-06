@@ -15,6 +15,8 @@ import { systems, extraState } from './systems.js'
 import { meta, metaState } from './meta.js'
 import { ascension, ascensionState } from './ascension.js'
 import { collection, collectionState } from './collection.js'
+import { omens, omensState } from './omens.js'
+import { OMEN_MAP } from './data/omens.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
 
@@ -89,6 +91,7 @@ export function newState(profile = {}) {
     ...metaState(),
     ...ascensionState(),
     ...collectionState(),
+    ...omensState(),
   }
 }
 
@@ -241,6 +244,8 @@ export const G = {
     const st = this.s
     // The bestiary keeps its own lifetime kill count; saves from before it start from the current one
     if (!Object.keys(st.bestiary.kills).length) st.bestiary.kills = { ...st.killsBy }
+    // Events from before omens existed are dropped
+    if (st.event && !(OMEN_MAP[st.event.id] && st.event.phase)) st.event = null
     if (!ROLES[st.role]) st.role = 'warrior'
     if (!DIFFICULTIES[st.difficulty]) st.difficulty = 'normal'
     if ((st.version || 2) < 3) {
@@ -343,7 +348,7 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -661,6 +666,7 @@ export const G = {
     this.addMastery(skill, a.id, masteryXpPerAction(a.time))
     this.rollSkillPet(skill, a.time)
     this.festivalAction(a.time)
+    this.omenAction(a.time)
 
     if (a.fail && Math.random() < this.failChance(skill, a)) {
       const dmg = rand(a.fail.dmg[0], a.fail.dmg[1])
@@ -759,6 +765,7 @@ export const G = {
     this.addMastery('farming', c.id, 10 + c.grow / 30)
     this.s.stats.harvests = (this.s.stats.harvests || 0) + 1
     this.rollSkillPet('farming')
+    this.omenAction(3)
     this.s.farm.plots[i] = null
     if (replant && this.qty(c.id + '_seed') > 0 && this.level('farming') >= c.lvl) this.plant(i, c.id)
     return { item: c.id, n }
@@ -786,7 +793,8 @@ export const G = {
   areaUnlocked(area) { return !area.reqQuest || this.questDone(area.reqQuest) },
   // Apply the difficulty multiplier to a monster's stats
   scaleMonster(m) {
-    const f = this.diff().monster
+    // Difficulty and a Blood Moon both make monsters stronger
+    const f = this.diff().monster * this.omenMonsterMult()
     if (f === 1) return m
     const key = m.id + '|' + f
     let s = scaledCache.get(key)
@@ -858,10 +866,11 @@ export const G = {
       return this.scaleMonster(act.room < dg.rooms.length ? MONSTERS[dg.rooms[act.room]] : dg.boss)
     }
     if (act.kind === 'tower') {
-      const key = act.floor + '|' + this.s.difficulty
+      const key = act.floor + '|' + this.s.difficulty + '|' + this.omenMonsterMult()
       if (towerCache.key !== key) towerCache = { key, m: this.scaleMonster(towerMonster(act.floor)) }
       return towerCache.m
     }
+    if (act.kind === 'omen') return this.omenCreature(act.target)
     return MONSTERS[act.target] && this.scaleMonster(MONSTERS[act.target])
   },
 
@@ -885,6 +894,7 @@ export const G = {
       if (!this.areaUnlocked(area)) return this.toast('padlock', 'msg.areaLocked', {}, 'warn')
       if (m.slayer && this.level('slayer') < m.slayer) return this.toast('death-skull', 'msg.needLevel', { lvl: m.slayer, skill: '@skill:slayer' }, 'warn')
     }
+    if (kind === 'omen' && !(this.canHunt() && this.activeOmen().hunt === target)) return this.toast('crystal-ball', 'omens.gone', {}, 'warn')
     if (kind === 'dungeon') {
       const dg = DUNGEONS.find(d => d.id === target)
       if (!dg) return
@@ -968,7 +978,8 @@ export const G = {
     const loot = []
     const lootMult = 1 + this.mod('loot')
     m.drops.forEach(d => {
-      if (Math.random() < Math.min(1, d.chance * lootMult)) {
+      // A Blood Moon makes rare drops (under 5%) more likely on top of the loot bonus
+      if (Math.random() < Math.min(1, d.chance * lootMult * (d.chance < 0.05 ? this.omenRareMult() : 1))) {
         const n = rand(d.qty[0], d.qty[1])
         this.addItem(d.item, n)
         this.recordDrop(m.id, d.item)
@@ -1012,6 +1023,7 @@ export const G = {
     } else act.respawn = m.boss ? m.respawn : RESPAWN_TIME
     if (m.boss && !m.dungeon && st.killsBy[m.id] === 1) this.log('trophy', 'log.bossFirst', { monster: '@monster:' + m.id })
     if (m.boss) this.rollMonsterPet(m.id)
+    this.omenKill(m)
     this.emit('kill', { monster: m, gold, loot })
   },
 
@@ -1239,6 +1251,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection)
+Object.assign(G, systems, meta, ascension, collection, omens)
 
 export { SKILLS, ITEMS }

@@ -25,6 +25,7 @@ const sections = computed(() => [
     { to: '/slayer', icon: 'death-skull', key: 'nav.slayer', badge: state.slayer.task ? state.slayer.task.left : null },
     { to: '/tower', icon: 'stone-tower', key: 'nav.tower', pulse: inCombat('tower') },
     { to: '/bestiary', icon: 'open-book', key: 'nav.bestiary', badge: G.claimableGroups() || null },
+    { to: '/omens', icon: 'crystal-ball', key: 'nav.omens', badge: G.omenSign() ? '?' : null, pulse: !!G.activeOmen() },
   ] },
   { id: 'progress', key: 'nav.groups.progress', items: [
     { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: QUESTS.filter(q => G.questReady(q)).length + G.tasksReady() || null },

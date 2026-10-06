@@ -9,6 +9,7 @@ import { AVATARS, TINTS } from '../game/data/character.js'
 import { TITLES, EXTRA_AVATARS, EXTRA_TINTS, titled } from '../game/data/cosmetics.js'
 import { ACHIEVEMENTS } from '../game/data/progression.js'
 import { FESTIVAL_MAP } from '../game/data/festivals.js'
+import { OMEN_MAP } from '../game/data/omens.js'
 import ItemTile from './ItemTile.vue'
 
 const visible = defineModel('visible', { type: Boolean })
@@ -22,6 +23,10 @@ const tints = computed(() => [...TINTS.map(id => ({ id })), ...EXTRA_TINTS])
 function hint(c) {
   if (c.ach) return t('cosmetics.fromAch', { name: ACHIEVEMENTS.find(a => a.id === c.ach)?.name || c.ach })
   if (c.festival) return t('cosmetics.fromFestival', { name: FESTIVAL_MAP[c.festival].name })
+  // Omens stay a mystery until witnessed: their names only show once seen
+  if (c.omen?.seen) return state.omens.seen[c.omen.seen] ? t('cosmetics.fromOmen', { name: OMEN_MAP[c.omen.seen].name, n: c.omen.n }) : t('cosmetics.fromUnknownOmen')
+  if (c.omen?.kill) return state.omens.kills[c.omen.kill] ? t('cosmetics.fromCreature', { name: t(`omens.creatures.${c.omen.kill}`), n: c.omen.n }) : t('cosmetics.fromUnknownOmen')
+  if (c.omen?.wishes) return state.omens.seen.comet ? t('cosmetics.fromWishes', { n: c.omen.wishes }) : t('cosmetics.fromUnknownOmen')
   return ''
 }
 const unlockedCount = computed(() => ({

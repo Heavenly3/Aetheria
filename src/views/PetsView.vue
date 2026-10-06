@@ -8,6 +8,7 @@ import { MONSTERS, BOSSES } from '../game/data/combat.js'
 import { fmt, fmtDate } from '../game/format.js'
 import { modText } from '../i18n/mods.js'
 import { FESTIVAL_MAP } from '../game/data/festivals.js'
+import { OMEN_MAP } from '../game/data/omens.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 
@@ -20,6 +21,8 @@ function sourceText(src) {
   if (src.monster) return t('pets.source.monster', { monster: (MONSTERS[src.monster] || BOSSES.find(b => b.id === src.monster))?.name })
   if (src.slayer) return t('pets.source.slayer')
   if (src.festival) return t('pets.source.festival', { name: FESTIVAL_MAP[src.festival].name })
+  // Omen pets name their omen only once it has been witnessed
+  if (src.omen) return state.omens.seen[src.omen] ? t('pets.source.omen', { name: OMEN_MAP[src.omen].name }) : t('pets.source.omenUnknown')
   return t('pets.source.dice')
 }
 // Which kind of roll the odds refer to
@@ -53,6 +56,7 @@ const oddsKey = src => 'pets.odds.' + (src.skill === 'farming' ? 'harvests' : sr
           <span class="grow" />
           <span v-if="G.hasPet(p.id)" class="small ok-text"><i class="pi pi-check" /> {{ fmtDate(state.pets[p.id]) }}</span>
           <span v-else-if="p.source.festival" class="small faint">{{ $t('pets.festivalOnly') }}</span>
+          <span v-else-if="p.source.omen" class="small faint">{{ $t('pets.omenOnly') }}</span>
           <span v-else class="small faint" v-tooltip.top="$t('pets.oddsTip')">{{ $t(oddsKey(p.source), { n: fmt(petOdds(p)) }) }}</span>
         </div>
       </div>

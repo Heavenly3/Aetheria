@@ -244,6 +244,8 @@ def('wisdom_elixir', { icon: 'bubbling-flask', type: 'potion', value: 0, tint: '
 /* ---------------- Beyond the Abyss ---------------- */
 def('void_essence',    { icon: 'black-hole-bolas', value: 800,  tint: '#8a5cff' })
 def('starlight_shard', { icon: 'floating-crystal', value: 1500, tint: '#ffe08a', hasDesc: true })
+// Falls from the sky during some omens; traded at the Veiled Caravan and offered to the stars
+def('stardust',        { icon: 'sparkles', value: 8, tint: '#9db8ff', hasDesc: true })
 def('void_blade',      { icon: 'energy-sword',    type: 'equip', slot: 'weapon', style: 'melee', value: 120000, tint: '#9b5cff', stats: { atk: 128, str: 120 }, req: { attack: 90 }, rare: true })
 def('astral_bow',      { icon: 'high-shot',       type: 'equip', slot: 'weapon', style: 'ranged', twoHanded: true, value: 130000, tint: '#7ad7ff', stats: { rAtk: 130, rStr: 34 }, req: { ranged: 90 }, rare: true })
 def('eclipse_staff',   { icon: 'crystal-wand',    type: 'equip', slot: 'weapon', style: 'magic', twoHanded: true, value: 130000, tint: '#ffb347', stats: { mAtk: 110, mDmg: 0.45 }, req: { magic: 90 }, rare: true })

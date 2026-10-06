@@ -15,7 +15,7 @@ export default {
     hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
-    pets: 'Mascotas', forge: 'Forja', bestiary: 'Bestiario', festival: 'Festival',
+    pets: 'Mascotas', forge: 'Forja', bestiary: 'Bestiario', festival: 'Festival', omens: 'Prodigios',
     groups: { hero: 'Héroe', adventure: 'Aventura', progress: 'Progreso', town: 'Pueblo' },
     ascension: 'Renacimiento',
     skills: 'Habilidades', more: 'Menú', main: 'Navegación principal',
@@ -67,6 +67,7 @@ export default {
     achievement: 'Logro desbloqueado: <b>{name}</b>', quest: 'Misión completada: <b>{name}</b>', death: 'Has caído ante <b>{name}</b>',
     expeditionOk: '<b>{name}</b> vuelve de {exp} con {gold} de oro', expeditionFail: '<b>{name}</b> fracasa en {exp} y vuelve herido',
     dungeon: '¡<b>{name}</b> completada! {loot}',
+    boon: 'El cielo te concede una bendición: <b>{name}</b>', wish: 'Se cumple un deseo: <b>{wish}</b>, para siempre',
     pet: '¡Nueva mascota: <b>{name}</b>!', petPlain: 'Has encontrado una mascota: {name}', streak: '¡Diarias completadas! Racha: <b>{n} días</b>',
   },
 
@@ -217,7 +218,7 @@ export default {
   queue: { added: 'En cola: {n}× {action}', addAria: 'Añadir {name} a la cola', add: 'A la cola', howMany: '¿Cuántas veces?', count: '{n} en cola' },
 
   dock: {
-    tower: 'Torre infinita', boss: 'Jefe', dungeon: 'Mazmorra', combat: 'Combate', queueWaiting: '{n} acciones esperando en cola',
+    tower: 'Torre infinita', omen: 'Prodigio', boss: 'Jefe', dungeon: 'Mazmorra', combat: 'Combate', queueWaiting: '{n} acciones esperando en cola',
     startQueue: 'Iniciar cola', viewQueue: 'Ver cola', goTo: 'Ir', queue: 'Cola', clear: 'Vaciar', queueEmpty: 'La cola está vacía.',
     chainFor: 'para {action}',
   },
@@ -233,7 +234,9 @@ export default {
     room: '{room} mejorada a nivel {level}.', prestige: '{skill} alcanza el prestigio {n}.', tavernLevel: 'Tu taberna ahora es {tavern}.',
     hired: 'Contratas a {name} ({spec}, {rarity}).', fired: '{name} deja tu personal.', workerLevel: '{name} alcanza el nivel {level} de {skill}.',
     expeditionOk: '{name} vuelve de {exp} con {gold} de oro.', expeditionFail: '{name} fracasa en {exp} ({gold} de oro).',
-    order: 'Encargo entregado: {n}× {item}.', lostChest: 'Encuentras un cofre perdido: {gold} de oro y {n}× {item}.',
+    order: 'Encargo entregado: {n}× {item}.', lostChest: 'Encuentras un cofre perdido: {gold} de oro y {n}× {item}.', chestOmen: 'Encuentras un cofre perdido: {gold} de oro y {dust} de polvo estelar.',
+    omen: 'Prodigio: {omen}.', goblinCaught: '¡Has atrapado al Duende Dorado!', goblinEscaped: 'El Duende Dorado se ha escapado.', wish: 'Se cumple un deseo: {wish}.',
+    relic: 'Aparece una reliquia: {item}.', boon: 'Bendición recibida: {boon}.', offering: 'Haces una ofrenda a las estrellas.',
     pet: '¡Una nueva mascota se une a ti: {pet}!', enchant: '{slot} encantado a +{n}.', streak: 'Racha diaria: {n} días.',
     ascend: 'Renacimiento {n}: renaces con {shards} fragmentos de éter.',
   },
@@ -396,6 +399,10 @@ export default {
     hunted: { name: 'Maestro cazador {n}', desc: 'Domina {n} criaturas del bestiario.' },
     setFull: { name: 'Vestido para la ocasión', desc: 'Lleva puestas todas las piezas de un conjunto.' },
     ascend: { name: 'Renacimiento {n}', desc: 'Renace {n} veces.' },
+    omens: { name: 'Observador de estrellas {n}', desc: 'Presencia {n} prodigios.' },
+    omensAll: { name: 'Guardián de la Crónica', desc: 'Presencia todos los prodigios.' },
+    wishes: { name: 'Pedidor de deseos {n}', desc: 'Recibe {n} deseos del cometa.' },
+    relicMythic: { name: 'Tocado por el mito', desc: 'Encuentra una reliquia de calidad mítica.' },
     boss_void_emperor: { name: 'Rompevacíos', desc: 'Derrota al Emperador del Vacío.' },
     boss_aether_sovereign: { name: 'Más allá de las estrellas', desc: 'Derrota al Soberano del Éter.' },
   },
@@ -461,11 +468,13 @@ export default {
   },
 
   cosmetics: {
-    title: 'Apariencia', edit: 'Apariencia y título', intro: 'Los títulos, retratos y colores se desbloquean con logros y festivales.',
+    title: 'Apariencia', edit: 'Apariencia y título', intro: 'Los títulos, retratos y colores se desbloquean con logros, prodigios y festivales.',
     tabs: { title: 'Títulos', avatar: 'Retratos', tint: 'Colores' }, noTitle: 'Sin título',
     titled: '{name}, {title}', titledOf: '{name} {title}',
+    fromOmen: 'Presencia {name} {n}×', fromCreature: 'Derrota {n}× a {name}', fromWishes: 'Recibe {n} deseos', fromUnknownOmen: 'Oculto en un prodigio aún no presenciado',
     fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
     titles: {
+      starborn: 'Polvo de Estrellas', goldcatcher: 'Atrapaduendes', blood_moon: 'de la Luna de Sangre', riftbreaker: 'Rompegrietas', wishbearer: 'Cumpledeseos', eye_witness: 'Testigo del Ojo',
       apprentice: 'Aprendiz', goblin_hunter: 'Cazagoblins', dragonslayer: 'Matadragones', voidwalker: 'Caminante del Vacío', unbound: 'Sin Cadenas',
       spire_climber: 'Escalatorres', naturalist: 'Naturalista', beastbane: 'Azote de Bestias', wild_heart: 'Corazón Salvaje', twice_born: 'de la Segunda Vida',
       many_lives: 'de Muchas Vidas', goldhand: 'Manos de Oro', hope: 'Esperanza del Reino', ten_runes: 'de las Diez Runas', unfailing: 'Inquebrantable',
@@ -492,6 +501,40 @@ export default {
     shop: 'Tienda del festival', buy: 'Comprar', owned: 'Conseguido', bought: 'Comprado: <b>{item}</b>',
     kinds: { title: 'Título del festival', avatar: 'Retrato del festival', tint: 'Color del festival', avatarHint: 'Un retrato para tu héroe; se elige en Apariencia.', tintHint: 'Un color para tu retrato; se elige en Apariencia.' },
     none: 'Ahora no hay ningún festival', next: 'El próximo: {name}, dentro de {time}.', calendar: 'Calendario de festivales',
+  },
+
+  omens: {
+    rarity: { common: 'Común', rare: 'Raro', epic: 'Épico', legendary: 'Legendario', mythic: 'Mítico' },
+    signs: {
+      common: 'Una brisa extraña recorre el reino…', rare: 'Los pájaros callan de golpe…', epic: 'El cielo se oscurece sin una sola nube…',
+      legendary: 'Una luz nueva arde entre las estrellas…', mythic: 'Todo se detiene. Algo te observa.',
+    },
+    signTitle: 'Una señal en el cielo', signSoon: 'Sea lo que sea, llegará en {time}.',
+    taking: 'Estás participando', notTaking: 'Entrena una habilidad o combate para participar',
+    defeated: 'Derrotados: {n}', huntBtn: { gilded_goblin: 'Perseguirlo', rift_horror: 'Entrar en la grieta' },
+    creatures: {
+      gilded_goblin: 'Duende Dorado', gilded_goblinDesc: 'Difícil de golpear e inofensivo, pero lleva encima una fortuna. Huye cuando acaba el prodigio.',
+      rift_horror: 'Horror de la Grieta', rift_horrorDesc: 'Se vuelve tan fuerte como tú. Cada uno puede soltar una reliquia.',
+    },
+    caravan: 'La Caravana Velada', mysteryRelic: 'Reliquia sellada', mysteryRelicHint: 'Su calidad solo se revela al abrirla.', sold: 'Vendido',
+    bought: 'La caravana te entrega {item}', calmTitle: 'Cielos en calma',
+    calm: 'Nada se mueve. Los prodigios llegan cuando quieren, mientras juegas. Una ofrenda de polvo estelar a las estrellas puede adelantarlos y atraer otros más raros.',
+    offeringMade: 'Las estrellas han oído tu ofrenda. Algo responderá pronto.', offer: 'Ofrecer {n} de polvo estelar', offered: 'Esparces polvo estelar hacia el cielo. Brilla, y espera.',
+    boonTitle: 'Bendición', boonHint: 'Participa en un prodigio y, cuando termine, el cielo te concederá una bendición. Casi todas son modestas. Algunas no.',
+    wishTitle: 'Deseos {n}/{max}', wishHint: 'Los deseos que concede el cometa se quedan contigo para siempre.', wishUnknown: 'Algunos prodigios dejan regalos que nunca se desvanecen.',
+    chronicle: 'Crónica de prodigios', chronicleIntro: 'Aquí queda escrito cada prodigio que presencias. Los demás siguen siendo un misterio.',
+    witnessed: 'presenciado {n}×', unseen: 'Aún no presenciado', secretPet: 'Un compañero que solo aparece durante este prodigio',
+    relics: 'Reliquias', relicsIntro: 'Las reliquias aparecen en la grieta, en cofres perdidos y en la caravana. Su calidad se decide al aparecer, y una calidad mejor da estadísticas mucho más altas.',
+    jackpot: '¡Una veta rica! <b>+{gold} de oro</b>', closed: 'El prodigio se desvanece y el paso se cierra', gone: 'Ese prodigio ya ha pasado',
+    boons: {
+      swift_wind: { name: 'Viento veloz' }, scholar: { name: 'Lucidez del erudito' }, fortune: { name: 'Favor de la fortuna' }, fools_luck: { name: 'Suerte del necio' },
+    },
+    wishes: { xp: '+0,5% de XP', gold: '+0,5% de oro', loot: '+0,5% de botín', speed: '+0,3% de velocidad', double: '+0,3% de recursos dobles', mastery: '+1% de XP de maestría', heal: '+1% de curación', vigour: '+1 de vida máxima' },
+  },
+
+  relics: {
+    astral_charm: 'Amuleto astral', veil_mantle: 'Manto del velo', moonlit_aegis: 'Égida lunar',
+    desc: 'Una reliquia de un prodigio. No hay dos iguales: su calidad se decidió en el instante en que apareció.',
   },
 
   sets: {
@@ -604,12 +647,32 @@ export default {
   },
 
   events: {
-    stars: { name: 'Lluvia de estrellas', desc: '+25% XP durante 15 minutos.' },
-    goldrush: { name: 'Fiebre del oro', desc: '+50% oro durante 10 minutos.' },
-    harvest: { name: 'Lluvia fértil', desc: 'Cultivos un 50% más rápidos durante 15 minutos.' },
-    merchant: { name: 'Mercader ambulante', desc: 'Vende un objeto a mitad de precio durante 10 minutos.' },
-    chest: { name: 'Cofre perdido', desc: 'Encuentras un cofre abandonado.' },
-    chestFound: 'Cofre perdido: <b>{gold} de oro</b> y {n}× {item}', started: 'Evento: <b>{event}</b>',
+    stars: { name: 'Lluvia de estrellas', desc: '+25% de XP, y las acciones y los combates desprenden polvo estelar.',
+      lore: 'El cielo se deshace en hilos de plata. Donde caen, la tierra zumba durante días.' },
+    goldrush: { name: 'Fiebre del oro', desc: '+50% de oro y, de vez en cuando, una veta que vale diez veces más.',
+      lore: 'En la taberna alguien jura que el río bajaba amarillo al amanecer. A mediodía todos tienen una batea.' },
+    harvest: { name: 'Lluvia fértil', desc: 'Los cultivos crecen un 50% más rápido y cada parcela da una cosecha más.',
+      lore: 'Una lluvia tibia que huele a pan. Los granjeros viejos se quitan el sombrero ante ella.' },
+    chest: { name: 'Cofre perdido', desc: 'Un cofre abandonado con oro, polvo estelar y, a veces, una reliquia.',
+      lore: 'Medio enterrado, con el cerrojo comido por el óxido. Quien lo dejó tenía prisa.' },
+    aurora: { name: 'Aurora de los Antiguos', desc: 'La recolección da el doble mucho más a menudo y la maestría crece un 50% más rápido.',
+      lore: 'Un fuego verde rueda sobre las cumbres. A su luz, cada veta y cada pez se dejan ver.' },
+    merchant: { name: 'La Caravana Velada', desc: 'Una caravana que vende lo que no tiene ninguna tienda del reino, por oro o polvo estelar.',
+      lore: 'Nadie la ve llegar. Tiendas de seda, mercaderes enmascarados y mercancías que no deberían existir.' },
+    gilded_goblin: { name: 'El Duende Dorado', desc: 'Un goblin cubierto de oro cruza el reino a la carrera. Atrápalo antes de que desaparezca.',
+      lore: 'Ríe, tintinea y es rapidísimo. Dicen que nunca se queda más de dos minutos.' },
+    blood_moon: { name: 'Luna de Sangre', desc: 'Los monstruos son un 30% más fuertes, pero el botín se duplica y lo raro cae el triple.',
+      lore: 'La luna se tiñe de rojo y las bestias dejan de dormir. Los cazadores valientes se hacen ricos. Los demás no vuelven.' },
+    eclipse: { name: 'Eclipse Arcano', desc: '+50% de daño mágico, la mitad de las runas no se gastan, y las runas y la magia aprenden más rápido.',
+      lore: 'El sol se apaga y cada hechizo del reino arde con el doble de fuerza.' },
+    rift: { name: 'La Grieta Errante', desc: 'Un desgarro en el mundo libera un horror que crece contigo. Guarda reliquias.',
+      lore: 'El aire se rasga como tela vieja. Algo al otro lado llevaba tiempo esperando.' },
+    comet: { name: 'Cometa de los Deseos', desc: '+50% de XP, y cada acción o combate puede concederte un deseo permanente.',
+      lore: 'Una vez en la vida, dicen. Susurra tu deseo cuando pase y puede que el cielo responda.' },
+    eye: { name: 'El Ojo se Abre', desc: 'Todo se triplica: XP, oro y botín, con acciones más rápidas. Su mirada deja un regalo a quienes estaban allí.',
+      lore: 'Las estrellas se detienen. Un ojo tan antiguo como el mundo se abre sobre el reino, y te mira.' },
+    started: 'Un prodigio: <b>{event}</b>', hunt: 'Un prodigio: <b>{event}</b>. ¡Cázalo antes de que se vaya!',
+    chestFound: 'Cofre perdido: <b>{gold} de oro</b> y {dust} de polvo estelar', chestRelic: 'Cofre perdido: <b>{gold} de oro</b>, {dust} de polvo estelar y <b>{relic}</b>!',
   },
 
   styles: {
@@ -699,6 +762,7 @@ export default {
   recipes: { tanLeather: 'Curtir cuero', tanDragonhide: 'Curtir piel de dragón' },
 
   tpl: {
+    relic: '{relic} ({quality})',
     made: '{thing} de {mat}', raw: '{fish} sin cocinar', cooked: '{fish}', seed: '{crop} (semilla)', uncut: '{gem} sin tallar', amulet: 'Amuleto de {gem}',
     burn: 'Quemar {item}', cut: 'Tallar {gem}', bury: 'Enterrar {item}', scatter: 'Esparcir {item}',
     wood: { logs: 'Troncos de {wood}', rod: 'Caña de {wood}', bow: 'Arco de {wood}', staff: 'Bastón de {wood}', tree: 'Árbol de {wood}' },
@@ -717,6 +781,7 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    stardust: 'Polvo estelar',
     copper_ore: 'Mineral de cobre', tin_ore: 'Mineral de estaño', rune_essence: 'Esencia rúnica', iron_ore: 'Mineral de hierro', coal: 'Carbón', gold_ore: 'Mineral de oro',
     mithril_ore: 'Mineral de mithril', adamantite_ore: 'Mineral de adamantita', runite_ore: 'Mineral de runita', gold_bar: 'Barra de oro', logs: 'Troncos',
     rod: 'Caña de pescar', bow: 'Arco corto', arrow_shaft: 'Astil de flecha', headless_arrow: 'Flecha sin punta', feathers: 'Plumas',
@@ -738,6 +803,7 @@ export default {
     eclipse_staff: 'Bastón del eclipse', celestial_aegis: 'Égida celestial', crown_of_ages: 'Corona de las Eras', sovereign_cape: 'Capa del Soberano', eternity_amulet: 'Amuleto de la Eternidad',
   },
   itemDesc: {
+    stardust: 'Cae del cielo durante algunos prodigios. La Caravana Velada lo acepta, y las estrellas también.',
     compost: 'Úsalo en una parcela para reducir a la mitad el tiempo que falta.',
     slayer_helm: 'Con un encargo activo: +15% precisión y daño contra el objetivo.',
     starlight_shard: 'Evita que un encantamiento fallido baje de nivel.',
@@ -748,7 +814,8 @@ export default {
     unknown: 'Aún no la has encontrado. Sigue intentándolo.',
     oddsTip: 'Número medio de intentos. Los bonos de botín mejoran un poco tu suerte.',
     odds: { actions: '~1 de cada {n} acciones', kills: '1 de cada {n} bajas', harvests: '1 de cada {n} cosechas', tasks: '1 de cada {n} encargos', games: '1 de cada {n} partidas' },
-    source: { harvest: 'Cosechas de la granja', skill: 'Entrenando {skill}', monster: 'Derrotando a {monster}', slayer: 'Terminando encargos de cazador', dice: 'Jugando a los dados en la taberna', festival: 'Tienda del festival: {name}' },
+    source: { harvest: 'Cosechas de la granja', skill: 'Entrenando {skill}', monster: 'Derrotando a {monster}', slayer: 'Terminando encargos de cazador', dice: 'Jugando a los dados en la taberna', festival: 'Tienda del festival: {name}', omen: 'Durante el prodigio {name}', omenUnknown: 'Durante un prodigio aún no presenciado' },
+    omenOnly: 'Solo durante su prodigio',
     festivalOnly: 'Se vende durante su festival',
     rock_golem: { name: 'Gólem de roca', desc: 'Un guijarro que se niega a estarse quieto.' },
     beaver: { name: 'Castor', desc: 'Juzga cada árbol que talas.' },
@@ -776,6 +843,13 @@ export default {
     mushling: { name: 'Setilla', desc: 'Brotó en un campo de calabazas y ya no se separa de ti.' },
     frost_cub: { name: 'Osezno de escarcha', desc: 'Cálido como una estufa, frío como un ventisquero.' },
     spring_chick: { name: 'Pollito de primavera', desc: 'Salió del cascarón la primera mañana templada del año.' },
+    astral_wisp: { name: 'Fuego fatuo astral', desc: 'Una chispa que cayó con las estrellas y decidió quedarse.' },
+    gilded_imp: { name: 'Diablillo dorado', desc: 'El duende se lo dejó atrás. Todavía cuenta monedas en sueños.' },
+    crimson_pup: { name: 'Lobezno carmesí', desc: 'Nació bajo una luna roja. Sus ojos brillan cuando hay peligro cerca.' },
+    eclipse_orb: { name: 'Orbe del eclipse', desc: 'Un fragmento del sol oscuro que orbita tu cabeza y zumba de magia.' },
+    rift_gargoyle: { name: 'Gárgola de la grieta', desc: 'Salió a rastras de la grieta y te eligió como amo.' },
+    comet_sprite: { name: 'Duendecillo del cometa', desc: 'Deja una estela de chispas allá donde vuela.' },
+    wandering_eye: { name: 'Ojo errante', desc: 'Un ojo pequeño que vela por ti. Algo más grande mira a través de él.' },
     sunfox: { name: 'Zorro solar', desc: 'Su cola brilla como las últimas brasas de una hoguera.' },
   },
 

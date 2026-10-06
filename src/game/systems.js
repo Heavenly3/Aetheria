@@ -12,7 +12,7 @@ import {
   SPECIALTIES, RARITIES, TRAITS, WORKER_NAMES, WAGE_BASE, HIRE_FEE_HOURS, BOARD_REFRESH, TAVERN_LEVELS,
   EXPEDITIONS, EXPEDITION_DURATIONS, INJURY_TIME, DRINKS, DRINK_DURATION, MYSTERY_CHEST, ORDERS_PER_DAY, ORDER_SKILLS,
 } from './data/tavern.js'
-import { PRAYERS, PRAYER_DRAIN, PRAYER_BONES, GRACE_COSTS, GRACE_SPEED, EVENTS, EVENT_CHANCE_PER_MIN, MERCHANT_POOL } from './data/extras.js'
+import { PRAYERS, PRAYER_DRAIN, PRAYER_BONES, GRACE_COSTS, GRACE_SPEED } from './data/extras.js'
 import { AVATARS } from './data/character.js'
 
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
@@ -434,42 +434,6 @@ export const systems = {
   },
   marketMult(id) { return this.marketTable()[id] || 1 },
 
-  /* ================= random events ================= */
-  maybeEvent() {
-    if (this.s.event || Math.random() >= EVENT_CHANCE_PER_MIN) return
-    this.startEvent(pick(EVENTS).id)
-  },
-  startEvent(id) {
-    const ev = EVENTS.find(e => e.id === id)
-    if (ev.instant) {
-      const gold = this.addGold(rand(120, 450) * (1 + this.combatLevel() / 25), true)
-      const item = pick(MERCHANT_POOL)
-      const n = ITEMS[item].value > 500 ? 1 : rand(1, 3)
-      this.addItem(item, n)
-      this.log(ev.icon, 'log.lostChest', { gold, n, item: '@item:' + item })
-      this.emit('event', { ev, msg: msg('events.chestFound', { gold, n, item: '@item:' + item }) })
-      return
-    }
-    const e = { id, t: ev.duration, total: ev.duration }
-    if (ev.offer) {
-      const item = pick(MERCHANT_POOL)
-      const qty = ITEMS[item].value > 500 ? 1 : rand(2, 6)
-      e.offer = { item, qty, price: Math.ceil(ITEMS[item].value * 0.5) * qty }
-    }
-    this.s.event = e
-    this.emit('event', { ev, msg: msg('events.started', { event: '@event:' + id }) })
-    this.emit('notify', msg('notify.event', { event: '@event:' + id }))
-  },
-  buyOffer() {
-    const e = this.s.event
-    if (!e?.offer || this.s.gold < e.offer.price) return false
-    this.s.gold -= e.offer.price
-    this.addItem(e.offer.item, e.offer.qty)
-    this.s.event = null
-    return true
-  },
-  currentEvent() { return this.s.event ? EVENTS.find(e => e.id === this.s.event.id) : null },
-
   /* ================= history ================= */
   snapshot() {
     const st = this.s
@@ -482,14 +446,13 @@ export const systems = {
   },
 
   /* ================= engine hooks ================= */
-  // Bonuses from the active drink, prayer, event and grace rewards
+  // Bonuses from the active drink, prayer and grace rewards (omens add theirs in omens.js)
   extraMods(key) {
     const st = this.s
     let v = 0
     const dr = st.tavern?.drink
     if (dr && dr.t > 0) v += DRINKS.find(d => d.id === dr.id)?.mods[key] || 0
     if (st.prayer && st.activity?.type === 'combat') v += PRAYERS.find(p => p.id === st.prayer)?.mods[key] || 0
-    if (st.event && st.event.t > 0) v += EVENTS.find(e => e.id === st.event.id)?.mods?.[key] || 0
     if (key === 'speed') v += (st.grace || 0) * GRACE_SPEED
     return v
   },
@@ -497,7 +460,7 @@ export const systems = {
     const st = this.s
     this.updateWorkers(dt)
     if (st.tavern.drink) { st.tavern.drink.t -= dt; if (st.tavern.drink.t <= 0) st.tavern.drink = null }
-    if (st.event && !EVENTS.find(e => e.id === st.event.id)?.instant) { st.event.t -= dt; if (st.event.t <= 0) st.event = null }
+    this.updateOmens(dt)
     this.updatePrayer(dt)
   },
   systemsBusy() { return this.workersBusy() || !!this.s.tavern.drink || !!this.s.event },

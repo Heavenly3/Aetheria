@@ -5,6 +5,7 @@ import { t } from '../../i18n/index.js'
   Cosmetics: titles shown next to the hero's name, extra portraits and colours.
   `ach`      -> unlocked by that achievement (achievements survive ascension, so cosmetics do too)
   `festival` -> sold in that festival's shop (see festivals.js)
+  `omen`     -> earned through omens: { seen: omen, n } · { kill: creature, n } · { wishes: n }
   Titles with `of: true` read as "Name of …" instead of "Name, …".
 */
 const title = (id, unlock, of = false) => named({ id, of, ...unlock }, `cosmetics.titles.${id}`)
@@ -26,6 +27,12 @@ export const TITLES = [
   title('ten_runes', { ach: 'enchant_10' }, true),
   title('unfailing', { ach: 'streak_30' }),
   title('polymath', { ach: 'total_1500' }),
+  title('starborn', { omen: { seen: 'stars', n: 10 } }),
+  title('goldcatcher', { omen: { kill: 'gilded_goblin', n: 1 } }),
+  title('blood_moon', { omen: { seen: 'blood_moon', n: 1 } }, true),
+  title('riftbreaker', { omen: { kill: 'rift_horror', n: 25 } }),
+  title('wishbearer', { omen: { wishes: 10 } }),
+  title('eye_witness', { omen: { seen: 'eye', n: 1 } }),
   title('harvest_moon', { festival: 'harvest' }, true),
   title('endless_winter', { festival: 'winter' }, true),
   title('first_bloom', { festival: 'spring' }, true),
@@ -42,6 +49,10 @@ export const EXTRA_AVATARS = [
   { id: 'dragon-head', ach: 'boss_ancient_dragon' },
   { id: 'hooded-figure', ach: 'ascend_1' },
   { id: 'sun-priest', ach: 'boss_aether_sovereign' },
+  { id: 'vampire-dracula', omen: { seen: 'blood_moon', n: 3 } },
+  { id: 'spectre', omen: { seen: 'eclipse', n: 1 } },
+  { id: 'tentacles-skull', omen: { kill: 'rift_horror', n: 10 } },
+  { id: 'all-seeing-eye', omen: { seen: 'eye', n: 1 } },
   { id: 'werewolf', festival: 'harvest' },
   { id: 'ice-golem', festival: 'winter' },
   { id: 'unicorn', festival: 'spring' },
@@ -52,6 +63,10 @@ export const EXTRA_TINTS = [
   { id: '#e2b65a', ach: 'gold_1000000' },
   { id: '#7d3cff', ach: 'boss_void_emperor' },
   { id: '#f5e6a8', ach: 'boss_aether_sovereign' },
+  { id: '#9db8ff', omen: { seen: 'stars', n: 5 } },
+  { id: '#b3142a', omen: { seen: 'blood_moon', n: 1 } },
+  { id: '#5a2bd6', omen: { seen: 'eclipse', n: 1 } },
+  { id: '#3fe0c5', omen: { seen: 'eye', n: 1 } },
   { id: '#d9772b', festival: 'harvest' },
   { id: '#8fd0f2', festival: 'winter' },
   { id: '#f08fb8', festival: 'spring' },

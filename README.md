@@ -59,6 +59,7 @@ Requires Node.js 18 or newer.
 - **Daily and weekly tasks** with a day streak that boosts rewards.
 - **Equipment sets**: 13 sets (every metal, leather, dragonhide, wizard, slayer, dragonbane and the endgame regalia) with bonuses for 2, 3, 4 or 5 pieces worn.
 - **Bestiary**: every creature you defeat is recorded. Learn its drops, master it for a combat bonus against it, and complete each area for a permanent reward.
+- **Omens**: twelve rare world phenomena that arrive unannounced, from the common Starfall to the mythic Eye that Opens. A cryptic sign comes first; then a Blood Moon, an Arcane Eclipse, a Gilded Goblin to chase, a Wandering Rift with a horror that scales with you, a Veiled Caravan, a Comet of Wishes… They hide rewards found nowhere else: seven pets, relics of random quality, permanent wishes and boons rolled when an omen ends. A chronicle records the ones you have witnessed; the rest stay a mystery.
 - **Festivals**: four seasonal festivals a year (Harvest, Winter's Veil, Spring Bloom and Midsummer Fires) run on their real dates, with a passive bonus, festival tokens and a shop with an exclusive pet, title, portrait and colour.
 - **Titles and appearance**: 20 titles shown next to the hero's name, plus extra portraits and colours unlocked by achievements and festivals.
 - **Ascension**: start the whole hero over for Aether shards and spend them in a three-branch tree of permanent upgrades.
@@ -79,6 +80,7 @@ Requires Node.js 18 or newer.
 - `src/game/meta.js`: pets, gear enchanting and daily / weekly tasks.
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
+- `src/game/omens.js`: omens, their creatures, relics, wishes and boons.
 - `src/game/loop.js`: game loop, offline progress and autosave.
 - `src/game/tutorial.js`: the guided first steps.
 - `src/game/transfer.js`: save files and transfer links (the save is deflated and base64url-encoded into the link).
@@ -86,7 +88,7 @@ Requires Node.js 18 or newer.
 - `src/components/` and `src/views/`: the UI.
 - `public/`: app manifest, service worker (offline play) and icons.
 - `scripts/`: icon extraction, the translation checker and the balance report.
-- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, cosmetics, pets, enchanting, daily tasks, ascension and translations.
+- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, cosmetics, pets, enchanting, daily tasks, ascension and translations.
 
 ## Adding a language
 

@@ -1,5 +1,5 @@
 // Resolvers for "@kind:id" message parameters (see resolveParams in ./index.js)
-import { registerNames } from './index.js'
+import { registerNames, t } from './index.js'
 import { SKILLS } from '../game/data/skills.js'
 import { ITEMS, CROPS, SLOTS } from '../game/data/items.js'
 import { findAction } from '../game/data/actions.js'
@@ -7,7 +7,8 @@ import { MONSTERS, BOSSES, DUNGEONS, AREAS } from '../game/data/combat.js'
 import { QUESTS, ACHIEVEMENTS, ROOMS, BLESSINGS } from '../game/data/progression.js'
 import { ROLES } from '../game/data/character.js'
 import { SPECIALTIES, RARITIES, EXPEDITIONS, DRINKS, TAVERN_LEVELS } from '../game/data/tavern.js'
-import { PRAYERS, EVENTS } from '../game/data/extras.js'
+import { PRAYERS } from '../game/data/extras.js'
+import { OMENS, BOONS, WISHES } from '../game/data/omens.js'
 import { PET_MAP } from '../game/data/pets.js'
 import { BESTIARY } from '../game/data/bestiary.js'
 import { SET_MAP } from '../game/data/sets.js'
@@ -27,7 +28,9 @@ registerNames('area', byId(AREAS))
 registerNames('exp', byId(EXPEDITIONS))
 registerNames('drink', byId(DRINKS))
 registerNames('prayer', byId(PRAYERS))
-registerNames('event', byId(EVENTS))
+registerNames('event', byId(OMENS))
+registerNames('boon', id => (BOONS.some(b => b.id === id) ? t(`omens.boons.${id}.name`) : id))
+registerNames('wish', id => (WISHES.some(w => w.id === id) ? t(`omens.wishes.${id}`) : id))
 registerNames('crop', byId(CROPS))
 registerNames('pet', id => PET_MAP[id]?.name ?? id)
 registerNames('beasts', byId(BESTIARY))

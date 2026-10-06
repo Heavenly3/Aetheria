@@ -24,14 +24,3 @@ PRAYERS.forEach(p => named(p, `prayers.${p.id}.name`, `prayers.${p.id}.desc`))
 export const GRACE_COSTS = [5, 10, 20, 35, 60, 100, 160]
 export const GRACE_SPEED = 0.02 // +2% global speed per level
 
-/* ---------------- Random events ---------------- */
-export const EVENT_CHANCE_PER_MIN = 1 / 35 // roughly one event every 35 minutes of active play
-export const EVENTS = [
-  { id: 'stars',    icon: 'falling-star', duration: 900, mods: { xp: 0.25 } },
-  { id: 'goldrush', icon: 'gold-nuggets', duration: 600, mods: { gold: 0.5 } },
-  { id: 'harvest',  icon: 'droplets',     duration: 900, mods: { farmSpeed: 0.5 } },
-  { id: 'merchant', icon: 'shopping-bag', duration: 600, offer: true },
-  { id: 'chest',    icon: 'locked-chest', duration: 0,   instant: true },
-]
-EVENTS.forEach(e => named(e, `events.${e.id}.name`, `events.${e.id}.desc`))
-export const MERCHANT_POOL = ['uncut_sapphire', 'uncut_emerald', 'uncut_ruby', 'ranarr_seed', 'irit_seed', 'kwuarm_seed', 'mithril_bar', 'adamant_bar', 'death_rune', 'blood_rune', 'gem_chest', 'wisdom_elixir', 'super_attack', 'super_strength']
