@@ -2,7 +2,7 @@ export default {
   app: { tagline: 'Reinos Idle' },
 
   common: {
-    gold: 'oro', nothing: 'Nada', lvlShort: 'Nv {n}', raw: '{v}', notNow: 'Ahora no', buyFor: 'Comprar por {price}',
+    gold: 'oro', nothing: 'Nada', lvlShort: 'Nv {n}', raw: '{v}', notNow: 'Ahora no', close: 'Cerrar', buyFor: 'Comprar por {price}',
     cancel: 'Cancelar', level: 'Nivel', levelN: 'Nivel {n}', seconds: '{n} s', add: 'Añadir', hp: 'PV', stop: 'Detener',
     moveUp: 'Subir', moveDown: 'Bajar', remove: 'Quitar', always: 'siempre', locked: 'Bloqueado', equip: 'Equipar',
     missingMaterials: 'Faltan materiales', notEnoughGold: 'No tienes oro suficiente', back: 'Atrás', next: 'Siguiente',
@@ -15,7 +15,8 @@ export default {
     hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
-    pets: 'Mascotas', forge: 'Forja', bestiary: 'Bestiario',
+    pets: 'Mascotas', forge: 'Forja', bestiary: 'Bestiario', festival: 'Festival',
+    groups: { hero: 'Héroe', adventure: 'Aventura', progress: 'Progreso', town: 'Pueblo' },
     ascension: 'Renacimiento',
     skills: 'Habilidades', more: 'Menú', main: 'Navegación principal',
   },
@@ -394,6 +395,7 @@ export default {
     beastsAll: { name: 'Enciclopedia viviente', desc: 'Registra todas las criaturas del bestiario.' },
     hunted: { name: 'Maestro cazador {n}', desc: 'Domina {n} criaturas del bestiario.' },
     setFull: { name: 'Vestido para la ocasión', desc: 'Lleva puestas todas las piezas de un conjunto.' },
+    ascend: { name: 'Renacimiento {n}', desc: 'Renace {n} veces.' },
     boss_void_emperor: { name: 'Rompevacíos', desc: 'Derrota al Emperador del Vacío.' },
     boss_aether_sovereign: { name: 'Más allá de las estrellas', desc: 'Derrota al Soberano del Éter.' },
   },
@@ -456,6 +458,40 @@ export default {
     invalidSave: 'El código de partida no es válido', deleteTitle: 'Borrar partida', deleteMessage: 'Se borrará la partida de {name} de la ranura {n}. Esta acción no se puede deshacer.',
     deleteConfirm: 'Borrar todo',
     autoChain: 'Fabricar automáticamente los materiales que falten', autoChainHint: 'Si a una receta se le acaban los materiales, primero fabrica sus ingredientes (minar, fundir…) y después vuelve a ella.',
+  },
+
+  cosmetics: {
+    title: 'Apariencia', edit: 'Apariencia y título', intro: 'Los títulos, retratos y colores se desbloquean con logros y festivales.',
+    tabs: { title: 'Títulos', avatar: 'Retratos', tint: 'Colores' }, noTitle: 'Sin título',
+    titled: '{name}, {title}', titledOf: '{name} {title}',
+    fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
+    titles: {
+      apprentice: 'Aprendiz', goblin_hunter: 'Cazagoblins', dragonslayer: 'Matadragones', voidwalker: 'Caminante del Vacío', unbound: 'Sin Cadenas',
+      spire_climber: 'Escalatorres', naturalist: 'Naturalista', beastbane: 'Azote de Bestias', wild_heart: 'Corazón Salvaje', twice_born: 'de la Segunda Vida',
+      many_lives: 'de Muchas Vidas', goldhand: 'Manos de Oro', hope: 'Esperanza del Reino', ten_runes: 'de las Diez Runas', unfailing: 'Inquebrantable',
+      polymath: 'Polímata', harvest_moon: 'de la Luna de Cosecha', endless_winter: 'del Invierno Eterno', first_bloom: 'de la Primera Flor',
+      midsummer_fire: 'del Fuego de San Juan',
+    },
+  },
+
+  festivals: {
+    harvest: { name: 'Fiesta de la Cosecha', desc: 'Los campos rebosan de grano y los pueblos encienden sus farolillos. Los cultivos crecen más rápido y los cocineros aprenden antes.' },
+    winter: { name: 'Velo del Invierno', desc: 'La nieve cubre el reino y todos los hogares mantienen el fuego encendido. La comida cura más y la armadura aguanta mejor el frío.' },
+    spring: { name: 'Floración de Primavera', desc: 'El mundo despierta en flor. Todas las habilidades aprenden un poco más rápido.' },
+    summer: { name: 'Hogueras de San Juan', desc: 'Arden hogueras en cada colina durante los días más largos. Los mercaderes son generosos y el oro corre.' },
+  },
+
+  festival: {
+    endsIn: 'Termina en {time}', bonus: 'Bonificación del festival', tokens: 'Fichas del festival', howTitle: 'Cómo conseguir fichas',
+    how: {
+      actions: 'Cualquier acción de habilidad: un {pct}% de probabilidad por cada 3 segundos de acción.',
+      kills: 'Monstruos: un {pct}% de probabilidad por cada uno, y {boss} fichas por cada jefe.',
+      tasks: 'Tareas diarias y semanales: {n} fichas cada una.',
+    },
+    resetHint: 'Llevas {n} fichas ganadas en este festival. Las fichas no pasan al siguiente, pero todo lo que compres es tuyo para siempre.',
+    shop: 'Tienda del festival', buy: 'Comprar', owned: 'Conseguido', bought: 'Comprado: <b>{item}</b>',
+    kinds: { title: 'Título del festival', avatar: 'Retrato del festival', tint: 'Color del festival', avatarHint: 'Un retrato para tu héroe; se elige en Apariencia.', tintHint: 'Un color para tu retrato; se elige en Apariencia.' },
+    none: 'Ahora no hay ningún festival', next: 'El próximo: {name}, dentro de {time}.', calendar: 'Calendario de festivales',
   },
 
   sets: {
@@ -712,7 +748,8 @@ export default {
     unknown: 'Aún no la has encontrado. Sigue intentándolo.',
     oddsTip: 'Número medio de intentos. Los bonos de botín mejoran un poco tu suerte.',
     odds: { actions: '~1 de cada {n} acciones', kills: '1 de cada {n} bajas', harvests: '1 de cada {n} cosechas', tasks: '1 de cada {n} encargos', games: '1 de cada {n} partidas' },
-    source: { harvest: 'Cosechas de la granja', skill: 'Entrenando {skill}', monster: 'Derrotando a {monster}', slayer: 'Terminando encargos de cazador', dice: 'Jugando a los dados en la taberna' },
+    source: { harvest: 'Cosechas de la granja', skill: 'Entrenando {skill}', monster: 'Derrotando a {monster}', slayer: 'Terminando encargos de cazador', dice: 'Jugando a los dados en la taberna', festival: 'Tienda del festival: {name}' },
+    festivalOnly: 'Se vende durante su festival',
     rock_golem: { name: 'Gólem de roca', desc: 'Un guijarro que se niega a estarse quieto.' },
     beaver: { name: 'Castor', desc: 'Juzga cada árbol que talas.' },
     heron: { name: 'Garza', desc: 'Roba algún pez, pero te señala los mejores sitios.' },
@@ -736,6 +773,10 @@ export default {
     star_cub: { name: 'Cachorro estelar', desc: 'Deja un rastro de luz allá donde va.' },
     slayer_bat: { name: 'Murciélago cazador', desc: 'Encuentra tu siguiente objetivo antes que tú.' },
     lucky_cat: { name: 'Gato de la suerte', desc: 'Saluda a la fortuna, y la fortuna le devuelve el saludo.' },
+    mushling: { name: 'Setilla', desc: 'Brotó en un campo de calabazas y ya no se separa de ti.' },
+    frost_cub: { name: 'Osezno de escarcha', desc: 'Cálido como una estufa, frío como un ventisquero.' },
+    spring_chick: { name: 'Pollito de primavera', desc: 'Salió del cascarón la primera mañana templada del año.' },
+    sunfox: { name: 'Zorro solar', desc: 'Su cola brilla como las últimas brasas de una hoguera.' },
   },
 
   forge: {

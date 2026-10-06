@@ -24,6 +24,7 @@ import ItemTile from './components/ItemTile.vue'
 import TitleScreen from './components/TitleScreen.vue'
 import BottomNav from './components/BottomNav.vue'
 import TutorialCoach from './components/TutorialCoach.vue'
+import { titled, cosmeticsForAch } from './game/data/cosmetics.js'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -34,6 +35,7 @@ const menu = ref()
 
 const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.name : route.meta.titleKey && t(route.meta.titleKey)) || 'Aetheria')
 const hpPct = computed(() => (Math.max(0, state.hp) / G.maxHp()) * 100)
+const fest = computed(() => G.activeFestival())
 const unspent = computed(() => G.attrPoints() + G.talentPoints())
 const menuItems = computed(() => [
   { label: t('heroMenu.viewHero'), icon: 'pi pi-user', command: () => router.push('/') },
@@ -51,7 +53,7 @@ onMounted(() => {
   G.on('herolevel', l => { play('quest'); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000); notify(t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')) })
   G.on('mastery', d => push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
   G.on('rare', d => { play('rare'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
-  G.on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : ''), 'success', 5500) })
+  G.on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
   G.on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   G.on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })
   G.on('streak', d => { play('quest'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
@@ -101,6 +103,7 @@ function startAdventure() {
           <div><div class="brand-name">Aetheria</div><div class="brand-sub">{{ $t('app.tagline') }}</div></div>
         </div>
         <div class="nav-scroll"><NavMenu /></div>
+        <router-link to="/settings" class="nav-foot" :class="{ active: route.path === '/settings' }" data-tut="nav:/settings" @click="drawer = false"><GameIcon name="cog" :size="16" /> {{ $t('nav.settings') }}</router-link>
       </aside>
 
       <main class="main">
@@ -117,6 +120,7 @@ function startAdventure() {
             <button v-if="ev && state.event" class="chip event-chip" v-tooltip.bottom="ev.desc" @click="ev.offer ? (offerOpen = true) : null">
               <GameIcon :name="ev.icon" :size="15" />{{ ev.name }} · {{ fmtClock(state.event.t) }}
             </button>
+            <router-link v-if="fest" to="/festival" class="chip fest-chip" :style="{ '--c': fest.tint }" v-tooltip.bottom="fest.name"><GameIcon :name="fest.icon" :size="15" />{{ fmt(G.festivalState().tokens) }}</router-link>
             <span class="chip gold" v-tooltip.bottom="$t('common.gold')"><GameIcon name="two-coins" :size="15" />{{ fmt(state.gold) }}</span>
           </div>
           <button class="hero-chip" :aria-label="$t('heroMenu.label')" @click="menu.toggle($event)">
@@ -125,7 +129,7 @@ function startAdventure() {
               <span v-if="unspent" class="hero-dot" />
             </span>
             <span class="hero-meta">
-              <b>{{ state.name }}</b>
+              <b>{{ titled(state.name, G.heroTitle()) }}</b>
               <span class="small muted">{{ $t('common.lvlShort', { n: G.heroLevel() }) }} · {{ ROLES[state.role].name }}</span>
               <span class="bar thin"><i :style="{ width: G.heroProgress() * 100 + '%' }" /></span>
             </span>
@@ -150,6 +154,7 @@ function startAdventure() {
 
     <Drawer v-model:visible="drawer" header="Aetheria" class="nav-drawer">
       <NavMenu @navigate="drawer = false" />
+      <template #footer><router-link to="/settings" class="nav-foot" :class="{ active: route.path === '/settings' }" data-tut="nav:/settings" @click="drawer = false"><GameIcon name="cog" :size="16" /> {{ $t('nav.settings') }}</router-link></template>
     </Drawer>
   </template>
 
@@ -232,11 +237,18 @@ function startAdventure() {
 
 <style>
 .nav-drawer { width: min(300px, 86vw) !important; }
+.nav-drawer .p-drawer-footer { padding: 0 12px 12px; }
+.nav-foot { display: flex; align-items: center; gap: 10px; margin: 0 12px 12px; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); color: var(--ink-2); text-decoration: none; font-weight: 500; }
+.nav-drawer .nav-foot { margin: 0; }
+.nav-foot .gi { color: var(--gold); }
+.nav-foot:hover, .nav-foot.active { color: var(--ink); border-color: var(--line-hi); background: var(--tint-2); }
 .welcome-guide { display: flex; align-items: center; gap: 10px; margin: 16px 0 0; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--gold) 10%, transparent); border: 1px solid var(--line-hi); }
 .welcome-guide .gi { color: var(--gold); flex-shrink: 0; }
 .nav-drawer .p-drawer-title { font-family: var(--font-display); font-weight: 400; color: var(--gold); }
 .event-chip { border-color: rgba(179, 140, 255, 0.5) !important; color: var(--violet); cursor: pointer; font: inherit; font-weight: 700; animation: evGlow 2s infinite; }
 .event-chip .gi { color: #b38cff; }
+.fest-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 55%, transparent) !important; }
+.fest-chip .gi { color: var(--c); }
 @keyframes evGlow { 50% { box-shadow: 0 0 14px -2px rgba(179, 140, 255, 0.6); } }
 .hero-chip { display: flex; align-items: center; gap: 10px; padding-block: 5px; padding-inline: 5px 10px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line);
   color: var(--ink); font: inherit; cursor: pointer; transition: border-color 0.2s; }

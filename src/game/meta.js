@@ -64,7 +64,9 @@ export const meta = {
   /* ================= pets ================= */
   hasPet(id) { return !!this.s.pets?.[id] },
   petCount() { return Object.keys(this.s.pets || {}).filter(id => PET_MAP[id]).length },
-  petTotal() { return PETS.length },
+  // Festival pets are seasonal extras, so "every pet" means every pet that can be found
+  petTotal() { return PETS.filter(p => !p.source.festival).length },
+  petsComplete() { return PETS.every(p => p.source.festival || this.hasPet(p.id)) },
   rollPet(match, scale = 1) {
     for (const p of PETS) {
       if (this.hasPet(p.id) || !match(p.source)) continue
@@ -181,6 +183,7 @@ export const meta = {
     d.claimed = (d.claimed || 0) + 1
     this.addGold(r.gold)
     this.s.tavern.tokens += r.tokens
+    this.festivalTask()
     Object.entries(r.items || {}).forEach(([k, n]) => this.addItem(k, n))
     if (!weekly && d.tasks.every(x => x.claimed) && d.lastDone !== d.day) {
       d.streak = d.lastDone === yesterday() ? d.streak + 1 : 1

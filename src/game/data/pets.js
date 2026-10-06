@@ -35,9 +35,14 @@ export const PETS = [
   pet('star_cub',     'unicorn',        '#ffe08a', { monster: 'aether_sovereign' }, 1 / 300, { xp: 0.03 }),
   pet('slayer_bat',   'bat',            '#b5179e', { slayer: true },                1 / 150, { 'xp.slayer': 0.08 }),
   pet('lucky_cat',    'cat',            '#f0c040', { dice: true },                  1 / 400, { double: 0.01 }),
+  // Festival pets are bought in the festival shop, never rolled
+  pet('mushling',     'mushroom',       '#d9772b', { festival: 'harvest' },         0, { loot: 0.02 }),
+  pet('frost_cub',    'polar-bear',     '#8fd0f2', { festival: 'winter' },          0, { maxHp: 3 }),
+  pet('spring_chick', 'nest-eggs',      '#f08fb8', { festival: 'spring' },          0, { mastery: 0.03 }),
+  pet('sunfox',       'fox',            '#f2b233', { festival: 'summer' },          0, { gold: 0.02 }),
 ]
 
 export const PET_MAP = Object.fromEntries(PETS.map(p => [p.id, p]))
 
 // Roughly how many rolls it takes on average, for the collection screen
-export const petOdds = p => Math.round(1 / p.chance)
+export const petOdds = p => (p.chance ? Math.round(1 / p.chance) : 0)

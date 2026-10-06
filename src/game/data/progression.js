@@ -104,13 +104,14 @@ export const ACHIEVEMENTS = [
   ...['goblin_king', 'troll_lord', 'kraken', 'necromancer', 'ancient_dragon', 'void_emperor', 'aether_sovereign'].map((b, i) =>
     ach('boss_' + b, 'boss_' + b, 1, 'trophy', G => (G.s.killsBy[b] || 0) >= 1, [1000, 5000, 15000, 30000, 100000, 250000, 500000][i])),
   ...tiers('pets', [[1, 1000], [5, 10000], [10, 50000]], 'paw-print', (G, n) => G.petCount() >= n),
-  ach('pets_all', 'petsAll', 'all', 'paw-print', G => G.petCount() >= G.petTotal(), 250000),
+  ach('pets_all', 'petsAll', 'all', 'paw-print', G => G.petsComplete(), 250000),
   ...tiers('enchant', [[5, 2000], [10, 50000]], 'upgrade', (G, n) => G.maxEnchant() >= n),
   ...tiers('streak', [[3, 1000], [7, 5000], [30, 50000]], 'flame', (G, n) => (G.s.daily?.bestStreak || 0) >= n),
   ...tiers('dailies', [[10, 2000], [100, 25000]], 'calendar', (G, n) => (G.s.daily?.claimed || 0) >= n),
   ...tiers('beasts', [[10, 2000], [25, 20000]], 'open-book', (G, n) => G.bestiaryProgress().seen >= n),
   ach('beasts_all', 'beastsAll', 'all', 'open-book', G => G.bestiaryProgress().seen >= G.bestiaryProgress().total, 150000),
   ...tiers('hunted', [[1, 2500], [10, 40000]], 'archery-target', (G, n) => G.huntedCount() >= n),
+  ...tiers('ascend', [[1, 5000], [5, 100000]], 'ankh', (G, n) => (G.s.ascension?.count || 0) >= n),
   ach('set_full', 'setFull', 1, 'breastplate', G => G.activeSets().some(x => x.worn === x.set.pieces.length), 3000),
 ]
 

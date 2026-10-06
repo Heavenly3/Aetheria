@@ -343,7 +343,7 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -660,6 +660,7 @@ export const G = {
     this.s.stats.actions++
     this.addMastery(skill, a.id, masteryXpPerAction(a.time))
     this.rollSkillPet(skill, a.time)
+    this.festivalAction(a.time)
 
     if (a.fail && Math.random() < this.failChance(skill, a)) {
       const dmg = rand(a.fail.dmg[0], a.fail.dmg[1])
@@ -960,6 +961,7 @@ export const G = {
     st.stats.kills++
     st.killsBy[m.id] = (st.killsBy[m.id] || 0) + 1
     this.countBeast(m.id)
+    this.festivalKill(m)
     act.runKills++
     if (this.tracker) this.tracker.kills[m.id] = (this.tracker.kills[m.id] || 0) + 1
     const gold = this.addGold(rand(m.gold[0], m.gold[1]), true)

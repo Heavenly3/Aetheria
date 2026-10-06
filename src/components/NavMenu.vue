@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { G, state } from '../game/engine.js'
 import { SKILLS, SKILL_CATS } from '../game/data/skills.js'
@@ -9,84 +9,121 @@ import GameIcon from './GameIcon.vue'
 const emit = defineEmits(['navigate'])
 const route = useRoute()
 
-const questsReady = computed(() => QUESTS.filter(q => G.questReady(q)).length)
 const act = computed(() => state.activity)
 const inCombat = kind => act.value?.type === 'combat' && (!kind || act.value.kind === kind)
+const fest = computed(() => G.activeFestival())
 
-const realm = computed(() => [
-  { to: '/', icon: state.avatar || 'wizard-face', key: 'nav.hero', badge: G.attrPoints() + G.talentPoints() || null },
-  { to: '/inventory', icon: 'knapsack', key: 'nav.inventory' },
-  { to: '/combat', icon: 'crossed-swords', key: 'nav.combat', pulse: inCombat('area') || inCombat('boss') || inCombat('dungeon') },
-  { to: '/slayer', icon: 'death-skull', key: 'nav.slayer', badge: state.slayer.task ? state.slayer.task.left : null },
-  { to: '/tower', icon: 'stone-tower', key: 'nav.tower', pulse: inCombat('tower') },
-  { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: questsReady.value + G.tasksReady() || null },
-  { to: '/achievements', icon: 'trophy-cup', key: 'nav.achievements' },
-  { to: '/bestiary', icon: 'open-book', key: 'nav.bestiary', badge: G.claimableGroups() || null },
-  { to: '/pets', icon: 'paw-print', key: 'nav.pets' },
-  { to: '/ascension', icon: 'ankh', key: 'nav.ascension', badge: G.canAscend() && !state.ascension.count ? '!' : null },
-  { to: '/stats', icon: 'histogram', key: 'nav.stats' },
+// Sections of the menu; skills get one section per category
+const sections = computed(() => [
+  { id: 'hero', key: 'nav.groups.hero', items: [
+    { to: '/', icon: state.avatar || 'wizard-face', key: 'nav.hero', badge: G.attrPoints() + G.talentPoints() || null },
+    { to: '/inventory', icon: 'knapsack', key: 'nav.inventory' },
+    { to: '/pets', icon: 'paw-print', key: 'nav.pets' },
+  ] },
+  { id: 'adventure', key: 'nav.groups.adventure', items: [
+    { to: '/combat', icon: 'crossed-swords', key: 'nav.combat', pulse: inCombat('area') || inCombat('boss') || inCombat('dungeon') },
+    { to: '/slayer', icon: 'death-skull', key: 'nav.slayer', badge: state.slayer.task ? state.slayer.task.left : null },
+    { to: '/tower', icon: 'stone-tower', key: 'nav.tower', pulse: inCombat('tower') },
+    { to: '/bestiary', icon: 'open-book', key: 'nav.bestiary', badge: G.claimableGroups() || null },
+  ] },
+  { id: 'progress', key: 'nav.groups.progress', items: [
+    { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: QUESTS.filter(q => G.questReady(q)).length + G.tasksReady() || null },
+    { to: '/achievements', icon: 'trophy-cup', key: 'nav.achievements' },
+    { to: '/ascension', icon: 'ankh', key: 'nav.ascension', badge: G.canAscend() && !state.ascension.count ? '!' : null },
+    { to: '/stats', icon: 'histogram', key: 'nav.stats' },
+  ] },
+  { id: 'town', key: 'nav.groups.town', items: [
+    { to: '/festival', icon: fest.value?.icon || 'laurel-crown', key: 'nav.festival', festive: !!fest.value, badge: fest.value && G.festivalShop().some(e => e.kind !== 'item' && G.canBuyFestival(e)) ? '!' : null },
+    { to: '/tavern', icon: 'beer-horn', key: 'nav.tavern', badge: state.tavern.orders.filter(o => !o.done && G.qty(o.item) >= o.qty).length || null,
+      pulse: state.tavern.workers.some(w => w.status === 'working' || w.exp) },
+    { to: '/home', icon: 'family-house', key: 'nav.home' },
+    { to: '/forge', icon: 'anvil-impact', key: 'nav.forge' },
+    { to: '/church', icon: 'church', key: 'nav.church' },
+    { to: '/shop', icon: 'shop', key: 'nav.shop' },
+  ] },
+  ...Object.keys(SKILL_CATS).map(cat => ({
+    id: 'skills-' + cat, label: SKILL_CATS[cat], skills: true,
+    items: Object.entries(SKILLS).filter(([, s]) => s.cat === cat).map(([id, s]) => ({
+      to: '/skill/' + id, id, icon: s.icon, color: s.color, name: s.name, pulse: act.value?.type === 'skill' && act.value.skill === id,
+    })),
+  })),
 ])
-const town = computed(() => [
-  { to: '/tavern', icon: 'beer-horn', key: 'nav.tavern', badge: state.tavern.orders.filter(o => !o.done && G.qty(o.item) >= o.qty).length || null,
-    pulse: state.tavern.workers.some(w => w.status === 'working' || w.exp) },
-  { to: '/home', icon: 'family-house', key: 'nav.home' },
-  { to: '/forge', icon: 'anvil-impact', key: 'nav.forge' },
-  { to: '/church', icon: 'church', key: 'nav.church' },
-  { to: '/shop', icon: 'shop', key: 'nav.shop' },
-  { to: '/settings', icon: 'cog', key: 'nav.settings' },
-])
-const cats = computed(() => Object.keys(SKILL_CATS).map(cat => ({
-  cat, label: SKILL_CATS[cat], skills: Object.entries(SKILLS).filter(([, s]) => s.cat === cat).map(([id, s]) => ({ id, s })),
-})))
-const isActive = to => (to === '/' ? route.path === '/' : route.path.startsWith(to))
+
+const isActive = to => (to === '/' ? route.path === '/' : route.path === to || route.path.startsWith(to + '/'))
+
+// Folded sections are remembered per device; the section of the current screen always opens
+const STORE = 'aetheria-nav'
+const folded = reactive((() => { try { return JSON.parse(localStorage.getItem(STORE)) || {} } catch { return {} } })())
+const save = () => { try { localStorage.setItem(STORE, JSON.stringify(folded)) } catch { /* storage unavailable */ } }
+function toggle(id) { folded[id] = !folded[id]; save() }
+watch(() => route.path, () => { for (const s of sections.value) if (folded[s.id] && s.items.some(i => isActive(i.to))) { folded[s.id] = false; save() } }, { immediate: true })
+
+// What a folded section still shows: a sum of its counters, or a dot when something is running
+function summary(s) {
+  const nums = s.items.map(i => i.badge).filter(b => typeof b === 'number')
+  const total = nums.reduce((a, b) => a + b, 0)
+  return { badge: total || (s.items.some(i => i.badge === '!') ? '!' : null), pulse: s.items.some(i => i.pulse) }
+}
 </script>
 
 <template>
   <nav class="nav">
-    <div class="nav-label">{{ $t('nav.realm') }}</div>
-    <router-link v-for="n in realm" :key="n.to" :to="n.to" class="nav-item" :class="{ active: isActive(n.to) }" :data-tut="'nav:' + n.to" @click="emit('navigate')">
-      <span class="nav-icon"><GameIcon :name="n.icon" :size="17" /></span>
-      <span class="nav-name grow">{{ $t(n.key) }}</span>
-      <span v-if="n.badge" class="nav-badge">{{ n.badge }}</span>
-      <span v-if="n.pulse" class="pulse" />
-    </router-link>
-
-    <div class="nav-label">{{ $t('nav.town') }}</div>
-    <router-link v-for="n in town" :key="n.to" :to="n.to" class="nav-item" :class="{ active: isActive(n.to) }" :data-tut="'nav:' + n.to" @click="emit('navigate')">
-      <span class="nav-icon"><GameIcon :name="n.icon" :size="17" /></span>
-      <span class="nav-name grow">{{ $t(n.key) }}</span>
-      <span v-if="n.badge" class="nav-badge">{{ n.badge }}</span>
-      <span v-if="n.pulse" class="pulse" />
-    </router-link>
-
-    <template v-for="c in cats" :key="c.cat">
-      <div class="nav-label">{{ c.label }}</div>
-      <router-link v-for="{ id, s } in c.skills" :key="id" :to="'/skill/' + id" class="nav-item" :class="{ active: route.path === '/skill/' + id }"
-        :style="{ '--c': s.color }" :data-tut="'nav:/skill/' + id" @click="emit('navigate')">
-        <span class="nav-icon skill"><GameIcon :name="s.icon" :size="17" /></span>
-        <span class="grow">
-          <span class="nav-name row"><span class="grow">{{ s.name }}</span><span class="nav-lvl">{{ G.level(id) }}</span></span>
-          <span class="bar thin" style="margin-top:5px"><i :style="{ width: G.levelProgress(id) * 100 + '%' }" /></span>
-        </span>
-        <span v-if="act?.type === 'skill' && act.skill === id" class="pulse" />
-      </router-link>
-    </template>
+    <section v-for="s in sections" :key="s.id" class="nav-sec" :class="{ folded: folded[s.id] }">
+      <button class="nav-label" :aria-expanded="!folded[s.id]" @click="toggle(s.id)">
+        <span class="grow">{{ s.label || $t(s.key) }}</span>
+        <template v-if="folded[s.id]">
+          <span v-if="summary(s).badge" class="nav-badge sm">{{ summary(s).badge }}</span>
+          <span v-else-if="summary(s).pulse" class="pulse" />
+        </template>
+        <i class="pi pi-angle-down chev" />
+      </button>
+      <div v-show="!folded[s.id]" class="nav-items">
+        <template v-if="s.skills">
+          <router-link v-for="i in s.items" :key="i.id" :to="i.to" class="nav-item" :class="{ active: route.path === i.to }"
+            :style="{ '--c': i.color }" :data-tut="'nav:' + i.to" @click="emit('navigate')">
+            <span class="nav-icon skill"><GameIcon :name="i.icon" :size="16" /></span>
+            <span class="grow">
+              <span class="nav-name row"><span class="grow">{{ i.name }}</span><span class="nav-lvl">{{ G.level(i.id) }}</span></span>
+              <span class="bar thin" style="margin-top:4px"><i :style="{ width: G.levelProgress(i.id) * 100 + '%' }" /></span>
+            </span>
+            <span v-if="i.pulse" class="pulse" />
+          </router-link>
+        </template>
+        <template v-else>
+          <router-link v-for="i in s.items" :key="i.to" :to="i.to" class="nav-item" :class="{ active: isActive(i.to), festive: i.festive }"
+            :data-tut="'nav:' + i.to" @click="emit('navigate')">
+            <span class="nav-icon"><GameIcon :name="i.icon" :size="16" /></span>
+            <span class="nav-name grow">{{ $t(i.key) }}</span>
+            <span v-if="i.badge" class="nav-badge">{{ i.badge }}</span>
+            <span v-if="i.pulse" class="pulse" />
+          </router-link>
+        </template>
+      </div>
+    </section>
   </nav>
 </template>
 
 <style scoped>
-.nav-label { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); padding: 16px 10px 6px; }
-.nav-item { position: relative; display: flex; align-items: center; gap: 11px; padding: 7px 10px; border-radius: 11px; color: var(--ink-2); text-decoration: none; -webkit-tap-highlight-color: transparent;
+.nav-sec + .nav-sec { margin-top: 4px; }
+.nav-label { display: flex; align-items: center; gap: 8px; width: 100%; padding: 12px 10px 6px; border: 0; background: none; cursor: pointer; font: inherit;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); text-align: start; }
+.nav-label:hover { color: var(--muted); }
+.chev { font-size: 11px; transition: transform 0.2s; }
+.folded .chev { transform: rotate(-90deg); }
+.nav-items { display: flex; flex-direction: column; gap: 1px; }
+.nav-item { position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 10px; color: var(--ink-2); text-decoration: none; -webkit-tap-highlight-color: transparent;
   transition: background 0.18s, color 0.18s; }
 .nav-item:hover { background: var(--tint-2); color: var(--ink); }
 .nav-item.active { background: linear-gradient(90deg, rgba(226, 182, 90, 0.15), rgba(226, 182, 90, 0.02)); color: var(--ink); box-shadow: inset 0 0 0 1px rgba(226, 182, 90, 0.18); }
-.nav-item.active::before { content: ''; position: absolute; inset-inline-start: -12px; top: 8px; bottom: 8px; width: 3px; border-start-end-radius: 3px; border-end-end-radius: 3px; background: var(--gold-grad); }
-.nav-icon { width: 30px; height: 30px; flex-shrink: 0; display: grid; place-items: center; border-radius: 9px; background: var(--tint-2); border: 1px solid var(--line); color: var(--gold); }
+.nav-item.active::before { content: ''; position: absolute; inset-inline-start: -12px; top: 7px; bottom: 7px; width: 3px; border-start-end-radius: 3px; border-end-end-radius: 3px; background: var(--gold-grad); }
+.nav-item.festive .nav-icon { color: var(--on-gold); background: var(--gold-grad); border-color: transparent; }
+.nav-icon { width: 28px; height: 28px; flex-shrink: 0; display: grid; place-items: center; border-radius: 8px; background: var(--tint-2); border: 1px solid var(--line); color: var(--gold); }
 .nav-icon.skill { color: var(--c); }
-.nav-name { font-weight: 500; font-size: 14.5px; }
-.nav-lvl { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.nav-badge { font-size: 11.5px; font-weight: 800; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; display: grid; place-items: center; background: var(--gold); color: var(--on-gold); }
+.nav-name { font-weight: 500; font-size: 14px; }
+.nav-lvl { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nav-badge { font-size: 11px; font-weight: 800; min-width: 19px; height: 19px; padding: 0 6px; border-radius: 10px; display: grid; place-items: center; background: var(--gold); color: var(--on-gold); }
+.nav-badge.sm { min-width: 17px; height: 17px; font-size: 10.5px; letter-spacing: 0; }
 .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; animation: pulse 1.6s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(226, 182, 90, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(226, 182, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(226, 182, 90, 0); } }
-@media (pointer: coarse) { .nav-item { padding: 10px; } .nav-icon { width: 34px; height: 34px; } }
+@media (pointer: coarse) { .nav-item { padding: 9px 10px; } .nav-icon { width: 34px; height: 34px; } .nav-label { padding-block: 14px 8px; } }
 </style>

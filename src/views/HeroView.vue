@@ -6,6 +6,7 @@ import Tab from 'primevue/tab'
 import TabPanels from 'primevue/tabpanels'
 import TabPanel from 'primevue/tabpanel'
 import Badge from 'primevue/badge'
+import Button from 'primevue/button'
 import { G, state } from '../game/engine.js'
 import { SKILLS } from '../game/data/skills.js'
 import { ITEMS, SLOTS, STAT_LABELS } from '../game/data/items.js'
@@ -20,8 +21,11 @@ import ItemTile from '../components/ItemTile.vue'
 import AttributesPanel from '../components/AttributesPanel.vue'
 import TalentsPanel from '../components/TalentsPanel.vue'
 import SetBonuses from '../components/SetBonuses.vue'
+import AppearanceDialog from '../components/AppearanceDialog.vue'
+import { titled } from '../game/data/cosmetics.js'
 
 const tab = ref('overview')
+const appearance = ref(false)
 const b = computed(() => G.bonuses())
 const ps = computed(() => G.playerStats(null))
 const activeBlessings = computed(() => BLESSINGS.filter(x => G.blessed(x.id)))
@@ -49,6 +53,9 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
             <div class="panel pad">
               <div class="avatar" :style="{ '--t': state.tint }"><ItemTile :icon="state.avatar" :tint="state.tint" size="xl" :tip="false" /></div>
               <div class="hero-name">{{ state.name }}</div>
+              <div v-if="G.heroTitle()" class="hero-title">{{ G.heroTitle().name }}</div>
+              <div class="row" style="justify-content:center;margin-top:6px"><Button :label="$t('cosmetics.edit')" icon="pi pi-palette" size="small" text @click="appearance = true" /></div>
+              <AppearanceDialog v-model:visible="appearance" />
               <div class="row" style="justify-content:center;gap:6px;margin:6px 0 14px">
                 <span class="tag" :style="{ color: role.color }"><GameIcon :name="role.icon" :size="13" /> {{ role.name }}</span>
                 <span class="tag hue" :style="{ '--hue': diff.color }">{{ diff.name }}</span>
@@ -175,6 +182,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
 .avatar { display: grid; place-items: center; margin: 4px auto 12px; }
 .avatar :deep(.tile) { border-radius: 50% !important; box-shadow: 0 0 0 2px rgba(226, 182, 90, 0.6), 0 0 0 7px rgba(226, 182, 90, 0.08), 0 16px 40px -10px rgba(226, 182, 90, 0.45); }
 .hero-name { text-align: center; font-family: var(--font-display); font-size: 26px; }
+.hero-title { text-align: center; font-family: var(--font-display); font-size: 14px; letter-spacing: 0.06em; color: var(--gold-hi); margin-top: -2px; }
 .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .equip-grid.tools { grid-template-columns: 1fr; }
 .equip-slot { display: flex; align-items: center; gap: 10px; padding: 9px; border-radius: 12px; text-align: start; color: inherit; font: inherit;

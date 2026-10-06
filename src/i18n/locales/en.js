@@ -2,7 +2,7 @@ export default {
   app: { tagline: 'Idle Realms' },
 
   common: {
-    gold: 'gold', nothing: 'Nothing', lvlShort: 'Lv {n}', raw: '{v}', notNow: 'Not now', buyFor: 'Buy for {price}',
+    gold: 'gold', nothing: 'Nothing', lvlShort: 'Lv {n}', raw: '{v}', notNow: 'Not now', close: 'Close', buyFor: 'Buy for {price}',
     cancel: 'Cancel', level: 'Level', levelN: 'Level {n}', seconds: '{n} s', add: 'Add', hp: 'HP', stop: 'Stop',
     moveUp: 'Move up', moveDown: 'Move down', remove: 'Remove', always: 'always', locked: 'Locked', equip: 'Equip',
     missingMaterials: 'Missing materials', notEnoughGold: 'Not enough gold', back: 'Back', next: 'Next',
@@ -15,7 +15,8 @@ export default {
     hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
     settings: 'Settings', realm: 'Realm', town: 'Town',
-    pets: 'Pets', forge: 'Forge', bestiary: 'Bestiary',
+    pets: 'Pets', forge: 'Forge', bestiary: 'Bestiary', festival: 'Festival',
+    groups: { hero: 'Hero', adventure: 'Adventure', progress: 'Progress', town: 'Town' },
     ascension: 'Ascension',
     skills: 'Skills', more: 'Menu', main: 'Main navigation',
   },
@@ -394,6 +395,7 @@ export default {
     beastsAll: { name: 'Living Encyclopedia', desc: 'Record every creature in the bestiary.' },
     hunted: { name: 'Master Hunter {n}', desc: 'Master {n} creatures in the bestiary.' },
     setFull: { name: 'Dressed for the Part', desc: 'Wear every piece of an equipment set.' },
+    ascend: { name: 'Reborn {n}', desc: 'Ascend {n} times.' },
     boss_void_emperor: { name: 'Voidbreaker', desc: 'Defeat the Void Emperor.' },
     boss_aether_sovereign: { name: 'Above the Stars', desc: 'Defeat the Aether Sovereign.' },
   },
@@ -456,6 +458,40 @@ export default {
     invalidSave: 'That save code is not valid', deleteTitle: 'Delete game', deleteMessage: "{name}'s game in slot {n} will be deleted. This cannot be undone.",
     deleteConfirm: 'Delete everything',
     autoChain: 'Craft missing materials automatically', autoChainHint: 'If a recipe runs out, make its ingredients first (mining, smelting…) and then go back to it.',
+  },
+
+  cosmetics: {
+    title: 'Appearance', edit: 'Appearance and title', intro: 'Titles, portraits and colours are unlocked by achievements and festivals.',
+    tabs: { title: 'Titles', avatar: 'Portraits', tint: 'Colours' }, noTitle: 'No title',
+    titled: '{name}, {title}', titledOf: '{name} {title}',
+    fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
+    titles: {
+      apprentice: 'the Apprentice', goblin_hunter: 'Goblin Hunter', dragonslayer: 'Dragonslayer', voidwalker: 'Voidwalker', unbound: 'the Unbound',
+      spire_climber: 'Spire Climber', naturalist: 'the Naturalist', beastbane: 'Beastbane', wild_heart: 'Wild Heart', twice_born: 'the Twice-Born',
+      many_lives: 'of Many Lives', goldhand: 'Goldhand', hope: 'Hope of the Realm', ten_runes: 'of the Ten Runes', unfailing: 'the Unfailing',
+      polymath: 'the Polymath', harvest_moon: 'of the Harvest Moon', endless_winter: 'of the Endless Winter', first_bloom: 'of the First Bloom',
+      midsummer_fire: 'of the Midsummer Fire',
+    },
+  },
+
+  festivals: {
+    harvest: { name: 'Harvest Festival', desc: 'The fields are heavy with grain and the villages light their lanterns. Crops grow faster and cooks learn quicker.' },
+    winter: { name: "Winter's Veil", desc: 'Snow covers the realm and every hearth stays lit. Food heals more and armour holds better against the cold.' },
+    spring: { name: 'Spring Bloom', desc: 'The world wakes up in flower. Every skill learns a little faster.' },
+    summer: { name: 'Midsummer Fires', desc: 'Bonfires burn on every hill through the longest days. Merchants are generous and gold flows freely.' },
+  },
+
+  festival: {
+    endsIn: 'Ends in {time}', bonus: 'Festival bonus', tokens: 'Festival tokens', howTitle: 'How to earn tokens',
+    how: {
+      actions: 'Any skill action: a {pct}% chance for every 3 seconds of action time.',
+      kills: 'Monsters: a {pct}% chance per kill, and {boss} tokens for every boss.',
+      tasks: 'Daily and weekly tasks: {n} tokens each.',
+    },
+    resetHint: 'You have earned {n} tokens in this festival. Tokens do not carry over to the next one, but everything you buy is yours for good.',
+    shop: 'Festival shop', buy: 'Buy', owned: 'Owned', bought: 'Bought: <b>{item}</b>',
+    kinds: { title: 'Festival title', avatar: 'Festival portrait', tint: 'Festival colour', avatarHint: 'A portrait for your hero, chosen in Appearance.', tintHint: 'A colour for your portrait, chosen in Appearance.' },
+    none: 'No festival right now', next: 'Next: {name}, in {time}.', calendar: 'Festival calendar',
   },
 
   sets: {
@@ -712,7 +748,8 @@ export default {
     unknown: 'Not found yet. Keep at it.',
     oddsTip: 'Average number of tries. Loot bonuses improve your luck a little.',
     odds: { actions: '~1 in {n} actions', kills: '1 in {n} kills', harvests: '1 in {n} harvests', tasks: '1 in {n} tasks', games: '1 in {n} games' },
-    source: { harvest: 'Farming harvests', skill: 'Training {skill}', monster: 'Defeating {monster}', slayer: 'Finishing slayer tasks', dice: 'Playing dice at the tavern' },
+    source: { harvest: 'Farming harvests', skill: 'Training {skill}', monster: 'Defeating {monster}', slayer: 'Finishing slayer tasks', dice: 'Playing dice at the tavern', festival: 'Festival shop: {name}' },
+    festivalOnly: 'Sold during its festival',
     rock_golem: { name: 'Rock Golem', desc: 'A pebble that refuses to stay still.' },
     beaver: { name: 'Beaver', desc: 'Judges every tree you cut.' },
     heron: { name: 'Heron', desc: 'Steals the occasional fish, but points out the best spots.' },
@@ -736,6 +773,10 @@ export default {
     star_cub: { name: 'Star Cub', desc: 'Leaves a trail of light wherever it goes.' },
     slayer_bat: { name: 'Slayer Bat', desc: 'Finds your next target before you do.' },
     lucky_cat: { name: 'Lucky Cat', desc: 'Waves at fortune, and fortune waves back.' },
+    mushling: { name: 'Mushling', desc: 'Sprouted in a pumpkin patch and never left your side.' },
+    frost_cub: { name: 'Frost Cub', desc: 'Warm as a stove, cold as a snowdrift.' },
+    spring_chick: { name: 'Spring Chick', desc: 'Hatched on the first warm morning of the year.' },
+    sunfox: { name: 'Sunfox', desc: 'Its tail glows like the last embers of a bonfire.' },
   },
 
   forge: {
