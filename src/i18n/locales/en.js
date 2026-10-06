@@ -92,6 +92,9 @@ export default {
   },
 
   hero: {
+    unequip: 'Take off', unequipTitle: 'Take off: {slot}', unequipMessage: '{item} will go back to your inventory.',
+    unequipCombat: 'You are in combat, so its bonuses are lost at once.', unequipSet: 'You will lose part of the {set} set bonus.',
+    unequipToolBusy: 'Your hero is using it for {action}, which will stop.',
     heroLevel: 'Hero level',
     tabs: { overview: 'Overview', attributes: 'Attributes', talents: 'Talents' },
     equipment: 'Equipment', clickToRemove: 'Click to unequip', empty: 'Empty', tools: 'Tools', toolTier: '{tool} · tier {n}',
@@ -288,7 +291,20 @@ export default {
   chart: { notEnough: 'Not enough data yet. A sample is saved every 5 minutes of play.', asTable: 'View as table', time: 'Time' },
 
   inventory: {
-    filters: { all: 'All', resource: 'Resources', food: 'Food', equip: 'Gear', tool: 'Tools', potion: 'Potions', seed: 'Seeds', rune: 'Runes', other: 'Other' },
+    groups: { all: 'All', gear: 'Gear', supplies: 'Supplies', resources: 'Resources', other: 'Other' },
+    cats: {
+      weapons: 'Weapons', armour: 'Armour', accessories: 'Amulets and capes', ammo: 'Ammunition', tools: 'Tools',
+      food: 'Food', potions: 'Potions', runes: 'Runes', seeds: 'Seeds',
+      ores: 'Ores and bars', wood: 'Wood', fish: 'Raw fish', crops: 'Crops', herbs: 'Herbs', gems: 'Gems', remains: 'Bones and ashes',
+      hides: 'Hides and feathers', parts: 'Crafting parts', special: 'Rare materials', chests: 'Containers', junk: 'Junk',
+    },
+    compare: {
+      title: 'Compared with what you wear', tier: 'Tier', speed: '{skill} speed', better: 'Upgrade', worse: 'Downgrade', mixed: 'Trade-off', same: 'Same',
+      wearing: 'You are wearing this one.', noTool: 'No tool of this kind equipped', emptySlot: 'Nothing in the {slot} slot',
+      twoHandedNote: 'A two-handed weapon and a shield cannot be worn together, so both are compared.',
+    },
+    usedIn: 'Used in', moreUses: 'and {n} more', displaceTitle: 'Swap equipment', displaceMessage: 'Equipping {item} will take off {other}.',
+    equippedToast: 'Equipped {item}', cannotEquip: 'Requires {req} to equip.', sellAtShop: 'Sell at the shop',
     sold: 'Sold for <b>{gold}</b> gold', goldAmount: '{n} gold', opened: 'You get: <b>{items}</b>', sellShownTitle: 'Sell what you see',
     sellShownMessage: '{n} item types will be sold for {gold} gold. Locked items are kept.', sell: 'Sell', junkSold: 'Junk sold for <b>{gold}</b> gold',
     noJunk: 'You have no junk to sell', search: 'Search items…', totalValue: 'Total value: {gold} gold', sellJunk: 'Sell junk',
@@ -441,6 +457,13 @@ export default {
   },
 
   shop: {
+    buyTab: 'Buy', sellTab: 'Sell', sellIntro: 'Sell what you do not need. Prices follow the daily market: items in high demand pay more today.',
+    nothingToSell: 'You have nothing to sell.', pickToSell: 'Choose an item to sell it.',
+    confirmTitle: 'Confirm sale', confirmMessage: 'Sell {n}× {item} for {gold} gold?',
+    warn: {
+      ammo: 'It is your equipped ammunition, so you will run out of arrows.', food: 'It is your combat food, so you will fight without healing.',
+      potion: 'It is your combat potion.', rare: 'It is a rare item and hard to find again.', big: 'This sale is worth {gold} gold.',
+    },
     bought: 'Bought: <b>{n}× {item}</b>', intro: 'The merchant of Aetheria sells basic supplies. To sell your items, go to the inventory.',
     marketTitle: "Today's market", marketIntro: 'Demand changes every day: these items sell for more or less today.', have: 'you have {n}',
     cats: { supplies: 'Supplies', seeds: 'Seeds', runes: 'Runes', tools: 'Tools', gear: 'Gear' },

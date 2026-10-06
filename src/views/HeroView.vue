@@ -1,5 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useConfirm } from 'primevue/useconfirm'
+import { SET_OF } from '../game/data/sets.js'
+import { findAction } from '../game/data/actions.js'
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
 import Tab from 'primevue/tab'
@@ -25,6 +29,40 @@ import AppearanceDialog from '../components/AppearanceDialog.vue'
 import { titled } from '../game/data/cosmetics.js'
 
 const tab = ref('overview')
+const { t } = useI18n()
+const confirm = useConfirm()
+
+// Taking gear off asks first, and says what is lost: combat bonuses, set bonuses or the action in progress
+function setLoss(id) {
+  const set = SET_OF[id]
+  if (!set) return null
+  const worn = G.setPieces(set)
+  return set.bonuses.some(b => worn >= b.n && worn - 1 < b.n) ? set : null
+}
+function ask(header, lines, onAccept) {
+  confirm.require({
+    header, message: lines.join(' '), icon: 'pi pi-question-circle',
+    acceptLabel: t('hero.unequip'), rejectLabel: t('common.cancel'), rejectProps: { severity: 'secondary', outlined: true },
+    accept: onAccept,
+  })
+}
+function askUnequip(slot) {
+  const id = state.equipment[slot]
+  const lines = [t('hero.unequipMessage', { item: ITEMS[id].name })]
+  if (state.activity?.type === 'combat') lines.push(t('hero.unequipCombat'))
+  const set = setLoss(id)
+  if (set) lines.push(t('hero.unequipSet', { set: set.name }))
+  ask(t('hero.unequipTitle', { slot: SLOTS[slot].name }), lines, () => G.unequip(slot))
+}
+function askUnequipTool(type) {
+  const id = state.tools[type]
+  const lines = [t('hero.unequipMessage', { item: ITEMS[id].name })]
+  const act = state.activity
+  const action = act?.type === 'skill' ? findAction(act.skill, act.action) : null
+  const busy = action?.tool?.type === type
+  if (busy) lines.push(t('hero.unequipToolBusy', { action: action.name }))
+  ask(t('hero.unequipTitle', { slot: TOOL_TYPES[type].name }), lines, () => { if (busy) G.stop(); G.unequipTool(type) })
+}
 const appearance = ref(false)
 const b = computed(() => G.bonuses())
 const ps = computed(() => G.playerStats(null))
@@ -78,7 +116,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div class="section-title" style="margin-top:20px">{{ $t('hero.equipment') }}</div>
               <div class="equip-grid">
                 <template v-for="(s, slot) in SLOTS" :key="slot">
-                  <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="$t('hero.clickToRemove')" @click="G.unequip(slot)">
+                  <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="$t('hero.clickToRemove')" @click="askUnequip(slot)">
                     <ItemTile :item="state.equipment[slot]" size="sm" :tip="false" :qty="ITEMS[state.equipment[slot]].stackEquip ? G.qty(state.equipment[slot]) : null" />
                     <div class="grow"><div class="slot-name">{{ s.name }}</div><div class="slot-item">{{ ITEMS[state.equipment[slot]].name }}<b v-if="G.enchantLevel(slot)" class="ench"> +{{ G.enchantLevel(slot) }}</b></div></div>
                   </button>
@@ -91,7 +129,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div class="section-title" style="margin-top:20px">{{ $t('hero.tools') }}</div>
               <div class="equip-grid tools">
                 <template v-for="(t, type) in TOOL_TYPES" :key="type">
-                  <button v-if="state.tools[type]" class="equip-slot filled" v-tooltip.top="$t('hero.clickToRemove')" @click="G.unequipTool(type)">
+                  <button v-if="state.tools[type]" class="equip-slot filled" v-tooltip.top="$t('hero.clickToRemove')" @click="askUnequipTool(type)">
                     <ItemTile :item="state.tools[type]" size="sm" :tip="false" />
                     <div class="grow"><div class="slot-name">{{ $t('hero.toolTier', { tool: t.name, n: G.toolTier(type) }) }}</div><div class="slot-item">{{ ITEMS[state.tools[type]].name }}</div></div>
                   </button>

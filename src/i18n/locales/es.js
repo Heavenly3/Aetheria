@@ -92,6 +92,9 @@ export default {
   },
 
   hero: {
+    unequip: 'Quitar', unequipTitle: 'Quitar: {slot}', unequipMessage: '{item} volverá a tu inventario.',
+    unequipCombat: 'Estás en combate: pierdes sus bonificaciones al momento.', unequipSet: 'Perderás parte del bonus del conjunto {set}.',
+    unequipToolBusy: 'Tu héroe la está usando para {action}, que se detendrá.',
     heroLevel: 'Nivel de héroe',
     tabs: { overview: 'Resumen', attributes: 'Atributos', talents: 'Talentos' },
     equipment: 'Equipo', clickToRemove: 'Clic para quitar', empty: 'Vacío', tools: 'Herramientas', toolTier: '{tool} · nivel {n}',
@@ -288,7 +291,20 @@ export default {
   chart: { notEnough: 'Aún no hay datos suficientes. Se guarda una muestra cada 5 minutos de juego.', asTable: 'Ver como tabla', time: 'Hora' },
 
   inventory: {
-    filters: { all: 'Todo', resource: 'Recursos', food: 'Comida', equip: 'Equipo', tool: 'Herramientas', potion: 'Pociones', seed: 'Semillas', rune: 'Runas', other: 'Otros' },
+    groups: { all: 'Todo', gear: 'Equipo', supplies: 'Provisiones', resources: 'Recursos', other: 'Otros' },
+    cats: {
+      weapons: 'Armas', armour: 'Armaduras', accessories: 'Amuletos y capas', ammo: 'Munición', tools: 'Herramientas',
+      food: 'Comida', potions: 'Pociones', runes: 'Runas', seeds: 'Semillas',
+      ores: 'Minerales y lingotes', wood: 'Madera', fish: 'Pescado crudo', crops: 'Cultivos', herbs: 'Hierbas', gems: 'Gemas', remains: 'Huesos y cenizas',
+      hides: 'Pieles y plumas', parts: 'Piezas de artesanía', special: 'Materiales raros', chests: 'Contenedores', junk: 'Basura',
+    },
+    compare: {
+      title: 'Comparado con lo que llevas', tier: 'Nivel', speed: 'Velocidad de {skill}', better: 'Mejora', worse: 'Empeora', mixed: 'Cambio mixto', same: 'Igual',
+      wearing: 'Es lo que llevas puesto.', noTool: 'No llevas ninguna herramienta de este tipo', emptySlot: 'No llevas nada en {slot}',
+      twoHandedNote: 'Un arma a dos manos y un escudo no se pueden llevar juntos, así que se comparan ambos.',
+    },
+    usedIn: 'Se usa en', moreUses: 'y {n} más', displaceTitle: 'Cambiar equipo', displaceMessage: 'Al equipar {item} te quitarás {other}.',
+    equippedToast: 'Equipado: {item}', cannotEquip: 'Necesitas {req} para equiparlo.', sellAtShop: 'Vender en la tienda',
     sold: 'Vendido por <b>{gold}</b> de oro', goldAmount: '{n} de oro', opened: 'Obtienes: <b>{items}</b>', sellShownTitle: 'Vender lo que ves',
     sellShownMessage: 'Se venderán {n} tipos de objeto por {gold} de oro. Los objetos protegidos no se venden.', sell: 'Vender', junkSold: 'Basura vendida por <b>{gold}</b> de oro',
     noJunk: 'No tienes basura que vender', search: 'Buscar objeto…', totalValue: 'Valor total: {gold} de oro', sellJunk: 'Vender basura',
@@ -441,6 +457,13 @@ export default {
   },
 
   shop: {
+    buyTab: 'Comprar', sellTab: 'Vender', sellIntro: 'Vende lo que no necesites. Los precios siguen el mercado del día: lo que tiene mucha demanda hoy se paga más.',
+    nothingToSell: 'No tienes nada que vender.', pickToSell: 'Elige un objeto para venderlo.',
+    confirmTitle: 'Confirmar venta', confirmMessage: '¿Vender {n}× {item} por {gold} de oro?',
+    warn: {
+      ammo: 'Es tu munición equipada: te quedarás sin flechas.', food: 'Es tu comida de combate: lucharás sin curarte.',
+      potion: 'Es tu poción de combate.', rare: 'Es un objeto raro y difícil de volver a conseguir.', big: 'Esta venta vale {gold} de oro.',
+    },
     bought: 'Comprado: <b>{n}× {item}</b>', intro: 'El mercader de Aetheria vende suministros básicos. Para vender tus objetos, ve al inventario.',
     marketTitle: 'Mercado del día', marketIntro: 'Cada día cambia la demanda: estos objetos se venden hoy más caros o más baratos.', have: 'tienes {n}',
     cats: { supplies: 'Suministros', seeds: 'Semillas', runes: 'Runas', tools: 'Herramientas', gear: 'Equipo' },
