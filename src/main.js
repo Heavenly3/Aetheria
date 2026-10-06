@@ -15,6 +15,9 @@ import { G } from './game/engine.js'
 if (import.meta.env.DEV) window.__G = G
 
 applyTheme()
+
+// Embedded in another page (itch.io): the host iframe may not scroll, so the game scrolls its own panels
+try { if (window.self !== window.top) document.documentElement.classList.add('embedded') } catch { document.documentElement.classList.add('embedded') }
 await setLocale(detectLocale())
 
 const app = createApp(App)

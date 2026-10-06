@@ -319,6 +319,15 @@ button.card:hover:not(.locked) { transform: translateY(-2px); border-color: colo
 }
 
 
+/* Embedded in an iframe (itch.io): the page itself never scrolls, the main panel and the title screen do */
+html.embedded, html.embedded body { height: 100%; overflow: hidden; }
+html.embedded #app { height: 100%; }
+html.embedded .app { height: 100%; min-height: 0; }
+html.embedded .sidebar { height: 100%; }
+html.embedded .main { height: 100%; overflow-y: auto; overscroll-behavior: contain; }
+html.embedded .title-screen { height: 100%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+html.embedded .title-screen .ts-foot { position: static; margin-top: 28px; }
+
 /* Tutorial highlight */
 .tut-target { position: relative; z-index: 2; outline: 2px solid var(--gold) !important; outline-offset: 2px; animation: tutGlow 1.6s ease-in-out infinite; }
 @keyframes tutGlow { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--gold) 25%, transparent), 0 0 26px -4px var(--gold); } }

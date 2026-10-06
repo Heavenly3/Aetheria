@@ -33,6 +33,7 @@ export function initialRoute() {
 router.afterEach(to => {
   try { localStorage.setItem(ROUTE_KEY, to.fullPath) } catch { /* storage unavailable */ }
   window.scrollTo({ top: 0 })
+  document.querySelector('.main')?.scrollTo({ top: 0 })
 })
 
 export default router

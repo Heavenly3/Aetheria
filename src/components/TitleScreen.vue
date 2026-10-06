@@ -192,7 +192,9 @@ function created(profile) { startNewGame(createSlot.value, profile) }
 </template>
 
 <style scoped>
-.title-screen { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 16px 60px; overflow: hidden; }
+.title-screen { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 16px 60px; overflow: hidden; }
+/* Centred while it fits, scrollable from the top when it does not */
+.title-screen > .ts-content, .title-screen > .creator { margin-block: auto; }
 .ts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background: radial-gradient(ellipse 60% 50% at 50% 38%, rgba(226, 182, 90, 0.14), transparent 70%), radial-gradient(ellipse 90% 60% at 50% 110%, rgba(224, 85, 75, 0.12), transparent 70%); }
 .ts-lang { position: absolute; top: 16px; inset-inline-end: 16px; z-index: 2; display: flex; gap: 8px; align-items: center; }
