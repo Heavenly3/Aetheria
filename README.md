@@ -60,6 +60,7 @@ Requires Node.js 18 or newer.
 - **Equipment sets**: 13 sets (every metal, leather, dragonhide, wizard, slayer, dragonbane and the endgame regalia) with bonuses for 2, 3, 4 or 5 pieces worn.
 - **Bestiary**: every creature you defeat is recorded. Learn its drops, master it for a combat bonus against it, and complete each area for a permanent reward.
 - **Omens**: twelve rare world phenomena that arrive unannounced, from the common Starfall to the mythic Eye that Opens. A cryptic sign comes first; then a Blood Moon, an Arcane Eclipse, a Gilded Goblin to chase, a Wandering Rift with a horror that scales with you, a Veiled Caravan, a Comet of Wishes… They hide rewards found nowhere else: seven pets, relics of random quality, permanent wishes and boons rolled when an omen ends. A chronicle records the ones you have witnessed; the rest stay a mystery.
+- **Weekly boss**: from combat level 30, a different boss every week (the same one for every player, picked by a seeded rotation). Six bosses, each resisting one style, weak to another and with its own mechanic: stone skin, regrowth, thralls, fire breath, reflecting scales or rime that slows you. Its health lasts all week, attempts last up to five minutes while its fury grows, and falling costs no gold. Damage milestones pay gold, chests, starlight shards and relics, and the first kill of each boss drops its exclusive trophy.
 - **Festivals**: four seasonal festivals a year (Harvest, Winter's Veil, Spring Bloom and Midsummer Fires) run on their real dates, with a passive bonus, festival tokens and a shop with an exclusive pet, title, portrait and colour.
 - **Titles and appearance**: 20 titles shown next to the hero's name, plus extra portraits and colours unlocked by achievements and festivals.
 - **Ascension**: start the whole hero over for Aether shards and spend them in a three-branch tree of permanent upgrades.
@@ -79,6 +80,7 @@ Requires Node.js 18 or newer.
 - `src/game/systems.js`: tavern, staff, expeditions, orders, queue, loadouts, prayers, market, events and history.
 - `src/game/meta.js`: pet rolls, gear enchanting and daily / weekly tasks.
 - `src/game/companions.js`: eggs, the companion, feeding, bond, pet levels and gifts (tuning in `src/game/data/companions.js`).
+- `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.
@@ -89,7 +91,7 @@ Requires Node.js 18 or newer.
 - `src/components/` and `src/views/`: the UI.
 - `public/`: app manifest, service worker (offline play) and icons.
 - `scripts/`: icon extraction, the translation checker and the balance report.
-- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, cosmetics, pets, enchanting, daily tasks, ascension and translations.
+- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, cosmetics, pets, enchanting, daily tasks, ascension and translations.
 
 ## Adding a language
 

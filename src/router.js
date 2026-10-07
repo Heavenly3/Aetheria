@@ -13,6 +13,7 @@ const routes = [
   { path: '/achievements', name: 'achievements', component: () => import('./views/AchievementsView.vue'), meta: { titleKey: 'nav.achievements' } },
   { path: '/ascension', name: 'ascension', component: () => import('./views/AscensionView.vue'), meta: { titleKey: 'nav.ascension' } },
   { path: '/bestiary', name: 'bestiary', component: () => import('./views/BestiaryView.vue'), meta: { titleKey: 'nav.bestiary' } },
+  { path: '/weekly', name: 'weekly', component: () => import('./views/WeeklyView.vue'), meta: { titleKey: 'nav.weekly' } },
   { path: '/omens', name: 'omens', component: () => import('./views/OmensView.vue'), meta: { titleKey: 'nav.omens' } },
   { path: '/festival', name: 'festival', component: () => import('./views/FestivalView.vue'), meta: { titleKey: 'nav.festival' } },
   { path: '/pets', name: 'pets', component: () => import('./views/PetsView.vue'), meta: { titleKey: 'nav.pets' } },

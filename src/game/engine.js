@@ -17,6 +17,7 @@ import { ascension, ascensionState } from './ascension.js'
 import { collection, collectionState } from './collection.js'
 import { omens, omensState } from './omens.js'
 import { companions, companionsState } from './companions.js'
+import { weekly, weeklyState } from './weekly.js'
 import { OMEN_MAP } from './data/omens.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
@@ -94,6 +95,7 @@ export function newState(profile = {}) {
     ...collectionState(),
     ...omensState(),
     ...companionsState(),
+    ...weeklyState(),
   }
 }
 
@@ -192,6 +194,7 @@ export const G = {
     replaceState(newState(profile))
     this.slot = i
     this.setupCharacter()
+    this.ensureWeekly()
     this.s.tutorial = { step: 0, done: false, base: null }
     this.log(ROLES[this.s.role].icon, 'log.start', { name: this.s.name, role: '@role:' + this.s.role })
     this.save()
@@ -258,6 +261,7 @@ export const G = {
     Object.keys(st.inventory).forEach(id => { if (!ITEMS[id]) delete st.inventory[id] })
     this.ensurePlots()
     this.syncCare()
+    this.ensureWeekly()
   },
 
   /* ================= levels ================= */
@@ -875,6 +879,7 @@ export const G = {
       return towerCache.m
     }
     if (act.kind === 'omen') return this.omenCreature(act.target)
+    if (act.kind === 'weekly') return this.weeklyMonster(act)
     return MONSTERS[act.target] && this.scaleMonster(MONSTERS[act.target])
   },
 
@@ -899,6 +904,7 @@ export const G = {
       if (m.slayer && this.level('slayer') < m.slayer) return this.toast('death-skull', 'msg.needLevel', { lvl: m.slayer, skill: '@skill:slayer' }, 'warn')
     }
     if (kind === 'omen' && !(this.canHunt() && this.activeOmen().hunt === target)) return this.toast('crystal-ball', 'omens.gone', {}, 'warn')
+    if (kind === 'weekly' && !this.canWeekly()) return this.toast('crowned-skull', this.weeklyUnlocked() ? 'weekly.alreadySlain' : 'weekly.locked', {}, 'warn')
     if (kind === 'dungeon') {
       const dg = DUNGEONS.find(d => d.id === target)
       if (!dg) return
@@ -908,6 +914,7 @@ export const G = {
     if (this.s.hp <= 0) this.s.hp = 1
     const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0 }
     act.mHp = this.getMonster(act).hp
+    if (kind === 'weekly') this.beginWeeklyAttempt(act)
     this.s.activity = act
     this.emit('activity')
   },
@@ -921,10 +928,12 @@ export const G = {
       if (act.respawn <= 0) { act.mHp = this.getMonster(act).hp; act.pTimer = 0; act.mTimer = 0 }
       return
     }
+    // The weekly boss runs its own mechanics first (they can end the attempt)
+    if (act.kind === 'weekly' && this.weeklyTick(act, dt, m)) return
     const ps = this.playerStats(m)
     const mr = this.monsterRolls(m)
 
-    act.pTimer += dt
+    act.pTimer += act.kind === 'weekly' ? dt * this.weeklyPace(act) : dt
     if (act.pTimer >= PLAYER_ATTACK_SPEED) {
       act.pTimer -= PLAYER_ATTACK_SPEED
       const blocker = this.attackBlocker()
@@ -934,12 +943,13 @@ export const G = {
       if (type === 'magic' && Math.random() >= this.mod('runeSave')) Object.entries(this.currentSpell().runes).forEach(([r, q]) => this.removeItem(r, q))
       const hit = Math.random() < this.hitChance(ps.accRoll, mr.defRoll)
       const dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
-      const dealt = Math.min(dmg, act.mHp)
+      const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
       act.mHp -= dealt
       if (type === 'magic') this.addXp('magic', this.currentSpell().xp + dealt * 2)
       else if (dealt > 0) this.addXp(COMBAT_STYLES[this.s.combatStyle].skill, dealt * 4)
       if (dealt > 0) this.addXp('hitpoints', dealt * 1.33)
       this.emit('hit', { who: 'player', dmg })
+      if (act.kind === 'weekly' && this.weeklyDealt(act, dealt)) return
       if (act.mHp <= 0) return this.killMonster(m)
     }
 
@@ -971,6 +981,7 @@ export const G = {
 
   killMonster(m) {
     const act = this.s.activity
+    if (act.kind === 'weekly') return this.weeklyKilled(m)
     const st = this.s
     st.stats.kills++
     st.killsBy[m.id] = (st.killsBy[m.id] || 0) + 1
@@ -1035,11 +1046,13 @@ export const G = {
     const act = this.s.activity
     this.s.stats.deaths++
     this.s.hp = this.maxHp()
-    const lost = Math.floor(this.s.gold * this.diff().death)
+    // Falling to the weekly boss only ends the attempt
+    const lost = act.kind === 'weekly' ? 0 : Math.floor(this.s.gold * this.diff().death)
     if (lost > 0) this.s.gold -= lost
     this.log('broken-skull', lost > 0 ? 'log.deathGold' : 'log.death', { monster: '@monster:' + m.id, gold: lost })
     if (act.kind === 'dungeon') this.stop(msg('msg.diedDungeon', { dungeon: '@dungeon:' + act.target, room: act.room + 1, gold: lost }))
     else if (act.kind === 'tower') this.stop(msg('msg.diedTower', { floor: act.floor, best: this.s.tower.best, gold: lost }))
+    else if (act.kind === 'weekly') this.stop(msg('weekly.drivenBack', { boss: '@weekly:' + m.id, dmg: Math.round(act.dealt) }))
     else this.stop(msg('msg.died', { monster: '@monster:' + m.id, gold: lost }))
     this.emit('death', m)
   },
@@ -1256,6 +1269,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly)
 
 export { SKILLS, ITEMS }

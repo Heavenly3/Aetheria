@@ -18,7 +18,7 @@ const qpop = ref()
 const queued = computed(() => state.queue.map(q => ({ ...q, a: findAction(q.skill, q.action) })).filter(q => q.a))
 const act = computed(() => state.activity)
 
-const KIND = { tower: 'dock.tower', boss: 'dock.boss', dungeon: 'dock.dungeon', area: 'dock.combat', omen: 'dock.omen' }
+const KIND = { tower: 'dock.tower', boss: 'dock.boss', dungeon: 'dock.dungeon', area: 'dock.combat', omen: 'dock.omen', weekly: 'dock.weekly' }
 const info = computed(() => {
   const a = act.value
   if (!a) return null
@@ -39,7 +39,7 @@ const info = computed(() => {
     icon: m.icon, tint: '#9b2a32', color: '#e0554b',
     title: `${t(KIND[a.kind] || 'dock.combat')} · ${m.name}`,
     progress: a.respawn > 0 ? 0 : a.mHp / m.hp,
-    to: a.kind === 'tower' ? '/tower' : a.kind === 'omen' ? '/omens' : '/combat',
+    to: a.kind === 'tower' ? '/tower' : a.kind === 'omen' ? '/omens' : a.kind === 'weekly' ? '/weekly' : '/combat',
   }
 })
 

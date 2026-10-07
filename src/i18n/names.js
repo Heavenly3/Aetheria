@@ -12,6 +12,7 @@ import { OMENS, BOONS, WISHES } from '../game/data/omens.js'
 import { PET_MAP } from '../game/data/pets.js'
 import { BESTIARY } from '../game/data/bestiary.js'
 import { SET_MAP } from '../game/data/sets.js'
+import { WEEKLY_MAP } from '../game/data/weekly.js'
 
 const byId = list => id => list.find(x => x.id === id)?.name ?? id
 const allMonsters = id => MONSTERS[id]?.name ?? BOSSES.find(b => b.id === id)?.name ?? DUNGEONS.find(d => d.boss.id === id)?.boss.name ?? id
@@ -33,6 +34,7 @@ registerNames('boon', id => (BOONS.some(b => b.id === id) ? t(`omens.boons.${id}
 registerNames('wish', id => (WISHES.some(w => w.id === id) ? t(`omens.wishes.${id}`) : id))
 registerNames('crop', byId(CROPS))
 registerNames('pet', id => PET_MAP[id]?.name ?? id)
+registerNames('weekly', id => WEEKLY_MAP[id]?.name ?? id)
 registerNames('bond', id => t(`pets.bond.${id}`))
 registerNames('beasts', byId(BESTIARY))
 registerNames('set', id => SET_MAP[id]?.name ?? id)

@@ -254,6 +254,14 @@ def('crown_of_ages',   { icon: 'crown-of-thorns', type: 'equip', slot: 'head', v
 def('sovereign_cape',  { icon: 'cape-armor',      type: 'equip', slot: 'cape', value: 150000, tint: '#ffd36e', stats: { atk: 16, str: 16, def: 16, rAtk: 16, rStr: 8, mAtk: 16, mDmg: 0.08 }, req: {}, rare: true })
 def('eternity_amulet', { icon: 'eye-of-horus',    type: 'equip', slot: 'amulet', value: 80000, tint: '#5ee6c8', stats: { atk: 14, str: 14, def: 10, rAtk: 14, mAtk: 14 }, req: {}, rare: true })
 
+// Weekly boss trophies: one per boss, dropped the first time it is slain
+def('colossus_bulwark', { icon: 'bordered-shield', type: 'equip', slot: 'shield', value: 120000, tint: '#a08a6a', stats: { def: 95, str: 6 }, req: { defense: 80 }, rare: true, hasDesc: true })
+def('hydra_heart',      { icon: 'glass-heart',     type: 'equip', slot: 'amulet', value: 100000, tint: '#4fbf6a', stats: { atk: 16, str: 16, def: 8, rAtk: 16, mAtk: 16 }, req: {}, rare: true, hasDesc: true })
+def('lich_shroud',      { icon: 'vampire-cape',    type: 'equip', slot: 'cape', value: 140000, tint: '#8a5cff', stats: { def: 10, mAtk: 24, mDmg: 0.1 }, req: { magic: 80 }, rare: true, hasDesc: true })
+def('wyrm_crown',       { icon: 'crown',           type: 'equip', slot: 'head', value: 110000, tint: '#e0602a', stats: { def: 38, atk: 12, str: 14 }, req: { defense: 80 }, rare: true, hasDesc: true })
+def('abyssal_mantle',   { icon: 'cloak',           type: 'equip', slot: 'cape', value: 140000, tint: '#2fa8c6', stats: { def: 10, rAtk: 24, rStr: 12 }, req: { ranged: 80 }, rare: true, hasDesc: true })
+def('rime_locket',      { icon: 'necklace',        type: 'equip', slot: 'amulet', value: 100000, tint: '#8fd0f2', stats: { def: 16, atk: 14, str: 14, rAtk: 10, mAtk: 10 }, req: {}, rare: true, hasDesc: true })
+
 // Attach localized names: an explicit `name` (key or function) or the default "items.<id>" key
 Object.values(ITEMS).forEach(it => {
   const n = it.name

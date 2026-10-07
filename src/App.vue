@@ -72,6 +72,7 @@ onMounted(() => {
   G.on('petEgg', () => { play('rare'); push('cosmic-egg', t('toast.petEgg'), 'rare', 8000); notify(t('toast.petEggPlain'), t('toast.petEggHint')) })
   G.on('petLevel', d => { play('level'); push(d.pet.icon, t('toast.petLevel', { name: G.petName(d.pet.id), level: d.level }), 'success', 4500) })
   G.on('petBond', d => { play('quest'); push(d.pet.icon, t('toast.petBond', { name: G.petName(d.pet.id), tier: t(`pets.bond.${d.tier}`) }), 'success', 5500) })
+  G.on('weeklyKill', d => { play('quest'); push(d.boss.icon, t(d.trophy ? 'toast.weeklyKill' : 'toast.weeklyKillAgain', { name: d.boss.name }), 'rare', 8000); notify(d.boss.name, t('weekly.slainHint')) })
   G.on('streak', d => { play('quest'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
   G.on('death', m => { play('bad'); push('broken-skull', t('toast.death', { name: m.name }), 'error', 5000) })
   G.on('expedition', r => { play(r.ok ? 'quest' : 'bad'); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })

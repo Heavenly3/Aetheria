@@ -22,6 +22,7 @@ export const TITLES = [
   title('wild_heart', { ach: 'pets_10' }),
   title('beastfriend', { ach: 'pet_soulbound' }),
   title('pack_leader', { ach: 'petLevel_20' }),
+  title('worldbreaker', { ach: 'weekly_all' }),
   title('twice_born', { ach: 'ascend_1' }),
   title('many_lives', { ach: 'ascend_5' }, true),
   title('goldhand', { ach: 'gold_10000000' }),
