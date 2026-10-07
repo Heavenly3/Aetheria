@@ -54,7 +54,7 @@ Requires Node.js 18 or newer.
 - **Farming**: plots grow in real time, even offline, with optional auto-replant.
 - **Combat**: 10 areas, 7 bosses with mercenaries, 6 multi-room dungeons, an endless tower, slayer tasks, prayers and loadouts.
 - **Endgame beyond the Abyss**: the Void Rift and the Celestial Spire, aether gear forged at level 90 and boss-only uniques.
-- **Pets**: 23 very rare companions from skilling, bosses, slayer tasks and dice. Every pet you own adds a small permanent bonus.
+- **Pets**: 34 very rare companions from skilling, bosses, slayer tasks, dice, omens and festivals. A lucky find arrives as an egg that hatches in the incubator. Pick one as your companion, name it, feed it its favourite food (ores for the golem, fish for the heron…) and pet it: it learns alongside you up to level 20, grows its bond from Wary to Soulbound, doubles its bonus while fed and brings gifts to a basket. Hunger, hatching and gifts follow the clock, so they keep going offline.
 - **Enchanting**: raise each equipment slot from +1 to +10. Higher levels can fail and drop a level unless protected with a starlight shard.
 - **Daily and weekly tasks** with a day streak that boosts rewards.
 - **Equipment sets**: 13 sets (every metal, leather, dragonhide, wizard, slayer, dragonbane and the endgame regalia) with bonuses for 2, 3, 4 or 5 pieces worn.
@@ -77,7 +77,8 @@ Requires Node.js 18 or newer.
 - `src/game/data/`: all game content (skills, items, actions, monsters, quests, achievements, home, tavern). Balance and new content live here.
 - `src/game/engine.js`: reactive state and core logic (XP, actions, combat, quests, prestige, offline simulation).
 - `src/game/systems.js`: tavern, staff, expeditions, orders, queue, loadouts, prayers, market, events and history.
-- `src/game/meta.js`: pets, gear enchanting and daily / weekly tasks.
+- `src/game/meta.js`: pet rolls, gear enchanting and daily / weekly tasks.
+- `src/game/companions.js`: eggs, the companion, feeding, bond, pet levels and gifts (tuning in `src/game/data/companions.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.

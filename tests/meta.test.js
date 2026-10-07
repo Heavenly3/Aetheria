@@ -15,14 +15,16 @@ function complete(t) {
 describe('pets', () => {
   beforeEach(() => newHero())
 
-  it('are awarded on a lucky roll and only once', () => {
+  it('arrive as a single egg on a lucky roll', () => {
     fixRandom(0)
     const spy = vi.fn()
-    const off = G.on('pet', spy)
+    const off = G.on('petEgg', spy)
     G.rollSkillPet('mining', 3)
     G.rollSkillPet('mining', 3)
     off()
-    expect(G.hasPet('rock_golem')).toBe(true)
+    expect(G.hasPet('rock_golem')).toBe(false)
+    expect(G.hasEgg('rock_golem')).toBe(true)
+    expect(state.companions.eggs).toHaveLength(1)
     expect(spy).toHaveBeenCalledTimes(1)
   })
 

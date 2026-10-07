@@ -16,6 +16,7 @@ import { meta, metaState } from './meta.js'
 import { ascension, ascensionState } from './ascension.js'
 import { collection, collectionState } from './collection.js'
 import { omens, omensState } from './omens.js'
+import { companions, companionsState } from './companions.js'
 import { OMEN_MAP } from './data/omens.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
@@ -92,6 +93,7 @@ export function newState(profile = {}) {
     ...ascensionState(),
     ...collectionState(),
     ...omensState(),
+    ...companionsState(),
   }
 }
 
@@ -255,6 +257,7 @@ export const G = {
     Object.keys(st.skills).forEach(id => { if (!SKILLS[id]) delete st.skills[id] })
     Object.keys(st.inventory).forEach(id => { if (!ITEMS[id]) delete st.inventory[id] })
     this.ensurePlots()
+    this.syncCare()
   },
 
   /* ================= levels ================= */
@@ -388,6 +391,7 @@ export const G = {
     this.s.skills[skill].xp = Math.min(200_000_000, this.s.skills[skill].xp + gained)
     if (this.tracker) this.tracker.xp[skill] = (this.tracker.xp[skill] || 0) + gained
     this.addHeroXp(gained * HERO_XP_SHARE)
+    this.companionXp(gained)
     const after = this.level(skill)
     if (after > before) {
       if (this.tracker) this.tracker.levels[skill] = after
@@ -1200,6 +1204,7 @@ export const G = {
     if (st.buffs.elixir > 0) st.buffs.elixir = Math.max(0, st.buffs.elixir - dt)
     this.updateFarm(dt)
     this.updateSystems(dt)
+    this.updateCompanion(dt)
     this.ensureTasks()
 
     const act = st.activity
@@ -1251,6 +1256,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens)
+Object.assign(G, systems, meta, ascension, collection, omens, companions)
 
 export { SKILLS, ITEMS }

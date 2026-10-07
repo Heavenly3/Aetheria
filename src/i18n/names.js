@@ -33,6 +33,7 @@ registerNames('boon', id => (BOONS.some(b => b.id === id) ? t(`omens.boons.${id}
 registerNames('wish', id => (WISHES.some(w => w.id === id) ? t(`omens.wishes.${id}`) : id))
 registerNames('crop', byId(CROPS))
 registerNames('pet', id => PET_MAP[id]?.name ?? id)
+registerNames('bond', id => t(`pets.bond.${id}`))
 registerNames('beasts', byId(BESTIARY))
 registerNames('set', id => SET_MAP[id]?.name ?? id)
 registerNames('slot', id => SLOTS[id]?.name ?? id)

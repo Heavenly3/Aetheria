@@ -37,6 +37,18 @@ const menu = ref()
 const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.name : route.meta.titleKey && t(route.meta.titleKey)) || 'Aetheria')
 const hpPct = computed(() => (Math.max(0, state.hp) / G.maxHp()) * 100)
 const fest = computed(() => G.activeFestival())
+// The companion chip: hunger follows the clock, so it is re-read on every tick
+const pal = computed(() => {
+  void state.lastTick
+  const p = G.companion()
+  const c = state.companions
+  const eggs = G.readyEggs()
+  if (!p) return eggs ? { icon: 'cosmic-egg', tint: '#b38cff', full: 0, alert: true, tip: t('pets.chip.egg'), egg: true } : null
+  const mood = G.hungerState(p.id)
+  const alert = mood === 'starving' || mood === 'hungry' || c.basket.length > 0 || eggs > 0
+  const tip = c.basket.length ? t('pets.chip.gifts', { name: G.petName(p.id), n: c.basket.length }) : eggs ? t('pets.chip.egg') : t('pets.chip.' + mood, { name: G.petName(p.id) })
+  return { icon: p.icon, tint: p.tint, full: G.fullness(p.id), alert, tip, gifts: c.basket.length }
+})
 const unspent = computed(() => G.attrPoints() + G.talentPoints())
 const menuItems = computed(() => [
   { label: t('heroMenu.viewHero'), icon: 'pi pi-user', command: () => router.push('/') },
@@ -57,6 +69,9 @@ onMounted(() => {
   G.on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
   G.on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   G.on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })
+  G.on('petEgg', () => { play('rare'); push('cosmic-egg', t('toast.petEgg'), 'rare', 8000); notify(t('toast.petEggPlain'), t('toast.petEggHint')) })
+  G.on('petLevel', d => { play('level'); push(d.pet.icon, t('toast.petLevel', { name: G.petName(d.pet.id), level: d.level }), 'success', 4500) })
+  G.on('petBond', d => { play('quest'); push(d.pet.icon, t('toast.petBond', { name: G.petName(d.pet.id), tier: t(`pets.bond.${d.tier}`) }), 'success', 5500) })
   G.on('streak', d => { play('quest'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
   G.on('death', m => { play('bad'); push('broken-skull', t('toast.death', { name: m.name }), 'error', 5000) })
   G.on('expedition', r => { play(r.ok ? 'quest' : 'bad'); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })
@@ -125,6 +140,11 @@ function startAdventure() {
               <GameIcon :name="ev.icon" :size="15" />{{ ev.name }} · {{ fmtClock(state.event.t) }}
             </router-link>
             <router-link v-if="fest" to="/festival" class="chip fest-chip" :style="{ '--c': fest.tint }" v-tooltip.bottom="fest.name"><GameIcon :name="fest.icon" :size="15" />{{ fmt(G.festivalState().tokens) }}</router-link>
+            <router-link v-if="pal" to="/pets" class="chip pal-chip" :class="{ alert: pal.alert }" :style="{ '--c': pal.tint }" v-tooltip.bottom="pal.tip" :aria-label="pal.tip">
+              <GameIcon :name="pal.icon" :size="15" />
+              <span v-if="!pal.egg" class="pal-meter" :class="{ low: pal.full < 25 }"><i :style="{ width: pal.full + '%' }" /></span>
+              <b v-if="pal.gifts" class="pal-gifts">{{ pal.gifts }}</b>
+            </router-link>
             <span class="chip gold" v-tooltip.bottom="$t('common.gold')"><GameIcon name="two-coins" :size="15" />{{ fmt(state.gold) }}</span>
           </div>
           <button class="hero-chip" :aria-label="$t('heroMenu.label')" @click="menu.toggle($event)">
@@ -238,6 +258,15 @@ function startAdventure() {
 .omen-chip.sign { color: var(--muted); letter-spacing: 0.2em; }
 .fest-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 55%, transparent) !important; }
 .fest-chip .gi { color: var(--c); }
+.pal-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 45%, transparent) !important; }
+.pal-chip .gi { color: var(--c); }
+.pal-chip.alert { animation: palNudge 2.4s ease-in-out infinite; }
+.pal-meter { width: 30px; height: 6px; border-radius: 4px; background: var(--tint-2); overflow: hidden; }
+.pal-meter i { display: block; height: 100%; background: var(--ok); border-radius: inherit; transition: width 0.4s; }
+.pal-meter.low i { background: var(--warn); }
+.pal-gifts { min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--gold); color: #1a1408; font-size: 10.5px; display: grid; place-items: center; }
+@keyframes palNudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); box-shadow: 0 0 14px -4px var(--c); } }
+@media (prefers-reduced-motion: reduce) { .pal-chip.alert { animation: none; } }
 @keyframes evGlow { 50% { box-shadow: 0 0 14px -2px color-mix(in srgb, var(--c) 70%, transparent); } }
 .hero-chip { display: flex; align-items: center; gap: 10px; padding-block: 5px; padding-inline: 5px 10px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line);
   color: var(--ink); font: inherit; cursor: pointer; transition: border-color 0.2s; }

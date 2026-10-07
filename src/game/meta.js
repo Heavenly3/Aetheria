@@ -69,20 +69,26 @@ export const meta = {
   petsComplete() { return PETS.every(p => p.source.festival || this.hasPet(p.id)) },
   rollPet(match, scale = 1) {
     for (const p of PETS) {
-      if (this.hasPet(p.id) || !match(p.source)) continue
-      if (Math.random() < p.chance * scale * (1 + this.mod('loot') * 0.5 + this.mod('petChance'))) this.awardPet(p)
+      if (this.hasPet(p.id) || this.hasEgg(p.id) || !match(p.source)) continue
+      // A lucky roll lays an egg; the pet itself arrives when it hatches
+      if (Math.random() < p.chance * scale * (1 + this.mod('loot') * 0.5 + this.mod('petChance'))) this.layEgg(p)
     }
   },
   awardPet(p) {
     this.s.pets[p.id] = Date.now()
+    this.ensureCare(p.id)
+    if (!this.companion()) this.setCompanion(p.id)
     this.log(p.icon, 'log.pet', { pet: '@pet:' + p.id })
     this.emit('pet', p)
   },
   rollSkillPet(skill, time) { this.rollPet(src => src.skill === skill, skill === 'farming' ? 1 : time / 3) },
   rollMonsterPet(id) { this.rollPet(src => src.monster === id) },
   petMods(key) {
-    let v = 0
-    for (const id in this.s.pets) { const p = PET_MAP[id]; if (p) v += p.mods[key] || 0 }
+    let v = 0, now
+    for (const id in this.s.pets) {
+      const b = PET_MAP[id]?.mods[key]
+      if (b) v += b * this.petPower(id, (now ||= Date.now()))
+    }
     return v
   },
 
