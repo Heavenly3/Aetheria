@@ -9,7 +9,8 @@ import Drawer from 'primevue/drawer'
 import Button from 'primevue/button'
 import Menu from 'primevue/menu'
 import { useToast } from 'primevue/usetoast'
-import { G, state } from './game/engine.js'
+import { G, state, HP_REGEN, HP_REGEN_COMBAT } from './game/engine.js'
+import { help, tip } from './ui/tips.js'
 import { session, exitToTitle } from './game/loop.js'
 import { SKILLS } from './game/data/skills.js'
 import { ITEMS } from './game/data/items.js'
@@ -52,6 +53,7 @@ const pal = computed(() => {
 const unspent = computed(() => G.attrPoints() + G.talentPoints())
 const menuItems = computed(() => [
   { label: t('heroMenu.viewHero'), icon: 'pi pi-user', command: () => router.push('/') },
+  { label: t('nav.settings'), icon: 'pi pi-cog', command: () => router.push('/settings') },
   { label: t('heroMenu.saveNow'), icon: 'pi pi-save', command: () => { G.save(); G.toast('locked-chest', 'heroMenu.saved', {}, 'success') } },
   { separator: true },
   { label: t('heroMenu.mainMenu'), icon: 'pi pi-sign-out', command: () => exitToTitle() },
@@ -122,31 +124,30 @@ function startAdventure() {
           <div><div class="brand-name">Aetheria</div><div class="brand-sub">{{ $t('app.tagline') }}</div></div>
         </div>
         <div class="nav-scroll"><NavMenu /></div>
-        <router-link to="/settings" class="nav-foot" :class="{ active: route.path === '/settings' }" data-tut="nav:/settings" @click="drawer = false"><GameIcon name="cog" :size="16" /> {{ $t('nav.settings') }}</router-link>
       </aside>
 
       <main class="main">
         <header class="topbar">
           <div class="topbar-title">{{ title }}</div>
           <div class="chips">
-            <span class="chip" v-tooltip.bottom="$t('stats.hitpoints')">
+            <span class="chip" v-tooltip.bottom="help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
               <GameIcon name="glass-heart" :size="15" />
               <span class="mini-hp"><i :style="{ width: hpPct + '%' }" /></span>
               {{ Math.max(0, state.hp) }}/{{ G.maxHp() }}
             </span>
-            <span class="chip" v-tooltip.bottom="$t('stats.combatLevel')"><GameIcon name="crossed-swords" :size="15" />{{ G.combatLevel() }}</span>
-            <span class="chip" v-tooltip.bottom="$t('stats.totalLevel')"><GameIcon name="star-medal" :size="15" />{{ G.totalLevel() }}</span>
+            <span class="chip" v-tooltip.bottom="help('top.combat')"><GameIcon name="crossed-swords" :size="15" />{{ G.combatLevel() }}</span>
+            <span class="chip" v-tooltip.bottom="help('top.total')"><GameIcon name="star-medal" :size="15" />{{ G.totalLevel() }}</span>
             <router-link v-if="omenSign" to="/omens" class="chip omen-chip sign" v-tooltip.bottom="$t(`omens.signs.${omenSign}`)"><GameIcon name="crystal-ball" :size="15" />…</router-link>
-            <router-link v-else-if="ev && state.event" to="/omens" class="chip omen-chip" :style="{ '--c': RARITY_TINT[ev.rarity] }" v-tooltip.bottom="ev.desc">
+            <router-link v-else-if="ev && state.event" to="/omens" class="chip omen-chip" :style="{ '--c': RARITY_TINT[ev.rarity] }" v-tooltip.bottom="tip(ev.name, ev.desc)">
               <GameIcon :name="ev.icon" :size="15" />{{ ev.name }} · {{ fmtClock(state.event.t) }}
             </router-link>
-            <router-link v-if="fest" to="/festival" class="chip fest-chip" :style="{ '--c': fest.tint }" v-tooltip.bottom="fest.name"><GameIcon :name="fest.icon" :size="15" />{{ fmt(G.festivalState().tokens) }}</router-link>
+            <router-link v-if="fest" to="/festival" class="chip fest-chip" :style="{ '--c': fest.tint }" v-tooltip.bottom="tip(fest.name, fest.desc, [{ text: $t('help.top.festTokens', { n: fmt(G.festivalState().tokens) }), kind: 'gold' }])"><GameIcon :name="fest.icon" :size="15" />{{ fmt(G.festivalState().tokens) }}</router-link>
             <router-link v-if="pal" to="/pets" class="chip pal-chip" :class="{ alert: pal.alert }" :style="{ '--c': pal.tint }" v-tooltip.bottom="pal.tip" :aria-label="pal.tip">
               <GameIcon :name="pal.icon" :size="15" />
               <span v-if="!pal.egg" class="pal-meter" :class="{ low: pal.full < 25 }"><i :style="{ width: pal.full + '%' }" /></span>
               <b v-if="pal.gifts" class="pal-gifts">{{ pal.gifts }}</b>
             </router-link>
-            <span class="chip gold" v-tooltip.bottom="$t('common.gold')"><GameIcon name="two-coins" :size="15" />{{ fmt(state.gold) }}</span>
+            <span class="chip gold" v-tooltip.bottom="help('top.gold')"><GameIcon name="two-coins" :size="15" />{{ fmt(state.gold) }}</span>
           </div>
           <button class="hero-chip" :aria-label="$t('heroMenu.label')" @click="menu.toggle($event)">
             <span class="hero-portrait">
@@ -179,7 +180,6 @@ function startAdventure() {
 
     <Drawer v-model:visible="drawer" header="Aetheria" class="nav-drawer">
       <NavMenu @navigate="drawer = false" />
-      <template #footer><router-link to="/settings" class="nav-foot" :class="{ active: route.path === '/settings' }" data-tut="nav:/settings" @click="drawer = false"><GameIcon name="cog" :size="16" /> {{ $t('nav.settings') }}</router-link></template>
     </Drawer>
   </template>
 
@@ -247,10 +247,6 @@ function startAdventure() {
 <style>
 .nav-drawer { width: min(300px, 86vw) !important; }
 .nav-drawer .p-drawer-footer { padding: 0 12px 12px; }
-.nav-foot { display: flex; align-items: center; gap: 10px; margin: 0 12px 12px; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); color: var(--ink-2); text-decoration: none; font-weight: 500; }
-.nav-drawer .nav-foot { margin: 0; }
-.nav-foot .gi { color: var(--gold); }
-.nav-foot:hover, .nav-foot.active { color: var(--ink); border-color: var(--line-hi); background: var(--tint-2); }
 .welcome-guide { display: flex; align-items: center; gap: 10px; margin: 16px 0 0; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--gold) 10%, transparent); border: 1px solid var(--line-hi); }
 .welcome-guide .gi { color: var(--gold); flex-shrink: 0; }
 .nav-drawer .p-drawer-title { font-family: var(--font-display); font-weight: 400; color: var(--gold); }

@@ -5,6 +5,7 @@ import { G, state } from '../game/engine.js'
 import { monsterLevel } from '../game/data/combat.js'
 import { ITEMS } from '../game/data/items.js'
 import { fmt, pct } from '../game/format.js'
+import { chanceNote } from '../ui/tips.js'
 import ItemTile from './ItemTile.vue'
 
 const props = defineProps({ monster: Object, kind: { type: String, default: 'area' }, locked: Boolean, lockText: String })
@@ -39,8 +40,8 @@ const kills = computed(() => state.killsBy[m.value.id] || 0)
       <span v-if="kills" v-tooltip.top="$t('combat.defeated')"><i class="pi pi-flag" /> {{ fmt(kills) }}</span>
     </div>
     <div class="row wrap" style="gap:5px;margin-top:10px">
-      <span v-for="d in m.drops" :key="d.item" v-tooltip.top="`${ITEMS[d.item].name} · ${d.chance >= 1 ? $t('common.always') : pct(d.chance, d.chance < 0.01 ? 1 : 0)}`" class="drop" :class="{ rare: d.chance < 0.05 }">
-        <ItemTile :item="d.item" size="sm" :tip="false" />
+      <span v-for="d in m.drops" :key="d.item" class="drop" :class="{ rare: d.chance < 0.05 }">
+        <ItemTile :item="d.item" size="sm" :note="chanceNote(d.chance)" />
       </span>
     </div>
     <slot />

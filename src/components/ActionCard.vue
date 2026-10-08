@@ -5,6 +5,7 @@ import { SKILLS } from '../game/data/skills.js'
 import { ITEMS } from '../game/data/items.js'
 import { TOOL_TYPES } from '../game/data/character.js'
 import { fmt, pct } from '../game/format.js'
+import { chanceNote } from '../ui/tips.js'
 import ItemTile from './ItemTile.vue'
 import QueueButton from './QueueButton.vue'
 
@@ -66,9 +67,7 @@ const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q
     </div>
     <div v-if="a.extra?.length" class="row wrap extra">
       <span class="faint small">{{ $t('skill.possible') }}</span>
-      <span v-for="e in a.extra" :key="e.item" v-tooltip.top="`${ITEMS[e.item].name} · ${pct(e.chance, e.chance < 0.01 ? 2 : 1)}`">
-        <ItemTile :item="e.item" size="xs" :tip="false" />
-      </span>
+      <ItemTile v-for="e in a.extra" :key="e.item" :item="e.item" size="xs" :note="chanceNote(e.chance)" />
     </div>
     <div v-if="!locked" class="mastery" v-tooltip.top="$t('skill.masteryTip')">
       <span class="small faint">{{ $t('skill.mastery') }}</span>

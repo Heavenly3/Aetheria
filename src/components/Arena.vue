@@ -5,6 +5,7 @@ import { PLAYER_ATTACK_SPEED, MERCENARIES, COMBAT_STYLES, DUNGEONS } from '../ga
 import { pct, fmt } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
 import GameIcon from './GameIcon.vue'
+import { help, tip } from '../ui/tips.js'
 
 const act = computed(() => state.activity)
 const m = computed(() => G.getMonster(act.value))
@@ -60,15 +61,15 @@ onUnmounted(() => off && off())
     </div>
 
     <div class="arena-meta">
-      <span class="tag"><GameIcon :name="COMBAT_STYLES[state.combatStyle].icon" :size="12" /> {{ COMBAT_STYLES[state.combatStyle].name }}</span>
-      <span class="tag">{{ $t('combat.accuracy', { v: pct(G.hitChance(ps.accRoll, mr.defRoll)) }) }}</span>
-      <span class="tag">{{ $t('combat.maxHit', { v: ps.maxHit }) }}</span>
-      <span class="tag">{{ $t('combat.hitsYou', { v: pct(G.hitChance(mr.accRoll, ps.defRoll)) }) }}</span>
-      <span v-if="m.weak" class="tag" :class="m.weak === G.styleType() ? 'ok' : ''">{{ $t('combat.weakTo', { style: $t(`combat.types.${m.weak}`) }) }}</span>
-      <span v-if="G.onTask(m)" class="tag arcane">{{ $t('combat.taskLeft', { n: state.slayer.task.left }) }}</span>
+      <span class="tag" v-tooltip.top="tip(COMBAT_STYLES[state.combatStyle].name, COMBAT_STYLES[state.combatStyle].desc)"><GameIcon :name="COMBAT_STYLES[state.combatStyle].icon" :size="12" /> {{ COMBAT_STYLES[state.combatStyle].name }}</span>
+      <span class="tag" v-tooltip.top="help('combat.accuracy')">{{ $t('combat.accuracy', { v: pct(G.hitChance(ps.accRoll, mr.defRoll)) }) }}</span>
+      <span class="tag" v-tooltip.top="help('stats.maxHit')">{{ $t('combat.maxHit', { v: ps.maxHit }) }}</span>
+      <span class="tag" v-tooltip.top="help('combat.hitsYou')">{{ $t('combat.hitsYou', { v: pct(G.hitChance(mr.accRoll, ps.defRoll)) }) }}</span>
+      <span v-if="m.weak" class="tag" :class="m.weak === G.styleType() ? 'ok' : ''" v-tooltip.top="help('combat.weakness')">{{ $t('combat.weakTo', { style: $t(`combat.types.${m.weak}`) }) }}</span>
+      <span v-if="G.onTask(m)" class="tag arcane" v-tooltip.top="help('combat.task')">{{ $t('combat.taskLeft', { n: state.slayer.task.left }) }}</span>
       <span v-if="dungeon" class="tag arcane">{{ dungeon.name }} · {{ act.room >= dungeon.rooms.length ? $t('combat.boss') : $t('combat.room', { n: act.room + 1, total: dungeon.rooms.length }) }} · {{ $t('combat.clears', { n: act.clears }) }}</span>
       <span v-if="state.prayer" class="tag ok">{{ $t('combat.prayerActive') }}</span>
-      <span class="tag gold">{{ $t('combat.kills', { n: act.runKills }) }}</span>
+      <span class="tag gold" v-tooltip.top="help('combat.kills')">{{ $t('combat.kills', { n: act.runKills }) }}</span>
     </div>
   </div>
 </template>

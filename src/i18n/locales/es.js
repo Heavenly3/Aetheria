@@ -537,6 +537,50 @@ export default {
     none: 'Ahora no hay ningún festival', next: 'El próximo: {name}, dentro de {time}.', calendar: 'Calendario de festivales',
   },
 
+  // Ayuda de los tooltips, agrupada por dónde aparece (ver src/ui/tips.js)
+  help: {
+    top: {
+      hp: { title: 'Vida', body: 'Recuperas 1 PV cada {out} segundos, o cada {fight} segundos en combate. Elige comida y poción en Combate y tu héroe las usará solo.' },
+      combat: { title: 'Nivel de combate', body: 'Sale de Defensa y Vitalidad más tu mejor estilo de lucha: cuerpo a cuerpo (Ataque y Fuerza), Distancia o Magia. Compáralo con el nivel recomendado de cada zona.' },
+      total: { title: 'Nivel total', body: 'La suma de los niveles de todas tus habilidades. Muchos logros y el Renacimiento dependen de él.' },
+      gold: { title: 'Oro', body: 'Se gana con monstruos, ventas, misiones y encargos. Se gasta en la tienda, tu hogar, la forja y la taberna.' },
+      festTokens: 'Tus fichas del festival: {n}',
+    },
+    stats: {
+      atk: { title: 'Precisión cuerpo a cuerpo', body: 'Aumenta tu probabilidad de acertar con armas cuerpo a cuerpo.' },
+      str: { title: 'Fuerza cuerpo a cuerpo', body: 'Aumenta el daño máximo que haces con armas cuerpo a cuerpo.' },
+      def: { title: 'Defensa', body: 'Reduce la probabilidad de que los enemigos te acierten, sea cual sea tu estilo.' },
+      rAtk: { title: 'Precisión a distancia', body: 'Aumenta tu probabilidad de acertar con el arco.' },
+      rStr: { title: 'Fuerza a distancia', body: 'Aumenta el daño máximo que haces con el arco. Tus flechas también suman.' },
+      mAtk: { title: 'Precisión mágica', body: 'Aumenta tu probabilidad de acertar con los hechizos.' },
+      mDmg: { title: 'Daño mágico', body: 'Multiplica el daño de cada hechizo que lanzas.' },
+      maxHit: { title: 'Golpe máximo', body: 'El daño máximo de un solo golpe con tu estilo, equipo y mejoras actuales. Cada golpe que acierta hace entre 1 y este valor.' },
+    },
+    hero: {
+      offline: { title: 'Progreso sin conexión', body: 'Con el juego cerrado tu héroe sigue trabajando hasta este número de horas. Mejora el dormitorio de tu hogar para ampliarlo.' },
+    },
+    combat: {
+      style: { title: 'Estilo de combate', body: 'Decide qué habilidad gana XP y qué estadísticas se usan. Los estilos cuerpo a cuerpo necesitan un arma cuerpo a cuerpo; Distancia, un arco y flechas; Magia, runas.' },
+      spell: { title: 'Hechizo', body: 'Los hechizos más fuertes golpean más pero gastan más runas por lanzamiento. Necesitas el nivel de Magia que aparece junto a cada uno.' },
+      ammo: { title: 'Munición', body: 'Cada disparo gasta una flecha. Las mejores flechas suman a tu fuerza a distancia. Equípalas desde el inventario.' },
+      food: { title: 'Comida', body: 'Tu héroe come esta comida solo cuando su vida baja del umbral. Sin comida solo cuentas con la regeneración.' },
+      eatBelow: { title: 'Umbral para comer', body: 'Come cuando la vida baja de esta parte de tu máximo. Más alto es más seguro; más bajo ahorra comida.' },
+      potion: { title: 'Poción de combate', body: 'Se bebe sola mientras luchas, cada vez que se acaba el efecto de la anterior.' },
+      prayer: { title: 'Plegaria', body: 'Una plegaria da una ventaja en combate y gasta un hueso cada {n} segundos mientras luchas. Más nivel de Plegaria desbloquea otras mejores.' },
+      loadouts: { title: 'Equipos guardados', body: 'Guarda tu equipo, comida y estilo en una ranura y vuelve a ellos con un clic; por ejemplo, uno para cuerpo a cuerpo y otro para distancia.' },
+      accuracy: { title: 'Tu precisión', body: 'Tu probabilidad de acertar cada golpe a este enemigo. Sube con tu bonificación de precisión, tu nivel y el estilo que aprovecha su debilidad.' },
+      hitsYou: { title: 'Su precisión', body: 'La probabilidad de que cada uno de sus golpes te acierte. La defensa y la armadura la reducen.' },
+      weakness: { title: 'Debilidad', body: 'Atacar con este estilo hace mucho más fácil acertarle.' },
+      task: { title: 'Encargo de cazador', body: 'Este enemigo es tu encargo de cazador: cada baja cuenta para él y da XP extra de Cazador.' },
+      kills: { title: 'Bajas', body: 'Enemigos derrotados desde que empezaste este combate.' },
+    },
+    skill: {
+      xp: { title: 'Multiplicador de XP', body: 'Todo lo que aumenta la XP de esta habilidad: la biblioteca de tu hogar, el prestigio, las bendiciones, los elixires, los atributos, las mascotas y más.' },
+      speed: { title: 'Velocidad de acción', body: 'Cuánto más rápido terminan las acciones: herramientas, salas del hogar, Agilidad, prestigio, bendiciones y bonificaciones se suman. La maestría de cada acción añade más.' },
+    },
+    item: { always: 'Siempre cae', chance: 'Probabilidad: {v}%', set: 'Parte del conjunto {set}', value: 'Se vende por {gold} de oro', owned: 'Tienes {n}' },
+  },
+
   weekly: {
     resetIn: 'Nuevo jefe en {t}', resists: 'Resiste: {style}', weakTo: 'Débil a: {style}', resistTip: 'Recibe la mitad de daño de este estilo.',
     pool: 'Vida esta semana', slain: 'Derrotado esta semana', dealt: 'Daño infligido', attempts: 'Intentos', best: 'Mejor intento',

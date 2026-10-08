@@ -13,6 +13,7 @@ import { fmt, fmtClock } from '../game/format.js'
 import { tm } from '../i18n/index.js'
 import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'
+import HelpTip from './HelpTip.vue'
 
 const { t } = useI18n()
 const foods = computed(() => Object.keys(state.inventory).filter(id => ITEMS[id]?.type === 'food')
@@ -46,7 +47,7 @@ const ammo = computed(() => state.equipment.ammo)
 <template>
   <div class="two-col">
     <div class="panel pad">
-      <h3 class="panel-title"><GameIcon name="crossed-swords" /> {{ $t('combat.style') }}</h3>
+      <h3 class="panel-title"><GameIcon name="crossed-swords" /> {{ $t('combat.style') }} <HelpTip k="combat.style" /></h3>
       <div class="styles">
         <button v-for="(st, k) in COMBAT_STYLES" :key="k" class="style-btn" :class="{ active: state.combatStyle === k }" @click="state.combatStyle = k">
           <GameIcon :name="st.icon" :size="22" />
@@ -55,7 +56,7 @@ const ammo = computed(() => state.equipment.ammo)
         </button>
       </div>
       <div v-if="state.combatStyle === 'magic'" class="stack" style="margin-top:14px">
-        <label class="small muted" for="spell-select">{{ $t('combat.spell') }}</label>
+        <label class="small muted" for="spell-select">{{ $t('combat.spell') }} <HelpTip k="combat.spell" /></label>
         <Select inputId="spell-select" v-model="state.spell" :options="spells" optionLabel="label" optionValue="value" optionDisabled="disabled" class="w-full" />
         <div class="row wrap">
           <span class="small muted">{{ $t('combat.castCost') }}</span>
@@ -65,7 +66,7 @@ const ammo = computed(() => state.equipment.ammo)
         </div>
       </div>
       <div v-if="state.combatStyle === 'ranged'" class="row wrap" style="margin-top:14px">
-        <span class="small muted">{{ $t('combat.ammo') }}</span>
+        <span class="small muted">{{ $t('combat.ammo') }} <HelpTip k="combat.ammo" /></span>
         <template v-if="ammo"><ItemTile :item="ammo" size="xs" /><b class="small">{{ ITEMS[ammo].name }} · {{ fmt(G.qty(ammo)) }}</b></template>
         <span v-else class="small bad-text">{{ $t('combat.equipArrows') }}</span>
       </div>
@@ -75,15 +76,15 @@ const ammo = computed(() => state.equipment.ammo)
     <div class="panel pad">
       <h3 class="panel-title"><GameIcon name="meat" /> {{ $t('combat.supplies') }}</h3>
       <div class="stack">
-        <label class="small muted" for="food-select">{{ $t('combat.autoFood') }}</label>
+        <label class="small muted" for="food-select">{{ $t('combat.autoFood') }} <HelpTip k="combat.food" /></label>
         <Select inputId="food-select" v-model="state.food" :options="foods" optionLabel="label" optionValue="value" showClear :placeholder="$t('combat.noFood')" :emptyMessage="$t('combat.noFoodHint')" class="w-full" />
         <div class="row small">
-          <span class="muted grow">{{ $t('combat.eatBelow', { n: state.autoEatPct }) }}</span>
+          <span class="muted grow">{{ $t('combat.eatBelow', { n: state.autoEatPct }) }} <HelpTip k="combat.eatBelow" /></span>
         </div>
         <Slider v-model="state.autoEatPct" :min="20" :max="80" :step="5" />
-        <label class="small muted" for="potion-select" style="margin-top:6px">{{ $t('combat.autoPotion') }}</label>
+        <label class="small muted" for="potion-select" style="margin-top:6px">{{ $t('combat.autoPotion') }} <HelpTip k="combat.potion" /></label>
         <Select inputId="potion-select" v-model="state.potion" :options="potions" optionLabel="label" optionValue="value" showClear :placeholder="$t('combat.noPotion')" :emptyMessage="$t('combat.noPotionHint')" class="w-full" />
-        <label class="small muted" for="prayer-select" style="margin-top:6px">{{ $t('combat.prayerLabel', { n: PRAYER_DRAIN }) }}</label>
+        <label class="small muted" for="prayer-select" style="margin-top:6px">{{ $t('combat.prayerLabel', { n: PRAYER_DRAIN }) }} <HelpTip k="combat.prayer" :params="{ n: PRAYER_DRAIN }" /></label>
         <Select inputId="prayer-select" :modelValue="state.prayer" @update:modelValue="v => G.setPrayer(v)" :options="prayers" optionLabel="label" optionValue="value" optionDisabled="disabled"
           showClear :placeholder="$t('combat.noPrayer')" class="w-full" />
         <div v-if="state.prayer" class="small muted">{{ $t('combat.bonesLeft', { n: fmt(bonesLeft) }) }}</div>
@@ -96,7 +97,7 @@ const ammo = computed(() => state.equipment.ammo)
     </div>
   </div>
   <div class="panel pad" style="margin-top:16px">
-    <h3 class="panel-title"><GameIcon name="checked-shield" /> {{ $t('loadouts.title') }}</h3>
+    <h3 class="panel-title"><GameIcon name="checked-shield" /> {{ $t('loadouts.title') }} <HelpTip k="combat.loadouts" /></h3>
     <p class="small muted" style="margin-top:0">{{ $t('loadouts.intro') }}</p>
     <div class="sets">
       <div v-for="(lo, i) in state.loadouts" :key="i" class="set">

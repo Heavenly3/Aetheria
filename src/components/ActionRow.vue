@@ -35,10 +35,10 @@ const out = computed(() => Object.entries(a.value.out)[0])
     </div>
     <div class="ins">
       <span v-for="(q, k) in a.in" :key="k" class="in" :class="{ miss: G.qty(k) < q }" v-tooltip.top="ITEMS[k].name">
-        <ItemTile :item="k" size="xs" :tip="false" /><span class="tnum">{{ fmt(G.qty(k)) }}/{{ q }}</span>
+        <ItemTile :item="k" size="xs" /><span class="tnum">{{ fmt(G.qty(k)) }}/{{ q }}</span>
       </span>
       <span v-if="out" class="in out" v-tooltip.top="ITEMS[out[0]].name">
-        <i class="pi pi-arrow-right" /><ItemTile :item="out[0]" size="xs" :tip="false" /><span class="tnum">{{ fmt(G.qty(out[0])) }}</span>
+        <i class="pi pi-arrow-right" /><ItemTile :item="out[0]" size="xs" /><span class="tnum">{{ fmt(G.qty(out[0])) }}</span>
       </span>
     </div>
     <span class="tag gold">+{{ fmt(a.xp * G.xpMult(skill)) }}</span>

@@ -85,7 +85,7 @@ const reqText = q => [
           <span class="small faint">{{ $t('quests.reward') }}</span>
           <span v-if="q.reward.gold" class="tag gold">{{ $t('inventory.goldAmount', { n: fmt(q.reward.gold) }) }}</span>
           <span v-for="(v, s) in q.reward.xp || {}" :key="s" class="tag">{{ $t('quests.xp', { n: fmt(v), skill: SKILLS[s].name }) }}</span>
-          <span v-for="(v, k) in q.reward.items || {}" :key="k" class="tag"><ItemTile :item="k" size="xs" :tip="false" /> {{ v }}× {{ ITEMS[k].name }}</span>
+          <span v-for="(v, k) in q.reward.items || {}" :key="k" class="tag"><ItemTile :item="k" size="xs" /> {{ v }}× {{ ITEMS[k].name }}</span>
           <span v-if="q.reward.slayerPoints" class="tag arcane">{{ $t('quests.slayerPoints', { n: q.reward.slayerPoints }) }}</span>
           <span v-if="q.reward.unlock" class="tag ok"><i class="pi pi-unlock" /> {{ $t(q.reward.unlock) }}</span>
           <span class="tag gold">{{ $t('quests.qp', { n: q.reward.qp }) }}</span>

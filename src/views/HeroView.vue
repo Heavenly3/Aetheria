@@ -21,6 +21,8 @@ import { PRAYERS, GRACE_SPEED } from '../game/data/extras.js'
 import { fmt, fmtTime, fmtClock, fmtHour } from '../game/format.js'
 import { tm } from '../i18n/index.js'
 import GameIcon from '../components/GameIcon.vue'
+import HelpTip from '../components/HelpTip.vue'
+import { itemTip } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
 import AttributesPanel from '../components/AttributesPanel.vue'
 import TalentsPanel from '../components/TalentsPanel.vue'
@@ -116,7 +118,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div class="section-title" style="margin-top:20px">{{ $t('hero.equipment') }}</div>
               <div class="equip-grid">
                 <template v-for="(s, slot) in SLOTS" :key="slot">
-                  <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="$t('hero.clickToRemove')" @click="askUnequip(slot)">
+                  <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="itemTip(state.equipment[slot], $t('hero.clickToRemove'))" @click="askUnequip(slot)">
                     <ItemTile :item="state.equipment[slot]" size="sm" :tip="false" :qty="ITEMS[state.equipment[slot]].stackEquip ? G.qty(state.equipment[slot]) : null" />
                     <div class="grow"><div class="slot-name">{{ s.name }}</div><div class="slot-item">{{ ITEMS[state.equipment[slot]].name }}<b v-if="G.enchantLevel(slot)" class="ench"> +{{ G.enchantLevel(slot) }}</b></div></div>
                   </button>
@@ -129,7 +131,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div class="section-title" style="margin-top:20px">{{ $t('hero.tools') }}</div>
               <div class="equip-grid tools">
                 <template v-for="(t, type) in TOOL_TYPES" :key="type">
-                  <button v-if="state.tools[type]" class="equip-slot filled" v-tooltip.top="$t('hero.clickToRemove')" @click="askUnequipTool(type)">
+                  <button v-if="state.tools[type]" class="equip-slot filled" v-tooltip.top="itemTip(state.tools[type], $t('hero.clickToRemove'))" @click="askUnequipTool(type)">
                     <ItemTile :item="state.tools[type]" size="sm" :tip="false" />
                     <div class="grow"><div class="slot-name">{{ $t('hero.toolTier', { tool: t.name, n: G.toolTier(type) }) }}</div><div class="slot-item">{{ ITEMS[state.tools[type]].name }}</div></div>
                   </button>
@@ -143,8 +145,8 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
 
             <div class="panel pad">
               <h3 class="panel-title"><GameIcon name="checked-shield" /> {{ $t('hero.gearBonuses') }}</h3>
-              <div v-for="r in statRows" :key="r.k" class="kv"><span>{{ r.l }}</span><b>{{ r.v }}</b></div>
-              <div class="kv"><span>{{ $t('hero.maxHitCurrent') }}</span><b class="gold-text">{{ ps.maxHit }}</b></div>
+              <div v-for="r in statRows" :key="r.k" class="kv"><span>{{ r.l }} <HelpTip :k="'stats.' + r.k" /></span><b>{{ r.v }}</b></div>
+              <div class="kv"><span>{{ $t('hero.maxHitCurrent') }} <HelpTip k="stats.maxHit" /></span><b class="gold-text">{{ ps.maxHit }}</b></div>
               <template v-if="sets.length">
                 <div class="section-title" style="margin:18px 0 10px">{{ $t('sets.title') }}</div>
                 <div class="stack" style="gap:8px"><SetBonuses v-for="x in sets" :key="x.set.id" :set="x.set" pieces /></div>
@@ -203,7 +205,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
                   <div class="kv"><span>{{ $t('hero.quests') }}</span><b>{{ G.questsDone() }}</b></div>
                   <div class="kv"><span>{{ $t('hero.towerBest') }}</span><b>{{ $t('tower.floorN', { n: state.tower.best }) }}</b></div>
                   <div class="kv"><span>{{ $t('hero.maxMastery') }}</span><b>{{ G.maxMastery() }}</b></div>
-                  <div class="kv"><span>{{ $t('hero.offlineCap') }}</span><b>{{ $t('time.hours', { n: +G.offlineCapHours().toFixed(1) }) }}</b></div>
+                  <div class="kv"><span>{{ $t('hero.offlineCap') }} <HelpTip k="hero.offline" /></span><b>{{ $t('time.hours', { n: +G.offlineCapHours().toFixed(1) }) }}</b></div>
                 </div>
               </div>
             </div>

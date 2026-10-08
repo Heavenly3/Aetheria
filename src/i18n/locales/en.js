@@ -537,6 +537,50 @@ export default {
     none: 'No festival right now', next: 'Next: {name}, in {time}.', calendar: 'Festival calendar',
   },
 
+  // Tooltip help, grouped by where it appears (see src/ui/tips.js)
+  help: {
+    top: {
+      hp: { title: 'Health', body: 'You regain 1 HP every {out} seconds, or every {fight} seconds while fighting. Set food and a potion in Combat and your hero uses them on their own.' },
+      combat: { title: 'Combat level', body: 'Comes from Defence and Hitpoints plus your best fighting style: melee (Attack and Strength), Ranged or Magic. Compare it with the recommended level of each area.' },
+      total: { title: 'Total level', body: 'The sum of all your skill levels. Many achievements and Ascension depend on it.' },
+      gold: { title: 'Gold', body: 'Earned from monsters, selling, quests and tasks. Spend it in the shop, your home, the forge and the tavern.' },
+      festTokens: 'Your festival tokens: {n}',
+    },
+    stats: {
+      atk: { title: 'Melee accuracy', body: 'Raises your chance to land a blow with melee weapons.' },
+      str: { title: 'Melee strength', body: 'Raises the most damage you can do with melee weapons.' },
+      def: { title: 'Defence', body: 'Lowers the chance that enemies hit you, whatever your style.' },
+      rAtk: { title: 'Ranged accuracy', body: 'Raises your chance to land a shot with a bow.' },
+      rStr: { title: 'Ranged strength', body: 'Raises the most damage you can do with a bow. Your arrows add to it.' },
+      mAtk: { title: 'Magic accuracy', body: 'Raises your chance to land a spell.' },
+      mDmg: { title: 'Magic damage', body: 'Multiplies the damage of every spell you cast.' },
+      maxHit: { title: 'Max hit', body: 'The most damage a single blow can do with your current style, gear and boosts. Each landed blow does between 1 and this.' },
+    },
+    hero: {
+      offline: { title: 'Offline progress', body: 'While the game is closed your hero keeps working for up to this many hours. Upgrade the bedroom at home to raise it.' },
+    },
+    combat: {
+      style: { title: 'Combat style', body: 'Decides which skill earns XP and which of your stats are used. Melee styles need a melee weapon, Ranged needs a bow and arrows, Magic needs runes.' },
+      spell: { title: 'Spell', body: 'Stronger spells hit harder but cost more runes per cast. You need the Magic level shown next to each one.' },
+      ammo: { title: 'Ammunition', body: 'Every shot uses one arrow. Better arrows add to your ranged strength. Equip them from the inventory.' },
+      food: { title: 'Food', body: 'Your hero eats this food on their own whenever health drops below the threshold. Without food you only have regeneration.' },
+      eatBelow: { title: 'Eating threshold', body: 'Eat when health falls under this share of your maximum. Higher is safer, lower saves food.' },
+      potion: { title: 'Combat potion', body: 'Drunk on its own while fighting, whenever the previous one has worn off.' },
+      prayer: { title: 'Prayer', body: 'A prayer grants a combat bonus and uses one bone every {n} seconds while you fight. Higher Prayer unlocks better ones.' },
+      loadouts: { title: 'Saved sets', body: 'Save your gear, food and style in a slot and switch back to them with one click, for example one set for melee and another for ranged.' },
+      accuracy: { title: 'Your accuracy', body: 'Your chance to land each blow on this enemy. It rises with your accuracy bonus and your skill level, and with the right style against its weakness.' },
+      hitsYou: { title: 'Its accuracy', body: 'The chance that each of its blows lands on you. Defence and armour lower it.' },
+      weakness: { title: 'Weakness', body: 'Attacking with this style makes the enemy much easier to hit.' },
+      task: { title: 'Slayer task', body: 'This enemy is your slayer task: each kill counts towards it and gives extra Slayer XP.' },
+      kills: { title: 'Kills', body: 'Enemies defeated since you started this fight.' },
+    },
+    skill: {
+      xp: { title: 'XP multiplier', body: 'Everything that boosts the XP of this skill: the library at home, prestige, blessings, elixirs, attributes, pets and more.' },
+      speed: { title: 'Action speed', body: 'How much faster actions finish: tools, home rooms, Agility, prestige, blessings and bonuses all add up. Mastery of each action adds more.' },
+    },
+    item: { always: 'Always drops', chance: 'Chance: {v}%', set: 'Part of the set {set}', value: 'Sells for {gold} gold', owned: 'You have {n}' },
+  },
+
   weekly: {
     resetIn: 'New boss in {t}', resists: 'Resists {style}', weakTo: 'Weak to {style}', resistTip: 'Takes half damage from this style.',
     pool: 'Health this week', slain: 'Slain this week', dealt: 'Damage dealt', attempts: 'Attempts', best: 'Best attempt',

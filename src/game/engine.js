@@ -27,8 +27,8 @@ const SLOT_KEY = i => `aetheria-slot-${i}`
 const META_KEY = 'aetheria-meta'
 const LEGACY_KEY = 'aetheria-save-v2'
 const RESPAWN_TIME = 1.5
-const HP_REGEN = 3          // seconds per HP outside combat
-const HP_REGEN_COMBAT = 6   // seconds per HP while fighting
+export const HP_REGEN = 3          // seconds per HP outside combat
+export const HP_REGEN_COMBAT = 6   // seconds per HP while fighting
 const ELIXIR_DURATION = 1800
 const LOG_SIZE = 40
 const CHAIN_DEPTH = 3   // how many steps down the chained crafting may go

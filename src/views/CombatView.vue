@@ -15,6 +15,7 @@ import { fmt } from '../game/format.js'
 import CombatSettings from '../components/CombatSettings.vue'
 import Arena from '../components/Arena.vue'
 import MonsterCard from '../components/MonsterCard.vue'
+import { chanceNote } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
 
 const tab = ref(state.activity?.kind === 'boss' ? 'bosses' : state.activity?.kind === 'dungeon' ? 'dungeons' : 'areas')
@@ -86,7 +87,7 @@ function fightBoss(b) {
               </div>
               <div class="row wrap" style="gap:5px">
                 <span class="small faint">{{ $t('combat.chest') }}</span>
-                <span v-for="c in dg.chest" :key="c.item" v-tooltip.top="ITEMS[c.item].name + ' · ' + (c.chance >= 1 ? $t('common.always') : pct(c.chance))"><ItemTile :item="c.item" size="xs" :tip="false" /></span>
+                <ItemTile v-for="c in dg.chest" :key="c.item" :item="c.item" size="xs" :note="chanceNote(c.chance)" />
               </div>
               <Button :label="inDungeon(dg.id) ? $t('combat.retreat') : $t('combat.enter')" :icon="inDungeon(dg.id) ? 'pi pi-flag' : 'pi pi-sign-in'" :severity="inDungeon(dg.id) ? 'danger' : undefined" fluid
                 :disabled="!!dg.reqQuest && !G.questDone(dg.reqQuest) && !inDungeon(dg.id)" @click="inDungeon(dg.id) ? G.stop() : G.startCombat('dungeon', dg.id)" />

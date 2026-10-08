@@ -361,3 +361,23 @@ html.embedded .title-screen .ts-foot { position: static; margin-top: 28px; }
 /* Text tinted with a data colour (difficulty, rarity…); darkened on parchment so it stays readable */
 .hue { color: var(--hue); }
 :root[data-theme="light"] .hue { color: color-mix(in srgb, var(--hue) 60%, #1d1a14); }
+
+/* ---------- Tooltips: one look for all of them, themed for light and dark ---------- */
+.p-tooltip .p-tooltip-text {
+  background: var(--panel-solid); color: var(--ink); border: 1px solid var(--line-hi); border-radius: 10px;
+  padding: 7px 10px; font-size: 12.5px; line-height: 1.45; box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.55);
+}
+.p-tooltip.p-tooltip-top .p-tooltip-arrow { border-top-color: var(--line-hi); }
+.p-tooltip.p-tooltip-bottom .p-tooltip-arrow { border-bottom-color: var(--line-hi); }
+.p-tooltip.p-tooltip-left .p-tooltip-arrow { border-left-color: var(--line-hi); }
+.p-tooltip.p-tooltip-right .p-tooltip-arrow { border-right-color: var(--line-hi); }
+.p-tooltip.rich-tip { max-width: 290px; }
+.p-tooltip.rich-tip .p-tooltip-text { padding: 10px 12px; }
+.rich-tip .tt-title { font-family: var(--font-display); font-size: 14.5px; line-height: 1.2; color: var(--gold-hi); }
+.rich-tip .tt-sub { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+.rich-tip .tt-body { color: var(--muted); margin-top: 6px; }
+.rich-tip .tt-lines { list-style: none; margin: 8px 0 0; padding: 8px 0 0; border-top: 1px solid var(--line); display: grid; gap: 2px; }
+.rich-tip .tt-lines .ok { color: var(--tag-ok); }
+.rich-tip .tt-lines .bad { color: var(--tag-bad); }
+.rich-tip .tt-lines .gold { color: var(--gold); }
+.rich-tip .tt-lines .muted { color: var(--muted); }

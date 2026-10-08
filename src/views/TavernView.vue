@@ -18,6 +18,7 @@ import { SKILLS } from '../game/data/skills.js'
 import { SPECIALTIES, RARITIES, TRAITS, TAVERN_LEVELS, EXPEDITIONS, EXPEDITION_DURATIONS, DRINKS, MYSTERY_CHEST } from '../game/data/tavern.js'
 import { fmt, fmtTime, fmtClock, pct } from '../game/format.js'
 import { play } from '../game/sound.js'
+import { chanceNote } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 
@@ -138,7 +139,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
           <div class="small muted">{{ $t('tavern.upgradeHint') }}</div>
           <div class="cost">
             <span v-for="[k, v] in costList(next.cost)" :key="k" class="cost-i" :class="{ miss: !costOk(k, v) }" v-tooltip.top="k === 'gold' ? $t('common.gold') : ITEMS[k].name">
-              <ItemTile v-if="k !== 'gold'" :item="k" size="xs" :tip="false" /><GameIcon v-else name="two-coins" :size="16" />{{ fmt(v) }}
+              <ItemTile v-if="k !== 'gold'" :item="k" size="xs" /><GameIcon v-else name="two-coins" :size="16" />{{ fmt(v) }}
             </span>
           </div>
           <Button :label="G.tavernUpgradeBlocker() ? $t(G.tavernUpgradeBlocker()) : $t('tavern.upgrade')" icon="pi pi-arrow-up" size="small" :disabled="!!G.tavernUpgradeBlocker()" @click="upgrade" />
@@ -252,7 +253,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               </div>
               <div class="row wrap" style="gap:5px;margin-top:10px">
                 <span class="tag gold">{{ $t('inventory.goldAmount', { n: fmt(ex.gold * EXPEDITION_DURATIONS[durIdx].mult) }) }}</span>
-                <span v-for="l in ex.loot" :key="l.item" v-tooltip.top="ITEMS[l.item].name"><ItemTile :item="l.item" size="sm" :tip="false" /></span>
+                <ItemTile v-for="l in ex.loot" :key="l.item" :item="l.item" size="sm" />
               </div>
               <Button :label="$t('tavern.send')" icon="pi pi-send" size="small" fluid style="margin-top:12px" :disabled="!who" @click="send(ex)" />
             </div>
@@ -266,7 +267,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
                 <b>{{ r.name }}</b> · {{ expName(r.exp) }} <span class="tag" :class="r.ok ? 'ok' : 'bad'">{{ r.ok ? $t('tavern.success') : $t('tavern.failure') }}</span>
                 <div class="row wrap small muted" style="gap:4px 10px;margin-top:4px">
                   <span class="gold-text">+{{ $t('inventory.goldAmount', { n: fmt(r.gold) }) }}</span>
-                  <span v-for="(n, k) in r.items" :key="k" class="row" style="gap:4px"><ItemTile :item="k" size="xs" :tip="false" />{{ n }}× {{ ITEMS[k].name }}</span>
+                  <span v-for="(n, k) in r.items" :key="k" class="row" style="gap:4px"><ItemTile :item="k" size="xs" />{{ n }}× {{ ITEMS[k].name }}</span>
                 </div>
               </div>
             </div>
@@ -279,7 +280,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
           <div class="grid-wide">
             <div v-for="(o, i) in t.orders" :key="i + o.item" class="card" :class="{ done: o.done }">
               <div class="row">
-                <ItemTile :item="o.item" size="lg" :tip="false" />
+                <ItemTile :item="o.item" size="lg" />
                 <div class="grow">
                   <div class="card-name">{{ o.qty }}× {{ ITEMS[o.item].name }}</div>
                   <div class="card-sub">{{ $t('tavern.youHave', { n: fmt(G.qty(o.item)), total: o.qty }) }}</div>
@@ -353,7 +354,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               <h3 class="panel-title"><GameIcon name="open-treasure-chest" /> {{ $t('tavern.mysteryTitle') }}</h3>
               <p class="small muted" style="margin-top:0">{{ $t('tavern.mysteryIntro', { n: MYSTERY_CHEST.tokens }) }}</p>
               <div class="row wrap" style="gap:5px;margin-bottom:12px">
-                <span v-for="l in MYSTERY_CHEST.loot" :key="l.item" v-tooltip.top="`${ITEMS[l.item].name} · ${pct(l.chance)}`"><ItemTile :item="l.item" size="sm" :tip="false" /></span>
+                <ItemTile v-for="l in MYSTERY_CHEST.loot" :key="l.item" :item="l.item" size="sm" :note="chanceNote(l.chance)" />
               </div>
               <Button :label="$t('tavern.mysteryOpen', { n: MYSTERY_CHEST.tokens })" icon="pi pi-box" fluid :disabled="t.tokens < MYSTERY_CHEST.tokens" @click="mystery" />
               <p class="small faint" style="margin-bottom:0">{{ $t('tavern.tokensHint') }}</p>

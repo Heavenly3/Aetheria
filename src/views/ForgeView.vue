@@ -53,7 +53,7 @@ function enchant(slot) {
             <ToggleSwitch v-model="protect" inputId="forge-protect" />
             {{ $t('forge.protect', { item: ITEMS[PROTECT_ITEM].name }) }}
           </label>
-          <span class="tag gold"><ItemTile :item="PROTECT_ITEM" size="xs" :tip="false" /> {{ fmt(G.qty(PROTECT_ITEM)) }}</span>
+          <span class="tag gold"><ItemTile :item="PROTECT_ITEM" size="xs" /> {{ fmt(G.qty(PROTECT_ITEM)) }}</span>
         </div>
       </div>
     </div>
@@ -77,7 +77,7 @@ function enchant(slot) {
           <div class="cost">
             <span class="cost-i" :class="{ miss: state.gold < G.enchantCost(s.slot).gold }"><GameIcon name="two-coins" :size="15" />{{ fmt(G.enchantCost(s.slot).gold) }}</span>
             <span v-for="(q, k) in G.enchantCost(s.slot).items" :key="k" class="cost-i" :class="{ miss: G.qty(k) < q }" v-tooltip.top="ITEMS[k].name">
-              <ItemTile :item="k" size="xs" :tip="false" />{{ fmt(G.qty(k)) }}/{{ fmt(q) }}
+              <ItemTile :item="k" size="xs" />{{ fmt(G.qty(k)) }}/{{ fmt(q) }}
             </span>
           </div>
           <div class="row small">

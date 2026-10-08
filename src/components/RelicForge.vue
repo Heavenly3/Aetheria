@@ -112,8 +112,8 @@ const fromRank = computed(() => (reveal.value?.from ? qualityRank(ITEMS[reveal.v
     <div class="panel pad rf-head">
       <p class="intro" style="margin:0">{{ $t('forge.relic.intro') }}</p>
       <div class="res">
-        <span class="tag" v-tooltip.top="ITEMS.stardust.name"><ItemTile item="stardust" size="xs" :tip="false" /> {{ fmt(G.qty('stardust')) }}</span>
-        <span class="tag" v-tooltip.top="ITEMS[SEAL_ITEM].name"><ItemTile :item="SEAL_ITEM" size="xs" :tip="false" /> {{ fmt(G.qty(SEAL_ITEM)) }}</span>
+        <span class="tag"><ItemTile item="stardust" size="xs" /> {{ fmt(G.qty('stardust')) }}</span>
+        <span class="tag"><ItemTile :item="SEAL_ITEM" size="xs" /> {{ fmt(G.qty(SEAL_ITEM)) }}</span>
         <span class="tag gold"><GameIcon name="two-coins" :size="13" /> {{ fmt(state.gold) }}</span>
         <span class="heat" v-tooltip.top="$t('forge.relic.heatTip', { v: Math.round(HEAT_BONUS * 100), max: HEAT_MAX })" :aria-label="$t('forge.relic.heat', { n: heat, max: HEAT_MAX })">
           <span class="small muted">{{ $t('forge.relic.heatLabel') }}</span>
