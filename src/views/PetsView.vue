@@ -19,6 +19,7 @@ import { OMEN_MAP } from '../game/data/omens.js'
 import { play } from '../game/sound.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 
@@ -141,12 +142,12 @@ const sorted = computed(() => [...PETS].sort((a, b) => (G.isCompanion(b.id) - G.
               <div class="bar"><i :style="{ width: xpPct + '%' }" /></div>
             </div>
             <div>
-              <div class="meter-head"><span>{{ $t('pets.fullness') }}</span><span :class="mood === 'starving' || mood === 'hungry' ? 'warn-text' : 'faint'">{{ $t('pets.mood.' + mood) }}</span></div>
+              <div class="meter-head"><span>{{ $t('pets.fullness') }} <HelpTip k="sections.fullness" /></span><span :class="mood === 'starving' || mood === 'hungry' ? 'warn-text' : 'faint'">{{ $t('pets.mood.' + mood) }}</span></div>
               <div class="bar" :class="{ low: full < 25 }"><i class="full-bar" :style="{ width: (full / FULL_MAX) * 100 + '%' }" /></div>
             </div>
             <div>
               <div class="meter-head">
-                <span>{{ $t('pets.bondLabel') }} · <b>{{ $t('pets.bond.' + tier.id) }}</b></span>
+                <span>{{ $t('pets.bondLabel') }} · <b>{{ $t('pets.bond.' + tier.id) }}</b> <HelpTip k="sections.bond" /></span>
                 <span class="hearts" :aria-label="`${care.bond} / ${BOND_MAX}`">
                   <i v-for="(h, i) in hearts(care.bond)" :key="i" :class="h === 'empty' ? 'pi pi-heart' : 'pi pi-heart-fill'" :style="h === 'half' ? 'opacity:.5' : ''" />
                 </span>
@@ -186,7 +187,7 @@ const sorted = computed(() => [...PETS].sort((a, b) => (G.isCompanion(b.id) - G.
       <div v-if="isComp" class="basket">
         <GameIcon name="open-treasure-chest" :size="22" class="gold-text" />
         <div class="grow" style="min-width:0">
-          <div class="small"><b>{{ $t('pets.basket', { n: basket.length, max: BASKET_MAX }) }}</b></div>
+          <div class="small"><b>{{ $t('pets.basket', { n: basket.length, max: BASKET_MAX }) }}</b> <HelpTip k="sections.basket" /></div>
           <div class="small faint">
             <template v-if="care.bond < GIFTS_AT">{{ $t('pets.giftsLocked', { tier: $t('pets.bond.friendly') }) }}</template>
             <template v-else-if="basket.length >= BASKET_MAX">{{ $t('pets.basketFull') }}</template>
@@ -208,7 +209,7 @@ const sorted = computed(() => [...PETS].sort((a, b) => (G.isCompanion(b.id) - G.
 
     <!-- Incubator -->
     <div v-if="eggs.length" class="panel pad" style="margin-bottom:20px">
-      <h3 class="panel-title"><GameIcon name="cosmic-egg" :size="18" /> {{ $t('pets.incubator') }}</h3>
+      <h3 class="panel-title"><GameIcon name="cosmic-egg" :size="18" /> {{ $t('pets.incubator') }} <HelpTip k="sections.incubator" /></h3>
       <div class="eggs">
         <div v-for="(e, i) in eggs" :key="e.pet + e.at" class="egg" :class="{ ready: eggPct(e) >= 100 }" :style="{ '--c': PET_MAP[e.pet]?.tint }">
           <ItemTile icon="cosmic-egg" :tint="PET_MAP[e.pet]?.tint" size="lg" :tip="false" />

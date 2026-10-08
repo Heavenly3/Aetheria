@@ -15,6 +15,7 @@ import { play } from '../game/sound.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import InventoryGrid from '../components/InventoryGrid.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -131,7 +132,7 @@ function sellJunk() {
           </InventoryGrid>
         </div>
         <div class="panel pad">
-          <h3 class="panel-title"><i class="pi pi-chart-line gold-text" /> {{ $t('shop.marketTitle') }}</h3>
+          <h3 class="panel-title"><i class="pi pi-chart-line gold-text" /> {{ $t('shop.marketTitle') }} <HelpTip k="sections.market" /></h3>
           <p class="small muted" style="margin-top:0">{{ $t('shop.marketIntro') }}</p>
           <div class="market">
             <button v-for="[id, m] in market" :key="id" class="mrow" :class="{ owned: G.qty(id) > 0 }" :disabled="!G.qty(id)" @click="selected = id">

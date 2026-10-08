@@ -8,6 +8,7 @@ import Arena from '../components/Arena.vue'
 import CombatSettings from '../components/CombatSettings.vue'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const inTower = computed(() => state.activity?.type === 'combat' && state.activity.kind === 'tower')
 const startFloor = computed(() => Math.max(1, Math.floor(state.tower.best / 10) * 10 + 1))
@@ -39,7 +40,7 @@ function buy(it) {
     <Arena v-if="inTower" />
     <CombatSettings />
 
-    <div class="section-title">{{ $t('tower.next') }}</div>
+    <div class="section-title">{{ $t('tower.next') }} <HelpTip k="sections.towerNext" /></div>
     <div class="floors">
       <div v-for="m in preview" :key="m.floor" class="card floor" :class="{ active: inTower && state.activity.floor === m.floor }" style="--c:#e2b65a">
         <div class="small muted">{{ $t('tower.floorN', { n: m.floor }) }}</div>
@@ -49,7 +50,7 @@ function buy(it) {
       </div>
     </div>
 
-    <div class="section-title">{{ $t('tower.shop') }}</div>
+    <div class="section-title">{{ $t('tower.shop') }} <HelpTip k="sections.towerShop" /></div>
     <div class="grid-wide">
       <div v-for="it in TOWER_SHOP" :key="it.id" class="card">
         <div class="row">

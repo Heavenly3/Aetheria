@@ -12,6 +12,7 @@ import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import Arena from '../components/Arena.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 const ev = computed(() => state.event)
@@ -88,7 +89,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
 
       <!-- The Veiled Caravan -->
       <template v-if="omen.caravan">
-        <div class="section-title">{{ $t('omens.caravan') }}</div>
+        <div class="section-title">{{ $t('omens.caravan') }} <HelpTip k="sections.caravan" /></div>
         <div class="grid-wide">
           <div v-for="(o, i) in ev.offers" :key="o.id" class="card" :class="{ done: o.sold }" :style="{ '--c': RARITY_TINT.rare }">
             <div class="row">
@@ -125,7 +126,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
     <!-- Lasting gifts -->
     <div class="two-col gifts">
       <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="sparkles" /> {{ $t('omens.boonTitle') }}</h3>
+        <h3 class="panel-title"><GameIcon name="sparkles" /> {{ $t('omens.boonTitle') }} <HelpTip k="sections.boon" /></h3>
         <div v-if="boon" class="row">
           <span class="rarity-dot" :style="{ background: RARITY_TINT[boon.rarity] }" />
           <div class="grow"><b>{{ $t(`omens.boons.${boon.id}.name`) }}</b><div class="small muted">{{ effects(boon.mods) }}</div></div>
@@ -134,7 +135,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
         <p v-else class="small muted" style="margin:0">{{ $t('omens.boonHint') }}</p>
       </div>
       <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="burning-meteor" /> {{ $t('omens.wishTitle', { n: G.wishCount(), max: WISH_LIMIT }) }}</h3>
+        <h3 class="panel-title"><GameIcon name="burning-meteor" /> {{ $t('omens.wishTitle', { n: G.wishCount(), max: WISH_LIMIT }) }} <HelpTip k="sections.wishes" /></h3>
         <div v-if="wishes.length" class="row wrap" style="gap:6px">
           <span v-for="x in wishes" :key="x.w.id" class="tag ok">{{ effects(Object.fromEntries(Object.entries(x.w.mods).map(([k, v]) => [k, v * x.n]))) }}</span>
         </div>
@@ -143,7 +144,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
     </div>
 
     <!-- The chronicle -->
-    <div class="section-title">{{ $t('omens.chronicle') }} <span class="tag tnum">{{ seenKinds }} / {{ OMENS.length }}</span></div>
+    <div class="section-title">{{ $t('omens.chronicle') }} <HelpTip k="sections.chronicle" /> <span class="tag tnum">{{ seenKinds }} / {{ OMENS.length }}</span></div>
     <p class="intro">{{ $t('omens.chronicleIntro') }}</p>
     <div class="grid-wide">
       <div v-for="o in OMENS" :key="o.id" class="card entry" :class="{ unknown: !seen(o.id) }" :style="{ '--c': RARITY_TINT[o.rarity] }">
@@ -171,7 +172,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
       </div>
     </div>
 
-    <div class="section-title">{{ $t('omens.relics') }}</div>
+    <div class="section-title">{{ $t('omens.relics') }} <HelpTip k="sections.relics" /></div>
     <p class="intro">{{ $t('omens.relicsIntro') }}</p>
     <div class="row wrap" style="gap:8px">
       <span v-for="q in RARITIES" :key="q" class="tag tnum hue" :style="{ '--hue': RARITY_TINT[q] }">{{ $t(`omens.rarity.${q}`) }} · {{ state.omens.relics[q] || 0 }}</span>

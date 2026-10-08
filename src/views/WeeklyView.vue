@@ -10,6 +10,7 @@ import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import Arena from '../components/Arena.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 
@@ -128,7 +129,7 @@ const rewardText = i => {
     <div class="wb-grid">
       <!-- Milestones -->
       <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="open-treasure-chest" :size="18" /> {{ $t('weekly.milestones') }}</h3>
+        <h3 class="panel-title"><GameIcon name="open-treasure-chest" :size="18" /> {{ $t('weekly.milestones') }} <HelpTip k="sections.milestones" /></h3>
         <div v-for="(p, i) in MILESTONES" :key="i" class="ms" :class="{ done: G.milestoneClaimed(i), ready: G.milestoneReached(i) && !G.milestoneClaimed(i) }">
           <span class="ms-pct tnum">{{ p === 1 ? $t('weekly.kill') : Math.round(p * 100) + '%' }}</span>
           <span class="grow small muted" style="min-width:0">{{ rewardText(i) }}</span>
@@ -140,7 +141,7 @@ const rewardText = i => {
 
       <!-- Trophy and the hall of bosses -->
       <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="trophy" :size="18" /> {{ $t('weekly.trophy') }}</h3>
+        <h3 class="panel-title"><GameIcon name="trophy" :size="18" /> {{ $t('weekly.trophy') }} <HelpTip k="sections.trophy" /></h3>
         <div class="row" style="gap:12px">
           <ItemTile :item="boss.trophy" size="lg" />
           <div class="grow" style="min-width:0">
@@ -149,7 +150,7 @@ const rewardText = i => {
             <div class="small faint">{{ ownedTrophy ? $t('weekly.trophyOwned') : $t('weekly.trophyHint') }}</div>
           </div>
         </div>
-        <div class="section-title" style="margin-top:18px">{{ $t('weekly.hall') }}</div>
+        <div class="section-title" style="margin-top:18px">{{ $t('weekly.hall') }} <HelpTip k="sections.hall" /></div>
         <div class="hall">
           <div v-for="b in WEEKLY_BOSSES" :key="b.id" class="hall-row" :class="{ met: wk.slain[b.id] || b.id === boss.id }">
             <ItemTile :icon="b.icon" :tint="wk.slain[b.id] || b.id === boss.id ? b.tint : '#2a2838'" size="sm" :tip="false" />

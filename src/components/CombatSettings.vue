@@ -74,7 +74,7 @@ const ammo = computed(() => state.equipment.ammo)
     </div>
 
     <div class="panel pad">
-      <h3 class="panel-title"><GameIcon name="meat" /> {{ $t('combat.supplies') }}</h3>
+      <h3 class="panel-title"><GameIcon name="meat" /> {{ $t('combat.supplies') }} <HelpTip k="sections.supplies" /></h3>
       <div class="stack">
         <label class="small muted" for="food-select">{{ $t('combat.autoFood') }} <HelpTip k="combat.food" /></label>
         <Select inputId="food-select" v-model="state.food" :options="foods" optionLabel="label" optionValue="value" showClear :placeholder="$t('combat.noFood')" :emptyMessage="$t('combat.noFoodHint')" class="w-full" />

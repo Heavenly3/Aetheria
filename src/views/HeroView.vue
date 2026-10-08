@@ -115,7 +115,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
                 <span class="small muted">{{ $t('stats.totalLevel') }} <b class="gold-text">{{ G.totalLevel() }}</b></span>
               </div>
 
-              <div class="section-title" style="margin-top:20px">{{ $t('hero.equipment') }}</div>
+              <div class="section-title" style="margin-top:20px">{{ $t('hero.equipment') }} <HelpTip k="sections.equipment" /></div>
               <div class="equip-grid">
                 <template v-for="(s, slot) in SLOTS" :key="slot">
                   <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="itemTip(state.equipment[slot], $t('hero.clickToRemove'))" @click="askUnequip(slot)">
@@ -128,7 +128,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
                   </div>
                 </template>
               </div>
-              <div class="section-title" style="margin-top:20px">{{ $t('hero.tools') }}</div>
+              <div class="section-title" style="margin-top:20px">{{ $t('hero.tools') }} <HelpTip k="sections.tools" /></div>
               <div class="equip-grid tools">
                 <template v-for="(t, type) in TOOL_TYPES" :key="type">
                   <button v-if="state.tools[type]" class="equip-slot filled" v-tooltip.top="itemTip(state.tools[type], $t('hero.clickToRemove'))" @click="askUnequipTool(type)">
@@ -148,7 +148,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div v-for="r in statRows" :key="r.k" class="kv"><span>{{ r.l }} <HelpTip :k="'stats.' + r.k" /></span><b>{{ r.v }}</b></div>
               <div class="kv"><span>{{ $t('hero.maxHitCurrent') }} <HelpTip k="stats.maxHit" /></span><b class="gold-text">{{ ps.maxHit }}</b></div>
               <template v-if="sets.length">
-                <div class="section-title" style="margin:18px 0 10px">{{ $t('sets.title') }}</div>
+                <div class="section-title" style="margin:18px 0 10px">{{ $t('sets.title') }} <HelpTip k="sections.sets" /></div>
                 <div class="stack" style="gap:8px"><SetBonuses v-for="x in sets" :key="x.set.id" :set="x.set" pieces /></div>
               </template>
             </div>
@@ -156,7 +156,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
 
           <div class="stack" style="gap:0">
             <div v-if="anyEffect" class="panel pad" style="margin-bottom:18px">
-              <h3 class="panel-title"><GameIcon name="sparkles" /> {{ $t('hero.activeEffects') }}</h3>
+              <h3 class="panel-title"><GameIcon name="sparkles" /> {{ $t('hero.activeEffects') }} <HelpTip k="sections.effects" /></h3>
               <div class="row wrap">
                 <span v-for="bl in activeBlessings" :key="bl.id" class="tag gold"><GameIcon :name="bl.icon" :size="13" /> {{ bl.name }} · {{ fmtClock(state.blessings[bl.id]) }}</span>
                 <span v-if="state.buffs.potion" class="tag arcane"><GameIcon name="round-potion" :size="13" /> {{ ITEMS[state.buffs.potion.id].name }} · {{ fmtClock(state.buffs.potion.t) }}</span>
@@ -169,7 +169,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               </div>
             </div>
 
-            <div class="section-title">{{ $t('hero.skills') }}</div>
+            <div class="section-title">{{ $t('hero.skills') }} <HelpTip k="sections.skills" /></div>
             <div class="skills-grid">
               <router-link v-for="(s, id) in SKILLS" :key="id" :to="'/skill/' + id" class="skill-tile" :style="{ '--c': s.color }">
                 <ItemTile :icon="s.icon" :tint="s.color" size="md" :tip="false" />

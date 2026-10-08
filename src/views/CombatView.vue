@@ -17,6 +17,7 @@ import Arena from '../components/Arena.vue'
 import MonsterCard from '../components/MonsterCard.vue'
 import { chanceNote } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const tab = ref(state.activity?.kind === 'boss' ? 'bosses' : state.activity?.kind === 'dungeon' ? 'dungeons' : 'areas')
 const inDungeon = id => state.activity?.type === 'combat' && state.activity.kind === 'dungeon' && state.activity.target === id
@@ -97,7 +98,7 @@ function fightBoss(b) {
 
         <TabPanel value="bosses">
           <div class="panel pad" style="margin-bottom:18px">
-            <h3 class="panel-title">{{ $t('combat.mercsTitle') }}</h3>
+            <h3 class="panel-title">{{ $t('combat.mercsTitle') }} <HelpTip k="sections.mercs" /></h3>
             <p class="small muted" style="margin-top:0">{{ $t('combat.mercsIntro') }}</p>
             <div class="grid-cards">
               <div v-for="mc in MERCENARIES" :key="mc.id" class="merc row">

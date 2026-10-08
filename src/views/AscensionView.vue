@@ -11,6 +11,7 @@ import { modText } from '../i18n/mods.js'
 import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -56,7 +57,7 @@ function ascend() {
 
     <div class="two-col" style="margin-top:18px">
       <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="ankh" /> {{ $t('ascension.ascendTitle') }}</h3>
+        <h3 class="panel-title"><GameIcon name="ankh" /> {{ $t('ascension.ascendTitle') }} <HelpTip k="sections.ascend" /></h3>
         <template v-if="G.canAscend()">
           <div class="gain tnum">+{{ fmt(preview) }} <span class="small muted">{{ $t('ascension.shardsWord') }}</span></div>
           <p class="small muted">{{ $t('ascension.formula') }}</p>

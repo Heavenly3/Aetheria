@@ -13,6 +13,7 @@ import { CROPS, ITEMS } from '../game/data/items.js'
 import { fmt, fmtClock } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
 import GameIcon from './GameIcon.vue'
+import HelpTip from './HelpTip.vue'
 
 const { t } = useI18n()
 const pop = ref()
@@ -67,7 +68,7 @@ function harvestAll() {
     <div class="panel pad farm-bar">
       <div class="row wrap">
         <div class="grow">
-          <h3 class="panel-title" style="margin:0"><GameIcon name="plant-watering" /> {{ $t('farm.title') }}</h3>
+          <h3 class="panel-title" style="margin:0"><GameIcon name="plant-watering" /> {{ $t('farm.title') }} <HelpTip k="sections.farm" /></h3>
           <div class="small muted" style="margin-top:4px">{{ $t('farm.intro') }}</div>
         </div>
         <label class="row small" for="farm-auto" style="gap:8px;cursor:pointer">
@@ -108,7 +109,7 @@ function harvestAll() {
       </div>
     </div>
 
-    <div class="section-title">{{ $t('farm.seeds') }}</div>
+    <div class="section-title">{{ $t('farm.seeds') }} <HelpTip k="sections.seeds" /></div>
     <div class="row wrap" style="margin-bottom:14px">
       <IconField class="grow" style="min-width:200px">
         <InputIcon class="pi pi-search" />

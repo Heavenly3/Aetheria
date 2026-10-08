@@ -6,6 +6,7 @@ import { SKILLS } from '../game/data/skills.js'
 import { fmt, fmtClock } from '../game/format.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 function bless(b) {
   if (G.bless(b.id)) G.toast(b.icon, 'church.blessed', { name: '@blessing:' + b.id, n: Math.round(G.blessingDuration() / 60) }, 'success')
@@ -28,7 +29,7 @@ function bless(b) {
         </div>
       </div>
     </div>
-    <div class="section-title">{{ $t('church.blessings') }}</div>
+    <div class="section-title">{{ $t('church.blessings') }} <HelpTip k="sections.blessings" /></div>
     <div class="grid-wide">
       <div v-for="b in BLESSINGS" :key="b.id" class="card" :class="{ active: G.blessed(b.id), locked: G.level('prayer') < b.lvl }" style="--c:#f1e3b0">
         <div class="row">

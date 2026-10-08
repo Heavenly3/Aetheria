@@ -13,6 +13,7 @@ import { modText } from '../i18n/mods.js'
 import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 // Re-render the countdowns every minute
@@ -88,7 +89,7 @@ function buy(e) {
         <p class="small faint" style="margin:0">{{ $t('festival.resetHint', { n: fmt(fst.earned) }) }}</p>
       </div>
 
-      <div class="section-title">{{ $t('festival.shop') }}</div>
+      <div class="section-title">{{ $t('festival.shop') }} <HelpTip k="sections.festShop" /></div>
       <div class="grid-wide">
         <div v-for="e in G.festivalShop()" :key="e.id" class="card shop-entry" :class="{ done: G.festivalOwned(e) }" :style="{ '--c': f.tint }">
           <div class="row">
@@ -117,7 +118,7 @@ function buy(e) {
       <p class="muted" style="margin:6px 0 0">{{ $t('festival.next', { name: next.festival.name, time: fmtTime((next.start - now) / 1000) }) }}</p>
     </div>
 
-    <div class="section-title">{{ $t('festival.calendar') }}</div>
+    <div class="section-title">{{ $t('festival.calendar') }} <HelpTip k="sections.festCalendar" /></div>
     <div class="grid-wide">
       <div v-for="c in calendar" :key="c.fe.id" class="card cal" :class="{ active: f === c.fe }" :style="{ '--c': c.fe.tint }">
         <div class="row">

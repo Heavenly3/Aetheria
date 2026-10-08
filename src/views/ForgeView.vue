@@ -12,6 +12,7 @@ import { fmt, pct } from '../game/format.js'
 import { play } from '../game/sound.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 const tab = ref('enchant')
@@ -46,7 +47,7 @@ function enchant(slot) {
       <GameIcon class="banner-ghost" name="anvil-impact" :size="230" />
       <ItemTile icon="anvil-impact" tint="#8a5cff" size="xl" :tip="false" />
       <div class="grow">
-        <h1 class="banner-title">{{ $t('forge.title') }}</h1>
+        <h1 class="banner-title">{{ $t('forge.title') }} <HelpTip k="sections.enchant" /></h1>
         <div class="banner-desc">{{ $t('forge.desc', { v: Math.round(ENCHANT_PER_LEVEL * 100), max: ENCHANT_MAX }) }}</div>
         <div class="row wrap">
           <label class="row small" for="forge-protect" style="gap:8px;cursor:pointer">

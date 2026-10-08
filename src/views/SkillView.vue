@@ -20,6 +20,7 @@ import FarmPlots from '../components/FarmPlots.vue'
 import ItemTile from '../components/ItemTile.vue'
 import { GRACE_COSTS, GRACE_SPEED } from '../game/data/extras.js'
 import { intlLocale } from '../i18n/index.js'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
 function buyGrace() { if (G.buyGrace()) G.toast('star-swirl', 'skill.graceBought', { v: Math.round(GRACE_SPEED * 100) }, 'success') }
@@ -103,7 +104,7 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
     <div v-if="skill === 'agility'" class="panel pad grace">
       <ItemTile item="mark_of_grace" size="lg" :qty="G.qty('mark_of_grace')" />
       <div class="grow">
-        <h3 class="panel-title" style="margin:0 0 4px">{{ $t('skill.graceTitle') }}</h3>
+        <h3 class="panel-title" style="margin:0 0 4px">{{ $t('skill.graceTitle') }} <HelpTip k="sections.grace" /></h3>
         <div class="small muted" v-html="$t('skill.graceText', { v: Math.round(state.grace * GRACE_SPEED * 100), n: state.grace, max: GRACE_COSTS.length })" />
         <div class="pips"><i v-for="i in GRACE_COSTS.length" :key="i" :class="{ on: i <= state.grace }" /></div>
       </div>

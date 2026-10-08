@@ -14,6 +14,7 @@ import { play } from '../game/sound.js'
 import ItemTile from './ItemTile.vue'
 import GameIcon from './GameIcon.vue'
 import ItemCompare from './ItemCompare.vue'
+import HelpTip from './HelpTip.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -140,7 +141,7 @@ const fromRank = computed(() => (reveal.value?.from ? qualityRank(ITEMS[reveal.v
       <!-- Left: what to work on -->
       <div class="panel pad">
         <template v-if="mode !== 'fuse'">
-          <h3 class="panel-title"><GameIcon name="floating-crystal" :size="18" /> {{ $t('forge.relic.yourRelics') }}</h3>
+          <h3 class="panel-title"><GameIcon name="floating-crystal" :size="18" /> {{ $t('forge.relic.yourRelics') }} <HelpTip k="sections.relicList" /></h3>
           <div class="relic-list">
             <button v-for="r in (mode === 'reshape' ? owned.filter(x => !x.slot) : owned)" :key="keyOf(r)" class="relic"
               :class="{ on: pick && keyOf(pick) === keyOf(r) }" :style="{ '--q': RARITY_TINT[ITEMS[r.id].quality] }" @click="choose(r)">
@@ -157,7 +158,7 @@ const fromRank = computed(() => (reveal.value?.from ? qualityRank(ITEMS[reveal.v
         </template>
 
         <template v-else>
-          <h3 class="panel-title"><GameIcon name="crystal-cluster" :size="18" /> {{ $t('forge.relic.fuseFrom') }}</h3>
+          <h3 class="panel-title"><GameIcon name="crystal-cluster" :size="18" /> {{ $t('forge.relic.fuseFrom') }} <HelpTip k="sections.fuse" /></h3>
           <div class="q-list">
             <button v-for="f in fuseQualities" :key="f.q" class="q-row" :class="{ on: fuseQ === f.q, ready: f.n >= FUSE_COUNT }" :style="{ '--q': RARITY_TINT[f.q], '--q2': RARITY_TINT[nextQuality(f.q)] }" @click="fuseQ = f.q">
               <span class="q-dot" />

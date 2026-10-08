@@ -21,6 +21,7 @@ import { play } from '../game/sound.js'
 import { chanceNote } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const { t: $tr } = useI18n()
 const confirm = useConfirm()
@@ -157,7 +158,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
       <TabPanels style="background:transparent;padding:18px 0 0">
         <!-- STAFF -->
         <TabPanel value="staff">
-          <div class="section-title" style="margin-top:0">{{ $t('tavern.yourStaff') }}</div>
+          <div class="section-title" style="margin-top:0">{{ $t('tavern.yourStaff') }} <HelpTip k="sections.staff" /></div>
           <div v-if="!t.workers.length" class="panel pad muted">{{ $t('tavern.noStaff') }}</div>
           <div class="grid-wide">
             <div v-for="w in t.workers" :key="w.uid" class="card worker" :style="{ '--c': RARITIES[w.rarity].color }">
@@ -202,7 +203,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
             </div>
           </div>
 
-          <div class="section-title">{{ $t('tavern.board') }}</div>
+          <div class="section-title">{{ $t('tavern.board') }} <HelpTip k="sections.board" /></div>
           <div class="row wrap" style="margin-bottom:14px">
             <span class="small muted grow">{{ $t('tavern.boardHint', { time: fmtTime(boardIn), n: G.freeSlots() }) }}</span>
             <Button :label="$t('tavern.rerollGold', { n: fmt(G.rerollCost()) })" icon="pi pi-refresh" size="small" severity="secondary" :disabled="state.gold < G.rerollCost()" @click="G.rerollBoard()" />
@@ -258,7 +259,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               <Button :label="$t('tavern.send')" icon="pi pi-send" size="small" fluid style="margin-top:12px" :disabled="!who" @click="send(ex)" />
             </div>
           </div>
-          <div class="section-title">{{ $t('tavern.reports') }}</div>
+          <div class="section-title">{{ $t('tavern.reports') }} <HelpTip k="sections.reports" /></div>
           <div class="panel pad">
             <div v-if="!t.reports.length" class="small muted">{{ $t('tavern.noReports') }}</div>
             <div v-for="(r, i) in t.reports" :key="i" class="report">
@@ -304,7 +305,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 
         <!-- BAR -->
         <TabPanel value="bar">
-          <div class="section-title" style="margin-top:0">{{ $t('tavern.drinks') }}</div>
+          <div class="section-title" style="margin-top:0">{{ $t('tavern.drinks') }} <HelpTip k="sections.drinks" /></div>
           <div v-if="drink" class="panel pad row" style="margin-bottom:12px">
             <GameIcon :name="drink.icon" :size="22" class="gold-text" />
             <span class="grow" v-html="$t('tavern.underEffect', { name: drink.name, desc: drink.desc })" />
@@ -324,7 +325,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 
           <div class="two-col" style="margin-top:20px">
             <div class="panel pad">
-              <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }}</h3>
+              <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
               <p class="small muted" style="margin-top:0">{{ $t('tavern.diceRules') }}</p>
               <div class="dice-table">
                 <div class="dice-side">
@@ -351,7 +352,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
             </div>
             <div class="panel pad">
-              <h3 class="panel-title"><GameIcon name="open-treasure-chest" /> {{ $t('tavern.mysteryTitle') }}</h3>
+              <h3 class="panel-title"><GameIcon name="open-treasure-chest" /> {{ $t('tavern.mysteryTitle') }} <HelpTip k="sections.mystery" /></h3>
               <p class="small muted" style="margin-top:0">{{ $t('tavern.mysteryIntro', { n: MYSTERY_CHEST.tokens }) }}</p>
               <div class="row wrap" style="gap:5px;margin-bottom:12px">
                 <ItemTile v-for="l in MYSTERY_CHEST.loot" :key="l.item" :item="l.item" size="sm" :note="chanceNote(l.chance)" />

@@ -19,6 +19,7 @@ import { fmt, fmtTime, fmtClock } from './game/format.js'
 import { play, notify } from './game/sound.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
+import HelpTip from './components/HelpTip.vue'
 import ActivityDock from './components/ActivityDock.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
@@ -28,7 +29,7 @@ import TutorialCoach from './components/TutorialCoach.vue'
 import { titled, cosmeticsForAch } from './game/data/cosmetics.js'
 import { RARITY_TINT } from './game/data/omens.js'
 
-const { t } = useI18n()
+const { t, te } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
@@ -38,6 +39,8 @@ const menu = ref()
 const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.name : route.meta.titleKey && t(route.meta.titleKey)) || 'Aetheria')
 const hpPct = computed(() => (Math.max(0, state.hp) / G.maxHp()) * 100)
 const fest = computed(() => G.activeFestival())
+// The "?" next to the screen title explains the screen you are on
+const screenHelp = computed(() => (route.name && te(`help.screens.${String(route.name)}.body`) ? `screens.${String(route.name)}` : null))
 // The companion chip: hunger follows the clock, so it is re-read on every tick
 const pal = computed(() => {
   void state.lastTick
@@ -128,7 +131,7 @@ function startAdventure() {
 
       <main class="main">
         <header class="topbar">
-          <div class="topbar-title">{{ title }}</div>
+          <div class="topbar-title">{{ title }}<HelpTip v-if="screenHelp" :k="screenHelp" :params="{ skill: title }" class="screen-help" /></div>
           <div class="chips">
             <span class="chip" v-tooltip.bottom="help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
               <GameIcon name="glass-heart" :size="15" />
@@ -255,6 +258,7 @@ function startAdventure() {
 .omen-chip.sign { color: var(--muted); letter-spacing: 0.2em; }
 .fest-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 55%, transparent) !important; }
 .fest-chip .gi { color: var(--c); }
+.screen-help { font-size: 14px; margin-inline-start: 8px; }
 .pal-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 45%, transparent) !important; }
 .pal-chip .gi { color: var(--c); }
 .pal-chip.alert { animation: palNudge 2.4s ease-in-out infinite; }

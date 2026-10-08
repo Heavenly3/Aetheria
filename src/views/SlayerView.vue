@@ -8,6 +8,7 @@ import { fmt } from '../game/format.js'
 import SkillBanner from '../components/SkillBanner.vue'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
+import HelpTip from '../components/HelpTip.vue'
 
 const task = computed(() => state.slayer.task)
 const m = computed(() => (task.value ? MONSTERS[task.value.monster] : null))
@@ -24,7 +25,7 @@ function buy(it) {
     <SkillBanner skill="slayer" />
     <div class="two-col" style="margin-top:20px">
       <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="death-skull" /> {{ $t('slayer.current') }}</h3>
+        <h3 class="panel-title"><GameIcon name="death-skull" /> {{ $t('slayer.current') }} <HelpTip k="sections.slayerTask" /></h3>
         <template v-if="task && m">
           <div class="row">
             <ItemTile :icon="m.icon" tint="#7a2a52" size="xl" :tip="false" />
@@ -48,7 +49,7 @@ function buy(it) {
         </template>
       </div>
       <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="medal" /> {{ $t('slayer.record') }}</h3>
+        <h3 class="panel-title"><GameIcon name="medal" /> {{ $t('slayer.record') }} <HelpTip k="sections.slayerRecord" /></h3>
         <div class="kv"><span>{{ $t('slayer.points') }}</span><b class="gold-text">{{ fmt(state.slayer.points) }}</b></div>
         <div class="kv"><span>{{ $t('slayer.completed') }}</span><b>{{ state.slayer.completed }}</b></div>
         <div class="kv"><span>{{ $t('slayer.streak') }}</span><b>{{ state.slayer.streak }}</b></div>
@@ -56,7 +57,7 @@ function buy(it) {
       </div>
     </div>
 
-    <div class="section-title">{{ $t('slayer.shop') }}</div>
+    <div class="section-title">{{ $t('slayer.shop') }} <HelpTip k="sections.slayerShop" /></div>
     <div class="grid-wide">
       <div v-for="it in SLAYER_SHOP" :key="it.id" class="card">
         <div class="row">
