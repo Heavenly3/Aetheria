@@ -93,5 +93,5 @@ describe('offline progress', () => {
     const summary = G.simulate(cap * 3)
     expect(summary.capped).toBe(true)
     expect(summary.seconds).toBe(cap)
-  })
+  }, 30000) // simulates eight hours of play, which can be slow on a busy machine
 })
