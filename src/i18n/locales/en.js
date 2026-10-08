@@ -137,7 +137,7 @@ export default {
     double: '+{v}% double resources', preserve: '+{v}% chance to keep materials', mastery: '+{v}% mastery XP', heal: '+{v}% healing',
     defense: '+{v}% defence', thieving: '-{v}% thieving failure', meleeDmg: '+{v}% melee damage', meleeAcc: '+{v}% melee accuracy',
     rangedDmg: '+{v}% ranged damage', rangedAcc: '+{v}% ranged accuracy', magicDmg: '+{v}% magic damage', magicAcc: '+{v}% magic accuracy',
-    ammoSave: '+{v}% chance to save arrows', runeSave: '+{v}% chance to save runes', farmSpeed: 'Crops grow {v}% faster',
+    ammoSave: '+{v}% chance to save arrows', runeSave: '+{v}% chance to save runes', farmSpeed: 'Crops grow {v}% faster', farmSpeedNeg: 'Crops grow {v}% slower',
     farmYield: '+{v} harvest per plot', offline: '+{v} h of offline progress', maxHp: '+{v} max HP', blessing: 'Blessings last {v}% longer',
     speedSkill: '+{v}% {skill} speed', xpSkill: '+{v}% {skill} XP', doubleSkill: '+{v}% double {skill} resources',
     speedGroup: '+{v}% {group} speed', xpGroup: '+{v}% {group} XP', doubleGroup: '+{v}% double {group} products',
@@ -675,7 +675,9 @@ export default {
 
   weather: {
     seasons: { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' },
-    seasonLine: 'Season: {season}', eventLine: 'Climate event', changesIn: 'The weather changes in {t}', comingLine: 'On its way: {name}',
+    from: { weather: 'The weather', season: '{season}', night: 'The night' }, monsters: 'Monsters are {v}% stronger',
+    changed: 'The weather changes: <b>{name}</b>',
+    eventLine: 'Climate event', changesIn: 'The weather changes in {t}', comingLine: 'On its way: {name}',
     started: 'Climate event: <b>{name}</b>',
     clear: { name: 'Clear skies', desc: 'Not a cloud in sight. A fine day for an adventure.' },
     clearNight: { name: 'Starry night', desc: 'The sky is clear and full of stars.' },

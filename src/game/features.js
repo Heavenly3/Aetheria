@@ -5,4 +5,6 @@
 export const FEATURES = {
   // Seasonal festivals (tokens, shop, bonuses). Turned off for now; festival rewards already owned stay.
   festivals: false,
+  // Weather, seasons and the night change modifiers and monster strength (tests switch it off to stay predictable)
+  weatherEffects: true,
 }

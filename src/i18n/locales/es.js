@@ -137,7 +137,7 @@ export default {
     double: '+{v}% recursos dobles', preserve: '+{v}% de conservar materiales', mastery: '+{v}% XP de maestría', heal: '+{v}% curación',
     defense: '+{v}% defensa', thieving: '-{v}% fallos al robar', meleeDmg: '+{v}% daño cuerpo a cuerpo', meleeAcc: '+{v}% precisión cuerpo a cuerpo',
     rangedDmg: '+{v}% daño a distancia', rangedAcc: '+{v}% precisión a distancia', magicDmg: '+{v}% daño mágico', magicAcc: '+{v}% precisión mágica',
-    ammoSave: '+{v}% de no gastar flechas', runeSave: '+{v}% de no gastar runas', farmSpeed: 'Cultivos un {v}% más rápidos',
+    ammoSave: '+{v}% de no gastar flechas', runeSave: '+{v}% de no gastar runas', farmSpeed: 'Cultivos un {v}% más rápidos', farmSpeedNeg: 'Cultivos un {v}% más lentos',
     farmYield: '+{v} cosecha por parcela', offline: '+{v} h de progreso offline', maxHp: '+{v} PV máximos', blessing: 'Bendiciones un {v}% más largas',
     speedSkill: '+{v}% velocidad de {skill}', xpSkill: '+{v}% XP de {skill}', doubleSkill: '+{v}% recursos dobles en {skill}',
     speedGroup: '+{v}% velocidad de {group}', xpGroup: '+{v}% XP de {group}', doubleGroup: '+{v}% productos dobles de {group}',
@@ -675,7 +675,9 @@ export default {
 
   weather: {
     seasons: { spring: 'Primavera', summer: 'Verano', autumn: 'Otoño', winter: 'Invierno' },
-    seasonLine: 'Estación: {season}', eventLine: 'Evento climático', changesIn: 'El tiempo cambia en {t}', comingLine: 'Se acerca: {name}',
+    from: { weather: 'El clima', season: '{season}', night: 'La noche' }, monsters: 'Los monstruos son un {v}% más fuertes',
+    changed: 'Cambia el tiempo: <b>{name}</b>',
+    eventLine: 'Evento climático', changesIn: 'El tiempo cambia en {t}', comingLine: 'Se acerca: {name}',
     started: 'Evento climático: <b>{name}</b>',
     clear: { name: 'Cielo despejado', desc: 'Ni una nube a la vista. Un buen día para la aventura.' },
     clearNight: { name: 'Noche estrellada', desc: 'El cielo está despejado y lleno de estrellas.' },

@@ -20,6 +20,8 @@ import { companions, companionsState } from './companions.js'
 import { weekly, weeklyState } from './weekly.js'
 import { relicForge, relicForgeState } from './relicforge.js'
 import { journal, journalState } from './journal.js'
+import { weatherAt, skyTotals } from './data/weather.js'
+import { FEATURES } from './features.js'
 import { OMEN_MAP } from './data/omens.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
@@ -130,6 +132,8 @@ function replaceState(next) {
 }
 
 let towerCache = { key: '', m: null }
+// The sky changes every few hours; its modifiers are worked out once a minute
+let skyCache = { minute: -1, mods: {}, monster: 1 }
 const scaledCache = new Map()
 
 export const G = {
@@ -362,12 +366,24 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
     return v
   },
+  sky() {
+    if (!FEATURES.weatherEffects) return { mods: {}, monster: 1 }
+    const minute = Math.floor(Date.now() / 60000)
+    if (skyCache.minute !== minute) {
+      const w = weatherAt()
+      skyCache = { minute, mods: skyTotals(w), monster: w.weather.monster || 1 }
+    }
+    return skyCache
+  },
+  weatherMods(key) { return this.sky().mods[key] || 0 },
+  // Difficulty, a Blood Moon and stormy weather all make monsters stronger
+  monsterMult() { return this.diff().monster * this.omenMonsterMult() * this.sky().monster },
   diff() { return DIFFICULTIES[this.s.difficulty] || DIFFICULTIES.normal },
   room(id) { return this.s.rooms[id] || 0 },
   blessed(id) { return (this.s.blessings[id] || 0) > 0 },
@@ -808,8 +824,7 @@ export const G = {
   areaUnlocked(area) { return !area.reqQuest || this.questDone(area.reqQuest) },
   // Apply the difficulty multiplier to a monster's stats
   scaleMonster(m) {
-    // Difficulty and a Blood Moon both make monsters stronger
-    const f = this.diff().monster * this.omenMonsterMult()
+    const f = this.monsterMult()
     if (f === 1) return m
     const key = m.id + '|' + f
     let s = scaledCache.get(key)
@@ -881,7 +896,7 @@ export const G = {
       return this.scaleMonster(act.room < dg.rooms.length ? MONSTERS[dg.rooms[act.room]] : dg.boss)
     }
     if (act.kind === 'tower') {
-      const key = act.floor + '|' + this.s.difficulty + '|' + this.omenMonsterMult()
+      const key = act.floor + '|' + this.monsterMult()
       if (towerCache.key !== key) towerCache = { key, m: this.scaleMonster(towerMonster(act.floor)) }
       return towerCache.m
     }

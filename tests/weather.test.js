@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { G, newHero } from './helpers.js'
-import { WEATHERS, BLOCK_HOURS, seasonOf, isNight, weatherAt, nextWeather } from '../src/game/data/weather.js'
+import { WEATHERS, WEATHER_MAP, BLOCK_HOURS, SEASON_MODS, NIGHT_MODS, seasonOf, isNight, weatherAt, nextWeather, skyTotals } from '../src/game/data/weather.js'
 import { FEATURES } from '../src/game/features.js'
 
 const at = (y, m, d, h = 12) => new Date(y, m - 1, d, h).getTime()
@@ -33,8 +33,41 @@ describe('weather', () => {
     expect(seen.winter.has('heatwave')).toBe(false)
     expect(seen.winter.has('snow')).toBe(true)
     expect(WEATHERS.filter(w => w.event).map(w => w.id).sort()).toEqual(['blizzard', 'heatwave', 'storm'])
-    // Atmosphere only for now
-    expect(WEATHERS.every(w => !Object.keys(w.mods).length)).toBe(true)
+    // Every weather has upsides and downsides, except calm days that only help
+    expect(WEATHERS.every(w => Object.values(w.mods).some(v => v > 0))).toBe(true)
+    expect(WEATHERS.filter(w => w.event).every(w => w.monster > 1 && Object.values(w.mods).some(v => v < 0))).toBe(true)
+  })
+})
+
+describe('weather effects', () => {
+  // A moment with the given weather, found by walking the 3-hour blocks
+  const find = (id, from = at(2026, 7, 1, 13)) => {
+    for (let i = 0; i < 4000; i++) { const t = from + i * BLOCK_HOURS * 3600e3; if (weatherAt(t).weather.id === id) return t }
+    return null
+  }
+  it('add the weather, the season and the night together', () => {
+    const t = find('rain')
+    const w = weatherAt(t), tot = skyTotals(w)
+    const exp = (WEATHER_MAP.rain.mods['speed.fishing'] || 0) + (SEASON_MODS[w.season]['speed.fishing'] || 0)
+    expect(tot['speed.fishing']).toBeCloseTo(exp)
+    const night = { ...w, night: true }
+    expect(skyTotals(night).thieving).toBeCloseTo((tot.thieving || 0) + NIGHT_MODS.thieving)
+  })
+
+  it('reach the game through the modifiers and make storms more dangerous', () => {
+    newHero()
+    FEATURES.weatherEffects = true
+    const t = find('storm')
+    expect(t).not.toBe(null)
+    vi.spyOn(Date, 'now').mockReturnValue(t)
+    const base = G.diff().monster * G.omenMonsterMult()
+    expect(G.monsterMult()).toBeCloseTo(base * WEATHER_MAP.storm.monster)
+    expect(G.weatherMods('magicDmg')).toBeGreaterThan(0)
+    expect(G.mod('magicDmg')).toBeGreaterThanOrEqual(G.weatherMods('magicDmg'))
+    FEATURES.weatherEffects = false
+    vi.spyOn(Date, 'now').mockReturnValue(t + 120e3) // next minute: the cache refreshes
+    expect(G.weatherMods('magicDmg')).toBe(0)
+    expect(G.monsterMult()).toBeCloseTo(base)
   })
 })
 

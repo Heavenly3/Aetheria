@@ -22,7 +22,8 @@ import { setCompactNumbers } from './game/format.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
 import HelpTip from './components/HelpTip.vue'
-import { weatherAt, nextWeather } from './game/data/weather.js'
+import { weatherAt, nextWeather, skyMods } from './game/data/weather.js'
+import { modText } from './i18n/mods.js'
 import ActivityDock from './components/ActivityDock.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
@@ -52,10 +53,16 @@ const wxLook = computed(() => {
 })
 const wxTip = computed(() => {
   const w = wx.value, next = nextWeather()
-  const lines = [{ text: t('weather.seasonLine', { season: t(`weather.seasons.${w.season}`) }), kind: 'muted' }]
+  const lines = []
   if (w.weather.event) lines.unshift({ text: t('weather.eventLine'), kind: 'gold' })
   lines.push({ text: t('weather.changesIn', { t: fmtTime(Math.max(0, (w.endsAt - Date.now()) / 1000)) }), kind: 'muted' })
   if (next.weather.event && next.weather.id !== w.weather.id) lines.push({ text: t('weather.comingLine', { name: next.weather.name }), kind: 'gold' })
+  // What the sky does to the game right now: the weather, the season and the night
+  for (const part of skyMods(w)) {
+    lines.push({ text: t(`weather.from.${part.from}`, { season: t(`weather.seasons.${w.season}`) }), kind: 'gold' })
+    for (const [k, v] of Object.entries(part.mods)) lines.push({ text: modText(k, v), kind: v < 0 ? 'bad' : 'ok' })
+    if (part.from === 'weather' && w.weather.monster > 1) lines.push({ text: t('weather.monsters', { v: Math.round((w.weather.monster - 1) * 100) }), kind: 'bad' })
+  }
   return tip(t(`weather.${wxLook.value.key}.name`), t(`weather.${wxLook.value.key}.desc`), lines)
 })
 // Music follows what the hero is doing and the weather; settings apply as soon as they change
@@ -70,7 +77,9 @@ const toggleMute = () => { state.settings.muted = !state.settings.muted }
 // Climate events are announced when they begin
 watch(() => wx.value.block, (b, old) => {
   const w = wx.value.weather
-  if (old !== undefined && w.event) push(w.icon || 'sparkles', t('weather.started', { name: w.name }), 'info', 7000)
+  if (old === undefined) return
+  // Every change is announced, since it changes how the game plays; climate events stand out
+  push(w.icon || 'sparkles', t(w.event ? 'weather.started' : 'weather.changed', { name: w.name }), w.event ? 'rare' : 'info', 7000)
 })
 // The "?" next to the screen title explains the screen you are on
 const screenHelp = computed(() => (route.name && te(`help.screens.${String(route.name)}.body`) ? `screens.${String(route.name)}` : null))
