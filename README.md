@@ -6,7 +6,12 @@
 
 A fantasy idle RPG for the browser. Built with Vue 3, PrimeVue 4 and Vite.
 
-**[▶ Play in your browser](https://heavenly3.github.io/Aetheria/)** or **[on itch.io](https://3vynia.itch.io/aetheria)**: no download needed. It can also be installed as an app (the install button in the address bar, or "Add to Home Screen" on mobile) and keeps working offline.
+<p>
+  <a href="https://heavenly3.github.io/Aetheria/"><img alt="Play in your browser" src="https://img.shields.io/badge/%E2%96%B6%20Play%20in%20your%20browser-b8862e?style=for-the-badge"></a>
+  <a href="https://3vynia.itch.io/aetheria"><img alt="Play on itch.io" src="https://img.shields.io/badge/Play%20on%20itch.io-181726?style=for-the-badge&logo=itchdotio&logoColor=e2b65a"></a>
+</p>
+
+No download needed. It can also be installed as an app (the install button in the address bar, or "Add to Home Screen" on mobile) and keeps working offline.
 
 ![Combat in Aetheria](docs/screenshots/combat.gif)
 
