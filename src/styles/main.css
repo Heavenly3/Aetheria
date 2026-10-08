@@ -279,6 +279,7 @@ button.card:hover:not(.locked) { transform: translateY(-2px); border-color: colo
 .dock { position: fixed; left: calc(var(--sidebar-w) + 32px); right: 32px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 30; max-width: 780px; margin: 0 auto;
   transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
 .dock.show { transform: none; }
+.dock.mini { left: auto; right: 24px; max-width: none; }
 .dock-inner { display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; border-radius: 18px; background: var(--dock-bg);
   border: 1px solid rgba(226, 182, 90, 0.24); backdrop-filter: blur(20px); box-shadow: 0 22px 50px -10px var(--dock-shadow); }
 
@@ -339,6 +340,7 @@ html.embedded .title-screen .ts-foot { position: static; margin-top: 28px; }
   :root { --bottom-nav-h: 62px; }
   .view { padding-bottom: calc(170px + var(--bottom-nav-h)); }
   .dock { bottom: calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px)); left: 10px; right: 10px; }
+  .dock.mini { left: auto; right: 12px; }
   .dock-inner { padding: 10px; gap: 10px; }
   .p-toast.p-toast-top-right { top: 10px !important; right: 10px !important; left: 10px; width: auto; }
 }

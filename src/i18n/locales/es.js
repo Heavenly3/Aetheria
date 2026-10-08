@@ -224,7 +224,7 @@ export default {
   queue: { added: 'En cola: {n}× {action}', addAria: 'Añadir {name} a la cola', add: 'A la cola', howMany: '¿Cuántas veces?', count: '{n} en cola' },
 
   dock: {
-    tower: 'Torre infinita', omen: 'Prodigio', weekly: 'Jefe semanal', boss: 'Jefe', dungeon: 'Mazmorra', combat: 'Combate', queueWaiting: '{n} acciones esperando en cola',
+    tower: 'Torre infinita', omen: 'Prodigio', weekly: 'Jefe semanal', hide: 'Ocultar', show: 'Mostrar actividad', boss: 'Jefe', dungeon: 'Mazmorra', combat: 'Combate', queueWaiting: '{n} acciones esperando en cola',
     startQueue: 'Iniciar cola', viewQueue: 'Ver cola', goTo: 'Ir', queue: 'Cola', clear: 'Vaciar', queueEmpty: 'La cola está vacía.',
     chainFor: 'para {action}',
   },

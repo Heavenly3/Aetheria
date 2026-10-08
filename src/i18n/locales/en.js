@@ -224,7 +224,7 @@ export default {
   queue: { added: 'Queued: {n}× {action}', addAria: 'Add {name} to the queue', add: 'Queue', howMany: 'How many times?', count: '{n} in queue' },
 
   dock: {
-    tower: 'Endless Tower', omen: 'Omen', weekly: 'Weekly boss', boss: 'Boss', dungeon: 'Dungeon', combat: 'Combat', queueWaiting: '{n} queued actions waiting',
+    tower: 'Endless Tower', omen: 'Omen', weekly: 'Weekly boss', hide: 'Hide', show: 'Show activity', boss: 'Boss', dungeon: 'Dungeon', combat: 'Combat', queueWaiting: '{n} queued actions waiting',
     startQueue: 'Start queue', viewQueue: 'View queue', goTo: 'Go to', queue: 'Queue', clear: 'Clear', queueEmpty: 'The queue is empty.',
     chainFor: 'for {action}',
   },

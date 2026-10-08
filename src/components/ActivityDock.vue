@@ -18,6 +18,11 @@ const qpop = ref()
 const queued = computed(() => state.queue.map(q => ({ ...q, a: findAction(q.skill, q.action) })).filter(q => q.a))
 const act = computed(() => state.activity)
 
+// The dock can be folded into a small bubble; the choice is remembered on this device
+const MINI_KEY = 'aetheria-dock-mini'
+const mini = ref((() => { try { return localStorage.getItem(MINI_KEY) === '1' } catch { return false } })())
+watch(mini, v => { try { localStorage.setItem(MINI_KEY, v ? '1' : '0') } catch { /* storage unavailable */ } })
+
 const KIND = { tower: 'dock.tower', boss: 'dock.boss', dungeon: 'dock.dungeon', area: 'dock.combat', omen: 'dock.omen', weekly: 'dock.weekly' }
 const info = computed(() => {
   const a = act.value
@@ -66,13 +71,21 @@ onUnmounted(() => offs.forEach(f => f()))
 </script>
 
 <template>
-  <div class="dock" :class="{ show: !!info || state.queue.length > 0 }">
-    <div v-if="!info && state.queue.length" class="dock-inner">
+  <div class="dock" :class="{ show: !!info || state.queue.length > 0, mini }">
+    <!-- Folded: a bubble with the action, its progress as a ring and the queue size -->
+    <button v-if="mini" class="dock-bubble" :style="{ '--c': info?.color || 'var(--gold)', '--p': (info ? Math.min(1, info.progress) * 360 : 0) + 'deg' }"
+      :aria-label="$t('dock.show')" v-tooltip.left="info ? info.title : $t('dock.queueWaiting', { n: state.queue.length })" @click="mini = false">
+      <ItemTile v-if="info" :icon="info.icon" :tint="info.tint" size="sm" :tip="false" />
+      <i v-else class="pi pi-list" />
+      <b v-if="state.queue.length" class="bubble-badge">{{ state.queue.length }}</b>
+    </button>
+    <div v-else-if="!info && state.queue.length" class="dock-inner">
       <span class="grow small muted">{{ $t('dock.queueWaiting', { n: state.queue.length }) }}</span>
       <Button :label="$t('dock.startQueue')" icon="pi pi-play" size="small" @click="G.startNext()" />
       <Button icon="pi pi-list" text rounded :aria-label="$t('dock.viewQueue')" @click="qpop.toggle($event)" />
+      <Button icon="pi pi-chevron-down" text rounded severity="secondary" :aria-label="$t('dock.hide')" v-tooltip.top="$t('dock.hide')" @click="mini = true" />
     </div>
-    <div v-if="info" class="dock-inner">
+    <div v-else-if="info" class="dock-inner">
       <button class="dock-icon" @click="router.push(info.to)" :aria-label="$t('dock.goTo')">
         <ItemTile :icon="info.icon" :tint="info.tint" size="md" :tip="false" />
       </button>
@@ -85,6 +98,7 @@ onUnmounted(() => offs.forEach(f => f()))
       </div>
       <Button icon="pi pi-list" text rounded :badge="state.queue.length ? String(state.queue.length) : undefined" :aria-label="$t('dock.viewQueue')" v-tooltip.top="$t('dock.queue')" @click="qpop.toggle($event)" />
       <Button icon="pi pi-stop" severity="danger" text rounded :aria-label="$t('common.stop')" v-tooltip.top="$t('common.stop')" @click="G.stop()" />
+      <Button icon="pi pi-chevron-down" text rounded severity="secondary" :aria-label="$t('dock.hide')" v-tooltip.top="$t('dock.hide')" @click="mini = true" />
     </div>
     <Popover ref="qpop">
       <div class="qpanel">
@@ -110,4 +124,14 @@ onUnmounted(() => offs.forEach(f => f()))
 .qpanel { width: 340px; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .qrow { display: flex; align-items: center; gap: 6px; }
 .chain { color: var(--violet); font-weight: 500; }
+.dock-bubble { position: relative; display: grid; place-items: center; width: 60px; height: 60px; padding: 0; border-radius: 50%; cursor: pointer;
+  border: 0; color: var(--gold); background: var(--dock-bg); backdrop-filter: blur(20px); box-shadow: 0 14px 34px -8px var(--dock-shadow); }
+/* The ring shows how far the current action or enemy has gone */
+.dock-bubble::before { content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(var(--c) var(--p), rgba(226, 182, 90, 0.18) 0);
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 64%); mask: radial-gradient(circle, transparent 62%, #000 64%); }
+.dock-bubble:hover { transform: scale(1.06); }
+.dock-bubble { transition: transform 0.15s; }
+.bubble-badge { position: absolute; top: -2px; right: -2px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; display: grid; place-items: center;
+  background: var(--gold); color: var(--on-gold); font-size: 11px; }
 </style>
