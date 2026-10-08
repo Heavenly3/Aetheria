@@ -671,6 +671,53 @@ export default {
     blizzard: { name: 'Ventisca', desc: 'Viento aullante y una nieve tan espesa que no ves ni tu mano.' },
   },
 
+  changelog: {
+    title: "Actualizaciones",
+    intro: "Todo lo que ha cambiado en Aetheria, actualización a actualización.",
+    whatsNew: "Novedades",
+    gotIt: "Entendido",
+    seeAll: "Ver todas las actualizaciones",
+    beta: "Beta {v}",
+    live: "Ya disponible en la web · llegará en la próxima beta",
+    sections: {
+      new: "Nuevo",
+      changed: "Cambios",
+      fixed: "Arreglos",
+    },
+    entries: {
+      next: {
+        title: "El diario del héroe",
+        new: "Diario: la historia de Aetheria, contada en capítulos cortos que se desbloquean al explorar, derrotar jefes y presenciar prodigios. Reléelos cuando quieras.\nPersonajes: la gente que conoces por el camino, con nombres distintos en cada partida nueva.\nRecuerdos: cada ascensión trae un recuerdo de una vida pasada.\nActualizaciones: esta ventana después de cada actualización, y la lista completa de actualizaciones en Ajustes.",
+      },
+      b6: {
+        title: "Forja de reliquias, clima y ayuda en el juego",
+        new: "Forja de reliquias: reforja, fusiona y transforma las reliquias de los prodigios y del jefe semanal.\nUn clima que cambia cada tres horas y sigue las estaciones reales, con eventos climáticos raros.\nCada prodigio tiene ahora su propia señal misteriosa en la crónica.\nUn \"?\" junto a cada pantalla y sección explica cómo funciona, y al pasar el ratón por un objeto se ve su ficha completa.\nFiltros, búsqueda y un botón Máx. al comprar en la tienda. Al vender, el mercado aparece primero.\nLa barra de actividad se puede plegar en una burbuja pequeña, y los Ajustes pasaron al menú del héroe.",
+        changed: "Los festivales están desactivados por ahora. Se conservan las mascotas, títulos y apariencias de festival que ya tengas.",
+        fixed: "Los tooltips ya no se cierran un instante después de abrirse.",
+      },
+      b5: {
+        title: "Jefe semanal, prodigios y mascotas que crías",
+        new: "Jefe semanal: seis jefes con mecánicas propias, heridas que duran toda la semana y trofeos exclusivos.\nMascotas: incuba huevos y luego pon nombre, alimenta y acaricia a un compañero que sube de nivel y de vínculo.\nProdigios: doce fenómenos raros con mascotas, reliquias y deseos permanentes que no se consiguen en ningún otro sitio.\nTítulos junto a tu nombre, y un retrato y un color que puedes cambiar cuando quieras.\nPestañas de compra y venta en la tienda, con un aviso antes de las ventas arriesgadas.\nMás categorías en el inventario, un buscador y comparación de equipo antes de equiparlo.\nSecciones plegables en el menú lateral.",
+      },
+      b4: {
+        title: "Scroll en itch.io",
+        fixed: "Ahora se puede hacer scroll en el juego dentro de otras páginas, como itch.io.",
+      },
+      b3: {
+        title: "Sets de equipo y bestiario",
+        new: "Sets de equipo: 13 sets que dan bonificaciones al llevar varias piezas del mismo set.\nBestiario: 43 criaturas que descubrir, estudiar y dominar.\nNuevos logros para acompañarlos.",
+      },
+      b2: {
+        title: "Arreglos para móvil",
+        fixed: "La creación de personaje ahora cabe en pantallas de móvil.",
+      },
+      b1: {
+        title: "La primera beta",
+        new: "21 habilidades, combate con mazmorras, jefes y una torre infinita, la taberna, mascotas, encantamientos y Ascensión.\nTema claro, diseño para móvil, un tutorial guiado y transferencia de partidas entre dispositivos.\nProgreso sin conexión, cuatro ranuras de guardado y guardado automático.",
+      },
+    },
+  },
+
   journal: {
     tabs: {
       story: "Historia",

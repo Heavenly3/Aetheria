@@ -13,6 +13,7 @@ import { play, requestNotify } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import LanguageSelect from '../components/LanguageSelect.vue'
 import ThemeSelect from '../components/ThemeSelect.vue'
+import UpdateLog from '../components/UpdateLog.vue'
 import { encodeCode, decodeAny, makeLink, downloadFile, pickFile } from '../game/transfer.js'
 import { startTutorial } from '../game/tutorial.js'
 
@@ -135,13 +136,20 @@ function reset() {
         </div>
       </div>
     </div>
-    <div class="panel pad" style="align-self:start">
+    <div class="stack" style="align-self:start">
+    <div class="panel pad">
+      <h3 class="panel-title"><GameIcon name="quill-ink" /> {{ $t('changelog.title') }}</h3>
+      <p class="small muted" style="margin-top:0">{{ $t('changelog.intro') }}</p>
+      <UpdateLog />
+    </div>
+    <div class="panel pad">
       <h3 class="panel-title"><GameIcon name="open-book" /> {{ $t('settings.about') }}</h3>
       <p class="muted" style="margin-top:0">{{ $t('settings.aboutText') }}</p>
       <div class="kv"><span>{{ $t('settings.interface') }}</span><b>Vue 3 + PrimeVue 4</b></div>
       <div class="kv"><span>{{ $t('settings.icons') }}</span><b><a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> · CC BY 3.0</b></div>
       <div class="kv"><span>{{ $t('settings.offline') }}</span><b>{{ $t('settings.upTo', { n: +G.offlineCapHours().toFixed(1) }) }}</b></div>
       <p class="small faint">{{ $t('settings.credits') }}</p>
+    </div>
     </div>
   </div>
 </template>

@@ -671,6 +671,53 @@ export default {
     blizzard: { name: 'Blizzard', desc: 'Howling wind and snow so thick you cannot see your hand.' },
   },
 
+  changelog: {
+    title: "Updates",
+    intro: "Everything that has changed in Aetheria, update by update.",
+    whatsNew: "What's new",
+    gotIt: "Got it",
+    seeAll: "See all updates",
+    beta: "Beta {v}",
+    live: "Already on the website · coming in the next beta",
+    sections: {
+      new: "New",
+      changed: "Changed",
+      fixed: "Fixed",
+    },
+    entries: {
+      next: {
+        title: "The hero's journal",
+        new: "Journal: the story of Aetheria, told in short chapters that unlock as you explore, defeat bosses and witness omens. Read them again whenever you like.\nCharacters: the people you meet along the way, with a different cast of names in every new game.\nMemories: each ascension brings back a memory of a past life.\nUpdates: this window after each update, and the full list of updates in Settings.",
+      },
+      b6: {
+        title: "Relic forge, weather and in-game help",
+        new: "Relic forge: reforge, fuse and reshape the relics you get from omens and the weekly boss.\nWeather that changes every three hours and follows the real seasons, with rare climate events.\nEvery omen now has its own cryptic sign in the chronicle.\nA \"?\" next to every screen and section explains how it works, and hovering an item shows its full card.\nFilters, search and a Max button when buying in the shop. The market comes first when selling.\nThe activity bar can fold into a small bubble, and Settings moved into the hero menu.",
+        changed: "Festivals are switched off for now. Festival pets, titles and cosmetics you own are kept.",
+        fixed: "Tooltips no longer close a moment after they open.",
+      },
+      b5: {
+        title: "Weekly boss, omens and pets you raise",
+        new: "Weekly boss: six bosses with their own mechanics, wounds that last all week and exclusive trophies.\nPets: hatch eggs, then name, feed and pet a companion that grows in level and bond.\nOmens: twelve rare phenomena with pets, relics and permanent wishes found nowhere else.\nTitles next to your name, and a portrait and colour you can change at any time.\nBuy and sell tabs in the shop, with a warning before risky sales.\nMore inventory categories, a search box and gear comparison before you equip.\nCollapsible sections in the side menu.",
+      },
+      b4: {
+        title: "Scrolling on itch.io",
+        fixed: "The game can now be scrolled inside other pages, such as itch.io.",
+      },
+      b3: {
+        title: "Equipment sets and bestiary",
+        new: "Equipment sets: 13 sets that grant bonuses when you wear several pieces of the same set.\nBestiary: 43 creatures to discover, study and master.\nNew achievements to go with them.",
+      },
+      b2: {
+        title: "Phone fixes",
+        fixed: "Character creation now fits phone screens.",
+      },
+      b1: {
+        title: "The first beta",
+        new: "21 skills, combat with dungeons, bosses and an endless tower, the tavern, pets, enchanting and Ascension.\nA light theme, a phone layout, a guided tutorial and save transfer between devices.\nOffline progress, four save slots and autosave.",
+      },
+    },
+  },
+
   journal: {
     tabs: {
       story: "Story",
