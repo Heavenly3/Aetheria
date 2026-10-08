@@ -4,6 +4,7 @@ import { CHAPTERS, ACTS, CHARACTERS, RUMORS, rumorsFor, rollNames, NAMED } from 
 import { seeded } from '../src/game/systems.js'
 import { i18n } from '../src/i18n/index.js'
 import { OMENS } from '../src/game/data/omens.js'
+import { BESTIARY } from '../src/game/data/bestiary.js'
 
 describe('journal', () => {
   it('rolls new names for every save and keeps them', () => {
@@ -72,6 +73,7 @@ describe('journal', () => {
     }
     for (const p of CHARACTERS) expect(CHAPTERS.some(c => c.id === p.met)).toBe(true)
     for (const o of OMENS) expect(te(`journal.omenNotes.${o.id}`, 'en')).toBe(true)
+    for (const g of BESTIARY) for (const m of g.monsters) expect(te(`bestiary.lore.${m.id}`, 'en')).toBe(true)
   })
 })
 

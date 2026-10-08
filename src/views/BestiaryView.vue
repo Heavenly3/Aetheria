@@ -88,6 +88,10 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
             </span>
           </div>
 
+          <!-- Studying a creature reveals its place in the story -->
+          <p v-if="G.knows(m, 'studied')" class="lore">{{ $t(`bestiary.lore.${m.id}`, G.journalNames()) }}</p>
+          <p v-else-if="G.knowledge(m)" class="lore faint">{{ $t('bestiary.loreLocked') }}</p>
+
           <div v-if="nextTier(m)" class="next">
             <div class="row small faint" style="margin-bottom:4px">
               <span class="grow">{{ $t('bestiary.next', { tier: $t(`bestiary.tiers.${nextTier(m).tier}`) }) }}</span>
@@ -116,6 +120,7 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
 .beast.k-hunted { border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
 .hidden :deep(svg) { filter: brightness(0.25); }
 .stats { gap: 6px 14px; }
+.lore { margin: 0; font-size: 13px; font-style: italic; color: var(--ink-2); line-height: 1.5; }
 .drops { display: flex; flex-wrap: wrap; gap: 6px; }
 .drop { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
 .drop small { font-size: 10.5px; color: var(--muted); }
