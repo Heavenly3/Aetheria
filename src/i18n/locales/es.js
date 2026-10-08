@@ -719,6 +719,21 @@ export default {
   },
 
   journal: {
+    noteBy: "Nota de {astrologer}",
+    omenNotes: {
+      stars: "Las lluvias de estrellas son aether que vuelve a casa. Los libros antiguos dicen que la Corona se forjó justo con esta luz.",
+      goldrush: "Si me preguntas, no es un prodigio de verdad. Pero el oro siempre aparece cerca de los viejos caminos reales. Curioso.",
+      harvest: "La lluvia huele a pan porque cae de donde está el Fragmento de la Savia. Incluso rota, la Corona aún nos alimenta.",
+      chest: "Siempre medio enterrado, siempre abandonado con prisa. He encontrado tres con el mismo sello real, raspado.",
+      aurora: "Fuego verde sobre los picos. En el Observatorio lo llamamos el cielo soltando el aire. Algo allí arriba está tranquilo.",
+      merchant: "La Caravana Velada no deja huellas detrás. Ninguna. Lo comprobé. Viene de un sitio al que no llega ningún camino.",
+      gilded_goblin: "¿Viste lo que le cuelga del cuello? Un cristal que brilla dorado. Ese goblin lleva puesto un trozo de historia.",
+      blood_moon: "La Orden dice que la luna se vuelve roja cuando el Ojo está enfadado. Yo creo que no es enfado. Creo que es dolor.",
+      eclipse: "Por un momento el sol se apaga y la magia arde más fuerte. Como si alguien bajara las luces para vernos mejor.",
+      rift: "Cada grieta se abre un poco más cerca de la Grieta del Vacío que la anterior. Tengo los mapas que lo prueban. Nadie quiere verlos.",
+      comet: "Deseos concedidos para siempre. Lo único que el cielo da sin que se lo pidan. ¿Por qué a nosotros? ¿Por qué ahora?",
+      eye: "Nos miró. No al reino. A nosotros. Voy a pasarme el resto de mi vida escribiendo sobre esto.",
+    },
     keeper: {
       says: "{keeper}, tras la barra",
       ask: "¿Alguna novedad?",

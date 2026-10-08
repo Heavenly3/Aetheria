@@ -157,6 +157,8 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
             </div>
           </div>
           <p class="small muted" style="margin:10px 0 0">{{ o.desc }}</p>
+          <!-- Once the astrologer is met, she leaves a note on every omen witnessed -->
+          <p v-if="G.chapterUnlocked('sky_watcher')" class="omen-note"><span class="faint">{{ $t('journal.noteBy', G.journalNames()) }}:</span> “{{ $t(`journal.omenNotes.${o.id}`) }}”</p>
           <div v-if="petsOf(o.id).length" class="row wrap" style="gap:6px;margin-top:10px">
             <span v-for="p in petsOf(o.id)" :key="p.id" v-tooltip.top="G.hasPet(p.id) ? p.name : $t('omens.secretPet')" :class="{ dim: !G.hasPet(p.id) }">
               <ItemTile :icon="p.icon" :tint="G.hasPet(p.id) ? p.tint : '#2a2838'" size="xs" :tip="false" />
@@ -197,6 +199,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
 .omen-banner { margin-bottom: 8px; }
 .omen-bar { margin-bottom: 18px; }
 .rarity-tag { font-size: 11px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; }
+.omen-note { margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 13px; font-style: italic; color: var(--ink-2); line-height: 1.5; }
 .lore { margin: -6px 0 12px; color: var(--muted); font-style: italic; max-width: 70ch; }
 .hunt { margin-bottom: 18px; }
 .hunt-name { font-family: var(--font-display); font-size: 19px; font-weight: 400; }

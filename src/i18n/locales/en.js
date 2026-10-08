@@ -719,6 +719,21 @@ export default {
   },
 
   journal: {
+    noteBy: "{astrologer}'s note",
+    omenNotes: {
+      stars: "Starfalls are aether coming home. The old books say the Crown was forged from exactly this kind of light.",
+      goldrush: "Not really an omen, if you ask me. But the gold always turns up near the old royal roads. Interesting.",
+      harvest: "The rain smells of bread because it falls from where the Shard of Sap is. Even broken, the Crown still feeds us.",
+      chest: "Always half buried, always left in a hurry. I have found three with the same royal seal, scratched off.",
+      aurora: "Green fire over the peaks. In the Observatory we call it the sky breathing out. Something up there is relaxed.",
+      merchant: "The Veiled Caravan has no tracks behind it. None. I checked. It comes from somewhere a road cannot reach.",
+      gilded_goblin: "Did you see what hangs around its neck? Glass that glows gold. That goblin is wearing a piece of history.",
+      blood_moon: "The moon turns red when the Eye is angry, the Order says. I think it is not anger. I think it is pain.",
+      eclipse: "For a moment the sun goes out and magic burns brighter. As if someone dimmed the lights to see us better.",
+      rift: "Every rift opens a little closer to the Void Rift than the last. I have the maps to prove it. Nobody wants to see them.",
+      comet: "Wishes granted, forever. The only thing the sky gives without being asked. Why us? Why now?",
+      eye: "It looked at us. Not at the realm. At us. I will be writing about this for the rest of my life.",
+    },
     keeper: {
       says: "{keeper}, behind the bar",
       ask: "Any news?",
