@@ -5,6 +5,7 @@ import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
+import Slider from 'primevue/slider'
 import { useConfirm } from 'primevue/useconfirm'
 import { G, state } from '../game/engine.js'
 import { exitToTitle } from '../game/loop.js'
@@ -26,7 +27,13 @@ async function toggleNotify(v) {
   if (v && !(await requestNotify())) { state.settings.notify = false; G.toast('cross-mark', 'settings.notifyBlocked', {}, 'warn'); return }
   state.settings.notify = v
 }
-function toggleSound(v) { state.settings.sound = v; if (v) play('coin') }
+// Each sound channel has an on/off switch and its own volume
+const channels = [
+  { on: 'music', vol: 'musicVol', label: 'settings.music', hint: 'settings.musicHint' },
+  { on: 'ambience', vol: 'ambienceVol', label: 'settings.ambience', hint: 'settings.ambienceHint' },
+  { on: 'sound', vol: 'sfxVol', label: 'settings.sound', hint: 'settings.soundHint' },
+]
+function setChannel(c, v) { state.settings[c.on] = v; if (v && c.on === 'sound') play('coin') }
 
 function rename() {
   const v = name.value.trim().slice(0, 24)
@@ -105,10 +112,28 @@ function reset() {
         <div class="pref"><span class="grow">{{ $t('settings.language') }}</span><LanguageSelect input-id="settings-language" /></div>
         <div class="pref"><span class="grow">{{ $t('settings.theme') }}</span><ThemeSelect /></div>
         <label class="pref" for="pref-chain"><span class="grow">{{ $t('settings.autoChain') }}<span class="small faint" style="display:block">{{ $t('settings.autoChainHint') }}</span></span><ToggleSwitch v-model="state.settings.autoChain" inputId="pref-chain" /></label>
-        <label class="pref" for="pref-sound"><span class="grow">{{ $t('settings.sound') }}</span><ToggleSwitch inputId="pref-sound" :modelValue="state.settings.sound" @update:modelValue="toggleSound" /></label>
         <label class="pref" for="pref-notify"><span class="grow">{{ $t('settings.notify') }}</span><ToggleSwitch inputId="pref-notify" :modelValue="state.settings.notify" @update:modelValue="toggleNotify" /></label>
+        <label class="pref" for="pref-quiet"><span class="grow">{{ $t('settings.quietToasts') }}<span class="small faint" style="display:block">{{ $t('settings.quietToastsHint') }}</span></span><ToggleSwitch v-model="state.settings.quietToasts" inputId="pref-quiet" /></label>
+        <label class="pref" for="pref-numbers"><span class="grow">{{ $t('settings.compactNumbers') }}<span class="small faint" style="display:block">{{ $t('settings.compactNumbersHint') }}</span></span><ToggleSwitch v-model="state.settings.compactNumbers" inputId="pref-numbers" /></label>
+        <label class="pref" for="pref-motion"><span class="grow">{{ $t('settings.reduceMotion') }}<span class="small faint" style="display:block">{{ $t('settings.reduceMotionHint') }}</span></span><ToggleSwitch v-model="state.settings.reduceMotion" inputId="pref-motion" /></label>
         <div class="pref"><span class="grow">{{ $t('settings.tutorial') }}<span class="small faint" style="display:block">{{ $t('settings.tutorialHint') }}</span></span>
           <Button :label="$t('settings.tutorialRestart')" icon="pi pi-replay" size="small" severity="secondary" outlined :disabled="!state.tutorial.done" @click="restartTutorial" /></div>
+      </div>
+      <div class="panel pad">
+        <h3 class="panel-title"><i class="pi pi-volume-up" style="color:var(--gold)" /> {{ $t('settings.audio') }}</h3>
+        <div class="vol">
+          <span class="grow">{{ $t('settings.masterVol') }}</span>
+          <Slider v-model="state.settings.masterVol" :min="0" :max="100" :disabled="state.settings.muted" class="vol-slider" :aria-label="$t('settings.masterVol')" />
+          <span class="tnum small muted vol-n">{{ state.settings.masterVol }}</span>
+        </div>
+        <div v-for="c in channels" :key="c.on" class="vol">
+          <ToggleSwitch :inputId="'pref-' + c.on" :modelValue="state.settings[c.on]" @update:modelValue="v => setChannel(c, v)" />
+          <label class="grow" :for="'pref-' + c.on">{{ $t(c.label) }}<span class="small faint" style="display:block">{{ $t(c.hint) }}</span></label>
+          <Slider v-model="state.settings[c.vol]" :min="0" :max="100" :disabled="!state.settings[c.on] || state.settings.muted" class="vol-slider" :aria-label="$t(c.label)" />
+          <span class="tnum small muted vol-n">{{ state.settings[c.vol] }}</span>
+        </div>
+        <label class="pref" for="pref-hidden"><span class="grow">{{ $t('settings.muteHidden') }}<span class="small faint" style="display:block">{{ $t('settings.muteHiddenHint') }}</span></span><ToggleSwitch v-model="state.settings.muteHidden" inputId="pref-hidden" /></label>
+        <label class="pref" for="pref-muted"><span class="grow">{{ $t('settings.muteAll') }}</span><ToggleSwitch v-model="state.settings.muted" inputId="pref-muted" /></label>
       </div>
       <div class="panel pad">
         <h3 class="panel-title"><GameIcon name="locked-chest" /> {{ $t('settings.backup') }}</h3>
@@ -156,7 +181,12 @@ function reset() {
 
 <style scoped>
 .pref { display: flex; align-items: center; gap: 12px; padding: 8px 0; cursor: pointer; }
+.vol { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+.vol label { cursor: pointer; }
+.vol-slider { width: 130px; flex-shrink: 0; }
+.vol-n { width: 26px; text-align: end; }
 .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .backup-grid .span-2 { grid-column: 1 / -1; }
+@media (max-width: 520px) { .vol { flex-wrap: wrap; } .vol > .grow { flex: 1 1 calc(100% - 64px); } .vol-slider { width: auto; flex: 1 1 calc(100% - 60px); margin: 4px 8px 6px; } }
 @media (max-width: 420px) { .pref { flex-wrap: wrap; } .backup-grid { grid-template-columns: 1fr; } }
 </style>

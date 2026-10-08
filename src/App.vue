@@ -17,6 +17,8 @@ import { ITEMS } from './game/data/items.js'
 import { ROLES, DIFFICULTIES } from './game/data/character.js'
 import { fmt, fmtTime, fmtClock } from './game/format.js'
 import { play, notify } from './game/sound.js'
+import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor } from './game/music.js'
+import { setCompactNumbers } from './game/format.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
 import HelpTip from './components/HelpTip.vue'
@@ -56,6 +58,15 @@ const wxTip = computed(() => {
   if (next.weather.event && next.weather.id !== w.weather.id) lines.push({ text: t('weather.comingLine', { name: next.weather.name }), kind: 'gold' })
   return tip(t(`weather.${wxLook.value.key}.name`), t(`weather.${wxLook.value.key}.desc`), lines)
 })
+// Music follows what the hero is doing and the weather; settings apply as soon as they change
+watch(() => ({ mood: moodFor(), weather: wx.value.weather.id, night: wx.value.night }), setScene, { immediate: true, deep: true })
+watch(() => ({ ...state.settings }), st => {
+  applyAudioSettings()
+  setCompactNumbers(st.compactNumbers)
+  document.documentElement.dataset.motion = st.reduceMotion ? 'reduce' : ''
+}, { immediate: true, deep: true })
+watch(() => session.inGame, on => (on ? startAmbient() : stopAmbient()), { immediate: true })
+const toggleMute = () => { state.settings.muted = !state.settings.muted }
 // Climate events are announced when they begin
 watch(() => wx.value.block, (b, old) => {
   const w = wx.value.weather
@@ -89,9 +100,9 @@ const push = (icon, detail, kind = 'info', life = 3500) => toast.add({ severity:
 
 onMounted(() => {
   G.on('toast', e => push(e.icon, tm(e.msg), e.kind))
-  G.on('levelup', d => { play('level'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
+  G.on('levelup', d => { if (state.settings.quietToasts) return; play('level'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
   G.on('herolevel', l => { play('quest'); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000); notify(t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')) })
-  G.on('mastery', d => push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
+  G.on('mastery', d => state.settings.quietToasts || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
   G.on('rare', d => { play('rare'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
   G.on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
   G.on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
@@ -168,6 +179,9 @@ function startAdventure() {
         <header class="topbar">
           <div class="topbar-title">{{ title }}<HelpTip v-if="screenHelp" :k="screenHelp" :params="{ skill: title }" class="screen-help" /></div>
           <div class="chips">
+            <button class="chip mute-chip" :aria-label="$t(state.settings.muted ? 'settings.unmute' : 'settings.mute')" v-tooltip.bottom="$t(state.settings.muted ? 'settings.unmute' : 'settings.mute')" @click="toggleMute">
+              <i class="pi" :class="state.settings.muted ? 'pi-volume-off' : 'pi-volume-up'" />
+            </button>
             <span class="chip wx-chip" :style="{ '--c': wxLook.tint }" v-tooltip.bottom="wxTip" :aria-label="$t(`weather.${wxLook.key}.name`)">
               <GameIcon v-if="wxLook.icon" :name="wxLook.icon" :size="15" /><i v-else :class="wxLook.pi" />
             </span>
@@ -316,6 +330,8 @@ function startAdventure() {
 .news-title { font-family: var(--font-display); font-size: 19px; letter-spacing: 0.03em; }
 .wx-chip .gi, .wx-chip .pi { color: var(--c); }
 .wx-chip .pi { font-size: 14px; }
+.mute-chip { cursor: pointer; font: inherit; color: var(--muted); }
+.mute-chip:hover { color: var(--ink); }
 .pal-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 45%, transparent) !important; }
 .pal-chip .gi { color: var(--c); }
 .pal-chip.alert { animation: palNudge 2.4s ease-in-out infinite; }

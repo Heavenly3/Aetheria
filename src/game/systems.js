@@ -42,7 +42,11 @@ export const extraState = () => ({
   grace: 0,
   event: null,
   history: [],
-  settings: { sound: true, notify: false, autoChain: true },
+  // Volumes are 0-100; muteHidden silences the game while its tab is in the background
+  settings: {
+    sound: true, notify: false, autoChain: true, music: true, ambience: true,
+    masterVol: 80, musicVol: 45, ambienceVol: 50, sfxVol: 70, muteHidden: true, reduceMotion: false, compactNumbers: true, quietToasts: false, muted: false,
+  },
   dungeonsBy: {},
 })
 

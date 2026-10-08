@@ -125,6 +125,8 @@ a { color: var(--gold); }
 h1, h2, h3 { text-wrap: balance; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+/* The same, chosen in Settings */
+[data-motion="reduce"] *, [data-motion="reduce"] *::before, [data-motion="reduce"] *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 
 /* Fondo: bruma arcana + grano */
 .bg-aura { position: fixed; inset: 0; z-index: 0; pointer-events: none;

@@ -1,11 +1,15 @@
 import { t, intlLocale } from '../i18n/index.js'
 
+// Players can turn the short forms off in Settings and see every digit
+let compact = true
+export const setCompactNumbers = on => { compact = on !== false }
+
 // Compact number formatting that follows the active language (1.2K, 3.4M, ...)
 export function fmt(n) {
   n = Math.floor(n || 0)
   const a = Math.abs(n)
   const loc = intlLocale()
-  if (a < 10_000) return n.toLocaleString(loc)
+  if (a < 10_000 || !compact) return n.toLocaleString(loc)
   const fixed = (v, d) => Number(v.toFixed(d)).toLocaleString(loc)
   if (a < 1e6) return fixed(n / 1e3, a < 1e5 ? 1 : 0) + 'K'
   if (a < 1e9) return fixed(n / 1e6, 2) + 'M'

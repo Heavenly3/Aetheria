@@ -1,7 +1,7 @@
 import { state } from './engine.js'
+import { audioContext, sfxOut } from './music.js'
 
-// Sound effects synthesised with WebAudio (no audio files needed)
-let ctx = null
+// Sound effects synthesised with WebAudio (no audio files needed); they share the music's context
 const NOTES = {
   level: [[523, 0], [659, 0.09], [784, 0.18], [1047, 0.27]],
   rare: [[1175, 0], [1568, 0.07], [2093, 0.14]],
@@ -14,7 +14,8 @@ const NOTES = {
 export function play(kind, volume = 0.12) {
   if (!state.settings?.sound) return
   try {
-    ctx ||= new (window.AudioContext || window.webkitAudioContext)()
+    const ctx = audioContext()
+    if (!ctx) return
     if (ctx.state === 'suspended') ctx.resume()
     const now = ctx.currentTime
     ;(NOTES[kind] || NOTES.coin).forEach(([freq, at]) => {
@@ -25,7 +26,7 @@ export function play(kind, volume = 0.12) {
       gain.gain.setValueAtTime(0.0001, now + at)
       gain.gain.exponentialRampToValueAtTime(volume, now + at + 0.02)
       gain.gain.exponentialRampToValueAtTime(0.0001, now + at + 0.32)
-      osc.connect(gain).connect(ctx.destination)
+      osc.connect(gain).connect(sfxOut())
       osc.start(now + at)
       osc.stop(now + at + 0.35)
     })
