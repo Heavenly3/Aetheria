@@ -3,12 +3,17 @@ import { ref, reactive, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import InputNumber from 'primevue/inputnumber'
+import InputText from 'primevue/inputtext'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
+import Select from 'primevue/select'
 import Button from 'primevue/button'
 import SelectButton from 'primevue/selectbutton'
 import { useConfirm } from 'primevue/useconfirm'
 import { G, state } from '../game/engine.js'
 import { SHOP } from '../game/data/progression.js'
-import { ITEMS } from '../game/data/items.js'
+import { ITEMS, CROPS } from '../game/data/items.js'
+import { SKILLS } from '../game/data/skills.js'
 import { itemCategory } from '../game/data/categories.js'
 import { fmt } from '../game/format.js'
 import { play } from '../game/sound.js'
@@ -28,6 +33,37 @@ const tabs = computed(() => [{ value: 'buy', label: t('shop.buyTab'), icon: 'pi 
 /* ---------- buying ---------- */
 const qty = reactive({})
 const q = id => qty[id] || 1
+const SHOP_ICON = { supplies: 'knapsack', seeds: 'plant-seed', runes: 'rune-stone', tools: 'war-pick', gear: 'crossed-swords' }
+const buyCat = ref('all')
+const buySearch = ref('')
+const onlyAfford = ref(false)
+const onlyUsable = ref(false)
+const buySort = ref('shop')
+const sorts = computed(() => ['shop', 'cheap', 'dear', 'name'].map(value => ({ value, label: t(`shop.sort.${value}`) })))
+const CROP_LVL = Object.fromEntries(CROPS.map(c => [c.id + '_seed', c.lvl]))
+// What still stops the hero from using an item: missing levels for gear and tools, Farming for seeds
+function missing(id) {
+  const it = ITEMS[id]
+  if (CROP_LVL[id] && G.level('farming') < CROP_LVL[id]) return `${SKILLS.farming.name} ${CROP_LVL[id]}`
+  const miss = Object.entries(it.req || {}).filter(([sk, l]) => G.level(sk) < l)
+  return miss.length ? miss.map(([sk, l]) => `${SKILLS[sk].name} ${l}`).join(', ') : null
+}
+const offers = computed(() => SHOP.flatMap(c => c.items.map(([id, price], i) => ({ id, price, cat: c.cat, order: i }))))
+const catCount = cat => offers.value.filter(o => cat === 'all' || o.cat === cat).length
+const buyShown = computed(() => {
+  const qs = buySearch.value.trim().toLowerCase()
+  const list = offers.value.filter(o => (buyCat.value === 'all' || o.cat === buyCat.value)
+    && (!qs || ITEMS[o.id].name.toLowerCase().includes(qs))
+    && (!onlyAfford.value || state.gold >= o.price)
+    && (!onlyUsable.value || !missing(o.id)))
+  const by = { cheap: (a, b) => a.price - b.price, dear: (a, b) => b.price - a.price, name: (a, b) => ITEMS[a.id].name.localeCompare(ITEMS[b.id].name) }[buySort.value]
+  return by ? [...list].sort(by) : list
+})
+// Grouped by shop section unless sorted by price or name
+const buySections = computed(() => (buySort.value === 'shop'
+  ? SHOP.map(c => ({ cat: c.cat, items: buyShown.value.filter(o => o.cat === c.cat) })).filter(s => s.items.length)
+  : [{ cat: null, items: buyShown.value }]))
+const maxAfford = price => Math.max(1, Math.min(9999, Math.floor(state.gold / price)))
 function buy(id, price) {
   const n = q(id)
   if (G.buy(id, n, price)) { play('coin'); G.toast(ITEMS[id].icon, 'shop.bought', { n, item: '@item:' + id }, 'success') }
@@ -100,20 +136,46 @@ function sellJunk() {
 
     <!-- Buy -->
     <template v-if="tab === 'buy'">
-      <template v-for="c in SHOP" :key="c.cat">
-        <div class="section-title">{{ $t('shop.cats.' + c.cat) }}</div>
-        <div class="grid-cards">
-          <div v-for="[id, price] in c.items" :key="id" class="card shop-item">
+      <div class="panel pad buy-filters">
+        <div class="groups">
+          <button class="group-btn" :class="{ on: buyCat === 'all' }" @click="buyCat = 'all'">
+            <GameIcon name="shop" :size="15" /> {{ $t('inventory.groups.all') }} <small class="tnum">{{ catCount('all') }}</small>
+          </button>
+          <button v-for="c in SHOP" :key="c.cat" class="group-btn" :class="{ on: buyCat === c.cat }" @click="buyCat = c.cat">
+            <GameIcon :name="SHOP_ICON[c.cat]" :size="15" /> {{ $t('shop.cats.' + c.cat) }} <small class="tnum">{{ catCount(c.cat) }}</small>
+          </button>
+        </div>
+        <div class="row wrap" style="gap:8px">
+          <IconField class="grow" style="min-width:200px">
+            <InputIcon class="pi pi-search" />
+            <InputText v-model="buySearch" :placeholder="$t('inventory.search')" id="shop-search" fluid />
+          </IconField>
+          <button class="chip-btn" :class="{ on: onlyAfford }" :aria-pressed="onlyAfford" @click="onlyAfford = !onlyAfford"><i class="pi pi-wallet" /> {{ $t('shop.filter.afford') }}</button>
+          <button class="chip-btn" :class="{ on: onlyUsable }" :aria-pressed="onlyUsable" @click="onlyUsable = !onlyUsable"><i class="pi pi-check" /> {{ $t('shop.filter.usable') }}</button>
+          <Select v-model="buySort" :options="sorts" optionLabel="label" optionValue="value" size="small" :aria-label="$t('shop.sort.label')" class="sort-select" />
+        </div>
+      </div>
+
+      <div v-if="!buyShown.length" class="panel empty-state">
+        <GameIcon name="shop" :size="46" />
+        <div>{{ $t('shop.noMatch') }}</div>
+      </div>
+      <template v-for="s in buySections" :key="s.cat || 'all'">
+        <div v-if="s.cat" class="section-title">{{ $t('shop.cats.' + s.cat) }}</div>
+        <div class="grid-cards" :style="s.cat ? '' : 'margin-top:18px'">
+          <div v-for="o in s.items" :key="o.id" class="card shop-item" :class="{ poor: state.gold < o.price }">
             <div class="row">
-              <ItemTile :item="id" size="md" />
-              <div class="grow">
-                <div class="card-name">{{ ITEMS[id].name }}</div>
-                <div class="card-sub">{{ $t('inventory.goldAmount', { n: fmt(price) }) }} · {{ $t('shop.have', { n: fmt(G.qty(id)) }) }}</div>
+              <ItemTile :item="o.id" size="md" />
+              <div class="grow" style="min-width:0">
+                <div class="card-name">{{ ITEMS[o.id].name }}</div>
+                <div class="card-sub"><span class="gold-text">{{ $t('inventory.goldAmount', { n: fmt(o.price) }) }}</span> · {{ $t('shop.have', { n: fmt(G.qty(o.id)) }) }}</div>
+                <div v-if="missing(o.id)" class="small bad-text"><i class="pi pi-lock" style="font-size:11px" /> {{ $t('shop.needs', { req: missing(o.id) }) }}</div>
               </div>
             </div>
-            <div class="row" style="margin-top:12px">
-              <InputNumber :modelValue="q(id)" @update:modelValue="v => (qty[id] = v || 1)" :min="1" :max="9999" size="small" inputClass="shop-qty" class="grow" :inputId="'qty-' + id" />
-              <Button :label="fmt(price * q(id))" icon="pi pi-shopping-cart" size="small" :disabled="state.gold < price * q(id)" @click="buy(id, price)" />
+            <div class="row" style="margin-top:12px;gap:6px">
+              <InputNumber :modelValue="q(o.id)" @update:modelValue="v => (qty[o.id] = v || 1)" :min="1" :max="9999" size="small" inputClass="shop-qty" class="grow" :inputId="'qty-' + o.id" />
+              <Button :label="$t('shop.max')" size="small" text :disabled="state.gold < o.price" v-tooltip.top="$t('shop.maxTip')" @click="qty[o.id] = maxAfford(o.price)" />
+              <Button :label="fmt(o.price * q(o.id))" icon="pi pi-shopping-cart" size="small" :disabled="state.gold < o.price * q(o.id)" @click="buy(o.id, o.price)" />
             </div>
           </div>
         </div>
@@ -124,24 +186,24 @@ function sellJunk() {
     <div v-else class="sell-layout">
       <div class="stack" style="gap:18px">
         <div class="panel pad">
+          <h3 class="panel-title"><i class="pi pi-chart-line gold-text" /> {{ $t('shop.marketTitle') }} <HelpTip k="sections.market" /></h3>
+          <p class="small muted" style="margin-top:0">{{ $t('shop.marketIntro') }}</p>
+          <div class="market">
+            <button v-for="[id, m] in market" :key="id" class="mrow" :class="{ owned: G.qty(id) > 0 }" :disabled="!G.qty(id)" @click="selected = id">
+              <ItemTile :item="id" size="sm" />
+              <span class="grow small">{{ ITEMS[id].name }}</span>
+              <span class="tag" :class="m > 1 ? 'ok' : 'bad'"><i :class="m > 1 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'" style="font-size:10px" /> ×{{ m }}</span>
+              <b class="small tnum gold-text">{{ fmt(G.sellPrice(id)) }}</b>
+            </button>
+          </div>
+        </div>
+        <div class="panel pad">
           <InventoryGrid v-model="selected" mode="sell" @filtered="v => (shown = v)">
             <template #tools>
               <Button :label="$t('inventory.sellJunk')" icon="pi pi-trash" severity="secondary" size="small" outlined @click="sellJunk" />
               <Button :label="$t('inventory.sellShown', { gold: fmt(sellableValue) })" icon="pi pi-wallet" severity="danger" size="small" outlined :disabled="!sellable.length" @click="sellShown" />
             </template>
           </InventoryGrid>
-        </div>
-        <div class="panel pad">
-          <h3 class="panel-title"><i class="pi pi-chart-line gold-text" /> {{ $t('shop.marketTitle') }} <HelpTip k="sections.market" /></h3>
-          <p class="small muted" style="margin-top:0">{{ $t('shop.marketIntro') }}</p>
-          <div class="market">
-            <button v-for="[id, m] in market" :key="id" class="mrow" :class="{ owned: G.qty(id) > 0 }" :disabled="!G.qty(id)" @click="selected = id">
-              <ItemTile :item="id" size="sm" :tip="false" />
-              <span class="grow small">{{ ITEMS[id].name }}</span>
-              <span class="tag" :class="m > 1 ? 'ok' : 'bad'"><i :class="m > 1 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'" style="font-size:10px" /> ×{{ m }}</span>
-              <b class="small tnum gold-text">{{ fmt(G.sellPrice(id)) }}</b>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -182,6 +244,10 @@ function sellJunk() {
 
 <style scoped>
 .shop-head { gap: 14px; margin-bottom: 18px; align-items: center; }
+.buy-filters { margin-bottom: 4px; }
+.buy-filters .groups { margin-bottom: 12px; }
+.sort-select { min-width: 170px; }
+.shop-item.poor { opacity: 0.7; }
 :deep(.shop-qty) { width: 100%; }
 :deep(.qty-input) { width: 100%; text-align: center; }
 .sell-layout { display: grid; grid-template-columns: 1fr 340px; gap: 18px; align-items: start; }

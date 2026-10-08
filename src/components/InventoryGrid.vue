@@ -94,18 +94,6 @@ const sections = computed(() => {
 </template>
 
 <style scoped>
-.groups { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.group-btn { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--tint-1);
-  color: var(--ink-2); font: inherit; font-weight: 700; font-size: 13.5px; cursor: pointer; }
-.group-btn .gi { color: var(--gold); }
-.group-btn small { color: var(--faint); font-weight: 600; }
-.group-btn.on { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); color: var(--ink); }
-.group-btn:disabled { opacity: 0.4; cursor: default; }
-.subcats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-.chip-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--muted);
-  font: inherit; font-size: 12.5px; cursor: pointer; }
-.chip-btn.on { color: var(--ink); border-color: var(--line-hi); background: var(--tint-2); }
-.chip-btn small { color: var(--faint); }
 .cat-sec + .cat-sec { margin-top: 16px; }
 .cat-title { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 .cat-title .gi { color: var(--gold); }
