@@ -652,6 +652,22 @@ export default {
     item: { always: 'Siempre cae', chance: 'Probabilidad: {v}%', set: 'Parte del conjunto {set}', value: 'Se vende por {gold} de oro', owned: 'Tienes {n}' },
   },
 
+  weather: {
+    seasons: { spring: 'Primavera', summer: 'Verano', autumn: 'Otoño', winter: 'Invierno' },
+    seasonLine: 'Estación: {season}', eventLine: 'Evento climático', changesIn: 'El tiempo cambia en {t}', comingLine: 'Se acerca: {name}',
+    started: 'Evento climático: <b>{name}</b>',
+    clear: { name: 'Cielo despejado', desc: 'Ni una nube a la vista. Un buen día para la aventura.' },
+    clearNight: { name: 'Noche estrellada', desc: 'El cielo está despejado y lleno de estrellas.' },
+    cloudy: { name: 'Nublado', desc: 'Nubes grises avanzan despacio sobre el reino.' },
+    rain: { name: 'Lluvia', desc: 'Una lluvia constante cae sobre campos y bosques.' },
+    fog: { name: 'Niebla', desc: 'Una bruma espesa oculta los caminos. Los sonidos llegan extraños.' },
+    wind: { name: 'Viento fuerte', desc: 'Las ráfagas doblan los árboles y silban por los valles.' },
+    snow: { name: 'Nevada', desc: 'Una nieve suave se posa sobre los tejados.' },
+    storm: { name: 'Tormenta eléctrica', desc: 'Los relámpagos parten el cielo y los truenos ruedan sobre las montañas.' },
+    heatwave: { name: 'Ola de calor', desc: 'El aire tiembla. Hasta los ríos parecen cansados.' },
+    blizzard: { name: 'Ventisca', desc: 'Viento aullante y una nieve tan espesa que no ves ni tu mano.' },
+  },
+
   weekly: {
     resetIn: 'Nuevo jefe en {t}', resists: 'Resiste: {style}', weakTo: 'Débil a: {style}', resistTip: 'Recibe la mitad de daño de este estilo.',
     pool: 'Vida esta semana', slain: 'Derrotado esta semana', dealt: 'Daño infligido', attempts: 'Intentos', best: 'Mejor intento',
@@ -687,10 +703,28 @@ export default {
 
   omens: {
     rarity: { common: 'Común', rare: 'Raro', epic: 'Épico', legendary: 'Legendario', mythic: 'Mítico' },
+    // Se conservan para entradas del diario anteriores a las señales de cada prodigio
     signs: {
       common: 'Una brisa extraña recorre el reino…', rare: 'Los pájaros callan de golpe…', epic: 'El cielo se oscurece sin una sola nube…',
       legendary: 'Una luz nueva arde entre las estrellas…', mythic: 'Todo se detiene. Algo te observa.',
     },
+    // La señal que llega antes de cada prodigio: insinúa lo que viene sin nombrarlo.
+    // La misma frase marca en la crónica los prodigios aún no presenciados.
+    hints: {
+      stars: 'Al cielo nocturno le pica algo, como si quisiera sacudírselo de encima.',
+      goldrush: 'Los mineros juran oír monedas cantando bajo la roca.',
+      harvest: 'La tierra huele a una tormenta que aún no ha llegado.',
+      chest: 'En algún lugar, una cerradura se abre sola.',
+      aurora: 'Colores más antiguos que el reino despiertan en el borde del cielo.',
+      merchant: 'Cascabeles en un camino que no aparece en ningún mapa.',
+      gilded_goblin: 'Huellas diminutas y doradas, y una risita que se aleja corriendo.',
+      blood_moon: 'Los lobos dejan de aullar. La luna empieza a sonrojarse.',
+      eclipse: 'Tus runas se calientan en el bolsillo, y el sol duda.',
+      rift: 'El aire se rasga como una tela y luego se cose solo… casi.',
+      comet: 'Una cola de luz cruza el atardecer. Los niños cierran los ojos y susurran.',
+      eye: 'Todo se detiene. Algo muy grande está mirando hacia aquí.',
+    },
+    unseenSign: 'Su señal:',
     signTitle: 'Una señal en el cielo', signSoon: 'Sea lo que sea, llegará en {time}.',
     taking: 'Estás participando', notTaking: 'Entrena una habilidad o combate para participar',
     defeated: 'Derrotados: {n}', huntBtn: { gilded_goblin: 'Perseguirlo', rift_horror: 'Entrar en la grieta' },

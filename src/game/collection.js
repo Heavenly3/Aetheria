@@ -7,6 +7,7 @@ import { BESTIARY, BEAST_GROUP, KNOWLEDGE, HUNT_BONUS, killsFor } from './data/b
 import { TITLES, TITLE_MAP, EXTRA_AVATARS, EXTRA_TINTS } from './data/cosmetics.js'
 import { FESTIVAL_MAP, TOKENS, shopFor, festivalAt } from './data/festivals.js'
 import { PET_MAP } from './data/pets.js'
+import { FEATURES } from './features.js'
 
 export const collectionState = () => ({
   // kills: lifetime count per creature, kept through ascension (killsBy restarts with each life)
@@ -112,6 +113,7 @@ export const collection = {
 
   /* ================= festivals ================= */
   festivalWindow() {
+    if (!FEATURES.festivals) return null
     const now = Date.now()
     if (Math.abs(now - festCache.at) > 30000) festCache = { at: now, win: festivalAt(new Date(now)) }
     return festCache.win

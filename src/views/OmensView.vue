@@ -48,7 +48,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
       <GameIcon name="crystal-ball" :size="40" class="sky-icon" />
       <div class="grow">
         <div class="sky-title">{{ $t('omens.signTitle') }}</div>
-        <p class="sky-text">{{ $t(`omens.signs.${sign}`) }}</p>
+        <p class="sky-text">{{ $t(G.omenSignHint()) }}</p>
         <div class="small faint">{{ $t('omens.signSoon', { time: fmtClock(ev.t) }) }}</div>
       </div>
     </div>
@@ -166,8 +166,13 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
         <template v-else>
           <div class="row">
             <ItemTile icon="crystal-ball" tint="#2a2838" size="md" :tip="false" />
-            <div class="grow"><div class="card-name">???</div><div class="card-sub">{{ $t('omens.unseen') }}</div></div>
+            <div class="grow">
+              <div class="card-name">???</div>
+              <div class="card-sub"><span class="hue" :style="{ '--hue': RARITY_TINT[o.rarity] }">{{ $t(`omens.rarity.${o.rarity}`) }}</span> · {{ $t('omens.unseen') }}</div>
+            </div>
           </div>
+          <!-- Only its sign is known: a riddle to guess what it might be -->
+          <p class="omen-riddle"><span class="faint">{{ $t('omens.unseenSign') }}</span> “{{ $t(`omens.hints.${o.id}`) }}”</p>
         </template>
       </div>
     </div>
@@ -200,4 +205,6 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
 .entry.unknown { opacity: 0.7; }
 .entry:not(.unknown) { border-color: color-mix(in srgb, var(--c) 35%, transparent); }
 .dim :deep(svg) { filter: brightness(0.3); }
+.omen-riddle { margin: 10px 0 0; font-size: 13.5px; font-style: italic; color: var(--muted); line-height: 1.5; }
+.omen-riddle .faint { font-style: normal; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-inline-end: 4px; }
 </style>

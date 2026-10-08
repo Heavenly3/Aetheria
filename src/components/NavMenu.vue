@@ -5,6 +5,7 @@ import { G, state } from '../game/engine.js'
 import { SKILLS, SKILL_CATS } from '../game/data/skills.js'
 import { QUESTS } from '../game/data/progression.js'
 import GameIcon from './GameIcon.vue'
+import { FEATURES } from '../game/features.js'
 
 const emit = defineEmits(['navigate'])
 const route = useRoute()
@@ -35,7 +36,7 @@ const sections = computed(() => [
     { to: '/stats', icon: 'histogram', key: 'nav.stats' },
   ] },
   { id: 'town', key: 'nav.groups.town', items: [
-    { to: '/festival', icon: fest.value?.icon || 'laurel-crown', key: 'nav.festival', festive: !!fest.value, badge: fest.value && G.festivalShop().some(e => e.kind !== 'item' && G.canBuyFestival(e)) ? '!' : null },
+    FEATURES.festivals && { to: '/festival', icon: fest.value?.icon || 'laurel-crown', key: 'nav.festival', festive: !!fest.value, badge: fest.value && G.festivalShop().some(e => e.kind !== 'item' && G.canBuyFestival(e)) ? '!' : null },
     { to: '/tavern', icon: 'beer-horn', key: 'nav.tavern', badge: state.tavern.orders.filter(o => !o.done && G.qty(o.item) >= o.qty).length || null,
       pulse: state.tavern.workers.some(w => w.status === 'working' || w.exp) },
     { to: '/home', icon: 'family-house', key: 'nav.home' },
@@ -49,7 +50,7 @@ const sections = computed(() => [
       to: '/skill/' + id, id, icon: s.icon, color: s.color, name: s.name, pulse: act.value?.type === 'skill' && act.value.skill === id,
     })),
   })),
-])
+].map(s => ({ ...s, items: s.items.filter(Boolean) }))) // switched-off features leave a gap in their section
 
 const isActive = to => (to === '/' ? route.path === '/' : route.path === to || route.path.startsWith(to + '/'))
 

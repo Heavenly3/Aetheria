@@ -20,6 +20,7 @@ import { play } from '../game/sound.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
+import { FEATURES } from '../game/features.js'
 
 const { t } = useI18n()
 
@@ -112,7 +113,9 @@ function sourceText(src) {
 // Which kind of roll the odds refer to
 const oddsKey = src => 'pets.odds.' + (src.skill === 'farming' ? 'harvests' : src.skill ? 'actions' : src.monster ? 'kills' : src.slayer ? 'tasks' : 'games')
 // Owned pets first, the companion at the top
-const sorted = computed(() => [...PETS].sort((a, b) => (G.isCompanion(b.id) - G.isCompanion(a.id)) || (G.hasPet(b.id) - G.hasPet(a.id))))
+// While festivals are off, their pets only show once owned
+const listed = computed(() => PETS.filter(p => FEATURES.festivals || !p.source.festival || G.hasPet(p.id)))
+const sorted = computed(() => [...listed.value].sort((a, b) => (G.isCompanion(b.id) - G.isCompanion(a.id)) || (G.hasPet(b.id) - G.hasPet(a.id))))
 </script>
 
 <template>
@@ -227,9 +230,9 @@ const sorted = computed(() => [...PETS].sort((a, b) => (G.isCompanion(b.id) - G.
     <div class="panel pad" style="margin-bottom:20px">
       <div class="row wrap">
         <p class="intro grow" style="margin:0">{{ $t('pets.intro') }}</p>
-        <span class="tag gold tnum"><GameIcon name="paw-print" :size="13" /> {{ owned }} / {{ PETS.length }}</span>
+        <span class="tag gold tnum"><GameIcon name="paw-print" :size="13" /> {{ owned }} / {{ listed.length }}</span>
       </div>
-      <div class="bar thick" style="margin-top:14px"><i :style="{ width: (owned / PETS.length) * 100 + '%' }" /></div>
+      <div class="bar thick" style="margin-top:14px"><i :style="{ width: (owned / listed.length) * 100 + '%' }" /></div>
     </div>
 
     <div class="grid-cards">

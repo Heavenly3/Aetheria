@@ -652,6 +652,22 @@ export default {
     item: { always: 'Always drops', chance: 'Chance: {v}%', set: 'Part of the set {set}', value: 'Sells for {gold} gold', owned: 'You have {n}' },
   },
 
+  weather: {
+    seasons: { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' },
+    seasonLine: 'Season: {season}', eventLine: 'Climate event', changesIn: 'The weather changes in {t}', comingLine: 'On its way: {name}',
+    started: 'Climate event: <b>{name}</b>',
+    clear: { name: 'Clear skies', desc: 'Not a cloud in sight. A fine day for an adventure.' },
+    clearNight: { name: 'Starry night', desc: 'The sky is clear and full of stars.' },
+    cloudy: { name: 'Overcast', desc: 'Grey clouds drift slowly over the realm.' },
+    rain: { name: 'Rain', desc: 'A steady rain falls over fields and forests.' },
+    fog: { name: 'Fog', desc: 'A thick mist hides the paths. Sounds carry strangely.' },
+    wind: { name: 'Strong wind', desc: 'Gusts bend the trees and whistle through the valleys.' },
+    snow: { name: 'Snowfall', desc: 'Soft snow settles on the rooftops.' },
+    storm: { name: 'Thunderstorm', desc: 'Lightning splits the sky and thunder rolls over the mountains.' },
+    heatwave: { name: 'Heatwave', desc: 'The air shimmers. Even the rivers seem tired.' },
+    blizzard: { name: 'Blizzard', desc: 'Howling wind and snow so thick you cannot see your hand.' },
+  },
+
   weekly: {
     resetIn: 'New boss in {t}', resists: 'Resists {style}', weakTo: 'Weak to {style}', resistTip: 'Takes half damage from this style.',
     pool: 'Health this week', slain: 'Slain this week', dealt: 'Damage dealt', attempts: 'Attempts', best: 'Best attempt',
@@ -687,10 +703,28 @@ export default {
 
   omens: {
     rarity: { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' },
+    // Kept for diary entries written before each omen had its own sign
     signs: {
       common: 'A strange breeze crosses the realm…', rare: 'The birds fall silent all at once…', epic: 'The sky darkens without a single cloud…',
       legendary: 'A new light burns among the stars…', mythic: 'Everything stops. Something is watching.',
     },
+    // The sign that comes before each omen: it hints at what is coming without naming it.
+    // The same line marks an omen not yet witnessed in the chronicle.
+    hints: {
+      stars: 'The night sky itches, as if it wanted to shake something loose.',
+      goldrush: 'Miners swear they can hear coins singing under the rock.',
+      harvest: 'The soil smells of a storm that has not come yet.',
+      chest: 'Somewhere, a lock clicks open on its own.',
+      aurora: 'Colours older than the realm stir at the edge of the sky.',
+      merchant: 'Bells along a road that appears on no map.',
+      gilded_goblin: 'Tiny golden footprints, and a giggle that runs away.',
+      blood_moon: 'The wolves stop howling. The moon begins to blush.',
+      eclipse: 'Your runes grow warm in your pocket, and the sun hesitates.',
+      rift: 'The air tears like cloth, then mends itself… almost.',
+      comet: 'A tail of light crosses the dusk. Children shut their eyes and whisper.',
+      eye: 'Everything stops. Something very large is looking this way.',
+    },
+    unseenSign: 'Its sign:',
     signTitle: 'A sign in the sky', signSoon: 'Whatever it is arrives in {time}.',
     taking: 'You are taking part', notTaking: 'Train a skill or fight to take part',
     defeated: 'Defeated: {n}', huntBtn: { gilded_goblin: 'Chase it', rift_horror: 'Enter the rift' },

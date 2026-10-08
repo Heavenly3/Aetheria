@@ -1,4 +1,5 @@
 import { createRouter, createMemoryHistory } from 'vue-router'
+import { FEATURES } from './game/features.js'
 
 const ROUTE_KEY = 'aetheria-route'
 
@@ -15,7 +16,8 @@ const routes = [
   { path: '/bestiary', name: 'bestiary', component: () => import('./views/BestiaryView.vue'), meta: { titleKey: 'nav.bestiary' } },
   { path: '/weekly', name: 'weekly', component: () => import('./views/WeeklyView.vue'), meta: { titleKey: 'nav.weekly' } },
   { path: '/omens', name: 'omens', component: () => import('./views/OmensView.vue'), meta: { titleKey: 'nav.omens' } },
-  { path: '/festival', name: 'festival', component: () => import('./views/FestivalView.vue'), meta: { titleKey: 'nav.festival' } },
+  // Festivals are switched off for now (src/game/features.js); the screen sends players back to the hero
+  { path: '/festival', name: 'festival', component: () => import('./views/FestivalView.vue'), meta: { titleKey: 'nav.festival' }, beforeEnter: () => (FEATURES.festivals ? true : '/') },
   { path: '/pets', name: 'pets', component: () => import('./views/PetsView.vue'), meta: { titleKey: 'nav.pets' } },
   { path: '/forge', name: 'forge', component: () => import('./views/ForgeView.vue'), meta: { titleKey: 'nav.forge' } },
   { path: '/stats', name: 'stats', component: () => import('./views/StatsView.vue'), meta: { titleKey: 'nav.stats' } },

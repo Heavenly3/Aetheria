@@ -26,6 +26,8 @@ export const omens = {
   // s.event: { id, phase: 'sign' | 'active', t, total, part, offers, done }
   activeOmen() { const e = this.s.event; return e && e.phase === 'active' ? OMEN_MAP[e.id] || null : null },
   omenSign() { const e = this.s.event; return e && e.phase === 'sign' ? OMEN_MAP[e.id]?.rarity || 'common' : null },
+  // The cryptic line of the omen on its way (each omen has its own sign)
+  omenSignHint() { const e = this.s.event; return e && e.phase === 'sign' && OMEN_MAP[e.id] ? `omens.hints.${e.id}` : null },
   // Kept for the parts of the interface that only need "is something going on"
   currentEvent() { return this.activeOmen() },
 
@@ -39,8 +41,8 @@ export const omens = {
   beginSign(id) {
     const o = OMEN_MAP[id]
     this.s.event = { id, phase: 'sign', t: SIGN_TIME }
-    this.log('crystal-ball', `omens.signs.${o.rarity}`)
-    this.emit('omenSign', { rarity: o.rarity, msg: msg(`omens.signs.${o.rarity}`) })
+    this.log('crystal-ball', `omens.hints.${id}`)
+    this.emit('omenSign', { rarity: o.rarity, msg: msg(`omens.hints.${id}`) })
   },
   startEvent(id) {
     const o = OMEN_MAP[id]

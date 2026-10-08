@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Toast from 'primevue/toast'
@@ -20,6 +20,7 @@ import { play, notify } from './game/sound.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
 import HelpTip from './components/HelpTip.vue'
+import { weatherAt, nextWeather } from './game/data/weather.js'
 import ActivityDock from './components/ActivityDock.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
@@ -39,6 +40,25 @@ const menu = ref()
 const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.name : route.meta.titleKey && t(route.meta.titleKey)) || 'Aetheria')
 const hpPct = computed(() => (Math.max(0, state.hp) / G.maxHp()) * 100)
 const fest = computed(() => G.activeFestival())
+// Weather follows the clock (it changes every few hours, the same for everyone)
+const wx = computed(() => (void state.lastTick, weatherAt()))
+const wxLook = computed(() => {
+  const w = wx.value.weather, clearNight = w.id === 'clear' && wx.value.night
+  return { icon: clearNight ? null : w.icon, pi: clearNight ? 'pi pi-moon' : w.pi, key: clearNight ? 'clearNight' : w.id, tint: w.tint }
+})
+const wxTip = computed(() => {
+  const w = wx.value, next = nextWeather()
+  const lines = [{ text: t('weather.seasonLine', { season: t(`weather.seasons.${w.season}`) }), kind: 'muted' }]
+  if (w.weather.event) lines.unshift({ text: t('weather.eventLine'), kind: 'gold' })
+  lines.push({ text: t('weather.changesIn', { t: fmtTime(Math.max(0, (w.endsAt - Date.now()) / 1000)) }), kind: 'muted' })
+  if (next.weather.event && next.weather.id !== w.weather.id) lines.push({ text: t('weather.comingLine', { name: next.weather.name }), kind: 'gold' })
+  return tip(t(`weather.${wxLook.value.key}.name`), t(`weather.${wxLook.value.key}.desc`), lines)
+})
+// Climate events are announced when they begin
+watch(() => wx.value.block, (b, old) => {
+  const w = wx.value.weather
+  if (old !== undefined && w.event) push(w.icon || 'sparkles', t('weather.started', { name: w.name }), 'info', 7000)
+})
 // The "?" next to the screen title explains the screen you are on
 const screenHelp = computed(() => (route.name && te(`help.screens.${String(route.name)}.body`) ? `screens.${String(route.name)}` : null))
 // The companion chip: hunger follows the clock, so it is re-read on every tick
@@ -133,6 +153,9 @@ function startAdventure() {
         <header class="topbar">
           <div class="topbar-title">{{ title }}<HelpTip v-if="screenHelp" :k="screenHelp" :params="{ skill: title }" class="screen-help" /></div>
           <div class="chips">
+            <span class="chip wx-chip" :style="{ '--c': wxLook.tint }" v-tooltip.bottom="wxTip" :aria-label="$t(`weather.${wxLook.key}.name`)">
+              <GameIcon v-if="wxLook.icon" :name="wxLook.icon" :size="15" /><i v-else :class="wxLook.pi" />
+            </span>
             <span class="chip" v-tooltip.bottom="help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
               <GameIcon name="glass-heart" :size="15" />
               <span class="mini-hp"><i :style="{ width: hpPct + '%' }" /></span>
@@ -140,7 +163,7 @@ function startAdventure() {
             </span>
             <span class="chip" v-tooltip.bottom="help('top.combat')"><GameIcon name="crossed-swords" :size="15" />{{ G.combatLevel() }}</span>
             <span class="chip" v-tooltip.bottom="help('top.total')"><GameIcon name="star-medal" :size="15" />{{ G.totalLevel() }}</span>
-            <router-link v-if="omenSign" to="/omens" class="chip omen-chip sign" v-tooltip.bottom="$t(`omens.signs.${omenSign}`)"><GameIcon name="crystal-ball" :size="15" />…</router-link>
+            <router-link v-if="omenSign" to="/omens" class="chip omen-chip sign" v-tooltip.bottom="tip($t('omens.signTitle'), $t(G.omenSignHint()))"><GameIcon name="crystal-ball" :size="15" />…</router-link>
             <router-link v-else-if="ev && state.event" to="/omens" class="chip omen-chip" :style="{ '--c': RARITY_TINT[ev.rarity] }" v-tooltip.bottom="tip(ev.name, ev.desc)">
               <GameIcon :name="ev.icon" :size="15" />{{ ev.name }} · {{ fmtClock(state.event.t) }}
             </router-link>
@@ -259,6 +282,8 @@ function startAdventure() {
 .fest-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 55%, transparent) !important; }
 .fest-chip .gi { color: var(--c); }
 .screen-help { font-size: 14px; margin-inline-start: 8px; }
+.wx-chip .gi, .wx-chip .pi { color: var(--c); }
+.wx-chip .pi { font-size: 14px; }
 .pal-chip { color: var(--ink); text-decoration: none; border-color: color-mix(in srgb, var(--c) 45%, transparent) !important; }
 .pal-chip .gi { color: var(--c); }
 .pal-chip.alert { animation: palNudge 2.4s ease-in-out infinite; }

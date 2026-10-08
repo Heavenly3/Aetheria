@@ -1,8 +1,13 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 import { G, state, newHero, run } from './helpers.js'
 import { FESTIVALS, festivalAt, nextFestival, windowFor, shopFor } from '../src/game/data/festivals.js'
 import { TITLE_MAP, EXTRA_AVATARS, titled } from '../src/game/data/cosmetics.js'
 import { PETS } from '../src/game/data/pets.js'
+import { FEATURES } from '../src/game/features.js'
+
+// Festivals are switched off in the game for now; these tests cover the feature itself
+beforeAll(() => { FEATURES.festivals = true })
+afterAll(() => { FEATURES.festivals = false })
 
 const day = (y, m, d) => new Date(y, m - 1, d, 12)
 

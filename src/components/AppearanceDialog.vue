@@ -11,14 +11,18 @@ import { ACHIEVEMENTS } from '../game/data/progression.js'
 import { FESTIVAL_MAP } from '../game/data/festivals.js'
 import { OMEN_MAP } from '../game/data/omens.js'
 import ItemTile from './ItemTile.vue'
+import { FEATURES } from '../game/features.js'
 
 const visible = defineModel('visible', { type: Boolean })
 const { t } = useI18n()
 const tab = ref('title')
 const tabs = computed(() => ['title', 'avatar', 'tint'].map(value => ({ value, label: t(`cosmetics.tabs.${value}`) })))
 
-const avatars = computed(() => [...AVATARS.map(id => ({ id })), ...EXTRA_AVATARS])
-const tints = computed(() => [...TINTS.map(id => ({ id })), ...EXTRA_TINTS])
+// While festivals are off, their cosmetics only show once owned
+const offered = (c, kind) => FEATURES.festivals || !c.festival || G.cosmeticUnlocked(c, kind)
+const titles = computed(() => TITLES.filter(x => offered(x, 'title')))
+const avatars = computed(() => [...AVATARS.map(id => ({ id })), ...EXTRA_AVATARS.filter(x => offered(x, 'avatar'))])
+const tints = computed(() => [...TINTS.map(id => ({ id })), ...EXTRA_TINTS.filter(x => offered(x, 'tint'))])
 // How a locked cosmetic is earned
 function hint(c) {
   if (c.ach) return t('cosmetics.fromAch', { name: ACHIEVEMENTS.find(a => a.id === c.ach)?.name || c.ach })
@@ -30,7 +34,7 @@ function hint(c) {
   return ''
 }
 const unlockedCount = computed(() => ({
-  title: TITLES.filter(x => G.cosmeticUnlocked(x, 'title')).length + '/' + TITLES.length,
+  title: titles.value.filter(x => G.cosmeticUnlocked(x, 'title')).length + '/' + titles.value.length,
   avatar: avatars.value.filter(x => G.avatarUnlocked(x.id)).length + '/' + avatars.value.length,
   tint: tints.value.filter(x => G.tintUnlocked(x.id)).length + '/' + tints.value.length,
 }))
@@ -53,7 +57,7 @@ const unlockedCount = computed(() => ({
       <button class="title-opt" :class="{ on: !G.heroTitle() }" @click="G.setTitle(null)">
         <span class="grow">{{ $t('cosmetics.noTitle') }}</span><i v-if="!G.heroTitle()" class="pi pi-check" />
       </button>
-      <button v-for="x in TITLES" :key="x.id" class="title-opt" :class="{ on: G.heroTitle() === x, locked: !G.cosmeticUnlocked(x, 'title') }"
+      <button v-for="x in titles" :key="x.id" class="title-opt" :class="{ on: G.heroTitle() === x, locked: !G.cosmeticUnlocked(x, 'title') }"
         :disabled="!G.cosmeticUnlocked(x, 'title')" @click="G.setTitle(x.id)">
         <span class="grow">
           <span class="t-name">{{ x.name }}</span>
