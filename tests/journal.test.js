@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { G, state, newHero, setLevel } from './helpers.js'
-import { CHAPTERS, ACTS, CHARACTERS, rollNames, NAMED } from '../src/game/data/journal.js'
+import { CHAPTERS, ACTS, CHARACTERS, RUMORS, rumorsFor, rollNames, NAMED } from '../src/game/data/journal.js'
 import { seeded } from '../src/game/systems.js'
 import { i18n } from '../src/i18n/index.js'
 
@@ -70,5 +70,21 @@ describe('journal', () => {
       expect(ACTS.some(a => a.id === c.act)).toBe(true)
     }
     for (const p of CHARACTERS) expect(CHAPTERS.some(c => c.id === p.met)).toBe(true)
+  })
+})
+
+describe('tavern keeper', () => {
+  it('talks about what the hero has lived so far', () => {
+    newHero()
+    let ids = rumorsFor(G).map(r => r.id)
+    expect(ids).toContain('oldRoad')
+    expect(ids).not.toContain('sliver')
+    state.bestiary.kills.wolf = 1
+    state.bestiary.kills.warren_chief = 1
+    G.checkJournal()
+    ids = rumorsFor(G).map(r => r.id)
+    expect(ids).not.toContain('oldRoad')
+    expect(ids).toContain('sliver')
+    for (const r of RUMORS) expect(i18n.global.te(`journal.rumors.${r.id}`, 'en')).toBe(true)
   })
 })

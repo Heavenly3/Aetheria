@@ -78,3 +78,29 @@ export const CHARACTERS = [
 
 // One memory of a past life comes back with each ascension
 export const MEMORIES = [1, 2, 3, 4, 5].map(n => ({ id: `life${n}`, n }))
+
+// What the tavern keeper talks about, depending on how far the story has gone. The most recent
+// fitting line is said first; asking again picks another fitting one
+const has = id => g => g.chapterUnlocked(id)
+const not = f => g => !f(g)
+const all = (...fs) => g => fs.every(f => f(g))
+export const RUMORS = [
+  { id: 'ale', when: () => true },
+  { id: 'stew', when: () => true },
+  { id: 'heroes', when: () => true },
+  { id: 'crown', when: has('crown_tale') },
+  { id: 'oldRoad', when: not(has('kings_road')) },
+  { id: 'goblins', when: all(has('kings_road'), not(has('night_path'))) },
+  { id: 'caves', when: all(has('kings_road'), not(has('iron_heart'))) },
+  { id: 'sliver', when: has('night_path') },
+  { id: 'smith', when: has('iron_heart') },
+  { id: 'swamp', when: all(has('iron_heart'), not(has('living_mire'))) },
+  { id: 'shards', when: has('brins_secret') },
+  { id: 'naga', when: all(has('living_mire'), not(has('serpent_priestess'))) },
+  { id: 'bell', when: has('serpent_priestess') },
+  { id: 'astrologer', when: has('sky_watcher') },
+  { id: 'weekly', when: g => g.weeklyUnlocked() },
+  { id: 'reborn', when: g => (g.s.ascension?.count || 0) > 0 },
+  { id: 'omenNow', when: g => !!g.activeOmen() },
+]
+export const rumorsFor = g => RUMORS.filter(r => { try { return r.when(g) } catch { return false } })

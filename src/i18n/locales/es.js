@@ -719,6 +719,29 @@ export default {
   },
 
   journal: {
+    keeper: {
+      says: "{keeper}, tras la barra",
+      ask: "¿Alguna novedad?",
+    },
+    rumors: {
+      ale: "Prueba la cerveza ámbar. Receta de mi abuela. Juraba que la hacía con una pizca de luz de estrella. Creo que solo le gustaba decirlo.",
+      stew: "El guiso del día es el guiso de ayer con más cebolla. Nadie se ha quejado todavía. Nadie lo bastante valiente, al menos.",
+      heroes: "Todos los héroes que cruzan esa puerta dicen que volverán para cenar. Te sorprendería cuántos lo hacen.",
+      crown: "Siete pedazos de una corona repartidos por el reino. Algunas noches me pregunto si se echan de menos.",
+      oldRoad: "Si vas al Bosque Sombrío, fíjate en el camino viejo. Losas talladas con coronas. Los bandidos no se acercan a él cuando oscurece.",
+      goblins: "Los goblins de la madriguera brillan más de lo normal. Uno me pagó la cerveza con un diente de oro. Sospecho que no era suyo.",
+      caves: "Los mineros dicen que las Cavernas de Hierro vuelven a zumbar. Como si algo ahí abajo siguiera trabajando.",
+      sliver: "¿Aún tienes esa astilla de cristal? Bien. Tenla cerca y no hables de ella.",
+      smith: "{smith} vino anoche. Tres cervezas sin decir palabra. Luego pagó con un clavo de aetherium y se fue. Esa mujer guarda secretos.",
+      swamp: "Últimamente los pescadores evitan el Pantano Podrido. Dicen que los juncos se giran para verte pasar.",
+      shards: "El Gremio quiere reunir todos los fragmentos. La Orden quiere que se queden donde están. ¿Y yo? Yo solo quiero que todos paguen lo que deben.",
+      naga: "Dicen que una sacerdotisa sigue guardando el Templo de la Serpiente. Unos dicen que reza. Otros, que escucha a alguien.",
+      bell: "¿La has oído? Una campana, desde las Ruinas Malditas. Esa campana no sonaba desde hace trescientos años.",
+      astrologer: "{astrologer} pasó preguntando si alguien apuntó el último prodigio. Ella lo llama datos. Yo lo llamo un bonito espectáculo de luces.",
+      weekly: "Dicen que esta semana han visto a {boss}. Los valientes ya están afilando sus armas. Los demás piden otra ronda.",
+      reborn: "Siéntate, amigo. Tienes cara de haber vuelto a despertar en la pradera. Conozco esa cara. Ya la he visto antes.",
+      omenNow: "¡Mira fuera! Un prodigio, ahora mismo. Termínate eso y ve, estas cosas no esperan a nadie.",
+    },
     tabs: {
       story: "Historia",
       people: "Personajes",

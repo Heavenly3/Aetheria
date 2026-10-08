@@ -22,6 +22,7 @@ import { chanceNote } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
+import KeeperTalk from '../components/KeeperTalk.vue'
 
 const { t: $tr } = useI18n()
 const confirm = useConfirm()
@@ -147,6 +148,8 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
         </template>
       </div>
     </div>
+
+    <KeeperTalk />
 
     <Tabs v-model:value="tab" style="margin-top:18px">
       <TabList>

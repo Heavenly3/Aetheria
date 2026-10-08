@@ -719,6 +719,29 @@ export default {
   },
 
   journal: {
+    keeper: {
+      says: "{keeper}, behind the bar",
+      ask: "Any news?",
+    },
+    rumors: {
+      ale: "Try the amber ale. My grandmother's recipe. She swore it was brewed with a pinch of starlight. I think she just liked saying that.",
+      stew: "Stew of the day is the stew of yesterday, with more onion. Nobody has complained yet. Nobody brave enough, anyway.",
+      heroes: "Every hero who comes through that door says they will be back for dinner. You would be surprised how many do.",
+      crown: "Seven pieces of a crown, scattered across the realm. Some nights I wonder if they miss each other.",
+      oldRoad: "If you go into the Shadow Wood, keep an eye out for the old road. Paving stones carved with crowns. The bandits will not go near it after dark.",
+      goblins: "Goblins in the warren have been shinier than usual. One paid for his ale with a gold tooth. Not his own, I suspect.",
+      caves: "Miners say the Iron Caverns are humming again. Like something down there is still working.",
+      sliver: "You still have that sliver of glass? Good. Keep it close and keep it quiet.",
+      smith: "{smith} was in last night. Three ales, not a word. Then she paid with an aetherium nail and left. That woman has secrets.",
+      swamp: "Fishers keep away from the Rotting Swamp lately. They say the reeds turn to watch you go by.",
+      shards: "The Guild wants to gather all the shards. The Order wants them left alone. And me? I just want everyone to pay their tab.",
+      naga: "They say a priestess still guards the Serpent Temple. Some say she prays. Some say she is listening to someone.",
+      bell: "Did you hear it? A bell, all the way from the Cursed Ruins. That bell has not rung in three hundred years.",
+      astrologer: "{astrologer} came by asking if anyone wrote down the last omen. She calls it data. I call it a nice light show.",
+      weekly: "Word is {boss} has been seen this week. Brave folk are already sharpening their blades. The rest are ordering another round.",
+      reborn: "Sit down, friend. You look like someone who woke up in the meadow again. I know that face. I have seen it before.",
+      omenNow: "Look outside! An omen, right now. Drink up and go, this kind of thing does not wait for anyone.",
+    },
     tabs: {
       story: "Story",
       people: "Characters",
