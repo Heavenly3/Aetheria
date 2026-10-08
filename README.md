@@ -56,6 +56,7 @@ Requires Node.js 18 or newer.
 - **Endgame beyond the Abyss**: the Void Rift and the Celestial Spire, aether gear forged at level 90 and boss-only uniques.
 - **Pets**: 34 very rare companions from skilling, bosses, slayer tasks, dice, omens and festivals. A lucky find arrives as an egg that hatches in the incubator. Pick one as your companion, name it, feed it its favourite food (ores for the golem, fish for the heron…) and pet it: it learns alongside you up to level 20, grows its bond from Wary to Soulbound, doubles its bonus while fed and brings gifts to a basket. Hunger, hatching and gifts follow the clock, so they keep going offline.
 - **Enchanting**: raise each equipment slot from +1 to +10. Higher levels can fail and drop a level unless protected with a starlight shard.
+- **Relic forge**: work omen relics at the anvil. Reforge one to roll its quality again with the exact odds shown first (a starlight shard seals it so it cannot drop), and every roll that does not improve it heats the forge for better odds next time. Fuse three relics of a quality into one of the next, of the kind you choose, or reshape a relic into another kind. Worn relics are reforged in place.
 - **Daily and weekly tasks** with a day streak that boosts rewards.
 - **Equipment sets**: 13 sets (every metal, leather, dragonhide, wizard, slayer, dragonbane and the endgame regalia) with bonuses for 2, 3, 4 or 5 pieces worn.
 - **Bestiary**: every creature you defeat is recorded. Learn its drops, master it for a combat bonus against it, and complete each area for a permanent reward.
@@ -80,6 +81,7 @@ Requires Node.js 18 or newer.
 - `src/game/systems.js`: tavern, staff, expeditions, orders, queue, loadouts, prayers, market, events and history.
 - `src/game/meta.js`: pet rolls, gear enchanting and daily / weekly tasks.
 - `src/game/companions.js`: eggs, the companion, feeding, bond, pet levels and gifts (tuning in `src/game/data/companions.js`).
+- `src/game/relicforge.js`: reforging, fusing and reshaping relics (costs and odds in `src/game/data/relicforge.js`).
 - `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
@@ -91,7 +93,7 @@ Requires Node.js 18 or newer.
 - `src/components/` and `src/views/`: the UI.
 - `public/`: app manifest, service worker (offline play) and icons.
 - `scripts/`: icon extraction, the translation checker and the balance report.
-- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, cosmetics, pets, enchanting, daily tasks, ascension and translations.
+- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, the relic forge, cosmetics, pets, enchanting, daily tasks, ascension and translations.
 
 ## Adding a language
 

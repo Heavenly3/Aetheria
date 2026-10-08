@@ -108,6 +108,8 @@ export const ACHIEVEMENTS = [
   ...tiers('petLevel', [[10, 5000], [20, 50000]], 'paw-print', (G, n) => G.maxPetLevel() >= n),
   ach('weekly_1', 'weeklyFirst', 1, 'crowned-skull', G => G.weeklySlainCount() >= 1, 25000),
   ach('weekly_all', 'weeklyAll', 6, 'crowned-skull', G => G.weeklySlainCount() >= 6, 300000),
+  ach('forge_mythic', 'forgeMythic', 1, 'anvil-impact', G => (G.s.relicForge?.forgedMythic || 0) >= 1, 100000),
+  ...tiers('reforge', [[25, 5000], [100, 30000]], 'anvil', (G, n) => (G.s.relicForge?.reforged || 0) >= n),
   ach('pet_soulbound', 'petSoulbound', 100, 'glass-heart', G => G.maxPetBond() >= 100, 50000),
   ...tiers('enchant', [[5, 2000], [10, 50000]], 'upgrade', (G, n) => G.maxEnchant() >= n),
   ...tiers('streak', [[3, 1000], [7, 5000], [30, 50000]], 'flame', (G, n) => (G.s.daily?.bestStreak || 0) >= n),

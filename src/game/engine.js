@@ -18,6 +18,7 @@ import { collection, collectionState } from './collection.js'
 import { omens, omensState } from './omens.js'
 import { companions, companionsState } from './companions.js'
 import { weekly, weeklyState } from './weekly.js'
+import { relicForge, relicForgeState } from './relicforge.js'
 import { OMEN_MAP } from './data/omens.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
@@ -96,6 +97,7 @@ export function newState(profile = {}) {
     ...omensState(),
     ...companionsState(),
     ...weeklyState(),
+    ...relicForgeState(),
   }
 }
 
@@ -1269,6 +1271,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge)
 
 export { SKILLS, ITEMS }

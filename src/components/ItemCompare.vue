@@ -7,7 +7,8 @@ import { SKILLS } from '../game/data/skills.js'
 import { TOOL_TYPES, TOOL_SPEED_PER_TIER } from '../game/data/character.js'
 import ItemTile from './ItemTile.vue'
 
-const props = defineProps({ id: String })
+// preview: the item is a new copy (from the forge), so compare it even with an identical worn one
+const props = defineProps({ id: String, preview: Boolean })
 const { t } = useI18n()
 const it = computed(() => ITEMS[props.id])
 const isTool = computed(() => it.value.type === 'tool')
@@ -18,9 +19,9 @@ const replaced = computed(() => {
   const eq = state.equipment, out = [eq[it.value.slot]]
   if (it.value.twoHanded && eq.shield) out.push(eq.shield)
   if (it.value.slot === 'shield' && eq.weapon && ITEMS[eq.weapon].twoHanded) out.push(eq.weapon)
-  return out.filter(x => x && x !== props.id)
+  return out.filter(x => x && (props.preview || x !== props.id))
 })
-const worn = computed(() => (isTool.value ? state.tools[it.value.toolType] : state.equipment[it.value.slot]) === props.id)
+const worn = computed(() => !props.preview && (isTool.value ? state.tools[it.value.toolType] : state.equipment[it.value.slot]) === props.id)
 
 const sum = ids => ids.reduce((acc, id) => { for (const [k, v] of Object.entries(ITEMS[id].stats || {})) acc[k] = (acc[k] || 0) + v; return acc }, {})
 const rows = computed(() => {

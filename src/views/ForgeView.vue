@@ -2,6 +2,9 @@
 import { ref, computed } from 'vue'
 import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
+import SelectButton from 'primevue/selectbutton'
+import { useI18n } from 'vue-i18n'
+import RelicForge from '../components/RelicForge.vue'
 import { G, state } from '../game/engine.js'
 import { ITEMS, SLOTS, STAT_LABELS } from '../game/data/items.js'
 import { ENCHANT_SLOTS, ENCHANT_MAX, ENCHANT_PER_LEVEL, PROTECT_ITEM } from '../game/meta.js'
@@ -10,6 +13,9 @@ import { play } from '../game/sound.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 
+const { t } = useI18n()
+const tab = ref('enchant')
+const tabs = computed(() => [{ value: 'enchant', label: t('forge.tabs.enchant'), icon: 'pi pi-bolt' }, { value: 'relics', label: t('forge.tabs.relics'), icon: 'pi pi-star' }])
 const protect = ref(true)
 const flash = ref({}) // slot -> 'success' | 'fail' | 'drop', for a short animation
 const slots = computed(() => ENCHANT_SLOTS.map(slot => ({ slot, id: state.equipment[slot], lvl: G.enchantLevel(slot) })))
@@ -31,6 +37,11 @@ function enchant(slot) {
 
 <template>
   <div>
+    <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" style="margin-bottom:18px">
+      <template #option="{ option }"><i :class="option.icon" style="margin-inline-end:6px" />{{ option.label }}</template>
+    </SelectButton>
+    <RelicForge v-if="tab === 'relics'" />
+    <template v-else>
     <div class="banner" style="--c:#c58cff">
       <GameIcon class="banner-ghost" name="anvil-impact" :size="230" />
       <ItemTile icon="anvil-impact" tint="#8a5cff" size="xl" :tip="false" />
@@ -81,6 +92,7 @@ function enchant(slot) {
       </div>
     </div>
     <p class="small faint" style="margin-top:14px">{{ $t('forge.note') }}</p>
+    </template>
   </div>
 </template>
 
