@@ -30,6 +30,7 @@ const sections = computed(() => [
     { to: '/omens', icon: 'crystal-ball', key: 'nav.omens', badge: G.omenSign() ? '?' : null, pulse: !!G.activeOmen() },
   ] },
   { id: 'progress', key: 'nav.groups.progress', items: [
+    { to: '/journal', icon: 'quill-ink', key: 'nav.journal', badge: G.journalUnread() || null },
     { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: QUESTS.filter(q => G.questReady(q)).length + G.tasksReady() || null },
     { to: '/achievements', icon: 'trophy-cup', key: 'nav.achievements' },
     { to: '/ascension', icon: 'ankh', key: 'nav.ascension', badge: G.canAscend() && !state.ascension.count ? '!' : null },

@@ -13,6 +13,7 @@ import { PET_MAP } from '../game/data/pets.js'
 import { BESTIARY } from '../game/data/bestiary.js'
 import { SET_MAP } from '../game/data/sets.js'
 import { WEEKLY_MAP } from '../game/data/weekly.js'
+import { CHAPTER_MAP } from '../game/data/journal.js'
 
 const byId = list => id => list.find(x => x.id === id)?.name ?? id
 const allMonsters = id => MONSTERS[id]?.name ?? BOSSES.find(b => b.id === id)?.name ?? DUNGEONS.find(d => d.boss.id === id)?.boss.name ?? id
@@ -36,6 +37,7 @@ registerNames('crop', byId(CROPS))
 registerNames('pet', id => PET_MAP[id]?.name ?? id)
 registerNames('weekly', id => WEEKLY_MAP[id]?.name ?? id)
 registerNames('bond', id => t(`pets.bond.${id}`))
+registerNames('chapter', id => (CHAPTER_MAP[id] ? t(`journal.chapters.${id}.title`) : id))
 registerNames('beasts', byId(BESTIARY))
 registerNames('set', id => SET_MAP[id]?.name ?? id)
 registerNames('slot', id => SLOTS[id]?.name ?? id)

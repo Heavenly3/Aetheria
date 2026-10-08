@@ -12,7 +12,7 @@ export default {
   time: { dh: '{d}d {h}h', hm: '{h}h {m}m', ms: '{m}m {s}s', s: '{s}s', hours: '{n} h' },
 
   nav: {
-    hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
+    journal: 'Journal', hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
     settings: 'Settings', realm: 'Realm', town: 'Town',
     pets: 'Pets', forge: 'Forge', bestiary: 'Bestiary', festival: 'Festival', omens: 'Omens', weekly: 'Weekly boss',
@@ -62,6 +62,7 @@ export default {
   },
 
   toast: {
+    chapter: 'New journal page: <b>{name}</b>',
     levelUp: '<b>{skill}</b> reached level <b>{level}</b>', heroLevel: 'Hero level <b>{level}</b>!', heroLevelPlain: 'Hero level {level}',
     pointsToSpend: 'You have points to spend', mastery: 'Mastery {level}: <b>{name}</b>', rare: 'Rare drop: <b>{item}</b>',
     achievement: 'Achievement unlocked: <b>{name}</b>', quest: 'Quest complete: <b>{name}</b>', death: 'You were defeated by <b>{name}</b>',
@@ -232,6 +233,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    chapter: 'New journal page: {chapter}.',
     start: '{name} begins their adventure as a {role}.', heroLevel: 'Reached hero level {level} (+{points} points).',
     levelUp: '{skill} reached level {level}.', mastery: 'Mastery {level} in {name}.', found: 'Found: {item}.',
     bestiaryGroup: 'Bestiary group completed: {group}.', drop: '{monster} dropped {item}!', towerFloor: 'New Tower record: floor {floor}.', dungeonFirst: 'First clear of {dungeon}.',
@@ -543,6 +545,7 @@ export default {
   help: {
     // One guide per screen, shown by the "?" next to the screen title
     screens: {
+      journal: { title: 'Journal', body: 'The story of Aetheria, told in short chapters that unlock as you explore, defeat bosses and witness omens. Open a page to read it, and come back to it whenever you like. The journal is kept when you ascend, and each ascension brings back a memory of a past life.' },
       hero: { title: 'Hero', body: 'Your hero at a glance: gear, tools, skills and recent events. Spend attribute and talent points in their tabs as you level up, and click a worn item to take it off.' },
       inventory: { title: 'Inventory', body: 'Everything you carry, sorted into groups and categories. Pick an item to see what it does, equip or use it, compare it with your gear and see which recipes need it. Lock items you want to keep safe from selling.' },
       skill: { title: '{skill}', body: 'Pick an action to start training; it repeats on its own, even while you are away. Each action levels its own mastery, which makes it faster. Use the queue to chain several actions in a row.' },
@@ -666,6 +669,134 @@ export default {
     storm: { name: 'Thunderstorm', desc: 'Lightning splits the sky and thunder rolls over the mountains.' },
     heatwave: { name: 'Heatwave', desc: 'The air shimmers. Even the rivers seem tired.' },
     blizzard: { name: 'Blizzard', desc: 'Howling wind and snow so thick you cannot see your hand.' },
+  },
+
+  journal: {
+    tabs: {
+      story: "Story",
+      people: "Characters",
+      memories: "Memories",
+    },
+    intro: "Everything your hero has lived is written here, so you can read it again whenever you like. New pages appear as you explore.",
+    progress: "{n} / {total} pages",
+    new: "New",
+    locked: "???",
+    readAll: "Mark all as read",
+    soon: "Still being written…",
+    unknownPerson: "Someone you have not met yet",
+    memoriesIntro: "Each time you ascend, a memory of a past life comes back.",
+    memoryLocked: "Comes back after ascension {n}",
+    acts: {
+      prologue: "Prologue",
+      act1: "Act I · The Dawn Road",
+      act2: "Act II · Iron and Sap",
+      act3: "Act III · The Fallen Capital",
+      act4: "Act IV · Ice and Fire",
+      act5: "Act V · The Wound in the World",
+      act6: "Act VI · Above the Sky",
+    },
+    hints: {
+      firstQuest: "Complete your first quest",
+      firstOmen: "Witness an omen",
+      forest: "Defeat a creature in the Shadow Wood",
+      warrenChief: "Defeat the Goblin Chieftain in the Goblin Warren",
+      caves: "Defeat a creature in the Iron Caverns",
+      smithing: "Reach Smithing level 40",
+      swamp: "Defeat a creature in the Rotting Swamp",
+      naga: "Defeat the Great Naga in the Serpent Temple",
+    },
+    chapters: {
+      awakening: {
+        title: "Awakening",
+        text: "You wake in the grass of the Dawn Meadows with the sun in your eyes and no idea how you got there. Your name is still yours. Almost everything else is fog.\n\nA broad man with flour on his apron helps you up. \"Easy, friend. I'm {keeper}, I keep the Golden Tankard in Albor. Heroes turn up in this meadow more often than you'd think.\" He studies your face a moment too long. \"Funny. I could swear we've met.\"\n\nHe gives you a bowl of stew, an old pickaxe and a piece of advice: \"Work, fight, grow strong. The realm has been waiting for someone like you. It always is.\"",
+      },
+      crown_tale: {
+        title: "The Tale of the Crown",
+        text: "That night the tavern is full, and {keeper} tells the story every child in Albor knows.\n\n\"Long ago this realm shone. Our kings wore the Aether Crown, forged from the light of falling stars. With it they made the fields grow and kept the monsters away.\"\n\n\"The last of them, {king} the Tall, wanted more. He climbed to the top of the sky to become a star himself. Something up there opened its eye, and the Crown shattered into seven pieces.\"\n\n\"King Edmund rules us now. A good man, but a king without a crown. And {king}?\" {keeper} shrugs. \"Nobody ever found him.\"",
+      },
+      sky_watcher: {
+        title: "The Watcher of the Sky",
+        text: "The omen has barely faded when a woman in a star-patterned cloak sits down at your table without asking. \"You felt it too. Most people only see pretty lights.\"\n\nShe is {astrologer}, of the Observatory. \"Starfalls, blood moons, comets… We call them omens. I think something is looking at us. Some of us think it is trying to speak.\"\n\nBefore leaving she slides you a page from her notebook. \"Each omen comes with a sign. Write them down. One day they may make sense.\"",
+      },
+      kings_road: {
+        title: "The King's Road",
+        text: "Deep in the Shadow Wood the bandits have a saying: never follow the old road at night. Of course you do.\n\nUnder the moss lie paving stones carved with crowns, all pointing the same way: north, toward the mountains, toward the sky. It is the road {king} took on his last journey.\n\nAt the end of the trail you find the remains of a royal camp. In the ashes of a fire, someone has scratched a single line into a stone: \"Forgive me. I only wanted to keep the light.\"",
+      },
+      night_path: {
+        title: "Under the Warren",
+        text: "The Goblin Chieftain falls, and his treasure is the usual: copper, bones, a rusty spoon. But around his neck hangs something else: a sliver of glass that glows faintly gold.\n\nWhen you touch it, for a single heartbeat, you remember a place you have never been: a hall of white stone, and a crown resting on a cushion.\n\nBack at the tavern, {keeper} stares at the sliver for a long time. \"Keep it hidden,\" he says at last. \"Some people would do anything for a speck of aether. And some would do worse for what it means.\"",
+      },
+      iron_heart: {
+        title: "The Iron Heart",
+        text: "The Iron Caverns hum. Put your ear to the rock and you can hear it: a slow beat, like an anvil far away.\n\nA stocky woman with soot up to her elbows laughs at you. \"First time? That's the forge. Still working, three hundred years after the smiths left.\" She is {smith}, master of the Anvil Guild.\n\n\"This is where they made the Crown, you know. With aetherium, a metal that only grows down here. Those golems you keep smashing? Old forge tools. Nobody ever told them to stop.\"",
+      },
+      brins_secret: {
+        title: "The Smith's Secret",
+        text: "{smith} watches you work the anvil and nods slowly. \"You have good hands. Good enough to trust.\"\n\nShe bolts the door and opens a small iron box. Inside, wrapped in velvet, lies a shard of the Aether Crown, much bigger than yours and warm as a living thing.\n\n\"The Guild has been gathering them in secret for a hundred years. Find all seven and we can forge the Crown again and give the realm back its light.\" She closes the box. \"Not everyone agrees. The Order says the light was never ours to take. Others say worse.\"",
+      },
+      living_mire: {
+        title: "The Living Mire",
+        text: "In the Rotting Swamp everything grows. Roots move when you are not looking, flowers turn to follow your steps, and the water is warm as blood.\n\nA piece of the Crown fell here: the one the old books call the Shard of Sap, the heart of life itself. With no king to command it, it never stopped giving. Now it gives too much.\n\nAmong the reeds stand the old shrines of the Serpent Temple, whose priests prayed for eternal life. It looks as if something answered.",
+      },
+      serpent_priestess: {
+        title: "The Serpent Priestess",
+        text: "The Great Naga coils one last time before she falls. With her final breath she speaks, and the voice is not her own.\n\n\"So you are the one who remembers. You carry a piece of my brother's crown and you do not even know what else you carry.\"\n\nThe voice is cold, very old, and amused. \"I am Morwen. I have waited a thousand years. I can wait a little longer for you to come to me.\"\n\nThe Naga goes still. Far to the north, in the Cursed Ruins, a bell begins to toll.",
+      },
+    },
+    people: {
+      keeper: {
+        name: "{keeper}",
+        role: "Keeper of the Golden Tankard",
+        desc: "Runs the tavern in Albor and greets every hero who wakes in the meadows. He seems to know more than he says.",
+      },
+      edmund: {
+        name: "King Edmund",
+        role: "A king without a crown",
+        desc: "Rules what was left of the realm. Fair and tired, he sends heroes where his soldiers cannot go.",
+      },
+      king: {
+        name: "{king} the Tall",
+        role: "The last king",
+        desc: "Wore the Aether Crown and climbed the sky to become a star. The Crown shattered, and nobody knows what became of him.",
+      },
+      astrologer: {
+        name: "{astrologer}",
+        role: "Astrologer of the Observatory",
+        desc: "Studies the omens and their signs. She believes something above the sky is trying to speak.",
+      },
+      smith: {
+        name: "{smith}",
+        role: "Master of the Anvil Guild",
+        desc: "Works the ancient forge of the Iron Caverns and dreams of forging the Crown again.",
+      },
+      morwen: {
+        name: "Morwen, the Lich Queen",
+        role: "Sister of the first king",
+        desc: "Has ruled the dead for a thousand years. She wants the Crown back in her family, and she is waiting for you.",
+      },
+    },
+    memories: {
+      life1: {
+        title: "The First Memory",
+        text: "You fall, and you wake again in the Dawn Meadows with the sun in your eyes. But this time you remember something.\n\nA long staircase of light. A cold wind. A hand, perhaps yours, reaching for a crown as it breaks apart.\n\n{keeper} helps you up, as always. \"Easy, friend.\" And for the first time you notice that his hands are shaking.",
+      },
+      life2: {
+        title: "The Second Memory",
+        text: "Another life, another awakening. The memory is clearer now.\n\nYou were at the top of the Spire. You were not the king. You stood behind him, and you tried to stop him.\n\nWhen the Crown shattered, one shard did not fall to the ground. It fell into you.",
+      },
+      life3: {
+        title: "The Third Memory",
+        text: "The Golden Tankard keeps a ledger of every hero who ever woke in the Dawn Meadows. You ask {keeper} to show it to you.\n\nYour name is there. A hundred years ago. Two hundred. Three hundred. The handwriting changes; the name does not.\n\n\"I did not want to frighten you,\" {keeper} says. \"The Guild has known for a long time. You always come back. We just never knew why.\"",
+      },
+      life4: {
+        title: "The Fourth Memory",
+        text: "In a dream you stand beneath the open sky, and the sky looks back.\n\nIt is not angry. It is not kind. It is curious, like a child watching an ant carry a crumb far too big for it.\n\nYou wake with the taste of starlight in your mouth and a word you cannot quite remember.",
+      },
+      life5: {
+        title: "The Fifth Memory",
+        text: "Every life you come a little closer. Every life the omens come a little more often.\n\n{astrologer} has finally put the signs in order. Read together, she says, they make a sentence, but its last words are still missing.\n\n\"When the light falls again, the one who already fell shall wake. Neither king nor saint. The one who remembers…\"",
+      },
+    },
   },
 
   weekly: {

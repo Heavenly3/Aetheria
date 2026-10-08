@@ -19,6 +19,7 @@ import { omens, omensState } from './omens.js'
 import { companions, companionsState } from './companions.js'
 import { weekly, weeklyState } from './weekly.js'
 import { relicForge, relicForgeState } from './relicforge.js'
+import { journal, journalState } from './journal.js'
 import { OMEN_MAP } from './data/omens.js'
 import { cloneNamed } from '../i18n/bind.js'
 import '../i18n/names.js'
@@ -98,6 +99,7 @@ export function newState(profile = {}) {
     ...companionsState(),
     ...weeklyState(),
     ...relicForgeState(),
+    ...journalState(),
   }
 }
 
@@ -197,6 +199,8 @@ export const G = {
     this.slot = i
     this.setupCharacter()
     this.ensureWeekly()
+    this.ensureJournal()
+    this.checkJournal()
     this.s.tutorial = { step: 0, done: false, base: null }
     this.log(ROLES[this.s.role].icon, 'log.start', { name: this.s.name, role: '@role:' + this.s.role })
     this.save()
@@ -264,6 +268,7 @@ export const G = {
     this.ensurePlots()
     this.syncCare()
     this.ensureWeekly()
+    this.checkJournal(true)
   },
 
   /* ================= levels ================= */
@@ -1271,6 +1276,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal)
 
 export { SKILLS, ITEMS }

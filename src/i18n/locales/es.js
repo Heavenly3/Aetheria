@@ -12,7 +12,7 @@ export default {
   time: { dh: '{d} d {h} h', hm: '{h} h {m} min', ms: '{m} min {s} s', s: '{s} s', hours: '{n} h' },
 
   nav: {
-    hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
+    journal: 'Diario', hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
     pets: 'Mascotas', forge: 'Forja', bestiary: 'Bestiario', festival: 'Festival', omens: 'Prodigios', weekly: 'Jefe semanal',
@@ -62,6 +62,7 @@ export default {
   },
 
   toast: {
+    chapter: 'Nueva página del diario: <b>{name}</b>',
     levelUp: '<b>{skill}</b> alcanza el nivel <b>{level}</b>', heroLevel: '¡Héroe nivel <b>{level}</b>!', heroLevelPlain: 'Héroe nivel {level}',
     pointsToSpend: 'Tienes puntos por repartir', mastery: 'Maestría {level}: <b>{name}</b>', rare: 'Botín raro: <b>{item}</b>',
     achievement: 'Logro desbloqueado: <b>{name}</b>', quest: 'Misión completada: <b>{name}</b>', death: 'Has caído ante <b>{name}</b>',
@@ -232,6 +233,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    chapter: 'Nueva página del diario: {chapter}.',
     start: '{name} empieza su aventura como {role}.', heroLevel: 'Nivel de héroe {level} (+{points} puntos).',
     levelUp: '{skill} sube a nivel {level}.', mastery: 'Maestría {level} en {name}.', found: 'Encontrado: {item}.',
     bestiaryGroup: 'Grupo del bestiario completado: {group}.', drop: '¡{monster} suelta {item}!', towerFloor: 'Nuevo récord en la Torre: piso {floor}.', dungeonFirst: 'Primera vez que completas {dungeon}.',
@@ -543,6 +545,7 @@ export default {
   help: {
     // Una guía por pantalla, en el "?" junto al título de la pantalla
     screens: {
+      journal: { title: 'Diario', body: 'La historia de Aetheria, contada en capítulos cortos que se desbloquean al explorar, derrotar jefes y presenciar prodigios. Abre una página para leerla y vuelve a ella cuando quieras. El diario se conserva al ascender, y cada ascensión trae un recuerdo de una vida pasada.' },
       hero: { title: 'Héroe', body: 'Tu héroe de un vistazo: equipo, herramientas, habilidades y lo último que ha pasado. Gasta los puntos de atributo y talento en sus pestañas al subir de nivel, y pulsa un objeto puesto para quitártelo.' },
       inventory: { title: 'Inventario', body: 'Todo lo que llevas, ordenado por grupos y categorías. Elige un objeto para ver qué hace, equiparlo o usarlo, compararlo con tu equipo y ver qué recetas lo necesitan. Bloquea lo que no quieras vender por error.' },
       skill: { title: '{skill}', body: 'Elige una acción para empezar a entrenar; se repite sola, incluso mientras no juegas. Cada acción sube su propia maestría, que la hace más rápida. Usa la cola para encadenar varias acciones seguidas.' },
@@ -666,6 +669,134 @@ export default {
     storm: { name: 'Tormenta eléctrica', desc: 'Los relámpagos parten el cielo y los truenos ruedan sobre las montañas.' },
     heatwave: { name: 'Ola de calor', desc: 'El aire tiembla. Hasta los ríos parecen cansados.' },
     blizzard: { name: 'Ventisca', desc: 'Viento aullante y una nieve tan espesa que no ves ni tu mano.' },
+  },
+
+  journal: {
+    tabs: {
+      story: "Historia",
+      people: "Personajes",
+      memories: "Recuerdos",
+    },
+    intro: "Aquí queda escrito todo lo que ha vivido tu héroe, para que puedas releerlo cuando quieras. Aparecen páginas nuevas a medida que exploras.",
+    progress: "{n} / {total} páginas",
+    new: "Nuevo",
+    locked: "???",
+    readAll: "Marcar todo como leído",
+    soon: "Aún se está escribiendo…",
+    unknownPerson: "Alguien a quien aún no conoces",
+    memoriesIntro: "Cada vez que asciendes, vuelve un recuerdo de una vida pasada.",
+    memoryLocked: "Vuelve tras la ascensión {n}",
+    acts: {
+      prologue: "Prólogo",
+      act1: "Acto I · El camino del alba",
+      act2: "Acto II · Hierro y savia",
+      act3: "Acto III · La capital caída",
+      act4: "Acto IV · Hielo y fuego",
+      act5: "Acto V · La herida del mundo",
+      act6: "Acto VI · Sobre el cielo",
+    },
+    hints: {
+      firstQuest: "Completa tu primera misión",
+      firstOmen: "Presencia un prodigio",
+      forest: "Derrota a una criatura del Bosque Sombrío",
+      warrenChief: "Derrota al Cacique Goblin en la Madriguera Goblin",
+      caves: "Derrota a una criatura de las Cavernas de Hierro",
+      smithing: "Llega al nivel 40 de Herrería",
+      swamp: "Derrota a una criatura del Pantano Podrido",
+      naga: "Derrota a la Gran Naga en el Templo de la Serpiente",
+    },
+    chapters: {
+      awakening: {
+        title: "El despertar",
+        text: "Despiertas en la hierba de las Praderas del Alba, con el sol en los ojos y sin saber cómo has llegado. Tu nombre sigue siendo tuyo. Casi todo lo demás es niebla.\n\nUn hombre corpulento con el delantal lleno de harina te ayuda a levantarte. «Tranquilo, amigo. Soy {keeper}, llevo la Jarra Dorada de Albor. A esta pradera llegan héroes más a menudo de lo que crees». Te mira la cara un instante de más. «Qué raro. Juraría que ya nos conocemos».\n\nTe da un cuenco de guiso, un pico viejo y un consejo: «Trabaja, lucha, hazte fuerte. El reino llevaba tiempo esperando a alguien como tú. Siempre lo espera».",
+      },
+      crown_tale: {
+        title: "La leyenda de la Corona",
+        text: "Esa noche la taberna está llena y {keeper} cuenta la historia que todos los niños de Albor conocen.\n\n«Hace mucho, este reino brillaba. Nuestros reyes llevaban la Corona de Aether, forjada con la luz de las estrellas fugaces. Con ella hacían crecer los campos y mantenían lejos a los monstruos».\n\n«El último de ellos, {king} el Alto, quiso más. Subió a lo más alto del cielo para convertirse él mismo en estrella. Algo allí arriba abrió su ojo, y la Corona estalló en siete pedazos».\n\n«Ahora nos gobierna el rey Edmund. Un buen hombre, pero un rey sin corona. ¿Y {king}?». {keeper} se encoge de hombros. «Nunca nadie lo encontró».",
+      },
+      sky_watcher: {
+        title: "La vigía del cielo",
+        text: "El prodigio apenas se ha desvanecido cuando una mujer con una capa bordada de estrellas se sienta a tu mesa sin pedir permiso. «Tú también lo has sentido. La mayoría solo ve luces bonitas».\n\nEs {astrologer}, del Observatorio. «Lluvias de estrellas, lunas de sangre, cometas… Los llamamos prodigios. Yo creo que algo nos está mirando. Algunos pensamos que intenta hablar».\n\nAntes de irse te desliza una hoja de su cuaderno. «Cada prodigio llega con una señal. Apúntalas. Algún día puede que tengan sentido».",
+      },
+      kings_road: {
+        title: "El camino del rey",
+        text: "En lo profundo del Bosque Sombrío, los bandidos tienen un dicho: nunca sigas el camino viejo de noche. Por supuesto, lo sigues.\n\nBajo el musgo hay losas talladas con coronas, todas señalando hacia el mismo lado: al norte, hacia las montañas, hacia el cielo. Es el camino que tomó {king} en su último viaje.\n\nAl final del sendero encuentras los restos de un campamento real. En las cenizas de una hoguera, alguien grabó una sola frase en una piedra: «Perdonadme. Solo quería conservar la luz».",
+      },
+      night_path: {
+        title: "Bajo la madriguera",
+        text: "El Cacique Goblin cae, y su tesoro es lo de siempre: cobre, huesos, una cuchara oxidada. Pero de su cuello cuelga algo más: una astilla de cristal que brilla con un leve tono dorado.\n\nAl tocarla, durante un solo latido, recuerdas un lugar en el que nunca has estado: un salón de piedra blanca y una corona sobre un cojín.\n\nDe vuelta en la taberna, {keeper} mira la astilla durante un buen rato. «Escóndela», dice al fin. «Hay quien haría cualquier cosa por una mota de aether. Y quien haría algo peor por lo que significa».",
+      },
+      iron_heart: {
+        title: "El corazón de hierro",
+        text: "Las Cavernas de Hierro zumban. Pega la oreja a la roca y lo oirás: un latido lento, como un yunque muy lejano.\n\nUna mujer robusta, con hollín hasta los codos, se ríe de ti. «¿Primera vez? Es la forja. Sigue trabajando trescientos años después de que se fueran los herreros». Es {smith}, maestra del Gremio del Yunque.\n\n«Aquí forjaron la Corona, ¿sabes? Con aetherium, un metal que solo crece aquí abajo. ¿Esos gólems que no paras de romper? Herramientas viejas de la forja. Nadie les dijo nunca que pararan».",
+      },
+      brins_secret: {
+        title: "El secreto de la herrera",
+        text: "{smith} te observa trabajar en el yunque y asiente despacio. «Tienes buenas manos. Lo bastante buenas para confiar en ti».\n\nEcha el cerrojo y abre una cajita de hierro. Dentro, envuelto en terciopelo, hay un fragmento de la Corona de Aether, mucho más grande que el tuyo y tibio como algo vivo.\n\n«El Gremio lleva cien años reuniéndolos en secreto. Si encontramos los siete, podremos forjar de nuevo la Corona y devolverle la luz al reino». Cierra la caja. «No todos están de acuerdo. La Orden dice que la luz nunca fue nuestra. Otros dicen cosas peores».",
+      },
+      living_mire: {
+        title: "El pantano vivo",
+        text: "En el Pantano Podrido todo crece. Las raíces se mueven cuando no miras, las flores se giran para seguir tus pasos y el agua está tibia como la sangre.\n\nAquí cayó un pedazo de la Corona: el que los libros antiguos llaman el Fragmento de la Savia, el corazón de la vida misma. Sin un rey que lo dominara, nunca dejó de dar. Ahora da demasiado.\n\nEntre los juncos se alzan los viejos altares del Templo de la Serpiente, cuyos sacerdotes rezaban por la vida eterna. Parece que algo les respondió.",
+      },
+      serpent_priestess: {
+        title: "La sacerdotisa serpiente",
+        text: "La Gran Naga se enrosca una última vez antes de caer. Con su último aliento habla, y la voz no es la suya.\n\n«Así que tú eres quien recuerda. Llevas un pedazo de la corona de mi hermano y ni siquiera sabes qué más llevas dentro».\n\nLa voz es fría, muy antigua, y le divierte la situación. «Soy Morwen. He esperado mil años. Puedo esperar un poco más a que vengas a mí».\n\nLa Naga se queda inmóvil. Muy al norte, en las Ruinas Malditas, una campana empieza a doblar.",
+      },
+    },
+    people: {
+      keeper: {
+        name: "{keeper}",
+        role: "Tabernero de la Jarra Dorada",
+        desc: "Lleva la taberna de Albor y recibe a cada héroe que despierta en las praderas. Parece saber más de lo que dice.",
+      },
+      edmund: {
+        name: "El rey Edmund",
+        role: "Un rey sin corona",
+        desc: "Gobierna lo que quedó del reino. Justo y cansado, envía héroes allí donde sus soldados no pueden llegar.",
+      },
+      king: {
+        name: "{king} el Alto",
+        role: "El último rey",
+        desc: "Llevó la Corona de Aether y subió al cielo para convertirse en estrella. La Corona estalló y nadie sabe qué fue de él.",
+      },
+      astrologer: {
+        name: "{astrologer}",
+        role: "Astróloga del Observatorio",
+        desc: "Estudia los prodigios y sus señales. Cree que algo por encima del cielo intenta hablar.",
+      },
+      smith: {
+        name: "{smith}",
+        role: "Maestra del Gremio del Yunque",
+        desc: "Trabaja la antigua forja de las Cavernas de Hierro y sueña con forjar de nuevo la Corona.",
+      },
+      morwen: {
+        name: "Morwen, la Reina Liche",
+        role: "Hermana del primer rey",
+        desc: "Lleva mil años gobernando a los muertos. Quiere que la Corona vuelva a su familia, y te está esperando.",
+      },
+    },
+    memories: {
+      life1: {
+        title: "El primer recuerdo",
+        text: "Caes, y vuelves a despertar en las Praderas del Alba con el sol en los ojos. Pero esta vez recuerdas algo.\n\nUna larga escalera de luz. Un viento frío. Una mano, quizá la tuya, alargándose hacia una corona que se rompe.\n\n{keeper} te ayuda a levantarte, como siempre. «Tranquilo, amigo». Y por primera vez te fijas en que le tiemblan las manos.",
+      },
+      life2: {
+        title: "El segundo recuerdo",
+        text: "Otra vida, otro despertar. El recuerdo es más nítido.\n\nEstabas en lo alto de la Aguja. No eras el rey. Estabas detrás de él, e intentaste detenerlo.\n\nCuando la Corona estalló, un fragmento no cayó al suelo. Cayó dentro de ti.",
+      },
+      life3: {
+        title: "El tercer recuerdo",
+        text: "La Jarra Dorada guarda un registro de cada héroe que ha despertado en las Praderas del Alba. Le pides a {keeper} que te lo enseñe.\n\nTu nombre está ahí. Hace cien años. Doscientos. Trescientos. La letra cambia; el nombre no.\n\n«No quería asustarte», dice {keeper}. «El Gremio lo sabe desde hace mucho. Siempre vuelves. Lo que nunca supimos es por qué».",
+      },
+      life4: {
+        title: "El cuarto recuerdo",
+        text: "En un sueño estás bajo el cielo abierto, y el cielo te devuelve la mirada.\n\nNo está enfadado. No es amable. Siente curiosidad, como un niño que mira a una hormiga cargar una miga demasiado grande para ella.\n\nDespiertas con sabor a luz de estrellas en la boca y una palabra que no consigues recordar.",
+      },
+      life5: {
+        title: "El quinto recuerdo",
+        text: "En cada vida te acercas un poco más. En cada vida los prodigios llegan un poco más a menudo.\n\n{astrologer} por fin ha ordenado las señales. Leídas juntas, dice, forman una frase, pero aún faltan sus últimas palabras.\n\n«Cuando la luz vuelva a caer, despertará quien ya cayó. Ni rey ni santo. El que recuerda…»",
+      },
+    },
   },
 
   weekly: {

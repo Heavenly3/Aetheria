@@ -28,7 +28,7 @@ function startLoop() {
     if (dt > CATCHUP) catchUp(dt)
     else G.update(dt)
   }, 100))
-  timers.push(setInterval(() => G.checkAchievements(), 2000))
+  timers.push(setInterval(() => { G.checkAchievements(); G.checkJournal() }, 2000))
   timers.push(setInterval(() => { if (!document.hidden) G.maybeEvent() }, 60_000))
   timers.push(setInterval(() => G.snapshot(), 300_000))
   G.snapshot()
