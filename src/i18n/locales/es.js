@@ -273,6 +273,8 @@ export default {
   },
 
   combat: {
+    weaponMismatch: "Esta arma es para {style}: con este estilo lucha mucho peor.",
+    useStyle: "Cambiar a {style}",
     weaponTitle: "Tu arma",
     unarmed: "Sin arma",
     trains: "Entrena {skill}",

@@ -49,6 +49,10 @@ const ammo = computed(() => state.equipment.ammo)
 // The weapon in hand and how it fights: pace, crit chance and the status it can leave
 const weapon = computed(() => state.equipment.weapon)
 const wp = computed(() => weaponProfile(weapon.value))
+// A weapon made for another style is wasted: say which style it is for
+const weaponStyle = computed(() => (weapon.value ? ITEMS[weapon.value].style || 'melee' : null))
+const mismatch = computed(() => weaponStyle.value && weaponStyle.value !== G.styleType())
+const styleFor = type => Object.keys(COMBAT_STYLES).find(k => COMBAT_STYLES[k].type === type)
 const weaponLine = computed(() => {
   const parts = [t('fighting.weaponLine', { speed: fmtDec(G.attackSpeed()), crit: Math.round(G.critChance() * 100) + '%' })]
   for (const f of G.heroEffects()) parts.push(t('fighting.weaponFx', { chance: Math.round(f.chance * 100) + '%', status: t(`fighting.statuses.${f.id}.name`).toLowerCase() }))
@@ -77,6 +81,11 @@ const weaponLine = computed(() => {
           <div class="small" style="color:var(--ink-2)">{{ weaponLine }}</div>
         </div>
         <span class="tag" v-tooltip.top="$t('combat.trainsHint')">{{ $t('combat.trains', { skill: $t(`skills.${COMBAT_STYLES[state.combatStyle].skill}.name`) }) }}</span>
+      </div>
+      <div v-if="mismatch" class="mismatch row">
+        <i class="pi pi-exclamation-triangle" />
+        <span class="grow">{{ $t('combat.weaponMismatch', { style: $t(`combat.types.${weaponStyle}`) }) }}</span>
+        <button class="link" @click="state.combatStyle = styleFor(weaponStyle)">{{ $t('combat.useStyle', { style: COMBAT_STYLES[styleFor(weaponStyle)].name }) }}</button>
       </div>
       <div v-if="state.combatStyle === 'magic'" class="stack" style="margin-top:14px">
         <label class="small muted" for="spell-select">{{ $t('combat.spell') }} <HelpTip k="combat.spell" /></label>
@@ -152,6 +161,8 @@ const weaponLine = computed(() => {
 .style-btn.active { border-color: var(--gold); background: rgba(226, 182, 90, 0.08); box-shadow: inset 0 0 0 1px rgba(226, 182, 90, 0.3); }
 .style-btn.active .gi { color: var(--gold); }
 .w-full { width: 100%; }
+.mismatch { gap: 8px; margin-top: 8px; padding: 8px 10px; border-radius: 10px; font-size: 13px; color: var(--warn); background: color-mix(in srgb, var(--warn) 10%, transparent); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); }
+.mismatch .link { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--gold); cursor: pointer; text-decoration: underline; }
 .weapon { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 10px 12px; border-radius: 12px; background: var(--tint-1); border: 1px solid var(--line); }
 @media (max-width: 560px) { .weapon { flex-wrap: wrap; } }
 .sets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }

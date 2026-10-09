@@ -32,14 +32,17 @@ function toggle(a) {
     <!-- The bar: left to right is the order they are tried in -->
     <div class="bar-slots">
       <div v-for="(id, i) in slots" :key="i" class="slot" :class="{ empty: !id }">
+        <span class="slot-n">{{ i + 1 }}</span>
         <template v-if="id">
           <ItemTile :icon="ABILITY_MAP[id].icon" tint="#6a4fbf" size="sm" :tip="false" />
-          <span class="grow slot-name">{{ $t(`abilities.list.${id}`) }}</span>
-          <button class="mini" :disabled="i === 0" :aria-label="$t('abilities.left')" @click="G.moveAbility(id, -1)"><i class="pi pi-angle-left" /></button>
-          <button class="mini" :disabled="i === bar.length - 1" :aria-label="$t('abilities.right')" @click="G.moveAbility(id, 1)"><i class="pi pi-angle-right" /></button>
-          <button class="mini" :aria-label="$t('abilities.remove')" @click="G.toggleAbility(id)"><i class="pi pi-times" /></button>
+          <span class="slot-name">{{ $t(`abilities.list.${id}`) }}</span>
+          <span class="slot-tools">
+            <button class="mini" :disabled="i === 0" :aria-label="$t('abilities.left')" v-tooltip.top="$t('abilities.left')" @click="G.moveAbility(id, -1)"><i class="pi pi-angle-left" /></button>
+            <button class="mini" :aria-label="$t('abilities.remove')" v-tooltip.top="$t('abilities.remove')" @click="G.toggleAbility(id)"><i class="pi pi-times" /></button>
+            <button class="mini" :disabled="i === bar.length - 1" :aria-label="$t('abilities.right')" v-tooltip.top="$t('abilities.right')" @click="G.moveAbility(id, 1)"><i class="pi pi-angle-right" /></button>
+          </span>
         </template>
-        <span v-else class="small faint">{{ $t('abilities.emptySlot', { n: i + 1 }) }}</span>
+        <span v-else class="small faint slot-empty">{{ $t('abilities.emptySlot', { n: i + 1 }) }}</span>
       </div>
     </div>
 
@@ -61,11 +64,15 @@ function toggle(a) {
 </template>
 
 <style scoped>
-.bar-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-.slot { display: flex; align-items: center; gap: 6px; min-height: 46px; padding: 6px 8px; border-radius: 12px; border: 1px solid var(--line-hi); background: var(--tint-1); }
+.bar-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+.slot { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0; min-height: 112px; padding: 10px 8px 6px; border-radius: 12px; border: 1px solid var(--line-hi); background: var(--tint-1); text-align: center; }
+.slot-n { position: absolute; top: 6px; inset-inline-start: 8px; font-size: 11px; font-weight: 800; color: var(--gold); }
+.slot-tools { display: flex; gap: 2px; margin-top: auto; }
+.slot-empty { margin: auto 0; }
 .slot.empty { border-style: dashed; border-color: var(--line); justify-content: center; }
-.slot-name { font-size: 13px; font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mini { background: none; border: 0; color: var(--muted); padding: 2px 3px; cursor: pointer; }
+.slot-name { font-size: 13px; font-weight: 700; line-height: 1.2; max-width: 100%; overflow-wrap: anywhere; }
+.mini { background: none; border: 0; color: var(--muted); padding: 3px 6px; border-radius: 6px; cursor: pointer; }
+.mini:not(:disabled):hover { background: var(--tint-2); }
 .mini:disabled { opacity: 0.3; cursor: default; }
 .mini:not(:disabled):hover { color: var(--ink); }
 .ab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
@@ -76,5 +83,5 @@ function toggle(a) {
 .ab-name { display: block; font-weight: 700; font-size: 14px; }
 .ab-desc { display: block; font-size: 12px; color: var(--ink-2); line-height: 1.4; margin-top: 2px; }
 .ab-meta { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
-@media (max-width: 640px) { .bar-slots { grid-template-columns: 1fr; } }
+
 </style>
