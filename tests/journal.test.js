@@ -91,4 +91,28 @@ describe('tavern keeper', () => {
     expect(ids).toContain('sliver')
     for (const r of RUMORS) expect(i18n.global.te(`journal.rumors.${r.id}`, 'en')).toBe(true)
   })
+  it('tells the third act in the fallen capital', () => {
+    newHero()
+    const ids = ['tolling_bell', 'guild_ledger', 'empty_tomb', 'eternal_servant', 'queen_of_bones']
+    ids.forEach(id => expect(G.chapterUnlocked(id)).toBe(false))
+    state.bestiary.kills.specter = 1
+    state.guilds.rep.g0 = 0
+    state.dungeonsBy.crypt = 1
+    state.bestiary.kills.necromancer = 1
+    G.checkJournal()
+    ids.slice(0, 4).forEach(id => expect(G.chapterUnlocked(id)).toBe(true))
+    expect(G.chapterUnlocked('queen_of_bones')).toBe(false)
+    state.bestiary.kills.gargoyle = 149
+    G.checkJournal()
+    expect(G.chapterUnlocked('queen_of_bones')).toBe(true)
+    expect(ACTS.find(a => a.id === 'act3').soon).toBeFalsy()
+  })
+
+  it('names characters added after a save was made', () => {
+    newHero()
+    delete state.journal.names.priest
+    G.ensureJournal()
+    expect(state.journal.names.priest).toMatch(/^[A-Z][a-z]{3,8}$/)
+    expect(Object.values(state.journal.names).filter(n => n === state.journal.names.priest)).toHaveLength(1)
+  })
 })

@@ -1235,6 +1235,10 @@ export default {
       ask: "¿Alguna novedad?",
     },
     rumors: {
+      capital: "La vieja capital, Alba Mayor. Mi abuela decía que sus campanas sonaban en las bodas. Ahora no suenan para nadie.",
+      ledger: "¿Los registros del gremio? Libros viejos llenos de nombres viejos. Algunos nombres se repiten más que otros. Bebe.",
+      priest: "El hermano {priest} vino a por sopa. Educado, callado, y no soltó ese librito en toda la comida. ¿Qué puede haber en un libro para no soltarlo ni para comer?",
+      queen: "La has visto, ¿verdad? A la Reina. Se te nota en la cara. Todo el que la conoce duerme mal durante una semana.",
       ale: "Prueba la cerveza ámbar. Receta de mi abuela. Juraba que la hacía con una pizca de luz de estrella. Creo que solo le gustaba decirlo.",
       stew: "El guiso del día es el guiso de ayer con más cebolla. Nadie se ha quejado todavía. Nadie lo bastante valiente, al menos.",
       heroes: "Todos los héroes que cruzan esa puerta dicen que volverán para cenar. Te sorprendería cuántos lo hacen.",
@@ -1277,6 +1281,11 @@ export default {
       act6: "Acto VI · Sobre el cielo",
     },
     hints: {
+      ruins: "Derrota a una criatura en las Ruinas Malditas",
+      guild: "Entra en un gremio",
+      crypt: "Supera la Cripta olvidada",
+      necromancer: "Derrota al Nigromante Eterno",
+      queen: "Derrota al Nigromante Eterno y a 150 criaturas en las Ruinas Malditas",
       firstQuest: "Completa tu primera misión",
       firstOmen: "Presencia un prodigio",
       forest: "Derrota a una criatura del Bosque Sombrío",
@@ -1287,6 +1296,26 @@ export default {
       naga: "Derrota a la Gran naga en el Templo de la serpiente",
     },
     chapters: {
+      tolling_bell: {
+        title: "La campana de Alba Mayor",
+        text: "La campana no ha dejado de sonar desde que cayó la Naga. La sigues hacia el norte hasta que el camino se vuelve piedra blanca y la piedra se vuelve muralla.\n\nEsto fue Alba Mayor, la capital de los reyes. Torres sin tejado, una plaza cubierta de hiedra, un salón del trono abierto al cielo. Y en cada puerta, caballeros con armaduras oxidadas que no terminan de estar ahí.\n\nUno de ellos baja la espada al verte pasar. «El rey se retrasa», dice, con una voz como el viento en el ojo de una cerradura. «Guardamos la puerta hasta que vuelva».\n\nLe preguntas cuánto tiempo llevan esperando. El caballero se lo piensa mucho. «Desde esta mañana», responde. Han pasado trescientos años.",
+      },
+      guild_ledger: {
+        title: "El registro",
+        text: "Cada gremio lleva un registro, y el tuyo es más viejo que la sala donde se guarda. El archivero, un hombre delgado con tinta en los labios, escribe tu nombre despacio, letra a letra.\n\nEntonces se detiene. Retrocede cien páginas, luego doscientas. Sopla el polvo de una línea escrita con tinta marrón y desvaída.\n\nEs tu nombre. La misma ortografía, la misma letra. Al lado, una fecha de mucho antes de que nacieras y una nota: «Despertó en los Prados del Alba. No recordaba nada».\n\n«Un nombre corriente», dice el archivero, demasiado deprisa, y cierra el libro. Esa noche, {keeper} te sirve una copa que no has pedido y no te pregunta qué tal el día.",
+      },
+      empty_tomb: {
+        title: "La tumba vacía",
+        text: "Bajo las ruinas, la Cripta olvidada guarda a los reyes en hileras de piedra. Al final de la última hilera está la tumba más grande de todas, tallada con una corona de siete puntas.\n\nEs la tumba de {king} el Alto. La losa está apartada. La tumba está vacía, y la piedra de dentro está llena de arañazos.\n\nLos hicieron desde dentro.\n\nUn sacerdote de túnica gris espera junto a la escalera, como si te estuviera esperando. «Soy el hermano {priest}, de la Orden del Alba», dice. «Cuidamos esta cripta desde la noche en que las estrellas se quedaron quietas. Por favor, no le cuentes a nadie lo que has visto». Aprieta un librito contra el pecho y no lo suelta.",
+      },
+      eternal_servant: {
+        title: "El siervo eterno",
+        text: "El Nigromante Eterno cae de rodillas, y la oscuridad de sus ojos se apaga como una vela. Por un momento parece lo que fue: un anciano muy cansado.\n\n«Me pidió que mantuviera a los muertos en orden hasta que llegara el verdadero heredero», susurra. «Sangre real en el trono de Alba Mayor y la Corona entera otra vez. Solo así se cerrará la herida del cielo».\n\n«No es cruel, ¿sabes? Tiene miedo. Lleva mil años con miedo».\n\nTe mira, y algo parecido al reconocimiento le cruza la cara. «Vaya», dice. «No me dijo que volvías a ser tú». Y se convierte en polvo.",
+      },
+      queen_of_bones: {
+        title: "La Reina de los Huesos",
+        text: "La campana se calla. En el silencio, los caballeros de las puertas se arrodillan a la vez.\n\nBaja por la escalinata del salón del trono: alta, delgada, coronada de escarcha, con una túnica del color de un moratón viejo. Morwen no parece un monstruo. Parece alguien que lleva muchísimo tiempo esperando junto a una ventana.\n\n«Has crecido», dice, aunque nunca os habéis visto. «Cada vez creces un poco. Cada vez olvidas».\n\n«Dame lo que llevas y volveré a unir la Corona de mi hermano. Quédatelo, y el cielo seguirá abriéndose, un ojo cada vez». Sonríe. «No contestes ahora. Ve al norte, al hielo. Pregúntale a la Reina del Invierno lo que cuesta que las cosas sigan como están. Luego vuelve conmigo».\n\nSe ha ido antes de que puedas hablar. Solo queda la escarcha sobre el trono.",
+      },
       awakening: {
         title: "El despertar",
         text: "Despiertas en la hierba de los Prados del Alba, con el sol en los ojos y sin saber cómo has llegado. Tu nombre sigue siendo tuyo. Casi todo lo demás es niebla.\n\nUn hombre corpulento con el delantal lleno de harina te ayuda a levantarte. «Tranquilo, amigo. Soy {keeper}, llevo la Jarra Dorada de Albor. A este prado llegan héroes más a menudo de lo que crees». Te mira la cara un instante de más. «Qué raro. Juraría que ya nos conocemos».\n\nTe da un cuenco de guiso, un pico viejo y un consejo: «Trabaja, lucha, hazte fuerte. El reino llevaba tiempo esperando a alguien como tú. Siempre lo espera».",
@@ -1325,6 +1354,11 @@ export default {
       },
     },
     people: {
+      priest: {
+        name: "Hermano {priest}",
+        role: "Hermano de la Orden del Alba",
+        desc: "Cuida la Cripta olvidada en nombre de la Orden. Amable y prudente, siempre lleva un librito que nunca abre delante de nadie.",
+      },
       keeper: {
         name: "{keeper}",
         role: "Tabernero de la Jarra Dorada",

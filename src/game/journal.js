@@ -2,7 +2,7 @@
    JOURNAL — the story, unlocked chapter by chapter and kept forever.
    Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
-import { CHAPTERS, CHAPTER_MAP, MEMORIES, rollNames } from './data/journal.js'
+import { CHAPTERS, CHAPTER_MAP, MEMORIES, NAMED, rollNames, rollName } from './data/journal.js'
 
 export const journalState = () => ({
   // names: the characters' names rolled for this save · chapters: id -> when it was unlocked · read: ids already read
@@ -13,6 +13,14 @@ export const journal = {
   ensureJournal() {
     const j = this.s.journal
     if (!j.names) j.names = rollNames()
+    // Characters added after the save was made get a name of their own
+    for (const [id, kind] of Object.entries(NAMED)) {
+      if (j.names[id]) continue
+      let n
+      do n = rollName(Math.random, kind)
+      while (Object.values(j.names).includes(n))
+      j.names[id] = n
+    }
     j.chapters ||= {}
     j.read ||= {}
     return j

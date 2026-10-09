@@ -16,7 +16,7 @@ const SYL = {
   she: ['a', 'ia', 'is', 'wyn', 'elle', 'ara', 'ine', 'ys', 'eth', 'ira', 'ene', 'lyn', 'ora', 'issa', 'ae'],
 }
 // Who gets a rolled name, and which name endings suit them in the texts
-export const NAMED = { keeper: 'he', astrologer: 'she', smith: 'she', king: 'he' }
+export const NAMED = { keeper: 'he', astrologer: 'she', smith: 'she', king: 'he', priest: 'he' }
 
 export function rollName(rng, kind) {
   const pick = a => a[Math.floor(rng() * a.length)]
@@ -39,6 +39,8 @@ export function rollNames(rng = Math.random) {
 
 const areaMonsters = id => AREAS.find(a => a.id === id).monsters.map(m => m.id)
 const beat = id => g => (g.s.bestiary.kills[id] || 0) > 0
+const areaKills = id => { const ms = areaMonsters(id); return g => ms.reduce((n, m) => n + (g.s.bestiary.kills[m] || 0), 0) }
+export const RUINS_KILLS = 150
 const beatArea = id => { const ms = areaMonsters(id); return g => ms.some(m => (g.s.bestiary.kills[m] || 0) > 0) }
 
 // Acts follow the regions of the realm; acts without chapters yet are still being written
@@ -46,7 +48,7 @@ export const ACTS = [
   { id: 'prologue', icon: 'candle-light' },
   { id: 'act1', icon: 'pine-tree' },
   { id: 'act2', icon: 'stone-block' },
-  { id: 'act3', icon: 'crowned-skull', soon: true },
+  { id: 'act3', icon: 'crowned-skull' },
   { id: 'act4', icon: 'ice-spell-cast', soon: true },
   { id: 'act5', icon: 'vortex', soon: true },
   { id: 'act6', icon: 'sun', soon: true },
@@ -63,6 +65,11 @@ export const CHAPTERS = [
   { id: 'brins_secret', act: 'act2', icon: 'gem-pendant', hint: 'smithing', check: g => g.level('smithing') >= 40 },
   { id: 'living_mire', act: 'act2', icon: 'mushroom', hint: 'swamp', check: beatArea('swamp') },
   { id: 'serpent_priestess', act: 'act2', icon: 'snake', hint: 'naga', check: beat('naga') },
+  { id: 'tolling_bell', act: 'act3', icon: 'castle-ruins', hint: 'ruins', check: beatArea('ruins') },
+  { id: 'guild_ledger', act: 'act3', icon: 'scroll-quill', hint: 'guild', check: g => !!g.s.guilds?.member || Object.keys(g.s.guilds?.rep || {}).length > 0 },
+  { id: 'empty_tomb', act: 'act3', icon: 'crowned-skull', hint: 'crypt', check: g => (g.s.dungeonsBy.crypt || 0) > 0 },
+  { id: 'eternal_servant', act: 'act3', icon: 'skull-staff', hint: 'necromancer', check: beat('necromancer') },
+  { id: 'queen_of_bones', act: 'act3', icon: 'crown-of-thorns', hint: 'queen', check: g => beat('necromancer')(g) && areaKills('ruins')(g) >= RUINS_KILLS },
 ]
 export const CHAPTER_MAP = Object.fromEntries(CHAPTERS.map(c => [c.id, c]))
 
@@ -74,6 +81,7 @@ export const CHARACTERS = [
   { id: 'astrologer', icon: 'crystal-ball', tint: '#a98bff', met: 'sky_watcher' },
   { id: 'smith', icon: 'anvil-impact', tint: '#ff9a3c', met: 'iron_heart' },
   { id: 'morwen', icon: 'crowned-skull', tint: '#7ad7ff', met: 'serpent_priestess' },
+  { id: 'priest', icon: 'holy-symbol', tint: '#cfd8e3', met: 'empty_tomb' },
 ]
 
 // One memory of a past life comes back with each ascension
@@ -97,7 +105,11 @@ export const RUMORS = [
   { id: 'swamp', when: all(has('iron_heart'), not(has('living_mire'))) },
   { id: 'shards', when: has('brins_secret') },
   { id: 'naga', when: all(has('living_mire'), not(has('serpent_priestess'))) },
-  { id: 'bell', when: has('serpent_priestess') },
+  { id: 'bell', when: all(has('serpent_priestess'), not(has('tolling_bell'))) },
+  { id: 'capital', when: all(has('tolling_bell'), not(has('empty_tomb'))) },
+  { id: 'ledger', when: has('guild_ledger') },
+  { id: 'priest', when: has('empty_tomb') },
+  { id: 'queen', when: has('queen_of_bones') },
   { id: 'astrologer', when: has('sky_watcher') },
   { id: 'weekly', when: g => g.weeklyUnlocked() },
   { id: 'reborn', when: g => (g.s.ascension?.count || 0) > 0 },

@@ -1235,6 +1235,10 @@ export default {
       ask: "Any news?",
     },
     rumors: {
+      capital: "The old capital, Highdawn. My grandmother said its bells rang for weddings. Now they ring for nobody.",
+      ledger: "The guild ledgers? Old books full of old names. Some names come round more often than others. Drink up.",
+      priest: "Brother {priest} came by for soup. Polite, quiet, and he kept one hand on that little book the whole time. What is in a book that you cannot put it down to eat?",
+      queen: "You saw her, didn't you? The Queen. You have that look. Everyone who meets her sleeps badly for a week.",
       ale: "Try the amber ale. My grandmother's recipe. She swore it was brewed with a pinch of starlight. I think she just liked saying that.",
       stew: "Stew of the day is the stew of yesterday, with more onion. Nobody has complained yet. Nobody brave enough, anyway.",
       heroes: "Every hero who comes through that door says they will be back for dinner. You would be surprised how many do.",
@@ -1277,6 +1281,11 @@ export default {
       act6: "Act VI · Above the Sky",
     },
     hints: {
+      ruins: "Defeat a creature in the Cursed Ruins",
+      guild: "Join a guild",
+      crypt: "Clear the Forgotten Crypt",
+      necromancer: "Defeat the Eternal Necromancer",
+      queen: "Defeat the Eternal Necromancer and 150 creatures in the Cursed Ruins",
       firstQuest: "Complete your first quest",
       firstOmen: "Witness an omen",
       forest: "Defeat a creature in the Shadow Wood",
@@ -1287,6 +1296,26 @@ export default {
       naga: "Defeat the Great Naga in the Serpent Temple",
     },
     chapters: {
+      tolling_bell: {
+        title: "The Bell of Highdawn",
+        text: "The bell has not stopped since the Naga fell. You follow it north until the road turns to white stone, and the stone turns to walls.\n\nThis was Highdawn, the capital of the kings. Towers without roofs, a square full of ivy, a throne room open to the sky. And at every gate, knights in rusted armour who are not quite there.\n\nOne of them lowers his blade as you pass. \"The king is late,\" he says, in a voice like wind through a keyhole. \"We keep the gate until he returns.\"\n\nYou ask how long they have waited. The knight thinks about it for a long time. \"Since this morning,\" he says. It has been three hundred years.",
+      },
+      guild_ledger: {
+        title: "The Ledger",
+        text: "Every guild keeps a ledger, and yours is older than the hall it sits in. The archivist, a thin man with ink on his lips, writes your name slowly, letter by letter.\n\nThen he stops. He turns back a hundred pages, then two hundred. He blows the dust off a line written in faded brown ink.\n\nIt is your name. Same spelling, same hand. Next to it, a date from long before you were born, and a note: \"Woke in the Dawn Meadows. Did not remember.\"\n\n\"A common name,\" the archivist says, too quickly, and closes the book. That night {keeper} pours you a drink you did not order, and does not ask about your day.",
+      },
+      empty_tomb: {
+        title: "The Empty Tomb",
+        text: "Beneath the ruins, the Forgotten Crypt keeps the kings in rows of stone. At the end of the last row stands the largest tomb of all, carved with a crown of seven points.\n\nIt is the tomb of {king} the Tall. The lid has been pushed aside. The tomb is empty, and the stone inside is covered in scratches.\n\nThey were made from within.\n\nA priest in grey robes waits by the stairs, as if he expected you. \"I am Brother {priest}, of the Order of the Dawn,\" he says. \"We have tended this crypt since the night the stars stood still. Please, tell no one what you saw.\" He holds a small book against his chest, and he does not let go of it.",
+      },
+      eternal_servant: {
+        title: "The Eternal Servant",
+        text: "The Eternal Necromancer falls to his knees, and the dark in his eyes goes out like a candle. For a moment he looks like what he once was: an old man, very tired.\n\n\"She told me to keep the dead in line until the true heir came,\" he whispers. \"Royal blood on the throne of Highdawn, and the Crown made whole. Only then will the wound in the sky close.\"\n\n\"She is not cruel, you know. She is afraid. She has been afraid for a thousand years.\"\n\nHe looks at you, and something like recognition crosses his face. \"Oh,\" he says. \"She did not tell me it was you again.\" Then he is dust.",
+      },
+      queen_of_bones: {
+        title: "The Queen of Bones",
+        text: "The bell stops. In the silence, the knights at the gates kneel all at once.\n\nShe comes down the steps of the throne room: tall, thin, crowned with frost, her robes the colour of an old bruise. Morwen does not look like a monster. She looks like someone who has waited at a window for a very long time.\n\n\"You have grown,\" she says, though you have never met. \"Every time, you grow a little. Every time, you forget.\"\n\n\"Give me what you carry, and I will make my brother's Crown whole again. Keep it, and the sky will go on opening, one eye at a time.\" She smiles. \"Do not answer now. Go north, to the ice. Ask the Winter Queen what it costs to keep things as they are. Then come back to me.\"\n\nShe is gone before you can speak. Only the frost on the throne remains.",
+      },
       awakening: {
         title: "Awakening",
         text: "You wake in the grass of the Dawn Meadows with the sun in your eyes and no idea how you got there. Your name is still yours. Almost everything else is fog.\n\nA broad man with flour on his apron helps you up. \"Easy, friend. I'm {keeper}, I keep the Golden Tankard in Albor. Heroes turn up in this meadow more often than you'd think.\" He studies your face a moment too long. \"Funny. I could swear we've met.\"\n\nHe gives you a bowl of stew, an old pickaxe and a piece of advice: \"Work, fight, grow strong. The realm has been waiting for someone like you. It always is.\"",
@@ -1325,6 +1354,11 @@ export default {
       },
     },
     people: {
+      priest: {
+        name: "Brother {priest}",
+        role: "Brother of the Order of the Dawn",
+        desc: "Tends the Forgotten Crypt for the Order. Kind and careful, he always carries a small book that he never opens in front of anyone.",
+      },
       keeper: {
         name: "{keeper}",
         role: "Keeper of the Golden Tankard",
