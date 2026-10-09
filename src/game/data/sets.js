@@ -1,6 +1,6 @@
 import { named } from '../../i18n/bind.js'
 import { t } from '../../i18n/index.js'
-import { ITEMS, METALS } from './items.js'
+import { ITEMS, METALS, CLOTHS, ROBES, HIDES, HIDE_PIECES } from './items.js'
 
 /*
   Equipment sets: wearing several pieces of the same set adds its bonuses (`mods`, the same keys as
@@ -18,14 +18,27 @@ const metalSets = METALS.map((m, i) => {
   ], () => t('sets.metal', { mat: t(`mats.${m.id}`) }))
 })
 
+// Robes of one cloth and hides of one beast; finer materials give bigger bonuses
+const clothSets = CLOTHS.map((c, i) => set(c.id, 'cloak', c.tint, ROBES.map(r => `${c.id}_${r.id}`), [
+  { n: 2, mods: { magicAcc: 0.02 + 0.015 * i } },
+  { n: 3, mods: { magicDmg: 0.02 + 0.02 * i, runeSave: 0.05 + 0.03 * i } },
+], () => t('sets.cloth', { mat: t(`mats.${c.id}`) })))
+const hideSets = HIDES.map((h, i) => set(h.id, 'leather-vest', h.tint, HIDE_PIECES.map(p => `${h.id}_${p.id}`), [
+  { n: 2, mods: { rangedAcc: 0.03 + 0.02 * i } },
+  { n: 3, mods: { rangedDmg: 0.03 + 0.025 * i, ammoSave: 0.05 + 0.03 * i } },
+], () => t('sets.hide', { mat: t(`mats.${h.id}`) })))
+
 export const SETS = [
   ...metalSets,
+  ...clothSets,
+  ...hideSets,
   set('leather', 'leather-vest', '#a0703a', ['leather_coif', 'leather_body', 'leather_chaps'], [
     { n: 2, mods: { rangedAcc: 0.04 } },
     { n: 3, mods: { rangedDmg: 0.04, ammoSave: 0.05 } },
   ]),
-  set('dragonhide', 'leather-armor', '#3aa86a', ['dhide_body', 'dhide_chaps'], [
+  set('dragonhide', 'leather-armor', '#3aa86a', ['dhide_coif', 'dhide_body', 'dhide_chaps'], [
     { n: 2, mods: { rangedDmg: 0.08, ammoSave: 0.1 } },
+    { n: 3, mods: { rangedAcc: 0.06 } },
   ]),
   set('wizard', 'wizard-face', '#3a5fe0', ['wizard_hat', 'wizard_robe', 'apprentice_staff'], [
     { n: 2, mods: { magicAcc: 0.05 } },

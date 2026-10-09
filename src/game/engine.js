@@ -1,7 +1,7 @@
 import { reactive, toRaw } from 'vue'
 import { SKILLS, XP_TABLE, MAX_LEVEL } from './data/skills.js'
 import { ITEMS, SLOTS, CROPS, GEMS, POTION_DURATION } from './data/items.js'
-import { ACTIONS, findAction } from './data/actions.js'
+import { ACTIONS, findAction, QUALITIES, qualityChances, withQuality } from './data/actions.js'
 import {
   PLAYER_ATTACK_SPEED, COMBAT_STYLES, SPELLS, MONSTERS, AREAS, BOSSES, MERCENARIES,
   SLAYER_SHOP, TOWER_SHOP, towerMonster, monsterLevel, DUNGEONS,
@@ -744,6 +744,15 @@ export const G = {
       let n = q
       if (a.runeMult) n = q * this.runeMult(skill, a)
       n *= double
+      // Crafted gear can come out finer: each piece rolls its own quality
+      if (a.quality) {
+        for (let i = 0; i < n; i++) {
+          const id = withQuality(k, this.rollQuality(skill, a.id))
+          this.addItem(id, 1)
+          gain = msg('gain.item', { n: 1, item: '@item:' + id })
+        }
+        return
+      }
       this.addItem(k, n)
       gain = msg('gain.item', { n, item: '@item:' + k })
     })
@@ -760,6 +769,28 @@ export const G = {
     this.addXp(skill, a.xp)
     gain ||= msg('gain.xp', { n: Math.round(a.xp * this.xpMult(skill)) })
     this.emit('gain', { ...gain, double: double > 1, bonus })
+  },
+
+  // Chances of [fine, superior, masterwork] for a recipe
+  qualityChances(skill, id) { return qualityChances(this.masteryLevel(skill, id), this.mod('quality')) },
+  rollQuality(skill, id) {
+    const [fine, sup, master] = this.qualityChances(skill, id)
+    const r = Math.random()
+    let q = 0
+    if (r < master) q = 3
+    else if (r < master + sup) q = 2
+    else if (r < master + sup + fine) q = 1
+    if (q) {
+      const st = this.s.stats
+      st.quality = st.quality || {}
+      st.quality[q] = (st.quality[q] || 0) + 1
+    }
+    if (q === 3) {
+      const out = Object.keys(findAction(skill, id).out)[0]
+      this.log('anvil-impact', 'log.masterwork', { item: '@item:' + withQuality(out, 3) })
+      this.emit('masterwork', { item: withQuality(out, 3), quality: QUALITIES[3] })
+    }
+    return q
   },
 
   updateSkill(dt) {

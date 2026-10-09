@@ -6,6 +6,7 @@ import { ITEMS } from '../game/data/items.js'
 import { TOOL_TYPES } from '../game/data/character.js'
 import { fmt, pct } from '../game/format.js'
 import { chanceNote } from '../ui/tips.js'
+import { withQuality } from '../game/data/actions.js'
 import ItemTile from './ItemTile.vue'
 import QueueButton from './QueueButton.vue'
 
@@ -26,6 +27,9 @@ const time = computed(() => G.actionTime(props.skill, a.value))
 const xp = computed(() => a.value.xp * G.xpMult(props.skill))
 const xph = computed(() => (xp.value * 3600) / time.value)
 const progress = computed(() => (active.value ? Math.max(0, state.activity.progress) / time.value : 0))
+// Crafted gear: the chances of a finer piece, and how many of each quality are in the bag
+const quality = computed(() => (a.value.quality && !locked.value ? G.qualityChances(props.skill, a.value.id) : null))
+const ownAll = id => G.qty(id) + [1, 2, 3].reduce((s, q) => s + G.qty(withQuality(id, q)), 0)
 const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q)
 </script>
 
@@ -62,8 +66,12 @@ const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q
       <div v-for="(q, k) in a.out" :key="'out' + k" class="io-row out">
         <i class="pi pi-arrow-right" style="font-size:10px;color:var(--faint)" />
         <ItemTile :item="k" size="xs" /><span class="grow">{{ outQty(q) }}× {{ ITEMS[k].name }}</span>
-        <b class="muted">{{ fmt(G.qty(k)) }}</b>
+        <b class="muted">{{ fmt(a.quality ? ownAll(k) : G.qty(k)) }}</b>
       </div>
+    </div>
+    <div v-if="quality" class="quality small" v-tooltip.top="$t('quality.chancesHelp')">
+      <span class="q q1">{{ pct(quality[0]) }}</span><span class="q q2">{{ pct(quality[1]) }}</span><span class="q q3">{{ pct(quality[2], 1) }}</span>
+      <span class="faint">{{ $t('quality.labels.fine') }} · {{ $t('quality.labels.superior') }} · {{ $t('quality.labels.masterwork') }}</span>
     </div>
     <div v-if="a.extra?.length" class="row wrap extra">
       <span class="faint small">{{ $t('skill.possible') }}</span>
@@ -85,5 +93,8 @@ const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q
 .io-row b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink-2); }
 .extra { margin-top: 10px; gap: 5px; }
 .mastery { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.quality { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.quality .q { font-weight: 700; font-variant-numeric: tabular-nums; }
+.q1 { color: #7fd6a0; } .q2 { color: #6fb7ff; } .q3 { color: #f6c453; }
 .card.missing:not(.locked) { border-style: dashed; }
 </style>

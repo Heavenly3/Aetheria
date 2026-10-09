@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    masterwork: "Masterwork! <b>{item}</b>",
     huntStreak: 'Hunting streak: <b>{n} kills</b> · +{v}% combat XP and loot',
     bossPhase: '{name} is now <b>{phase}</b>!',
     elite: 'An elite appears: <b>{name}</b>!',
@@ -140,6 +141,7 @@ export default {
   },
 
   mods: {
+    quality: "+{v}% chance of finer crafted gear",
     xp: '+{v}% XP in every skill', speed: '+{v}% action speed', gold: '+{v}% gold', loot: '+{v}% loot chance',
     double: '+{v}% double resources', preserve: '+{v}% chance to keep materials', mastery: '+{v}% mastery XP', heal: '+{v}% healing',
     defense: '+{v}% defence', thieving: '-{v}% thieving failure', meleeDmg: '+{v}% melee damage', meleeAcc: '+{v}% melee accuracy',
@@ -240,6 +242,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    masterwork: "You made a masterwork: {item}!",
     guildApply: "You applied to join {guild}.",
     guildJoin: "You joined {guild}.",
     guildLeave: "You left {guild}.",
@@ -988,6 +991,22 @@ export default {
     },
   },
 
+  quality: {
+    names: {
+      fine: "Fine {item}",
+      superior: "Superior {item}",
+      masterwork: "Masterwork {item}",
+    },
+    labels: {
+      fine: "Fine",
+      superior: "Superior",
+      masterwork: "Masterwork",
+    },
+    tip: "{quality} quality: +{n}% stats",
+    chances: "Quality: fine {fine} · superior {sup} · masterwork {master}",
+    chancesHelp: "Gear you craft can come out Fine (+5% stats), Superior (+10%) or Masterwork (+20%). The chances grow with your mastery of the recipe; masterworks start at mastery 50.",
+  },
+
   guilds: {
     nameTpl: "{group} of {emblem}",
     groups: {
@@ -1500,6 +1519,8 @@ export default {
   },
 
   sets: {
+    cloth: "{mat} robes",
+    hide: "{mat} hunter",
     title: 'Set bonuses', worn: '{n}/{total} worn', pieces: '{n} pieces', metal: '{mat} armour',
     leather: 'Leather hunter', dragonhide: 'Dragonhide', wizard: "Apprentice's regalia", slayer: "Slayer's garb",
     dragonbane: 'Dragonbane', regalia: 'Regalia of the Ages',
@@ -1754,6 +1775,8 @@ export default {
   },
 
   groups: {
+    hides: "Hides",
+    cloth: "Cloth and robes",
     actions: 'Actions', smelting: 'Smelting', tools: 'Tools', forging: 'Forging', fish: 'Fish', dishes: 'Dishes', arrows: 'Arrows',
     bows: 'Bows', rods: 'Fishing rods', leather: 'Leather', jewellery: 'Jewellery', staves: 'Staves',
   },
@@ -1777,19 +1800,33 @@ export default {
     wood: { logs: '{wood} logs', rod: '{wood} rod', bow: '{wood} bow', staff: '{wood} staff', tree: '{wood} tree' },
   },
   things: {
+    cloth: "cloth",
+    hood: "hood",
+    robe_top: "robe top",
+    robe_bottom: "robe bottom",
+    hide_coif: "coif",
+    hide_chaps: "chaps",
+    hide_body: "body",
     bar: 'bar', sword: 'sword', helm: 'helm', shield: 'shield', legs: 'platelegs', body: 'platebody', pickaxe: 'pickaxe', axe: 'axe',
     arrowtips: 'arrowtips', arrow: 'arrow',
   },
-  mats: { bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather', aether: 'Aether' },
+  mats: {linen: "Linen", silk: "Silk", spellweave: "Spellweave", starweave: "Starweave", wolf: "Wolf", snake: "Snakeskin", wyvern: "Wyvern",  bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather', aether: 'Aether' },
   woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic' },
   fish: { shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
   crops: {
+    flax: "Flax",
     potato: 'Potato', onion: 'Onion', tomato: 'Tomato', strawberry: 'Strawberry', guam: 'Guam', marrentill: 'Marrentill', tarromin: 'Tarromin',
     harralander: 'Harralander', ranarr: 'Ranarr', irit: 'Irit', kwuarm: 'Kwuarm', snapdragon: 'Snapdragon', torstol: 'Torstol',
   },
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    snake_skin: "Snake skin",
+    wyvern_scale: "Wyvern scale",
+    wolf_leather: "Wolf leather",
+    snake_leather: "Snake leather",
+    wyvern_leather: "Wyvern leather",
+    dhide_coif: "Green dragonhide coif",
     stardust: 'Stardust',
     copper_ore: 'Copper ore', tin_ore: 'Tin ore', rune_essence: 'Rune essence', iron_ore: 'Iron ore', coal: 'Coal', gold_ore: 'Gold ore',
     mithril_ore: 'Mithril ore', adamantite_ore: 'Adamantite ore', runite_ore: 'Runite ore', gold_bar: 'Gold bar', logs: 'Logs',

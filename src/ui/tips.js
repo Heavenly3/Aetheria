@@ -15,6 +15,7 @@ import { RARITY_TINT } from '../game/data/omens.js'
 import { itemCategory } from '../game/data/categories.js'
 import { fmt } from '../game/format.js'
 import { weaponProfile } from '../game/data/fighting.js'
+import { QUALITIES } from '../game/data/actions.js'
 
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c])
@@ -50,7 +51,9 @@ export function itemTip(id, note) {
   const sub = it.quality
     ? { text: `${t('omens.rarity.' + it.quality)} · ${kind.join(' · ')}`, color: RARITY_TINT[it.quality] }
     : { text: (it.rare ? t('inventory.rare') + ' · ' : '') + kind.join(' · '), color: it.rare ? 'var(--gold)' : null }
+  if (it.grade) sub.color = QUALITIES[it.grade].color
   const lines = []
+  if (it.grade) { const q = QUALITIES[it.grade]; lines.push({ text: t('quality.tip', { quality: t(`quality.labels.${q.id}`), n: Math.round((q.mult - 1) * 100) }), kind: 'gold' }) }
   for (const [k, v] of Object.entries(it.stats || {})) lines.push({ text: statText(k, v), kind: 'ok' })
   // Weapons: their pace, crit chance and the status they can leave
   if (it.slot === 'weapon') {
@@ -65,7 +68,8 @@ export function itemTip(id, note) {
     lines.push({ text: `${t('inventory.requires')} ${SKILLS[sk].name} ${l}`, kind: G.level(sk) >= l ? 'muted' : 'bad' })
   }
   if (note) lines.push({ text: note, kind: 'gold' })
-  if (SET_OF[id]) lines.push({ text: t('help.item.set', { set: SET_OF[id].name }), kind: 'gold' })
+  const setOf = SET_OF[it.base || id]
+  if (setOf) lines.push({ text: t('help.item.set', { set: setOf.name }), kind: 'gold' })
   // Gear: what wearing it would change in a fight, worked out from the hero's own numbers
   if (it.type === 'equip' && it.slot && G.s.equipment[it.slot] !== id) {
     const now = G.combatProfile(), next = G.withGear(id, () => G.combatProfile())

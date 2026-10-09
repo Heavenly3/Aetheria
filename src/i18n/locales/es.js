@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    masterwork: "¡Obra maestra! <b>{item}</b>",
     huntStreak: 'Racha de caza: <b>{n} muertes</b> · +{v}% de XP de combate y botín',
     bossPhase: '¡{name} está <b>{phase}</b>!',
     elite: '¡Aparece un élite: <b>{name}</b>!',
@@ -140,6 +141,7 @@ export default {
   },
 
   mods: {
+    quality: "+{v}% de probabilidad de fabricar equipo de mejor calidad",
     xp: '+{v}% XP en todas las habilidades', speed: '+{v}% velocidad de acciones', gold: '+{v}% oro', loot: '+{v}% probabilidad de botín',
     double: '+{v}% recursos dobles', preserve: '+{v}% de conservar materiales', mastery: '+{v}% XP de maestría', heal: '+{v}% curación',
     defense: '+{v}% defensa', thieving: '-{v}% fallos al robar', meleeDmg: '+{v}% daño cuerpo a cuerpo', meleeAcc: '+{v}% precisión cuerpo a cuerpo',
@@ -240,6 +242,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    masterwork: "¡Has fabricado una obra maestra: {item}!",
     guildApply: "Solicitaste entrar en {guild}.",
     guildJoin: "Entraste en {guild}.",
     guildLeave: "Dejaste {guild}.",
@@ -988,6 +991,22 @@ export default {
     },
   },
 
+  quality: {
+    names: {
+      fine: "{item} de calidad",
+      superior: "{item} superior",
+      masterwork: "{item} (obra maestra)",
+    },
+    labels: {
+      fine: "Fina",
+      superior: "Superior",
+      masterwork: "Obra maestra",
+    },
+    tip: "Calidad {quality}: +{n}% de estadísticas",
+    chances: "Calidad: fina {fine} · superior {sup} · obra maestra {master}",
+    chancesHelp: "El equipo que fabricas puede salir Fino (+5 % de estadísticas), Superior (+10 %) u Obra maestra (+20 %). Las probabilidades crecen con tu maestría en la receta; las obras maestras empiezan con maestría 50.",
+  },
+
   guilds: {
     nameTpl: "{group} {emblem}",
     groups: {
@@ -1500,6 +1519,8 @@ export default {
   },
 
   sets: {
+    cloth: "Ropajes de {mat}",
+    hide: "Cazador de {mat}",
     title: 'Bonificaciones de conjunto', worn: '{n}/{total} puestas', pieces: '{n} piezas', metal: 'Armadura de {mat}',
     leather: 'Cazador de cuero', dragonhide: 'Piel de dragón', wizard: 'Atuendo de aprendiz', slayer: 'Atuendo de cazador',
     dragonbane: 'Azote de dragones', regalia: 'Regalía de las Eras',
@@ -1754,6 +1775,8 @@ export default {
   },
 
   groups: {
+    hides: "Pieles",
+    cloth: "Telas y túnicas",
     actions: 'Acciones', smelting: 'Fundición', tools: 'Herramientas', forging: 'Forja', fish: 'Pescado', dishes: 'Platos', arrows: 'Flechas',
     bows: 'Arcos', rods: 'Cañas de pescar', leather: 'Cuero', jewellery: 'Joyería', staves: 'Bastones',
   },
@@ -1777,19 +1800,33 @@ export default {
     wood: { logs: 'Troncos de {wood}', rod: 'Caña de {wood}', bow: 'Arco de {wood}', staff: 'Bastón de {wood}', tree: 'Árbol de {wood}' },
   },
   things: {
+    cloth: "Tela",
+    hood: "Capucha",
+    robe_top: "Túnica",
+    robe_bottom: "Faldón",
+    hide_coif: "Cofia",
+    hide_chaps: "Zahones",
+    hide_body: "Jubón",
     bar: 'Barra', sword: 'Espada', helm: 'Yelmo', shield: 'Escudo', legs: 'Grebas', body: 'Coraza', pickaxe: 'Pico', axe: 'Hacha',
     arrowtips: 'Puntas', arrow: 'Flecha',
   },
-  mats: { bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero', aether: 'éter' },
+  mats: {linen: "lino", silk: "seda", spellweave: "tejido arcano", starweave: "tejido estelar", wolf: "lobo", snake: "serpiente", wyvern: "guiverno",  bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero', aether: 'éter' },
   woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia' },
   fish: { shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
   crops: {
+    flax: "Lino",
     potato: 'Patata', onion: 'Cebolla', tomato: 'Tomate', strawberry: 'Fresa', guam: 'Guam', marrentill: 'Marrentill', tarromin: 'Tarromin',
     harralander: 'Harralander', ranarr: 'Ranarr', irit: 'Irit', kwuarm: 'Kwuarm', snapdragon: 'Snapdragon', torstol: 'Torstol',
   },
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    snake_skin: "Piel de serpiente",
+    wyvern_scale: "Escama de guiverno",
+    wolf_leather: "Cuero de lobo",
+    snake_leather: "Cuero de serpiente",
+    wyvern_leather: "Cuero de guiverno",
+    dhide_coif: "Cofia de dragón verde",
     stardust: 'Polvo estelar',
     copper_ore: 'Mineral de cobre', tin_ore: 'Mineral de estaño', rune_essence: 'Esencia rúnica', iron_ore: 'Mineral de hierro', coal: 'Carbón', gold_ore: 'Mineral de oro',
     mithril_ore: 'Mineral de mithril', adamantite_ore: 'Mineral de adamantita', runite_ore: 'Mineral de runita', gold_bar: 'Barra de oro', logs: 'Troncos',

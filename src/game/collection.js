@@ -3,6 +3,7 @@
    Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
 import { SETS, SET_OF } from './data/sets.js'
+import { ITEMS } from './data/items.js'
 import { BESTIARY, BEAST_GROUP, KNOWLEDGE, HUNT_BONUS, killsFor } from './data/bestiary.js'
 import { TITLES, TITLE_MAP, EXTRA_AVATARS, EXTRA_TINTS } from './data/cosmetics.js'
 import { FESTIVAL_MAP, TOKENS, shopFor, festivalAt } from './data/festivals.js'
@@ -26,12 +27,13 @@ let festCache = { at: 0, win: null }
 export const collection = {
   /* ================= equipment sets ================= */
   setPieces(set) {
-    const worn = Object.values(this.s.equipment)
+    // Finer pieces of a set still count as the piece
+    const worn = Object.values(this.s.equipment).map(id => ITEMS[id]?.base || id)
     return set.pieces.filter(id => worn.includes(id)).length
   },
   activeSets() {
     const seen = new Set()
-    for (const id of Object.values(this.s.equipment)) if (id && SET_OF[id]) seen.add(SET_OF[id])
+    for (const id of Object.values(this.s.equipment)) { const b = ITEMS[id]?.base || id; if (b && SET_OF[b]) seen.add(SET_OF[b]) }
     return SETS.filter(s => seen.has(s)).map(s => ({ set: s, worn: this.setPieces(s) }))
   },
   setMods(key) {

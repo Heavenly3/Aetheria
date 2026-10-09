@@ -65,7 +65,7 @@ export const AREAS = [
   {
     id: 'swamp', icon: 'mushroom', recLvl: 32,
     monsters: [
-      mon('snake', 'snake', 35, 38, 30, 6, 2.4, [12, 40], [d('venom_sac', 0.35), d('bones', 1), d('harralander_seed', 0.04)], { weak: 'magic' }),
+      mon('snake', 'snake', 35, 38, 30, 6, 2.4, [12, 40], [d('venom_sac', 0.35), d('snake_skin', 0.45), d('bones', 1), d('harralander_seed', 0.04)], { weak: 'magic' }),
       mon('scorpion', 'scorpion', 45, 44, 48, 7, 2.6, [20, 55], [d('venom_sac', 0.5), d('uncut_ruby', 0.01), d('chaos_rune', 0.15, 2, 6)], { weak: 'melee' }),
       mon('werewolf', 'werewolf', 60, 50, 42, 9, 2.4, [30, 80], [d('wolf_pelt', 0.8, 1, 2), d('big_bones', 1), d('ranarr_seed', 0.03)], { weak: 'ranged' }),
     ],
@@ -91,7 +91,7 @@ export const AREAS = [
     monsters: [
       mon('green_dragon', 'dragon-head', 85, 68, 68, 12, 2.8, [80, 220], [d('green_dhide', 1), d('dragon_bones', 1), d('runite_ore', 0.05), d('uncut_diamond', 0.01)], { weak: 'ranged' }),
       mon('red_dragon', 'spiked-dragon-head', 140, 90, 90, 18, 2.8, [200, 500], [d('dragon_bones', 1, 1, 2), d('rune_bar', 0.08, 1, 2), d('rune_sword', 0.01), d('uncut_diamond', 0.03)], { weak: 'magic' }),
-      mon('wyvern', 'wyvern', 170, 95, 105, 20, 3, [250, 600], [d('dragon_bones', 1, 1, 2), d('blood_rune', 0.15, 2, 6), d('torstol_seed', 0.02)], { weak: 'ranged', slayer: 60 }),
+      mon('wyvern', 'wyvern', 170, 95, 105, 20, 3, [250, 600], [d('dragon_bones', 1, 1, 2), d('wyvern_scale', 0.6, 1, 2), d('blood_rune', 0.15, 2, 6), d('torstol_seed', 0.02)], { weak: 'ranged', slayer: 60 }),
     ],
   },
   {

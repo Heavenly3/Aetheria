@@ -1,4 +1,4 @@
-import { ITEMS, METALS, PIECES, WOODS, FISH, POTIONS, RUNES, GEMS } from './items.js'
+import { ITEMS, METALS, PIECES, WOODS, FISH, POTIONS, RUNES, GEMS, CLOTHS, ROBES, HIDES, HIDE_PIECES } from './items.js'
 import { named } from '../../i18n/bind.js'
 import { t } from '../../i18n/index.js'
 
@@ -133,6 +133,21 @@ add('crafting', { id: 'leather_body', icon: 'leather-vest', tint: '#a0703a', gro
 add('crafting', { id: 'green_dleather', nameKey: 'recipes.tanDragonhide', icon: 'animal-hide', tint: '#3aa86a', group: 'groups.leather', lvl: 55, xp: 40, time: 2.4, in: { green_dhide: 1 }, out: { green_dleather: 1 } })
 add('crafting', { id: 'dhide_chaps', icon: 'armored-pants', tint: '#3aa86a', group: 'groups.leather', lvl: 60, xp: 124, time: 3.5, in: { green_dleather: 2 }, out: { dhide_chaps: 1 } })
 add('crafting', { id: 'dhide_body', icon: 'leather-armor', tint: '#3aa86a', group: 'groups.leather', lvl: 63, xp: 186, time: 3.5, in: { green_dleather: 3 }, out: { dhide_body: 1 } })
+add('crafting', { id: 'dhide_coif', icon: 'hood', tint: '#3aa86a', group: 'groups.leather', lvl: 57, xp: 62, time: 3, in: { green_dleather: 1 }, out: { dhide_coif: 1 } })
+HIDES.forEach(h => {
+  add('crafting', { id: h.id + '_leather', icon: 'animal-hide', tint: h.tint, group: 'groups.hides', lvl: h.tan.lvl, xp: h.tan.xp, time: 2.4, in: { [h.drop]: 1 }, out: { [h.id + '_leather']: 1 } })
+  HIDE_PIECES.forEach(p => add('crafting', {
+    id: `${h.id}_${p.id}`, icon: p.icon, tint: h.tint, group: 'groups.hides', lvl: h.lvl + p.lvlOff, xp: Math.round(h.xp * p.leather), time: 3,
+    in: { [h.id + '_leather']: p.leather }, out: { [`${h.id}_${p.id}`]: 1 },
+  }))
+})
+CLOTHS.forEach(c => {
+  add('crafting', { id: c.id + '_cloth', icon: 'tie', tint: c.tint, group: 'groups.cloth', lvl: c.cloth.lvl, xp: c.cloth.xp, time: 2.4, in: c.cloth.in, out: { [c.id + '_cloth']: 1 } })
+  ROBES.forEach(r => add('crafting', {
+    id: `${c.id}_${r.id}`, icon: r.icon, tint: c.tint, group: 'groups.cloth', lvl: c.lvl + r.lvlOff, xp: Math.round(c.xp * r.cloth), time: 3,
+    in: { [c.id + '_cloth']: r.cloth }, out: { [`${c.id}_${r.id}`]: 1 },
+  }))
+})
 add('crafting', { id: 'gold_amulet', icon: 'necklace', tint: '#e3b23c', group: 'groups.jewellery', lvl: 8, xp: 30, time: 3, in: { gold_bar: 1 }, out: { gold_amulet: 1 } })
 GEMS.forEach(g => {
   add('crafting', { id: 'cut_' + g.id, nameFn: () => t('tpl.cut', { gem: t(`gems.${g.id}`) }), icon: 'cut-diamond', tint: g.tint, group: 'groups.jewellery', lvl: g.cutLvl, xp: g.cutXp, time: 2.4, in: { ['uncut_' + g.id]: 1 }, out: { [g.id]: 1 } })
@@ -143,7 +158,7 @@ WOODS.filter(w => w.staff).forEach(w => add('crafting', {
   lvl: w.staff.lvl, xp: w.staff.xp, time: 3.5, in: { [w.id]: 2, air_rune: 10 }, out: { [w.id.replace('logs', 'staff')]: 1 },
 }))
 {
-  const order = { 'groups.leather': 0, 'groups.jewellery': 1, 'groups.staves': 2 }
+  const order = { 'groups.leather': 0, 'groups.hides': 1, 'groups.cloth': 2, 'groups.jewellery': 3, 'groups.staves': 4 }
   ACTIONS.crafting.sort((a, b) => order[a.group] - order[b.group] || a.lvl - b.lvl)
 }
 
@@ -183,6 +198,8 @@ RUNES.forEach(r => add('runecrafting', {
   else if (wood) a.mat = `woods.${wood.tree}`
   else if (['logs', 'bow', 'rod', 'arrow_shaft'].includes(id)) a.mat = 'woods.normal'
   else if (gem) a.mat = `gems.${gem.id}`
+  else if (HIDES.some(h => id.startsWith(h.id + '_'))) a.mat = `mats.${id.split('_')[0]}`
+  else if (CLOTHS.some(c => id.startsWith(c.id + '_'))) a.mat = `mats.${id.split('_')[0]}`
   else if (/leather|dhide|coif|chaps/.test(id)) a.mat = 'mats.leather'
 }))
 
@@ -196,5 +213,40 @@ Object.values(ACTIONS).flat().forEach(a => {
     return qty > 1 ? `${ITEMS[item].name} ×${qty}` : ITEMS[item].name
   }))
 })
+
+/* ---------- Quality of crafted gear ---------- */
+// Gear made at the anvil, the fletching bench or the crafting table can come out finer than usual.
+// The better the hero's mastery of the recipe, the likelier; each quality is its own item ("<id>_q<n>")
+export const QUALITIES = [
+  null,
+  { id: 'fine', mult: 1.05, value: 1.6, color: '#7fd6a0' },
+  { id: 'superior', mult: 1.1, value: 2.5, color: '#6fb7ff' },
+  { id: 'masterwork', mult: 1.2, value: 5, color: '#f6c453' },
+]
+export const QUALITY_SKILLS = ['smithing', 'fletching', 'crafting']
+export const gradeOf = id => ITEMS[id]?.grade || 0
+export const baseItem = id => ITEMS[id]?.base || id
+export const withQuality = (id, q) => (q ? `${id}_q${q}` : id)
+// Chances of [fine, superior, masterwork] at a mastery level (1–99); `bonus` multiplies them
+export function qualityChances(mastery, bonus = 0) {
+  const f = 1 + bonus
+  const master = mastery >= 50 ? (0.002 + (mastery - 50) * 0.0025) * f : 0
+  return [Math.min(0.6, (0.12 + mastery * 0.0035) * f), Math.min(0.3, (0.02 + mastery * 0.0022) * f), Math.min(0.2, master)]
+}
+const scaleStat = (v, mult) => (Number.isInteger(v) ? (v > 0 ? Math.max(v + 1, Math.round(v * mult)) : v) : Math.round(v * mult * 1000) / 1000)
+QUALITY_SKILLS.forEach(sk => ACTIONS[sk].forEach(a => {
+  const [id] = Object.keys(a.out)
+  const it = ITEMS[id]
+  if (!it || it.type !== 'equip' || it.stackEquip) return
+  a.quality = true
+  if (ITEMS[withQuality(id, 1)]) return
+  QUALITIES.forEach((q, n) => {
+    if (!q) return
+    const v = { ...it, id: withQuality(id, n), base: id, grade: n, value: Math.round(it.value * q.value),
+      stats: Object.fromEntries(Object.entries(it.stats || {}).map(([k, x]) => [k, scaleStat(x, q.mult)])) }
+    delete v.name
+    ITEMS[v.id] = named(v, () => t(`quality.names.${q.id}`, { item: it.name }))
+  })
+}))
 
 export const findAction = (skill, id) => (ACTIONS[skill] || []).find(a => a.id === id)

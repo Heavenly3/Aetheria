@@ -4,6 +4,7 @@ import { ITEMS } from '../game/data/items.js'
 import { fmt } from '../game/format.js'
 import GameIcon from './GameIcon.vue'
 import { itemTip } from '../ui/tips.js'
+import { QUALITIES } from '../game/data/actions.js'
 
 const SIZES = { xs: 22, sm: 30, md: 46, lg: 64, xl: 92 }
 const p = defineProps({
@@ -19,6 +20,8 @@ const p = defineProps({
 const it = computed(() => (p.item ? ITEMS[p.item] : null))
 const px = computed(() => SIZES[p.size] || 46)
 // The full item card on hover (kind, stats, effects, needs and value)
+// Finer crafted gear wears coloured gems in its corner
+const grade = computed(() => (it.value?.grade ? QUALITIES[it.value.grade] : null))
 const tipValue = computed(() => (p.tip && p.item ? itemTip(p.item, p.note) : null))
 const style = computed(() => ({
   '--t': p.tint || it.value?.tint || '#8a8a8a',
@@ -32,5 +35,6 @@ const style = computed(() => ({
   <div class="tile" :class="{ empty }" :style="style" v-tooltip.top="tipValue">
     <GameIcon :name="icon || it?.icon" :size="Math.round(px * 0.62)" />
     <span v-if="qty !== null" class="qty">{{ fmt(qty) }}</span>
+    <span v-if="grade" class="grade" :style="{ '--g': grade.color }">{{ '◆'.repeat(it.grade) }}</span>
   </div>
 </template>

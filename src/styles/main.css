@@ -235,6 +235,8 @@ button.card:hover:not(.locked) { transform: translateY(-2px); border-color: colo
   background: radial-gradient(circle at 30% 22%, color-mix(in srgb, var(--t) 55%, var(--tile-hi)), color-mix(in srgb, var(--t) 22%, var(--tile-lo)) 75%);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--t) 40%, rgba(255, 255, 255, 0.06)) inset, 0 8px 18px -10px color-mix(in srgb, var(--t) 90%, transparent); }
 .tile.empty { --t: #3a384a; opacity: 0.5; }
+/* Finer crafted gear: one gem per quality step, in the quality's colour */
+.tile .grade { position: absolute; left: 3px; top: 0; font-size: 9px; line-height: 1.2; letter-spacing: -1px; color: var(--g); text-shadow: 0 0 4px var(--g), 0 1px 2px #000; pointer-events: none; }
 .tile .qty { position: absolute; right: 4px; bottom: 1px; font-size: 12px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums;
   text-shadow: 0 1px 2px #000, 0 0 6px #000; }
 

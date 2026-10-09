@@ -1,4 +1,5 @@
 import { PLAYER_ATTACK_SPEED } from './combat.js'
+import { ITEMS } from './items.js'
 
 /*
   The finer side of combat:
@@ -27,6 +28,7 @@ const PROFILES = {
 }
 export function weaponProfile(id) {
   if (!id) return PROFILES.unarmed
+  id = ITEMS[id]?.base || id
   if (PROFILES[id]) return PROFILES[id]
   if (id.endsWith('_sword')) return PROFILES.sword
   if (id.endsWith('bow')) return PROFILES.bow

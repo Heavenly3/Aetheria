@@ -63,7 +63,7 @@ export const ROLES = {
   artisan: {
     icon: 'anvil-impact', color: '#e3a64a',
     attrs: { str: 3, dex: 3, int: 3, vit: 2, wis: 3, luck: 1 },
-    bonus: { 'speed.artisan': 0.1, preserve: 0.05, 'xp.smithing': 0.05, 'xp.crafting': 0.05 },
+    bonus: { 'speed.artisan': 0.1, preserve: 0.05, 'xp.smithing': 0.05, 'xp.crafting': 0.05, quality: 0.25 },
     skills: { smithing: 4, crafting: 4, cooking: 3 },
     items: { bronze_bar: 10, shrimp: 10 }, gold: 250, equip: [], style: 'attack',
   },

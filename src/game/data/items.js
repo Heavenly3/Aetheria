@@ -128,6 +128,8 @@ def('burnt_food', { icon: 'fishbone', value: 0, tint: '#4a3a30', type: 'junk' })
 /* ---------------- Farming ---------------- */
 export const CROPS = [
   { id: 'potato',      icon: 'potato',       lvl: 1,  xp: 32,  yield: [3, 6], value: 3,   tint: '#c9a66b', seedValue: 4 },
+  // Flax is spun into linen for mage robes
+  { id: 'flax',        icon: 'wheat',        lvl: 3,  xp: 38,  yield: [3, 6], value: 4,   tint: '#c8b878', seedValue: 6 },
   { id: 'onion',       icon: 'carrot',       lvl: 5,  xp: 42,  yield: [3, 6], value: 5,   tint: '#e0b46a', seedValue: 8 },
   { id: 'guam',        icon: 'herbs-bundle', lvl: 9,  xp: 55,  yield: [2, 5], value: 12,  tint: '#6fbf4a', seedValue: 25, herb: true },
   { id: 'tomato',      icon: 'tomato',       lvl: 12, xp: 60,  yield: [3, 7], value: 8,   tint: '#e24a3b', seedValue: 15 },
@@ -142,7 +144,7 @@ export const CROPS = [
   { id: 'torstol',     icon: 'herbs-bundle', lvl: 85, xp: 700, yield: [2, 4], value: 350, tint: '#b04ae0', seedValue: 1200, herb: true },
 ]
 // Real-time growth per plot (seconds)
-const GROW = { potato: 180, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700 }
+const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700 }
 CROPS.forEach(c => {
   c.grow = GROW[c.id]
   // Higher crops grow slowly, so their harvest pays more per point of base XP
@@ -220,6 +222,8 @@ def('wolf_pelt',     { icon: 'wolf-head',       value: 18,  tint: '#7c7c8a' })
 def('troll_tusk',    { icon: 'troll',           value: 45,  tint: '#cfc6a8' })
 def('ectoplasm',     { icon: 'droplets',        value: 70,  tint: '#7be0b0' })
 def('venom_sac',     { icon: 'death-juice',     value: 55,  tint: '#8be04a' })
+def('snake_skin',    { icon: 'snake',           value: 40,  tint: '#7aa83a' })
+def('wyvern_scale',  { icon: 'wyvern',          value: 260, tint: '#5a9ec0' })
 def('ice_shard',     { icon: 'crystal-cluster', value: 90,  tint: '#9fd8ff' })
 def('mark_of_grace', { icon: 'star-swirl',      value: 250, tint: '#f0c040' })
 def('coin_pouch',    { icon: 'two-coins',       value: 60,  tint: '#e3b23c', type: 'chest' })
@@ -261,6 +265,46 @@ def('lich_shroud',      { icon: 'vampire-cape',    type: 'equip', slot: 'cape', 
 def('wyrm_crown',       { icon: 'crown',           type: 'equip', slot: 'head', value: 110000, tint: '#e0602a', stats: { def: 38, atk: 12, str: 14 }, req: { defense: 80 }, rare: true, hasDesc: true })
 def('abyssal_mantle',   { icon: 'cloak',           type: 'equip', slot: 'cape', value: 140000, tint: '#2fa8c6', stats: { def: 10, rAtk: 24, rStr: 12 }, req: { ranged: 80 }, rare: true, hasDesc: true })
 def('rime_locket',      { icon: 'necklace',        type: 'equip', slot: 'amulet', value: 100000, tint: '#8fd0f2', stats: { def: 16, atk: 14, str: 14, rAtk: 10, mAtk: 10 }, req: {}, rare: true, hasDesc: true })
+
+/* ---------------- Cloth and hides ---------------- */
+// Mage robes: flax is spun into linen, and each finer cloth is linen worked with runes and more
+export const CLOTHS = [
+  { id: 'linen',      tier: 1,   lvl: 5,  req: 1,  xp: 18,  tint: '#d8cfb8', cloth: { lvl: 1,  xp: 8,  in: { flax: 2 } } },
+  { id: 'silk',       tier: 2.5, lvl: 30, req: 20, xp: 50,  tint: '#6f8fe0', cloth: { lvl: 28, xp: 26, in: { linen_cloth: 1, chaos_rune: 2 } } },
+  { id: 'spellweave', tier: 4.5, lvl: 55, req: 40, xp: 105, tint: '#9d5fe0', cloth: { lvl: 52, xp: 55, in: { linen_cloth: 1, nature_rune: 2, ectoplasm: 1 } } },
+  { id: 'starweave',  tier: 7,   lvl: 80, req: 60, xp: 185, tint: '#7ad7ff', cloth: { lvl: 78, xp: 95, in: { linen_cloth: 1, death_rune: 2, stardust: 5 } } },
+]
+export const ROBES = [
+  { id: 'hood',        icon: 'hood',          slot: 'head', cloth: 1, lvlOff: 0, stats: k => ({ mAtk: Math.round(3 * k), def: Math.round(1 * k) }) },
+  { id: 'robe_bottom', icon: 'armored-pants', slot: 'legs', cloth: 2, lvlOff: 2, stats: k => ({ mAtk: Math.round(4 * k), def: Math.round(2 * k) }) },
+  { id: 'robe_top',    icon: 'cloak',         slot: 'body', cloth: 3, lvlOff: 4, stats: k => ({ mAtk: Math.round(6 * k), def: Math.round(3 * k) }) },
+]
+CLOTHS.forEach(c => {
+  def(c.id + '_cloth', { icon: 'tie', value: Math.round(10 + c.tier * c.tier * 12), tint: c.tint, name: made('cloth', c.id) })
+  ROBES.forEach(r => def(`${c.id}_${r.id}`, {
+    icon: r.icon, type: 'equip', slot: r.slot, style: 'magic', value: Math.round((10 + c.tier * c.tier * 12) * r.cloth * 1.6), tint: c.tint,
+    stats: r.stats(c.tier), req: { magic: c.req }, name: made(r.id, c.id),
+  }))
+})
+// Ranger hides: pelts, skins and scales from monsters, tanned and stitched
+export const HIDES = [
+  { id: 'wolf',   tier: 2,   lvl: 20, req: 15, xp: 34,  tint: '#8a8a9a', drop: 'wolf_pelt',    tan: { lvl: 18, xp: 14 } },
+  { id: 'snake',  tier: 3.3, lvl: 40, req: 30, xp: 68,  tint: '#7aa83a', drop: 'snake_skin',   tan: { lvl: 38, xp: 24 } },
+  { id: 'wyvern', tier: 6.8, lvl: 75, req: 60, xp: 160, tint: '#5a9ec0', drop: 'wyvern_scale', tan: { lvl: 73, xp: 48 } },
+]
+export const HIDE_PIECES = [
+  { id: 'coif',  icon: 'hood',          slot: 'head', leather: 1, lvlOff: 0, stats: k => ({ def: Math.round(3 * k), rAtk: Math.round(2 * k) }) },
+  { id: 'chaps', icon: 'armored-pants', slot: 'legs', leather: 2, lvlOff: 2, stats: k => ({ def: Math.round(5 * k), rAtk: Math.round(3 * k) }) },
+  { id: 'body',  icon: 'leather-vest',  slot: 'body', leather: 3, lvlOff: 4, stats: k => ({ def: Math.round(8 * k), rAtk: Math.round(4.5 * k) }) },
+]
+HIDES.forEach(h => {
+  def(h.id + '_leather', { icon: 'animal-hide', value: Math.round(ITEMS[h.drop].value * 1.4), tint: h.tint })
+  HIDE_PIECES.forEach(p => def(`${h.id}_${p.id}`, {
+    icon: p.icon, type: 'equip', slot: p.slot, style: 'ranged', value: Math.round(ITEMS[h.drop].value * 1.4 * p.leather * 1.8), tint: h.tint,
+    stats: p.stats(h.tier), req: { ranged: h.req }, name: made('hide_' + p.id, h.id),
+  }))
+})
+def('dhide_coif', { icon: 'hood', type: 'equip', slot: 'head', style: 'ranged', value: 600, tint: '#3aa86a', stats: { def: 15, rAtk: 7 }, req: { ranged: 40 } })
 
 // Attach localized names: an explicit `name` (key or function) or the default "items.<id>" key
 Object.values(ITEMS).forEach(it => {
