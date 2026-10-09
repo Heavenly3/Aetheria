@@ -247,6 +247,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    guest: "{guest} visited your tavern and left a gift.",
     guardian: "You defeated {guardian} on floor {floor} for the first time.",
     favour: "Your favour with the Order of the Dawn rose to level {n}.",
     codexPage: "You completed the compendium page \"{page}\".",
@@ -725,6 +726,7 @@ export default {
       graceful: { title: "Graceful outfit", body: "Four light pieces bought with marks of grace from the agility courses. Worn together they speed up gathering, boost Agility XP, make thieving safer and speed up every action." },
       towerAffixes: { title: "This week's floors", body: "From floor 6 on, every block of five floors has a twist that changes each week, the same for everyone. Floors with a twist pay a quarter more tokens." },
       towerRivals: { title: "Race to the top", body: "The best climbers of the realm's guilds and how high they have reached. They keep climbing as the days go by." },
+      patrons: { title: "Patrons", body: "Patrons drop in over time, even while you are away, each asking for some food or drink from your stores. Serve them for gold and a tip. Every patron served raises the tavern's reputation, so everyone pays more. Sometimes a special guest comes, asks for more and pays with rare goods. A bigger tavern brings more patrons." },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -1709,6 +1711,20 @@ export default {
   },
 
   tavern: {
+    patrons: "Patrons",
+    noPatrons: "The bar is quiet. Patrons drop in over time, even while you are away.",
+    rep: "Reputation {n} · +{v}%",
+    repTip: "Every patron served raises the tavern's reputation; patrons now pay {v}% more.",
+    serveAll: "Serve everyone",
+    serve: "Serve",
+    wants: "Wants {n}× {item}",
+    leavesIn: "Leaves in {time}",
+    served: "{name} paid {gold} gold",
+    servedGuest: "{name} paid {gold} gold and left a gift",
+    servedAll: "{n} patrons served for {gold} gold",
+    drinkOwn: "Drink your {item} ({n})",
+    needsMap: "needs a treasure map ({n})",
+    guests: { faceless: "The Faceless Merchant", bard: "A wandering bard", courier: "A royal courier", knight: "A weary knight" },
     maxLevel: 'Tavern at max level', intro: 'Hire staff who work for you in parallel, even while you are away. You pay their wages while they work.',
     staffCount: 'Staff {n} / {max}', wages: 'Wages {n} gold/h', tokens: '{n} tavern tokens', upgradeTo: 'Upgrade to {name}',
     upgradeHint: '+1 staff slot, more candidates, new specialities and rarities.', upgrade: 'Upgrade tavern', upgraded: 'Your tavern is now <b>{name}</b>!',
@@ -1753,7 +1769,7 @@ export default {
     tough: { name: 'Tough', desc: 'Never injured on expeditions' },
     clumsy: { name: 'Clumsy', desc: '+10% failures (burning, thieving)' },
   },
-  expeditions: {
+  expeditions: { treasure: "Follow a treasure map",
     meadows: 'Meadow Patrol', forest: 'Shadow Wood Sweep', caves: 'Cavern Exploration', swamp: 'Swamp Crossing',
     peaks: 'Frozen Peaks Ascent', dragons: 'Raid on Dragon Lands',
   },
@@ -1883,6 +1899,7 @@ export default {
   },
 
   groups: {
+    brews: "Brews",
     bury: "Bury",
     altar: "Altar",
     hides: "Hides",
@@ -1932,6 +1949,11 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    amber_ale: "Amber ale",
+    herbal_mead: "Herbal mead",
+    strawberry_wine: "Strawberry wine",
+    fire_grog: "Fire grog",
+    treasure_map: "Treasure map",
     climbers_amulet: "Climber's amulet",
     graceful_hood: "Graceful hood",
     graceful_cape: "Graceful cape",
@@ -1969,6 +1991,7 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    treasure_map: "An old map with an X on it. An adventurer from your tavern can follow it on an expedition.",
     holy_water: "Blessed by the Order of the Dawn. At the church it renews every active blessing.",
     slayer_helm_i: "With an active task: +25% accuracy and damage against the target. Counts as a slayer helm for its set.",
     slayer_sigil: "Torn from Superior creatures. Imbues the slayer helm at the crafting table.",

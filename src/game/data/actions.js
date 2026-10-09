@@ -1,4 +1,4 @@
-import { ITEMS, METALS, PIECES, WOODS, FISH, POTIONS, RUNES, GEMS, CLOTHS, ROBES, HIDES, HIDE_PIECES } from './items.js'
+import { ITEMS, METALS, PIECES, WOODS, FISH, POTIONS, RUNES, GEMS, CLOTHS, ROBES, HIDES, HIDE_PIECES, BREWS } from './items.js'
 import { named } from '../../i18n/bind.js'
 import { t } from '../../i18n/index.js'
 
@@ -64,7 +64,8 @@ FISH.forEach((f, i) => add('fishing', {
   { id: 'paladin', icon: 'holy-symbol',    lvl: 70, xp: 151,  time: 3.8, gold: [80, 160],  dmg: [3, 7], extra: [{ item: 'death_rune', chance: 0.08, qty: [1, 4] }, { item: 'uncut_ruby', chance: 0.01, qty: [1, 1] }] },
   { id: 'hero',    icon: 'laurel-crown',   lvl: 80, xp: 273,  time: 4,   gold: [200, 320], dmg: [4, 9], extra: [{ item: 'blood_rune', chance: 0.06, qty: [1, 3] }, { item: 'uncut_diamond', chance: 0.008, qty: [1, 1] }, { item: 'gem_chest', chance: 0.004, qty: [1, 1] }] },
 ].forEach(v => add('thieving', {
-  id: v.id, nameKey: `marks.${v.id}`, icon: v.icon, tint: '#9d79bc', lvl: v.lvl, xp: v.xp, time: v.time, gold: v.gold, fail: { dmg: v.dmg }, extra: v.extra,
+  id: v.id, nameKey: `marks.${v.id}`, icon: v.icon, tint: '#9d79bc', lvl: v.lvl, xp: v.xp, time: v.time, gold: v.gold, fail: { dmg: v.dmg },
+  extra: v.lvl >= 25 ? [...v.extra, { item: 'treasure_map', chance: 0.0015 + v.lvl * 0.00004, qty: [1, 1] }] : v.extra,
 }))
 
 /* ---------- Smithing ---------- */
@@ -99,6 +100,7 @@ FISH.forEach(f => add('cooking', {
   in: { ['raw_' + f.id]: 1 }, out: { [f.id]: 1 }, burn: true,
 }))
 add('cooking', { id: 'baked_potato', icon: 'potato', tint: '#d9a35b', group: 'groups.dishes', lvl: 7, xp: 45, time: 2.4, in: { potato: 1 }, out: { baked_potato: 1 }, burn: true })
+BREWS.forEach(b => add('cooking', { id: b.id, icon: b.icon, tint: b.tint, group: 'groups.brews', lvl: b.lvl, xp: b.xp, time: 3, in: b.in, out: { [b.id]: 1 } }))
 add('cooking', { id: 'stew', icon: 'cooking-pot', tint: '#c76b3a', group: 'groups.dishes', lvl: 25, xp: 117, time: 3, in: { potato: 1, onion: 1, tomato: 1 }, out: { stew: 1 }, burn: true })
 add('cooking', { id: 'strawberry_pie', icon: 'bread', tint: '#ff7a8a', group: 'groups.dishes', lvl: 60, xp: 190, time: 3.2, in: { strawberry: 3, potato: 1 }, out: { strawberry_pie: 1 }, burn: true })
 

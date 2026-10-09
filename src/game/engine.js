@@ -25,6 +25,7 @@ import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
 import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
+import { bar } from './bar.js'
 import { TOWER_AFFIXES, AFFIX_TOKENS, affixOf, guardianOf, guardianReward, rivalBest } from './data/tower.js'
 import { guildRoster } from './data/guilds.js'
 import { t } from '../i18n/index.js'
@@ -1392,6 +1393,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar)
 
 export { SKILLS, ITEMS }

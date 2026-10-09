@@ -33,7 +33,7 @@ export function seeded(str) {
 export const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
 export const extraState = () => ({
-  tavern: { level: 1, board: [], boardAt: 0, workers: [], tokens: 0, orders: [], ordersDay: '', drink: null, uid: 0, reports: [], dice: { played: 0, won: 0, net: 0 } },
+  tavern: { level: 1, board: [], boardAt: 0, workers: [], tokens: 0, orders: [], ordersDay: '', drink: null, uid: 0, reports: [], dice: { played: 0, won: 0, net: 0 }, patrons: [], patronAt: 0, rep: 0 },
   queue: [],
   locked: {},
   loadouts: [null, null, null],
@@ -206,6 +206,7 @@ export const systems = {
     const ex = EXPEDITIONS.find(x => x.id === expId)
     const dur = EXPEDITION_DURATIONS[durIdx]
     if (!w || !ex || !dur || w.spec !== 'adventurer' || w.exp || w.injured > 0) return false
+    if (ex.map) { if (this.qty('treasure_map') <= 0) return false; this.removeItem('treasure_map', 1) }
     w.task = null
     w.exp = { id: expId, hours: dur.hours, mult: dur.mult, t: dur.hours * 3600, total: dur.hours * 3600 }
     w.status = 'expedition'

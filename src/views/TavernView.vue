@@ -19,6 +19,7 @@ import { SPECIALTIES, RARITIES, TRAITS, TAVERN_LEVELS, EXPEDITIONS, EXPEDITION_D
 import { fmt, fmtTime, fmtClock, pct } from '../game/format.js'
 import { play } from '../game/sound.js'
 import { chanceNote } from '../ui/tips.js'
+import { GUEST_MAP, REP_STEP, repMult } from '../game/data/bar.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
@@ -96,6 +97,20 @@ const bet = ref(100)
 const lastRoll = ref(null)
 const rolling = ref(false)
 const drink = computed(() => (t.value.drink ? DRINKS.find(d => d.id === t.value.drink.id) : null))
+// The bar: patrons waiting to be served, and the hero's own brews
+const patrons = computed(() => (now.value, G.ensurePatrons()))
+const repLevel = computed(() => Math.floor((t.value.rep || 0) / REP_STEP))
+const repBonus = computed(() => Math.round((repMult(t.value.rep || 0) - 1) * 100))
+const patronName = p => (p.guest ? $tr(`tavern.guests.${p.guest}`) : p.name)
+const patronIcon = p => (p.guest ? GUEST_MAP[p.guest].icon : 'hood')
+function serve(p) {
+  const r = G.serve(p.id)
+  if (!r) return
+  play('coin')
+  G.toast(ITEMS[p.item].icon, r.reward ? 'tavern.servedGuest' : 'tavern.served', { name: patronName(p), gold: fmt(r.gold) }, r.reward ? 'rare' : 'success')
+}
+function serveAll() { const r = G.serveAll(); if (r.n) { play('coin'); G.toast('beer-horn', 'tavern.servedAll', { n: r.n, gold: fmt(r.gold) }, 'success') } }
+function drinkOwn(d) { if (G.drinkOwn(d.id)) { play('coin'); G.toast(d.icon, 'tavern.drank', { drink: '@drink:' + d.id }, 'success') } }
 function buyDrink(d) { if (G.buyDrink(d.id)) { play('coin'); G.toast(d.icon, 'tavern.drank', { drink: '@drink:' + d.id }, 'success') } }
 function roll() {
   if (rolling.value) return
@@ -252,14 +267,14 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
             <div v-for="ex in EXPEDITIONS" :key="ex.id" class="card">
               <div class="row">
                 <ItemTile :icon="ex.icon" tint="#3f7a6a" size="md" :tip="false" />
-                <div class="grow"><div class="card-name">{{ ex.name }}</div><div class="card-sub">{{ $t('tavern.power', { n: ex.power }) }}</div></div>
+                <div class="grow"><div class="card-name">{{ ex.name }}</div><div class="card-sub">{{ $t('tavern.power', { n: ex.power }) }}<template v-if="ex.map"> · {{ $t('tavern.needsMap', { n: G.qty('treasure_map') }) }}</template></div></div>
                 <span v-if="who" class="tag" :class="G.expeditionChance(who, ex) >= 0.7 ? 'ok' : G.expeditionChance(who, ex) < 0.4 ? 'bad' : ''">{{ $t('tavern.successChance', { v: pct(G.expeditionChance(who, ex)) }) }}</span>
               </div>
               <div class="row wrap" style="gap:5px;margin-top:10px">
                 <span class="tag gold">{{ $t('inventory.goldAmount', { n: fmt(ex.gold * EXPEDITION_DURATIONS[durIdx].mult) }) }}</span>
                 <ItemTile v-for="l in ex.loot" :key="l.item" :item="l.item" size="sm" />
               </div>
-              <Button :label="$t('tavern.send')" icon="pi pi-send" size="small" fluid style="margin-top:12px" :disabled="!who" @click="send(ex)" />
+              <Button :label="$t('tavern.send')" icon="pi pi-send" size="small" fluid style="margin-top:12px" :disabled="!who || (ex.map && !G.qty('treasure_map'))" @click="send(ex)" />
             </div>
           </div>
           <div class="section-title">{{ $t('tavern.reports') }} <HelpTip k="sections.reports" /></div>
@@ -308,7 +323,35 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 
         <!-- BAR -->
         <TabPanel value="bar">
-          <div class="section-title" style="margin-top:0">{{ $t('tavern.drinks') }} <HelpTip k="sections.drinks" /></div>
+          <div class="row" style="margin-bottom:12px">
+            <div class="section-title grow" style="margin:0">{{ $t('tavern.patrons') }} <HelpTip k="sections.patrons" /></div>
+            <span class="tag gold" v-tooltip.top="$t('tavern.repTip', { v: repBonus })"><GameIcon name="laurel-crown" :size="12" /> {{ $t('tavern.rep', { n: repLevel, v: repBonus }) }}</span>
+            <Button :label="$t('tavern.serveAll')" icon="pi pi-check" size="small" severity="secondary" outlined :disabled="!G.patronsReady()" @click="serveAll" />
+          </div>
+          <div v-if="!patrons.length" class="panel pad small muted" style="margin-bottom:16px">{{ $t('tavern.noPatrons') }}</div>
+          <div class="grid-wide" style="margin-bottom:20px">
+            <div v-for="p in patrons" :key="p.id" class="card patron" :class="{ guest: p.guest }">
+              <div class="row">
+                <ItemTile :icon="patronIcon(p)" :tint="p.guest ? '#7b5fd1' : '#6b4a2a'" size="md" :tip="false" />
+                <div class="grow" style="min-width:0">
+                  <div class="card-name">{{ patronName(p) }}</div>
+                  <div class="card-sub">{{ $t('tavern.leavesIn', { time: fmtClock(Math.max(0, (p.until - now) / 1000)) }) }}</div>
+                </div>
+              </div>
+              <div class="row small" style="margin-top:10px">
+                <ItemTile :item="p.item" size="xs" />
+                <span class="grow">{{ $t('tavern.wants', { n: p.qty, item: ITEMS[p.item].name }) }}</span>
+                <b class="tnum" :class="{ 'bad-text': G.qty(p.item) < p.qty }">{{ fmt(G.qty(p.item)) }} / {{ p.qty }}</b>
+              </div>
+              <div class="row wrap small" style="gap:6px;margin-top:8px">
+                <span class="tag gold"><GameIcon name="two-coins" :size="11" /> {{ fmt(G.patronPay(p)) }}</span>
+                <template v-if="p.guest"><span v-for="(n, k) in GUEST_MAP[p.guest].reward" :key="k" class="tag arcane"><ItemTile :item="k" size="xs" :tip="false" /> {{ n }}× {{ ITEMS[k].name }}</span></template>
+              </div>
+              <Button :label="$t('tavern.serve')" icon="pi pi-check" size="small" fluid style="margin-top:10px" :disabled="!G.canServe(p)" @click="serve(p)" />
+            </div>
+          </div>
+
+          <div class="section-title">{{ $t('tavern.drinks') }} <HelpTip k="sections.drinks" /></div>
           <div v-if="drink" class="panel pad row" style="margin-bottom:12px">
             <GameIcon :name="drink.icon" :size="22" class="gold-text" />
             <span class="grow" v-html="$t('tavern.underEffect', { name: drink.name, desc: drink.desc })" />
@@ -322,6 +365,8 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               </div>
               <Button :label="d.price.gold ? $t('inventory.goldAmount', { n: fmt(d.price.gold) }) : $t('tower.tokens', { n: d.price.tokens })" icon="pi pi-shopping-cart" size="small" fluid style="margin-top:12px"
                 :disabled="!G.canAffordCost(d.price)" @click="buyDrink(d)" />
+              <Button v-if="G.brewFor(d.id)" :label="$t('tavern.drinkOwn', { item: ITEMS[G.brewFor(d.id).id].name, n: G.qty(G.brewFor(d.id).id) })" size="small" fluid severity="secondary" outlined style="margin-top:6px"
+                :disabled="!G.qty(G.brewFor(d.id).id)" @click="drinkOwn(d)" />
             </div>
           </div>
           <p class="small faint">{{ $t('tavern.oneDrink') }}</p>
@@ -371,6 +416,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 </template>
 
 <style scoped>
+.patron.guest { border-color: rgba(123, 95, 209, 0.5); box-shadow: 0 0 18px -10px #7b5fd1; }
 .up-card { display: flex; flex-direction: column; gap: 8px; width: 290px; padding: 14px; }
 .cost { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13px; }
 .cost-i { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; color: var(--ink-2); }

@@ -83,6 +83,9 @@ export const EXPEDITIONS = [
   { id: 'dragons', icon: 'dragon-head', power: 80, gold: 1200,
     loot: [L('dragon_bones', 0.5, 1, 3), L('green_dhide', 0.4, 1, 2), L('runite_ore', 0.15, 1, 2), L('blood_rune', 0.2, 2, 6), L('torstol_seed', 0.03), L('gem_chest', 0.06)] },
 ]
+// Following a treasure map: it costs the map, and pays like few other trips
+EXPEDITIONS.push({ id: 'treasure', icon: 'treasure-map', power: 30, gold: 1500, map: true,
+  loot: [L('gem_chest', 0.35), L('coin_pouch', 0.6, 2, 5), L('uncut_ruby', 0.2), L('uncut_diamond', 0.1), L('starlight_shard', 0.05), L('stardust', 0.5, 10, 30)] })
 EXPEDITIONS.forEach(e => named(e, `expeditions.${e.id}`))
 export const INJURY_TIME = 1800
 

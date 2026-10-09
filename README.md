@@ -85,6 +85,9 @@ Requires Node.js 18 or newer.
 - **Titles and appearance**: 20 titles shown next to the hero's name, plus extra portraits and colours unlocked by achievements and festivals.
 - **Ascension**: start the whole hero over for Aether shards and spend them in a three-branch tree of permanent upgrades.
 - **Tavern**: hire staff (11 specialities, 4 rarities, traits and levels) who work in parallel for a wage. Includes 1/4/8 h expeditions, daily orders, drinks, dice and a mystery chest.
+  - **The bar**: patrons drop in over time, even offline, asking for food and drink from your stores; serving them pays gold and tips and raises the tavern's reputation. Special guests (the Faceless Merchant, a bard, a royal courier, a weary knight) ask for more and pay with rare goods.
+  - **Brews**: amber ale, herbal mead, strawberry wine and fire grog, brewed with Cooking and drunk instead of buying the drink.
+  - **Treasure maps** found while thieving open an expedition of their own.
 - **Action queue** that moves on to the next task by itself, and **chained crafting**: when a recipe runs out, the game makes the missing materials first (mine, smelt, then forge) and goes back to it.
 - **Guided tutorial** for new heroes: thirteen short steps over the first ten minutes (mine, smelt, fight, meet the tavern, open the journal), with the next button highlighted. It can be hidden, skipped or restarted from Settings.
 - **Light and dark themes**, or follow the device setting.
@@ -104,6 +107,7 @@ Requires Node.js 18 or newer.
 - `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/slayer.js`: slayer tasks and offers, Superior creatures, perks and blocked creatures (tuning in `src/game/data/slayer.js`).
+- `src/game/bar.js`: patrons, special guests and the hero's own brews (tuning in `src/game/data/bar.js`).
 - `src/game/church.js`: the Order's favour, daily offerings, holy water and the graceful outfit (tuning in `src/game/data/church.js`).
 - `src/game/codex.js`: the compendium's item pages and masterwork milestones (pages and rewards in `src/game/data/codex.js`).
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.

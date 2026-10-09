@@ -247,6 +247,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    guest: "{guest} visitó tu taberna y dejó un regalo.",
     guardian: "Derrotaste por primera vez a {guardian} en el piso {floor}.",
     favour: "Tu favor con la Orden del Alba ha subido a nivel {n}.",
     codexPage: "Completaste la página «{page}» del compendio.",
@@ -725,6 +726,7 @@ export default {
       graceful: { title: "Conjunto ligero", body: "Cuatro piezas ligeras que se compran con marcas de gracia de las pistas de Agilidad. Juntas aceleran la recolección, aumentan la XP de Agilidad, hacen más seguro el robo y aceleran todas las acciones." },
       towerAffixes: { title: "Los pisos de esta semana", body: "Desde el piso 6, cada bloque de cinco pisos tiene un cambio que varía cada semana, igual para todos. Los pisos con cambio dan un cuarto más de fichas." },
       towerRivals: { title: "Carrera a la cima", body: "Los mejores escaladores de los gremios del reino y hasta dónde han llegado. Siguen subiendo con el paso de los días." },
+      patrons: { title: "Clientes", body: "Los clientes van llegando con el tiempo, también mientras no juegas, y cada uno pide comida o bebida de tus provisiones. Sírvelos a cambio de oro y propina. Cada cliente servido sube la reputación de la taberna, así que todos pagan más. A veces llega un huésped especial, pide más y paga con objetos raros. Una taberna más grande atrae más clientes." },
       slayerShop: { title: 'Tienda del cazador', body: 'Gasta los puntos de Cazador en equipo, provisiones y saltos de encargo.' },
       towerNext: { title: 'Próximos pisos', body: 'Los siguientes guardianes y su vida. Los pisos ★ son puntos de control con un guardián más duro y más fichas.' },
       towerShop: { title: 'Tienda de la torre', body: 'Gasta las fichas de la torre en capas, cofres y elixires.' },
@@ -1709,6 +1711,20 @@ export default {
   },
 
   tavern: {
+    patrons: "Clientes",
+    noPatrons: "La barra está tranquila. Los clientes van llegando con el tiempo, también mientras no juegas.",
+    rep: "Reputación {n} · +{v} %",
+    repTip: "Cada cliente servido sube la reputación de la taberna; ahora los clientes pagan un {v} % más.",
+    serveAll: "Servir a todos",
+    serve: "Servir",
+    wants: "Quiere {n}× {item}",
+    leavesIn: "Se va en {time}",
+    served: "{name} pagó {gold} de oro",
+    servedGuest: "{name} pagó {gold} de oro y dejó un regalo",
+    servedAll: "{n} clientes servidos por {gold} de oro",
+    drinkOwn: "Beber tu {item} ({n})",
+    needsMap: "requiere un mapa del tesoro ({n})",
+    guests: { faceless: "El Mercader sin Rostro", bard: "Un bardo errante", courier: "Un mensajero real", knight: "Un caballero cansado" },
     maxLevel: 'Taberna al máximo', intro: 'Contrata personal que trabaja para ti en paralelo, incluso cuando no juegas. Pagas su sueldo mientras trabajan.',
     staffCount: 'Personal {n} / {max}', wages: 'Sueldos {n} oro/h', tokens: '{n} fichas de taberna', upgradeTo: 'Mejorar a {name}',
     upgradeHint: '+1 puesto, más candidatos, especialidades y rarezas nuevas.', upgrade: 'Mejorar taberna', upgraded: '¡Tu taberna ahora es <b>{name}</b>!',
@@ -1753,7 +1769,7 @@ export default {
     tough: { name: 'Duro', desc: 'No se lesiona en expediciones' },
     clumsy: { name: 'Torpe', desc: '+10% de fallos (quemar, robar)' },
   },
-  expeditions: {
+  expeditions: { treasure: "Seguir un mapa del tesoro",
     meadows: 'Patrulla por los Prados', forest: 'Batida en el Bosque Sombrío', caves: 'Exploración de las Cavernas', swamp: 'Travesía del Pantano',
     peaks: 'Ascenso a los Picos Helados', dragons: 'Incursión en tierras de dragones',
   },
@@ -1883,6 +1899,7 @@ export default {
   },
 
   groups: {
+    brews: "Bebidas",
     bury: "Enterrar",
     altar: "Altar",
     hides: "Pieles",
@@ -1932,6 +1949,11 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    amber_ale: "Cerveza ámbar",
+    herbal_mead: "Hidromiel de hierbas",
+    strawberry_wine: "Vino de fresas",
+    fire_grog: "Grog ardiente",
+    treasure_map: "Mapa del tesoro",
     climbers_amulet: "Amuleto del escalador",
     graceful_hood: "Capucha ligera",
     graceful_cape: "Capa ligera",
@@ -1969,6 +1991,7 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    treasure_map: "Un mapa viejo marcado con una X. Un aventurero de tu taberna puede seguirlo en una expedición.",
     holy_water: "Bendecida por la Orden del Alba. En la iglesia renueva todas las bendiciones activas.",
     slayer_helm_i: "Con un encargo activo: +25 % de precisión y daño contra el objetivo. Cuenta como yelmo de cazador para su conjunto.",
     slayer_sigil: "Arrancado a criaturas Superiores. Imbuye el yelmo de cazador en la mesa de artesanía.",

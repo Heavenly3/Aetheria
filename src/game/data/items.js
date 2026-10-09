@@ -173,6 +173,16 @@ export const POTIONS = [
 export const POTION_DURATION = 300
 POTIONS.forEach(p => def(p.id, { icon: 'round-potion', value: Math.round(ITEMS[p.herb].value * 1.8 + 6), tint: p.tint, type: 'potion', buff: p.buff }))
 
+/* ---------------- Brews (Cooking) ---------------- */
+// Brewed at home from crops; each one can be drunk at the tavern instead of buying that drink
+export const BREWS = [
+  { id: 'amber_ale',       drink: 'ale',  lvl: 8,  xp: 30,  in: { potato: 3, vial_water: 1 },                tint: '#d9a441', icon: 'beer-horn',         value: 45 },
+  { id: 'herbal_mead',     drink: 'mead', lvl: 25, xp: 55,  in: { tarromin: 1, potato: 2, vial_water: 1 },   tint: '#e8c25a', icon: 'honeypot',          value: 95 },
+  { id: 'strawberry_wine', drink: 'wine', lvl: 40, xp: 80,  in: { strawberry: 4, vial_water: 1 },            tint: '#c0304a', icon: 'glass-celebration', value: 150 },
+  { id: 'fire_grog',       drink: 'grog', lvl: 55, xp: 110, in: { tomato: 3, fire_rune: 5, vial_water: 1 },  tint: '#e8572a', icon: 'fire-bottle',       value: 130 },
+]
+BREWS.forEach(b => def(b.id, { icon: b.icon, value: b.value, tint: b.tint, type: 'drink', drink: b.drink }))
+
 /* ---------------- Runes ---------------- */
 export const RUNES = [
   { id: 'air_rune',    lvl: 1,  xp: 5,    value: 4,   tint: '#cfe3f0', icon: 'tornado' },
@@ -245,6 +255,7 @@ def('graceful_hood', { icon: 'hood',         type: 'equip', slot: 'head', value:
 def('graceful_cape', { icon: 'cape',         type: 'equip', slot: 'cape', value: 0, tint: '#4ecdc4', stats: { def: 3 }, req: { agility: 20 } })
 def('graceful_legs', { icon: 'armored-pants', type: 'equip', slot: 'legs', value: 0, tint: '#4ecdc4', stats: { def: 4 }, req: { agility: 30 } })
 def('graceful_top',  { icon: 'leather-vest', type: 'equip', slot: 'body', value: 0, tint: '#4ecdc4', stats: { def: 5 }, req: { agility: 40 } })
+def('treasure_map',  { icon: 'treasure-map', value: 300, tint: '#c9a04a', hasDesc: true })
 def('holy_water',    { icon: 'vial', value: 40, tint: '#f1e3b0', hasDesc: true })
 def('slayer_sigil',  { icon: 'star-medal', value: 120, tint: '#d36bff', hasDesc: true })
 def('slayer_cape',   { icon: 'vampire-cape', type: 'equip', slot: 'cape', value: 0, tint: '#b5179e', stats: { atk: 6, str: 6, rAtk: 6, mAtk: 6, def: 6 }, req: { slayer: 50 } })

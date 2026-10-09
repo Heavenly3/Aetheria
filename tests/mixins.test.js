@@ -14,11 +14,12 @@ import { guilds } from '../src/game/guilds.js'
 import { codex } from '../src/game/codex.js'
 import { slayer } from '../src/game/slayer.js'
 import { church } from '../src/game/church.js'
+import { bar } from '../src/game/bar.js'
 
 // Every system is mixed into one engine object: two methods with the same name would silently replace each other
 describe('engine mixins', () => {
   it('never share a method name', () => {
-    const mixins = { systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church }
+    const mixins = { systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar }
     // The engine's own methods, read from its source
     const src = readFileSync(new URL('../src/game/engine.js', import.meta.url), 'utf8')
     const body = src.slice(src.indexOf('export const G = {'))

@@ -38,7 +38,7 @@ const sections = computed(() => [
   ] },
   { id: 'town', key: 'nav.groups.town', items: [
     FEATURES.festivals && { to: '/festival', icon: fest.value?.icon || 'laurel-crown', key: 'nav.festival', festive: !!fest.value, badge: fest.value && G.festivalShop().some(e => e.kind !== 'item' && G.canBuyFestival(e)) ? '!' : null },
-    { to: '/tavern', icon: 'beer-horn', key: 'nav.tavern', badge: state.tavern.orders.filter(o => !o.done && G.qty(o.item) >= o.qty).length || null,
+    { to: '/tavern', icon: 'beer-horn', key: 'nav.tavern', badge: state.tavern.orders.filter(o => !o.done && G.qty(o.item) >= o.qty).length + G.patronsReady() || null,
       pulse: state.tavern.workers.some(w => w.status === 'working' || w.exp) },
     { to: '/guilds', icon: 'swords-emblem', key: 'nav.guilds', badge: G.guildsReady() || null },
     { to: '/home', icon: 'family-house', key: 'nav.home' },
