@@ -323,7 +323,7 @@ function startAdventure() {
       </div>
     </div>
     <ul class="muted" style="padding-inline-start:18px;line-height:1.7;margin:0">
-      <li v-for="i in 6" :key="i" v-html="$t(`welcome.tips.${i - 1}`)" />
+      <li v-for="i in 8" :key="i" v-html="$t(`welcome.tips.${i - 1}`)" />
     </ul>
     <p v-if="!state.tutorial.done" class="welcome-guide"><GameIcon name="treasure-map" :size="20" /><span v-html="$t('welcome.tutorial')" /></p>
     <template #footer><Button :label="$t('welcome.start')" icon="pi pi-arrow-right" iconPos="right" @click="startAdventure" /></template>

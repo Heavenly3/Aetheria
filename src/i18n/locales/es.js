@@ -56,6 +56,8 @@ export default {
       'El juego sigue avanzando mientras no estás, hasta el límite offline.',
       'Contrata personal en la <b>Taberna</b> para que entrene habilidades por ti en paralelo.',
       'Las misiones desbloquean zonas y jefes nuevos. Revisa el tablón a menudo.',
+      'Los combates avanzan solos: cada ataque acumula <b>energía</b> y tus habilidades se lanzan solas. Elígelas en Combate.',
+      'Tu historia queda escrita en el <b>Diario</b>. Aparecen páginas nuevas a medida que exploras.',
     ],
     start: 'Que empiece la aventura',
     tutorial: 'Una pequeña guía en la parte de arriba te acompañará en tus primeros pasos. Puedes ocultarla o saltarla cuando quieras.',
@@ -258,6 +260,7 @@ export default {
   },
 
   msg: {
+    foodSwitched: 'Se acabó esa comida: ahora comes {item}.',
     needLevel: 'Necesitas nivel {lvl} de {skill}', needTool: 'Necesitas {tool} de nivel {tier}', noMaterials: 'Te faltan materiales',
     faintedThieving: 'Te han pillado y te has desmayado. Toca descansar.', queueSkipMaterials: 'Se salta {action}: faltan materiales',
     outOfMaterials: 'Sin materiales para {action}', noSeeds: 'No tienes {item}', needBow: 'Necesitas un arco equipado',
@@ -270,6 +273,11 @@ export default {
   },
 
   combat: {
+    weaponTitle: "Tu arma",
+    unarmed: "Sin arma",
+    trains: "Entrena {skill}",
+    trainsHint: "La habilidad en la que gana XP este estilo, además de Vitalidad.",
+    prep: { style: "Estilo y habilidades", supplies: "Suministros", loadouts: "Equipos guardados" },
     tabs: { areas: 'Zonas', bosses: 'Jefes', dungeons: 'Mazmorras' },
     respawning: 'Reapareciendo…', accuracy: 'Tu precisión {v}', maxHit: 'Golpe máx. {v}', hitsYou: 'Te acierta {v}', weakTo: 'Débil a {style}',
     types: { melee: 'cuerpo a cuerpo', ranged: 'distancia', magic: 'magia' },
@@ -935,9 +943,11 @@ export default {
       fixed: "Arreglos",
     },
     entries: {
-      next: {
-        title: "El diario del héroe",
-        new: "Diario: la historia de Aetheria, contada en capítulos cortos que se desbloquean al explorar, derrotar jefes y presenciar prodigios. Reléelos cuando quieras.\nPersonajes: la gente que conoces por el camino, con nombres distintos en cada partida nueva.\nRecuerdos: cada ascensión trae un recuerdo de una vida pasada.\nActualizaciones: esta ventana después de cada actualización, y la lista completa de actualizaciones en Ajustes.",
+      b7: {
+        title: "Un combate nuevo, una historia, música y un clima vivo",
+        new: "Combate: cada arma ataca a su ritmo y puede hacer críticos o causar sangrado, quemaduras, veneno, aturdimiento, ralentización o debilidad.\nHabilidades: seis por estilo de combate, que se desbloquean por nivel. Los ataques acumulan energía y hasta tres habilidades de tu barra se lanzan solas.\nLas criaturas tienen rasgos como veneno, coraza o regeneración, los élites raros dan mucho mejor botín y los jefes se vuelven más feroces a la mitad y a un cuarto de su vida.\nRachas de caza: matar seguido sin morir da hasta +25% de XP de combate y botín.\nPoder de combate: un panel con tu daño por segundo, tu defensa y más. El comparador de equipo y el tooltip de cada objeto dicen lo que cambiaría de verdad, y las fichas de monstruos muestran el tiempo por muerte.\nLa armadura ahora también absorbe parte de cada golpe. La Agilidad esquiva y los escudos bloquean.\nDiario: la historia de Aetheria en capítulos que se desbloquean al explorar, la gente que conoces (con nombres nuevos en cada partida) y recuerdos que vuelven con cada ascensión.\nEl tabernero comenta tu historia, la astróloga deja notas en los prodigios y las criaturas estudiadas revelan su lore.\nMúsica y sonido ambiente creados por el propio juego: melodías que siguen dónde estás y la hora del día, y lluvia, viento y pájaros que siguen el clima.\nEl clima ahora cambia el juego: cada clima, estación y la noche potencian unas habilidades y estilos y dificultan otros, y las tormentas hacen más fuertes a los monstruos.\nActualizaciones: esta ventana después de cada actualización y la lista completa en Ajustes.",
+        changed: "La pantalla de combate pone primero la pelea, con pestañas debajo para estilo y habilidades, suministros y equipos guardados.\nLos héroes nuevos empiezan con la comida elegida, y cuando se acaba una pasas a la siguiente.\nAjustes: volumen de música, ambiente y efectos, silencio en segundo plano, botón de silencio en la barra superior, menos avisos, números completos y menos animaciones.\nEl tutorial termina en el diario.",
+        fixed: "Herbología se puede entrenar desde el nivel 1 y la tienda vende guam.\nLas notificaciones ya no aparecen repetidas.",
       },
       b6: {
         title: "Forja de reliquias, clima y ayuda en el juego",
@@ -1292,11 +1302,12 @@ export default {
       smeltBar: { title: 'Funde un lingote de bronce', text: 'Un <b>Lingote de bronce</b> necesita un cobre y un estaño. Si falta algo, tu héroe lo mina primero.' },
       openInventory: { title: 'Mira tu inventario', text: 'Todo lo que fabricas acaba aquí. Pulsa un objeto para equiparlo, venderlo o ver para qué sirve.' },
       openCombat: { title: 'Ve a Combate', text: 'Luchar entrena Ataque, Fuerza, Defensa y Vida, y los monstruos sueltan oro y botín.' },
-      startFight: { title: 'Elige un rival', text: 'Empieza por algo fácil en los <b>Prados del Alba</b>, como una gallina. Lleva comida cuando te enfrentes a enemigos más duros.' },
-      winFights: { title: 'Gana tres combates', text: 'Los combates son automáticos. Vigila tu vida en la barra de arriba.' },
+      startFight: { title: 'Elige un rival', text: 'Empieza por algo fácil en los <b>Prados del Alba</b>, como una gallina. Tu comida ya está elegida en <b>Suministros</b>: comes solo cuando te hieren.' },
+      winFights: { title: 'Gana tres combates', text: 'Los combates son automáticos. Cada ataque llena tu <b>energía</b> y tus habilidades se lanzan solas cuando hay suficiente.' },
       openHero: { title: 'Conoce a tu héroe', text: 'Los niveles dan XP de héroe y puntos de atributos y talentos. Gástalos aquí y cambia tu equipo.' },
       openQuests: { title: 'Lee el tablón de misiones', text: 'Las misiones desbloquean zonas y jefes nuevos, y las tareas diarias dan premios cada día.' },
-      openTavern: { title: 'Visita la taberna', text: 'Contrata personal que entrena habilidades por ti, incluso cuando no estás. ¡Y con esto termina la guía!' },
+      openTavern: { title: 'Visita la taberna', text: 'Contrata personal que entrena habilidades por ti, incluso mientras no estás. El tabernero también tiene noticias sobre tu historia.' },
+      openJournal: { title: 'Abre tu diario', text: 'Tu historia queda escrita en el <b>Diario</b> y aparecen páginas nuevas a medida que exploras. ¡Ya has terminado la guía!' },
     },
   },
 

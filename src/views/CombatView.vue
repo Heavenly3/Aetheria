@@ -12,8 +12,7 @@ import { ITEMS } from '../game/data/items.js'
 import Button from 'primevue/button'
 import { QUESTS } from '../game/data/progression.js'
 import { fmt } from '../game/format.js'
-import CombatSettings from '../components/CombatSettings.vue'
-import AbilityPanel from '../components/AbilityPanel.vue'
+import CombatPrep from '../components/CombatPrep.vue'
 import Arena from '../components/Arena.vue'
 import MonsterCard from '../components/MonsterCard.vue'
 import { chanceNote } from '../ui/tips.js'
@@ -35,11 +34,9 @@ function fightBoss(b) {
 
 <template>
   <div>
-    <CombatSettings />
-    <div style="height:18px" />
-    <AbilityPanel />
-    <div style="height:18px" />
-    <Arena v-if="showArena" />
+    <!-- The fight comes first; getting ready sits below it -->
+    <Arena v-if="showArena" style="margin-bottom:18px" />
+    <CombatPrep />
 
     <Tabs v-model:value="tab">
       <TabList>

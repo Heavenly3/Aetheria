@@ -254,6 +254,8 @@ export const G = {
     })
     this.addItem('potato_seed', 6)
     this.s.combatStyle = role.style
+    // Heroes start with their food already set to be eaten when hurt
+    this.s.food = this.bestFood()
     this.s.hp = this.maxHp()
     this.ensurePlots()
   },
@@ -608,8 +610,22 @@ export const G = {
   },
   boosted(skill) { return this.level(skill) + this.boost(skill) },
   autoEat() {
-    const food = this.s.food
-    while (food && this.s.hp <= this.maxHp() * this.s.autoEatPct / 100 && this.qty(food) > 0) if (!this.eat(food)) break
+    if (!this.s.food) return
+    while (this.s.hp <= this.maxHp() * this.s.autoEatPct / 100) {
+      // When the chosen food runs out, the hero moves on to the best food left in the bag
+      if (this.qty(this.s.food) <= 0) {
+        const next = this.bestFood()
+        if (!next) return
+        this.s.food = next
+        this.toast(ITEMS[next].icon, 'msg.foodSwitched', { item: '@item:' + next }, 'info')
+      }
+      if (!this.eat(this.s.food)) break
+    }
+  },
+  bestFood() {
+    let best = null
+    for (const id in this.s.inventory) if (ITEMS[id]?.type === 'food' && this.s.inventory[id] > 0 && (!best || ITEMS[id].heal > ITEMS[best].heal)) best = id
+    return best
   },
   autoDrink() {
     const id = this.s.potion

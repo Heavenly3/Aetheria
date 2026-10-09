@@ -31,7 +31,7 @@ describe('tutorial', () => {
   it('pays a reward at the end and can be skipped or restarted', () => {
     state.tutorial.step = STEPS.length - 1
     const gold = state.gold
-    checkTutorial('/tavern')
+    checkTutorial(STEPS[STEPS.length - 1].route) // the last step: the journal
     expect(state.tutorial.done).toBe(true)
     expect(state.gold).toBe(gold + TUTORIAL_REWARD)
     startTutorial()

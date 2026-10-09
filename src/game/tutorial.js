@@ -24,6 +24,7 @@ export const STEPS = [
   { id: 'openHero', icon: 'laurel-crown', route: '/', targets: ['nav:/'] },
   { id: 'openQuests', icon: 'scroll-unfurled', route: '/quests', targets: ['nav:/quests'] },
   { id: 'openTavern', icon: 'beer-horn', route: '/tavern', targets: ['nav:/tavern', 'nav:menu'] },
+  { id: 'openJournal', icon: 'quill-ink', route: '/journal', targets: ['nav:/journal', 'nav:menu'] },
 ]
 
 export const tutorialActive = () => !state.tutorial.done && STEPS[state.tutorial.step]

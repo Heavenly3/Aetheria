@@ -9,12 +9,16 @@ import { G, state } from '../game/engine.js'
 import { COMBAT_STYLES, SPELLS } from '../game/data/combat.js'
 import { PRAYERS, PRAYER_DRAIN } from '../game/data/extras.js'
 import { ITEMS, SLOTS } from '../game/data/items.js'
-import { fmt, fmtClock } from '../game/format.js'
+import { weaponProfile } from '../game/data/fighting.js'
+import { fmt, fmtDec, fmtClock } from '../game/format.js'
 import { tm } from '../i18n/index.js'
 import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'
 import HelpTip from './HelpTip.vue'
 
+// section: show only one part ('style', 'supplies' or 'loadouts'), or 'all' of them
+const props = defineProps({ section: { type: String, default: 'all' } })
+const show = part => props.section === 'all' || props.section === part
 const { t } = useI18n()
 const foods = computed(() => Object.keys(state.inventory).filter(id => ITEMS[id]?.type === 'food')
   .sort((a, b) => ITEMS[a].heal - ITEMS[b].heal)
@@ -42,11 +46,19 @@ function useSet(i) {
 }
 const setSummary = lo => Object.keys(SLOTS).map(k => lo.equipment[k]).filter(Boolean)
 const ammo = computed(() => state.equipment.ammo)
+// The weapon in hand and how it fights: pace, crit chance and the status it can leave
+const weapon = computed(() => state.equipment.weapon)
+const wp = computed(() => weaponProfile(weapon.value))
+const weaponLine = computed(() => {
+  const parts = [t('fighting.weaponLine', { speed: fmtDec(G.attackSpeed()), crit: Math.round(G.critChance() * 100) + '%' })]
+  for (const f of G.heroEffects()) parts.push(t('fighting.weaponFx', { chance: Math.round(f.chance * 100) + '%', status: t(`fighting.statuses.${f.id}.name`).toLowerCase() }))
+  return parts.join(' · ')
+})
 </script>
 
 <template>
-  <div class="two-col">
-    <div class="panel pad">
+  <div :class="{ 'two-col': section === 'all' }">
+    <div v-if="show('style')" class="panel pad">
       <h3 class="panel-title"><GameIcon name="crossed-swords" /> {{ $t('combat.style') }} <HelpTip k="combat.style" /></h3>
       <div class="styles">
         <button v-for="(st, k) in COMBAT_STYLES" :key="k" class="style-btn" :class="{ active: state.combatStyle === k }" @click="state.combatStyle = k">
@@ -54,6 +66,17 @@ const ammo = computed(() => state.equipment.ammo)
           <b>{{ st.name }}</b>
           <span>{{ st.desc }}</span>
         </button>
+      </div>
+      <!-- The weapon in hand -->
+      <div class="weapon">
+        <ItemTile v-if="weapon" :item="weapon" size="md" />
+        <ItemTile v-else icon="biceps" size="md" empty :tip="false" />
+        <div class="grow" style="min-width:0">
+          <div class="small muted">{{ $t('combat.weaponTitle') }}</div>
+          <b>{{ weapon ? ITEMS[weapon].name : $t('combat.unarmed') }}</b>
+          <div class="small" style="color:var(--ink-2)">{{ weaponLine }}</div>
+        </div>
+        <span class="tag" v-tooltip.top="$t('combat.trainsHint')">{{ $t('combat.trains', { skill: $t(`skills.${COMBAT_STYLES[state.combatStyle].skill}.name`) }) }}</span>
       </div>
       <div v-if="state.combatStyle === 'magic'" class="stack" style="margin-top:14px">
         <label class="small muted" for="spell-select">{{ $t('combat.spell') }} <HelpTip k="combat.spell" /></label>
@@ -73,7 +96,7 @@ const ammo = computed(() => state.equipment.ammo)
       <div v-if="blocker" class="small bad-text" style="margin-top:12px"><i class="pi pi-exclamation-triangle" /> {{ tm(blocker) }}</div>
     </div>
 
-    <div class="panel pad">
+    <div v-if="show('supplies')" class="panel pad">
       <h3 class="panel-title"><GameIcon name="meat" /> {{ $t('combat.supplies') }} <HelpTip k="sections.supplies" /></h3>
       <div class="stack">
         <label class="small muted" for="food-select">{{ $t('combat.autoFood') }} <HelpTip k="combat.food" /></label>
@@ -96,7 +119,7 @@ const ammo = computed(() => state.equipment.ammo)
       </div>
     </div>
   </div>
-  <div class="panel pad" style="margin-top:16px">
+  <div v-if="show('loadouts')" class="panel pad" :style="section === 'all' ? 'margin-top:16px' : null">
     <h3 class="panel-title"><GameIcon name="checked-shield" /> {{ $t('loadouts.title') }} <HelpTip k="combat.loadouts" /></h3>
     <p class="small muted" style="margin-top:0">{{ $t('loadouts.intro') }}</p>
     <div class="sets">
@@ -129,6 +152,8 @@ const ammo = computed(() => state.equipment.ammo)
 .style-btn.active { border-color: var(--gold); background: rgba(226, 182, 90, 0.08); box-shadow: inset 0 0 0 1px rgba(226, 182, 90, 0.3); }
 .style-btn.active .gi { color: var(--gold); }
 .w-full { width: 100%; }
+.weapon { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 10px 12px; border-radius: 12px; background: var(--tint-1); border: 1px solid var(--line); }
+@media (max-width: 560px) { .weapon { flex-wrap: wrap; } }
 .sets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .set { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: var(--tint-1); border: 1px solid var(--line); }
 @media (max-width: 900px) { .sets { grid-template-columns: 1fr; } }

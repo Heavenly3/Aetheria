@@ -56,6 +56,8 @@ export default {
       'The game keeps going while you are away, up to the offline limit.',
       'Hire staff at the <b>Tavern</b> to train skills for you in parallel.',
       'Quests unlock new areas and bosses. Check the quest board often.',
+      'Fights run on their own: every attack builds <b>energy</b> and your abilities fire by themselves. Choose them in Combat.',
+      'Your story is written in the <b>Journal</b>. New pages appear as you explore.',
     ],
     start: 'Let the adventure begin',
     tutorial: 'A short guide at the top of the screen will walk you through your first steps. You can hide or skip it at any time.',
@@ -258,6 +260,7 @@ export default {
   },
 
   msg: {
+    foodSwitched: 'Out of that food: now eating {item}.',
     needLevel: 'You need {skill} level {lvl}', needTool: 'You need a {tool} of tier {tier}', noMaterials: 'You are missing materials',
     faintedThieving: 'You were caught and passed out. Taking a break.', queueSkipMaterials: 'Skipped {action}: missing materials',
     outOfMaterials: 'Out of materials for {action}', noSeeds: 'You have no {item}', needBow: 'You need a bow equipped',
@@ -270,6 +273,11 @@ export default {
   },
 
   combat: {
+    weaponTitle: "Your weapon",
+    unarmed: "Bare hands",
+    trains: "Trains {skill}",
+    trainsHint: "The skill this style earns XP in, besides Hitpoints.",
+    prep: { style: "Style and abilities", supplies: "Supplies", loadouts: "Saved loadouts" },
     tabs: { areas: 'Areas', bosses: 'Bosses', dungeons: 'Dungeons' },
     respawning: 'Respawning…', accuracy: 'Your accuracy {v}', maxHit: 'Max hit {v}', hitsYou: 'Hits you {v}', weakTo: 'Weak to {style}',
     types: { melee: 'melee', ranged: 'ranged', magic: 'magic' },
@@ -935,9 +943,11 @@ export default {
       fixed: "Fixed",
     },
     entries: {
-      next: {
-        title: "The hero's journal",
-        new: "Journal: the story of Aetheria, told in short chapters that unlock as you explore, defeat bosses and witness omens. Read them again whenever you like.\nCharacters: the people you meet along the way, with a different cast of names in every new game.\nMemories: each ascension brings back a memory of a past life.\nUpdates: this window after each update, and the full list of updates in Settings.",
+      b7: {
+        title: "A new way to fight, a story, music and living weather",
+        new: "Combat: every weapon swings at its own pace and can land critical hits or leave bleeding, burns, poison, stuns, slows or weakness.\nAbilities: six per combat style, unlocked by level. Attacks build energy and up to three abilities on your bar fire on their own.\nCreatures have traits like venom, armour or regeneration, rare elites bring far better loot, and bosses grow fiercer at half and a quarter of their health.\nHunting streaks: kills in a row without dying add up to +25% combat XP and loot.\nCombat power: a panel with your damage per second, defence and more. Comparing gear and every item tooltip show what it would really change, and monster cards show the time per kill.\nArmour now also soaks part of every blow. Agility dodges and shields block.\nJournal: the story of Aetheria in chapters that unlock as you explore, the people you meet (with new names in every game) and memories that return with each ascension.\nThe tavern keeper talks about your story, the astrologer leaves notes on omens and studied creatures reveal their lore.\nMusic and ambient sound made in the game itself: melodies that follow where you are and the time of day, and rain, wind and birds that follow the weather.\nWeather now changes the game: every weather, season and the night boost some skills and styles and hinder others, and storms make monsters stronger.\nUpdates: this window after each update and the full list in Settings.",
+        changed: "The combat screen puts the fight first, with tabs below for style and abilities, supplies and loadouts.\nNew heroes start with their food set, and you move on to the next food when one runs out.\nSettings: volumes for music, ambience and effects, silence in the background, a mute button in the top bar, fewer pop-ups, full numbers and reduced animations.\nThe tutorial ends in the journal.",
+        fixed: "Herblore can be trained from level 1, and the shop sells guam.\nNotifications no longer show up more than once.",
       },
       b6: {
         title: "Relic forge, weather and in-game help",
@@ -1292,11 +1302,12 @@ export default {
       smeltBar: { title: 'Smelt a bronze bar', text: 'A <b>Bronze bar</b> needs one copper and one tin. If something is missing, your hero mines it first.' },
       openInventory: { title: 'Check your inventory', text: 'Everything you make ends up here. Click an item to equip it, sell it or see what it is for.' },
       openCombat: { title: 'Head to Combat', text: 'Fighting trains Attack, Strength, Defence and Hitpoints, and monsters drop gold and loot.' },
-      startFight: { title: 'Pick a fight', text: 'Start with something easy in the <b>Dawn Meadows</b>, like a chicken. Bring food once you face tougher foes.' },
-      winFights: { title: 'Win three fights', text: 'Fights are automatic. Keep an eye on your hitpoints in the top bar.' },
+      startFight: { title: 'Pick a fight', text: 'Start with something easy in the <b>Dawn Meadows</b>, like a chicken. Your food is already set in <b>Supplies</b>: you eat on your own when hurt.' },
+      winFights: { title: 'Win three fights', text: 'Fights are automatic. Each attack fills your <b>energy</b>, and your abilities fire by themselves when it is full enough.' },
       openHero: { title: 'Meet your hero', text: 'Levels give hero XP and points for attributes and talents. Spend them here, and change your gear.' },
       openQuests: { title: 'Read the quest board', text: 'Quests unlock new areas and bosses, and daily tasks pay out every day.' },
-      openTavern: { title: 'Visit the tavern', text: 'Hire staff who train skills for you, even while you are away. That is the guide done!' },
+      openTavern: { title: 'Visit the tavern', text: 'Hire staff who train skills for you, even while you are away. The keeper also has news about your story.' },
+      openJournal: { title: 'Open your journal', text: 'Your story is written in the <b>Journal</b>, and new pages appear as you explore. That is the guide done!' },
     },
   },
 
