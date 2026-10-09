@@ -62,6 +62,8 @@ export default {
   },
 
   toast: {
+    huntStreak: 'Racha de caza: <b>{n} muertes</b> · +{v}% de XP de combate y botín',
+    bossPhase: '¡{name} está <b>{phase}</b>!',
     elite: '¡Aparece un élite: <b>{name}</b>!',
     eliteDown: 'Élite derrotado: <b>{name}</b>',
     chapter: 'Nueva página del diario: <b>{name}</b>',
@@ -235,6 +237,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    streakLost: 'Racha de caza perdida tras {n} muertes.',
     elite: 'Élite derrotado: {monster} {kind}.',
     chapter: 'Nueva página del diario: {chapter}.',
     start: '{name} empieza su aventura como {role}.', heroLevel: 'Nivel de héroe {level} (+{points} puntos).',
@@ -672,6 +675,8 @@ export default {
       offline: { title: 'Progreso sin conexión', body: 'Con el juego cerrado tu héroe sigue trabajando hasta este número de horas. Mejora el dormitorio de tu hogar para ampliarlo.' },
     },
     combat: {
+      streak: { title: "Racha de caza", body: "Muertes seguidas sin morir. Cada 25 muertes suman +2,5% de XP de combate y de botín, hasta +25%. Si mueres, se rompe. Tu mejor racha: {best}." },
+      live: { title: "Este combate", body: "Cifras desde que empezó este combate: el daño que haces y recibes por segundo, y las muertes, la XP de combate y el oro por hora." },
       energy: { title: "Energía", body: "Cada ataque normal acumula energía, los críticos dan más y recibir golpes también. Las habilidades la gastan." },
       speed: { title: "Velocidad de ataque", body: "Cada cuánto atacas. Cada arma tiene su ritmo: los arcos son rápidos y los martillos, lentos pero contundentes. Los hechizos de aire se lanzan más rápido." },
       crit: { title: "Golpes críticos", body: "La probabilidad de que un golpe acertado haga daño extra. Se muestra con un número dorado." },
@@ -794,6 +799,32 @@ export default {
   },
 
   fighting: {
+    phase: "Fase {n}",
+    streak: "{n} seguidas · +{v}%",
+    phases: {
+      enraged: {
+        name: "Furioso",
+        desc: "Con menos de la mitad de vida: ataca un 15% más rápido y golpea un 25% más fuerte.",
+      },
+      desperate: {
+        name: "Desesperado",
+        desc: "Con menos de un cuarto de vida: ataca un 25% más rápido, golpea un 35% más fuerte, ignora un 15% más de daño y te debilita al empezar.",
+      },
+    },
+    live: {
+      title: "Este combate",
+      dps: "daño/s",
+      killsH: "muertes/h",
+      xpH: "XP/h",
+      goldH: "oro/h",
+      taken: "recibido/s",
+    },
+    notes: {
+      ability: "Usaste {ability}",
+      phase: "¡El jefe está {phase}!",
+      elite: "Apareció un élite: {kind}",
+      bigCrit: "Un crítico enorme: {dmg}",
+    },
     crit: "¡Crítico!",
     dodged: "Esquivado",
     blocked: "Bloqueado",

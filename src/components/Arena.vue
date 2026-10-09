@@ -3,9 +3,9 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { MERCENARIES, COMBAT_STYLES, DUNGEONS } from '../game/data/combat.js'
-import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX } from '../game/data/fighting.js'
+import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES } from '../game/data/fighting.js'
 import { abilityText } from '../ui/abilities.js'
-import { pct, fmt } from '../game/format.js'
+import { pct, fmt, fmtDec } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
 import GameIcon from './GameIcon.vue'
 import { help, tip } from '../ui/tips.js'
@@ -30,6 +30,17 @@ const bar = computed(() => G.abilityBar().filter(id => ABILITY_MAP[id] && G.abil
   return { a, cd, cdPct: cd / a.cd, ready: !cd && (act.value.energy || 0) >= a.cost }
 }))
 const abilityTip = a => tip(t(`abilities.list.${a.id}`), abilityText(a), [{ text: `${t('abilities.cost', { n: a.cost })} · ${t('abilities.cooldown', { n: a.cd })}`, kind: 'muted' }])
+// Boss phase, hunting streak and the fight's running numbers
+const phase = computed(() => (act.value?.phase ? BOSS_PHASES[act.value.phase - 1] : null))
+const streak = computed(() => state.hunt?.streak || 0)
+const live = computed(() => (void act.value?.live?.t, G.liveStats()))
+const NOTE_PARAMS = {
+  ability: n => ({ ability: t(`abilities.list.${n.id}`) }),
+  phase: n => ({ phase: t(`fighting.phases.${n.id}.name`).toLowerCase() }),
+  elite: n => ({ kind: t(`fighting.elites.${n.id}`) }),
+  bigCrit: n => ({ dmg: fmt(n.dmg) }),
+}
+const noteText = n => t(`fighting.notes.${n.kind}`, NOTE_PARAMS[n.kind]?.(n) || {})
 const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))
 
 const splats = ref([])
@@ -99,6 +110,7 @@ onUnmounted(() => { off && off(); offAb && offAb() })
         <span v-if="elite" class="elite-tag" v-tooltip.top="tip($t('fighting.elite'), $t('fighting.eliteHint', { gold: ELITE_LOOT.gold, drops: ELITE_LOOT.drops }))">{{ $t('fighting.elite') }}</span>
         {{ monsterName }}
       </div>
+      <div v-if="phase" class="phase-tag" v-tooltip.top="tip($t(`fighting.phases.${phase.id}.name`), $t(`fighting.phases.${phase.id}.desc`))">{{ $t('fighting.phase', { n: act.phase + 1 }) }} · {{ $t(`fighting.phases.${phase.id}.name`) }}</div>
       <div class="bar thick hp"><i :style="{ width: (alive ? act.mHp / m.hp : 0) * 100 + '%' }" /></div>
       <div class="small muted tnum" style="margin-top:5px">{{ alive ? `${fmt(act.mHp)} / ${fmt(m.hp)} ${$t('common.hp')}` : $t('combat.respawning') }}</div>
       <div class="bar thin" style="margin-top:8px;--c:#e0554b"><i :style="{ width: (alive ? Math.min(1, act.mTimer / m.speed) : 0) * 100 + '%' }" /></div>
@@ -125,7 +137,21 @@ onUnmounted(() => { off && off(); offAb && offAb() })
       <span v-if="dungeon" class="tag arcane">{{ dungeon.name }} · {{ act.room >= dungeon.rooms.length ? $t('combat.boss') : $t('combat.room', { n: act.room + 1, total: dungeon.rooms.length }) }} · {{ $t('combat.clears', { n: act.clears }) }}</span>
       <span v-if="state.prayer" class="tag ok">{{ $t('combat.prayerActive') }}</span>
       <span class="tag gold" v-tooltip.top="help('combat.kills')">{{ $t('combat.kills', { n: act.runKills }) }}</span>
+      <span v-if="streak" class="tag" :class="{ gold: G.streakBonus() > 0 }" v-tooltip.top="help('combat.streak', { best: fmt(state.hunt.best) })"><GameIcon name="flame" :size="12" /> {{ $t('fighting.streak', { n: fmt(streak), v: fmtDec(G.streakBonus() * 100) }) }}</span>
     </div>
+
+    <!-- The fight in numbers, and its notable moments -->
+    <div v-if="live" class="live">
+      <span v-tooltip.top="help('combat.live')" class="live-title">{{ $t('fighting.live.title') }}</span>
+      <span><b class="tnum">{{ fmtDec(live.dps) }}</b> {{ $t('fighting.live.dps') }}</span>
+      <span><b class="tnum">{{ fmt(live.killsH) }}</b> {{ $t('fighting.live.killsH') }}</span>
+      <span><b class="tnum">{{ fmt(live.xpH) }}</b> {{ $t('fighting.live.xpH') }}</span>
+      <span><b class="tnum">{{ fmt(live.goldH) }}</b> {{ $t('fighting.live.goldH') }}</span>
+      <span><b class="tnum bad-text">{{ fmtDec(live.taken) }}</b> {{ $t('fighting.live.taken') }}</span>
+    </div>
+    <ul v-if="act.notes?.length" class="notes">
+      <li v-for="(n, i) in act.notes" :key="i + '-' + n.at + n.kind"><span class="faint tnum">{{ n.at }} s</span> {{ noteText(n) }}</li>
+    </ul>
   </div>
 </template>
 
@@ -141,6 +167,12 @@ onUnmounted(() => { off && off(); offAb && offAb() })
 .splat.crit { background: linear-gradient(135deg, #f8e3a8, #e2b65a 50%, #a87a2a); color: #1a1206; font-size: 19px; }
 .splat.soft { background: #2a3550; font-size: 13px; }
 .energy { --c: #a98bff; }
+.phase-tag { display: inline-block; margin-top: -2px; margin-bottom: 6px; padding: 1px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: #b3202a; }
+.live { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-size: 12.5px; color: var(--muted); padding-top: 10px; border-top: 1px solid var(--line); }
+.live b { color: var(--ink); }
+.live-title { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); cursor: help; }
+.notes { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 12px; color: var(--ink-2); max-width: 520px; justify-self: center; width: 100%; }
+.notes li { display: flex; gap: 8px; }
 .ab-row { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
 .ab-slot { position: relative; opacity: 0.55; transition: opacity 0.2s; }
 .ab-slot.ready { opacity: 1; filter: drop-shadow(0 0 6px #a98bff); }

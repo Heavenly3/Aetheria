@@ -15,7 +15,7 @@ import { session, exitToTitle } from './game/loop.js'
 import { SKILLS } from './game/data/skills.js'
 import { ITEMS } from './game/data/items.js'
 import { ROLES, DIFFICULTIES } from './game/data/character.js'
-import { fmt, fmtTime, fmtClock } from './game/format.js'
+import { fmt, fmtDec, fmtTime, fmtClock } from './game/format.js'
 import { play, notify } from './game/sound.js'
 import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
@@ -115,6 +115,8 @@ onMounted(() => {
   G.on('rare', d => { play('rare'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
   G.on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
   G.on('elite', e => { play('rare'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
+  G.on('bossPhase', e => push(e.monster.icon, t('toast.bossPhase', { name: e.monster.name, phase: t(`fighting.phases.${e.id}.name`).toLowerCase() }), 'warn', 4500))
+  G.on('huntStreak', e => { play('quest'); push('flame', t('toast.huntStreak', { n: e.n, v: fmtDec(e.bonus * 100) }), 'success', 5000) })
   G.on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
   G.on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   G.on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })

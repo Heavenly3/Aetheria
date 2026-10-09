@@ -62,6 +62,8 @@ export default {
   },
 
   toast: {
+    huntStreak: 'Hunting streak: <b>{n} kills</b> · +{v}% combat XP and loot',
+    bossPhase: '{name} is now <b>{phase}</b>!',
     elite: 'An elite appears: <b>{name}</b>!',
     eliteDown: 'Elite defeated: <b>{name}</b>',
     chapter: 'New journal page: <b>{name}</b>',
@@ -235,6 +237,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    streakLost: 'Hunting streak lost after {n} kills.',
     elite: 'Defeated an elite: {kind} {monster}.',
     chapter: 'New journal page: {chapter}.',
     start: '{name} begins their adventure as a {role}.', heroLevel: 'Reached hero level {level} (+{points} points).',
@@ -672,6 +675,8 @@ export default {
       offline: { title: 'Offline progress', body: 'While the game is closed your hero keeps working for up to this many hours. Upgrade the bedroom at home to raise it.' },
     },
     combat: {
+      streak: { title: "Hunting streak", body: "Kills in a row without dying. Every 25 kills add +2.5% combat XP and loot, up to +25%. Dying breaks it. Your best: {best}." },
+      live: { title: "This fight", body: "Running numbers since this fight began: damage you deal and take per second, and kills, combat XP and gold per hour." },
       energy: { title: "Energy", body: "Each normal attack builds energy, critical hits build more, and so does being hit. Abilities spend it." },
       speed: { title: "Attack speed", body: "How often you attack. Each weapon has its own pace: bows are quick, hammers slow but heavy. Air spells are cast faster." },
       crit: { title: "Critical hits", body: "The chance that a landed blow deals extra damage. Shown as a golden number." },
@@ -794,6 +799,32 @@ export default {
   },
 
   fighting: {
+    phase: "Phase {n}",
+    streak: "{n} in a row · +{v}%",
+    phases: {
+      enraged: {
+        name: "Enraged",
+        desc: "Below half health: attacks 15% faster and hits 25% harder.",
+      },
+      desperate: {
+        name: "Desperate",
+        desc: "Below a quarter of its health: attacks 25% faster, hits 35% harder, ignores 15% more damage, and weakens you as it begins.",
+      },
+    },
+    live: {
+      title: "This fight",
+      dps: "damage/s",
+      killsH: "kills/h",
+      xpH: "XP/h",
+      goldH: "gold/h",
+      taken: "taken/s",
+    },
+    notes: {
+      ability: "You used {ability}",
+      phase: "The boss is now {phase}!",
+      elite: "An elite appeared: {kind}",
+      bigCrit: "A huge critical hit: {dmg}",
+    },
     crit: "Crit!",
     dodged: "Dodged",
     blocked: "Blocked",

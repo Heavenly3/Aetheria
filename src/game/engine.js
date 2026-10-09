@@ -369,7 +369,7 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -938,7 +938,8 @@ export const G = {
     }
     const floor = kind === 'tower' ? Math.max(1, Math.floor(this.s.tower.best / 10) * 10 + 1) : null
     if (this.s.hp <= 0) this.s.hp = 1
-    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0, elite: null, fx: null, energy: 0, cd: {}, hb: {} }
+    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0, elite: null, fx: null, energy: 0, cd: {}, hb: {}, phase: 0 }
+    this.startTracking(act)
     this.spawn(act)
     if (kind === 'weekly') this.beginWeeklyAttempt(act)
     this.s.activity = act
@@ -957,6 +958,7 @@ export const G = {
     // The weekly boss runs its own mechanics first (they can end the attempt)
     if (act.kind === 'weekly' && this.weeklyTick(act, dt, m)) return
     // Statuses tick first: bleeding, poison or burns can finish a fight on their own
+    if (act.live) act.live.t += dt
     const fell = this.tickStatuses(act, dt)
     this.tickAbilities(act, dt)
     if (fell === 'monster') return this.killMonster(m)
@@ -979,6 +981,7 @@ export const G = {
       const r = this.heroTurn(act, m, ps, mr)
       if (r === 'end') return
       if (r === 'kill') return this.killMonster(m)
+      this.checkPhase(act, m)
     }
 
     if (act.mercs.length) {
@@ -987,25 +990,29 @@ export const G = {
         act.mercTimer -= PLAYER_ATTACK_SPEED
         let total = 0
         act.mercs.forEach(id => { const mc = MERCENARIES.find(x => x.id === id); if (Math.random() < 0.75) total += rand(0, mc.maxHit) })
-        act.mHp -= Math.min(total, act.mHp)
+        const mercDealt = Math.min(total, act.mHp)
+        act.mHp -= mercDealt
+        this.track(act, 'dealt', mercDealt)
         this.emit('hit', { who: 'merc', dmg: total })
         if (act.mHp <= 0) return this.killMonster(m)
       }
     }
 
     if (!this.hasStatus(act, 'monster', 'stun')) act.mTimer += dt / (1 + this.slowOf(act, 'monster'))
-    if (act.mTimer >= m.speed) {
-      act.mTimer -= m.speed
+    const mSpeed = m.speed * this.phaseOf(act).speed
+    if (act.mTimer >= mSpeed) {
+      act.mTimer -= mSpeed
       if (Math.random() < 1 / (1 + act.mercs.length)) {
         // Agility dodges the blow; a shield may block half of it
         if (Math.random() < this.dodgeChance() + this.buffValue(act, 'dodge')) { this.emit('hit', { who: 'monster', dmg: 0, dodged: true }); return }
         const hit = Math.random() < this.hitChance(mr.accRoll, ps.defRoll)
-        let dmg = hit ? rand(0, m.maxHit) : 0
+        let dmg = hit ? rand(0, Math.round(m.maxHit * this.phaseOf(act).maxHit)) : 0
         const enraged = act.mHp < m.hp * 0.3 ? this.traitValue(m, 'enrage') : 0
         dmg = Math.round(dmg * (1 + enraged) * (1 - this.weakenOf(act, 'monster')) * (1 - this.buffValue(act, 'ward')))
         const blocked = dmg > 0 && Math.random() < this.blockChance()
         if (blocked) dmg = Math.floor(dmg / 2)
         this.s.hp -= dmg
+        this.track(act, 'taken', dmg)
         this.emit('hit', { who: 'monster', dmg, blocked })
         if (dmg > 0) {
           this.gainEnergy(act, ENERGY.struck)
@@ -1027,6 +1034,7 @@ export const G = {
     st.killsBy[m.id] = (st.killsBy[m.id] || 0) + 1
     this.countBeast(m.id)
     this.festivalKill(m)
+    this.addStreak()
     act.runKills++
     if (this.tracker) this.tracker.kills[m.id] = (this.tracker.kills[m.id] || 0) + 1
     // Elites pay far better: more gold, likelier drops and a little stardust
@@ -1094,6 +1102,7 @@ export const G = {
   die(m) {
     const act = this.s.activity
     this.s.stats.deaths++
+    if (act.kind !== 'weekly') this.loseStreak()
     this.s.hp = this.maxHp()
     // Falling to the weekly boss only ends the attempt
     const lost = act.kind === 'weekly' ? 0 : Math.floor(this.s.gold * this.diff().death)

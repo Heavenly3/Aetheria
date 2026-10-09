@@ -10,13 +10,15 @@ import { COMBAT_STYLES } from './data/combat.js'
 import {
   weaponProfile, SPELL_FX, AIR_SPEED, STATUSES, TRAITS, traitsOf, ELITES, ELITE_IDS, ELITE_CHANCE,
   ABILITIES, ABILITY_MAP, ABILITY_SKILL, BUFFS, ENERGY, ENERGY_MAX, BAR_SIZE, defaultBar,
+  BOSS_PHASES, STREAK_STEP, STREAK_BONUS, STREAK_MAX, COMBAT_SKILLS,
 } from './data/fighting.js'
 
 const eliteCache = new Map()
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
 
 // bar: the abilities chosen for each style, in priority order; auto: whether they fire on their own
-export const fightingState = () => ({ abilities: { bar: defaultBar(), auto: true } })
+// hunt: kills in a row without dying, and the best run ever
+export const fightingState = () => ({ abilities: { bar: defaultBar(), auto: true }, hunt: { streak: 0, best: 0 } })
 
 export const fighting = {
   /* ================= the hero ================= */
@@ -69,10 +71,14 @@ export const fighting = {
     act.elite = null
     if (act.kind === 'area' && Math.random() < ELITE_CHANCE + this.mod('eliteChance')) act.elite = ELITE_IDS[Math.floor(Math.random() * ELITE_IDS.length)]
     act.fx = { player: act.fx?.player || {}, monster: {} }
+    act.phase = 0
     act.mHp = this.getMonster(act).hp
     act.pTimer = 0
     act.mTimer = 0
-    if (act.elite) this.emit('elite', { kind: act.elite, monster: this.getMonster(act) })
+    if (act.elite) {
+      this.note(act, 'elite', { id: act.elite })
+      this.emit('elite', { kind: act.elite, monster: this.getMonster(act) })
+    }
   },
 
   /* ================= what the hero is worth in a fight ================= */
@@ -184,13 +190,15 @@ export const fighting = {
     let dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
     const crit = hit && Math.random() < this.critChance() + (ab?.crit || 0) + this.buffValue(act, 'crit')
     if (crit) dmg = Math.floor(dmg * this.critMult())
-    if (hit) dmg = Math.max(1, Math.round(dmg * (ab ? ab.mult : 1) * (1 + this.buffValue(act, 'dmg')) * (1 - this.traitValue(m, 'armour')) * (1 - this.weakenOf(act, 'player'))))
+    if (hit) dmg = Math.max(1, Math.round(dmg * (ab ? ab.mult : 1) * (1 + this.buffValue(act, 'dmg')) * (1 - this.traitValue(m, 'armour') - this.phaseOf(act).armour) * (1 - this.weakenOf(act, 'player'))))
     const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
     act.mHp -= dealt
+    this.track(act, 'dealt', dealt)
     if (type === 'magic') this.addXp('magic', (first ? this.currentSpell().xp : 0) + dealt * 2)
     else if (dealt > 0) this.addXp(COMBAT_STYLES[this.s.combatStyle].skill, dealt * 4)
     if (dealt > 0) this.addXp('hitpoints', dealt * 1.33)
     this.emit('hit', { who: 'player', dmg, crit, evaded, ability: ab?.id })
+    if (crit && dmg >= ps.maxHit) this.note(act, 'bigCrit', { dmg })
     // Weapons, spells and abilities can leave statuses; the weekly boss keeps its own rules
     if (dealt > 0 && act.kind !== 'weekly') {
       for (const f of this.heroEffects()) if (Math.random() < f.chance) this.addStatus(act, 'monster', f.id, dealt)
@@ -209,6 +217,7 @@ export const fighting = {
       if (ab.heal) this.heal(Math.round(this.maxHp() * ab.heal))
       if (ab.buff) (act.hb ||= {})[ab.buff] = { t: BUFFS[ab.buff].time }
       this.emit('ability', { id: ab.id })
+      this.note(act, 'ability', { id: ab.id })
       for (let i = 0; i < (ab.mult > 0 ? ab.hits : 0); i++) {
         const r = this.heroHit(act, m, ps, mr, ab, i === 0)
         if (r === 'kill' || r === 'end') return r
@@ -219,6 +228,66 @@ export const fighting = {
     if (r === 'kill' || r === 'end') return r
     this.gainEnergy(act, ENERGY.attack + (r ? ENERGY.crit : 0))
     return null
+  },
+
+  /* ================= boss phases ================= */
+  phaseOf(act) { return (act?.phase && BOSS_PHASES[act.phase - 1]) || { speed: 1, maxHit: 1, armour: 0 } },
+  // Bosses (not the weekly one, which has its own mechanics) grow fiercer as their health drops
+  checkPhase(act, m) {
+    if (!m.boss || act.kind === 'weekly') return
+    while (act.phase < BOSS_PHASES.length && act.mHp <= m.hp * BOSS_PHASES[act.phase].at) {
+      const ph = BOSS_PHASES[act.phase]
+      act.phase++
+      if (ph.weaken) this.addStatus(act, 'player', 'weaken', m.maxHit)
+      this.note(act, 'phase', { id: ph.id })
+      this.emit('bossPhase', { id: ph.id, monster: m })
+    }
+  },
+
+  /* ================= hunting streaks ================= */
+  streakBonus() { return Math.min(STREAK_MAX, Math.floor((this.s.hunt?.streak || 0) / STREAK_STEP) * STREAK_BONUS) },
+  // The streak adds to loot and to the XP of combat skills
+  streakMods(key) {
+    if (!this.s.hunt?.streak) return 0
+    if (key === 'loot') return this.streakBonus()
+    if (key.startsWith('xp.') && COMBAT_SKILLS.includes(key.slice(3))) return this.streakBonus()
+    return 0
+  },
+  addStreak() {
+    const h = (this.s.hunt ||= { streak: 0, best: 0 })
+    h.streak++
+    h.best = Math.max(h.best, h.streak)
+    if (h.streak % STREAK_STEP === 0 && this.streakBonus() <= STREAK_MAX) this.emit('huntStreak', { n: h.streak, bonus: this.streakBonus() })
+  },
+  loseStreak() {
+    const h = this.s.hunt
+    if (!h?.streak) return
+    if (h.streak >= STREAK_STEP) this.log('broken-skull', 'log.streakLost', { n: h.streak })
+    h.streak = 0
+  },
+
+  /* ================= live numbers ================= */
+  // Each fight keeps its own running totals: time, damage dealt and taken, and what it has earned
+  startTracking(act) {
+    act.live = { t: 0, dealt: 0, taken: 0, xp: this.combatXp(), gold: this.s.stats.goldEarned || 0 }
+    act.notes = []
+  },
+  combatXp() { return COMBAT_SKILLS.reduce((sum, k) => sum + (this.s.skills[k]?.xp || 0), 0) },
+  track(act, key, n) { if (act.live) act.live[key] += n },
+  liveStats(act = this.s.activity) {
+    const l = act?.live
+    if (!l || l.t < 1) return null
+    const h = l.t / 3600
+    return {
+      t: l.t, dps: l.dealt / l.t, taken: l.taken / l.t, killsH: act.runKills / h,
+      xpH: (this.combatXp() - l.xp) / h, goldH: ((this.s.stats.goldEarned || 0) - l.gold) / h,
+    }
+  },
+  // A short list of the fight's notable moments, newest first
+  note(act, kind, params = {}) {
+    if (!act.notes) act.notes = []
+    act.notes.unshift({ kind, ...params, at: Math.round(act.live?.t || 0) })
+    if (act.notes.length > 6) act.notes.length = 6
   },
 
   /* ================= statuses ================= */
@@ -250,11 +319,13 @@ export const fighting = {
             if (side === 'monster') {
               const dealt = Math.min(dmg, act.mHp)
               act.mHp -= dealt
+              this.track(act, 'dealt', dealt)
               this.dotXp(dealt)
               this.emit('hit', { who: 'player', dmg: dealt, fx: id })
               if (act.mHp <= 0) return 'monster'
             } else {
               this.s.hp -= dmg
+              this.track(act, 'taken', dmg)
               this.emit('hit', { who: 'monster', dmg, fx: id })
               this.autoEat()
               if (this.s.hp <= 0) return 'player'

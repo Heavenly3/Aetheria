@@ -145,3 +145,18 @@ export const BUFFS = {
   ward: { icon: 'magic-shield', color: '#7ad7ff', time: 8, ward: 0.4 },
 }
 export const defaultBar = () => ({ melee: ['power_strike'], ranged: ['aimed_shot'], magic: ['arcane_bolt'] })
+
+/* ================= boss phases ================= */
+// Bosses change as they weaken: at: share of health left · speed: attack interval · maxHit and armour
+// stack with the creature's own · weaken: the hero is weakened when the phase begins
+export const BOSS_PHASES = [
+  { id: 'enraged', at: 0.5, speed: 0.85, maxHit: 1.25, armour: 0, weaken: false },
+  { id: 'desperate', at: 0.25, speed: 0.75, maxHit: 1.35, armour: 0.15, weaken: true },
+]
+
+/* ================= hunting streaks ================= */
+// Kills in a row without dying: every STREAK_STEP kills adds a step of combat XP and loot, up to the cap
+export const STREAK_STEP = 25
+export const STREAK_BONUS = 0.025
+export const STREAK_MAX = 0.25
+export const COMBAT_SKILLS = ['attack', 'strength', 'defense', 'ranged', 'magic', 'hitpoints', 'slayer']

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { G, state, newHero, run, fixRandom } from './helpers.js'
-import { MONSTERS } from '../src/game/data/combat.js'
-import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT, ABILITY_MAP, ENERGY } from '../src/game/data/fighting.js'
+import { MONSTERS, BOSSES } from '../src/game/data/combat.js'
+import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT, ABILITY_MAP, ENERGY, STREAK_STEP, STREAK_BONUS } from '../src/game/data/fighting.js'
 import { BESTIARY } from '../src/game/data/bestiary.js'
 import { i18n } from '../src/i18n/index.js'
 
@@ -205,5 +205,68 @@ describe('abilities', () => {
     expect(G.buffValue(act, 'dmg')).toBeGreaterThan(0)
     G.tickAbilities(act, 2)
     expect(G.buffValue(act, 'dmg')).toBe(0)
+  })
+})
+
+describe('boss phases', () => {
+  beforeEach(() => newHero())
+
+  it('grow fiercer at half and a quarter of their health', () => {
+    const b = BOSSES.find(x => !x.reqQuest) || BOSSES[0]
+    if (b.reqQuest) state.quests[b.reqQuest] = { status: 'done' }
+    G.startCombat('boss', b.id)
+    const act = state.activity, m = G.getMonster(act)
+    const seen = vi.fn()
+    const off = G.on('bossPhase', seen)
+    act.mHp = Math.floor(m.hp * 0.5)
+    G.checkPhase(act, m)
+    expect(act.phase).toBe(1)
+    expect(G.phaseOf(act).maxHit).toBeGreaterThan(1)
+    act.mHp = Math.floor(m.hp * 0.2)
+    G.checkPhase(act, m)
+    off()
+    expect(act.phase).toBe(2)
+    expect(G.hasStatus(act, 'player', 'weaken')).toBe(true)
+    expect(seen).toHaveBeenCalledTimes(2)
+  })
+
+  it('do not touch ordinary creatures', () => {
+    G.startCombat('area', 'cow')
+    const act = state.activity
+    act.mHp = 1
+    G.checkPhase(act, G.getMonster(act))
+    expect(act.phase).toBe(0)
+  })
+})
+
+describe('hunting streaks', () => {
+  beforeEach(() => newHero())
+
+  it('build up with kills, pay more XP and loot, and break on death', () => {
+    const xp = G.mod('xp.attack'), loot = G.mod('loot'), mining = G.mod('xp.mining')
+    for (let i = 0; i < STREAK_STEP * 2; i++) G.addStreak()
+    expect(G.streakBonus()).toBeCloseTo(STREAK_BONUS * 2)
+    expect(G.mod('xp.attack')).toBeCloseTo(xp + STREAK_BONUS * 2)
+    expect(G.mod('loot')).toBeCloseTo(loot + STREAK_BONUS * 2)
+    expect(G.mod('xp.mining')).toBeCloseTo(mining) // only combat skills
+    G.startCombat('area', 'cow')
+    G.die(G.getMonster(state.activity))
+    expect(state.hunt.streak).toBe(0)
+    expect(state.hunt.best).toBe(STREAK_STEP * 2)
+  })
+})
+
+describe('live numbers', () => {
+  beforeEach(() => newHero())
+
+  it('track damage, kills and earnings per fight', () => {
+    state.hp = 999
+    G.startCombat('area', 'chicken')
+    run(60, 0.1)
+    const live = G.liveStats()
+    expect(live.dps).toBeGreaterThan(0)
+    expect(live.killsH).toBeGreaterThan(0)
+    expect(live.xpH).toBeGreaterThan(0)
+    expect(state.activity.notes.length).toBeGreaterThan(0)
   })
 })
