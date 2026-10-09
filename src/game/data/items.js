@@ -158,7 +158,7 @@ def('strawberry_pie', { icon: 'bread',       value: 110, tint: '#ff7a8a', type: 
 /* ---------------- Herblore ---------------- */
 def('vial_water', { icon: 'vial', value: 4, tint: '#7fb7e6' })
 export const POTIONS = [
-  { id: 'attack_potion',   herb: 'guam',        lvl: 3,  xp: 25,  buff: { attack: [3, 0.10] },   tint: '#4a7fe0' },
+  { id: 'attack_potion',   herb: 'guam',        lvl: 1,  xp: 25,  buff: { attack: [3, 0.10] },   tint: '#4a7fe0' },
   { id: 'defense_potion',  herb: 'marrentill',  lvl: 8,  xp: 45,  buff: { defense: [3, 0.10] },  tint: '#5ac0c0' },
   { id: 'strength_potion', herb: 'tarromin',    lvl: 12, xp: 50,  buff: { strength: [3, 0.10] }, tint: '#e0a03a' },
   { id: 'ranging_potion',  herb: 'harralander', lvl: 22, xp: 70,  buff: { ranged: [4, 0.10] },   tint: '#6fbf4a' },

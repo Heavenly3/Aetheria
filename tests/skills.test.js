@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { G, state, newHero, setLevel, run, fixRandom } from './helpers.js'
-import { findAction } from '../src/game/data/actions.js'
+import { findAction, ACTIONS } from '../src/game/data/actions.js'
 import { CROPS } from '../src/game/data/items.js'
 
 const clearOres = () => Object.keys(state.inventory).forEach(k => { if (/_ore$|_bar$/.test(k)) delete state.inventory[k] })
@@ -107,5 +107,20 @@ describe('farming', () => {
     run(G.growTime(CROPS.find(c => c.id === 'potato')) + 1, 1)
     expect(G.qty('potato')).toBeGreaterThan(0)
     expect(state.farm.plots[0]?.crop).toBe('potato')
+  })
+})
+
+describe('every skill can be started', () => {
+  it('has a first action at level 1', () => {
+    for (const [skill, list] of Object.entries(ACTIONS)) expect([skill, Math.min(...list.map(a => a.lvl || 1))]).toEqual([skill, 1])
+  })
+
+  it('lets a new hero brew a first potion with what the shop sells', () => {
+    newHero()
+    G.addItem('guam', 1)
+    G.addItem('vial_water', 1)
+    G.startSkill('herblore', 'attack_potion')
+    run(3)
+    expect(G.qty('attack_potion')).toBe(1)
   })
 })
