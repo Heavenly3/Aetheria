@@ -4,6 +4,9 @@ import { t, intlLocale } from '../i18n/index.js'
 let compact = true
 export const setCompactNumbers = on => { compact = on !== false }
 
+// A number with a few decimals, in the active language (1.5 / 1,5)
+export const fmtDec = (n, d = 1) => (+(n || 0).toFixed(d)).toLocaleString(intlLocale())
+
 // Compact number formatting that follows the active language (1.2K, 3.4M, ...)
 export function fmt(n) {
   n = Math.floor(n || 0)

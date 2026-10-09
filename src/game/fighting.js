@@ -3,7 +3,9 @@
    creature traits and elites. The combat loop in engine.js calls into these.
    Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
+import { toRaw } from 'vue'
 import { cloneNamed } from '../i18n/bind.js'
+import { ITEMS } from './data/items.js'
 import { COMBAT_STYLES } from './data/combat.js'
 import {
   weaponProfile, SPELL_FX, AIR_SPEED, STATUSES, TRAITS, traitsOf, ELITES, ELITE_IDS, ELITE_CHANCE,
@@ -66,6 +68,56 @@ export const fighting = {
     act.pTimer = 0
     act.mTimer = 0
     if (act.elite) this.emit('elite', { kind: act.elite, monster: this.getMonster(act) })
+  },
+
+  /* ================= what the hero is worth in a fight ================= */
+  // A plain opponent at the hero's own combat level, for numbers outside of a fight
+  referenceMonster() {
+    const cl = this.combatLevel()
+    return { id: '_reference', hp: 10 + cl * 4, att: cl, def: cl, maxHit: Math.max(1, Math.round(cl / 3)), speed: 2.4, gold: [0, 0], drops: [] }
+  },
+  // Expected numbers against a creature (or the reference one): damage per second, time to kill,
+  // how often it hits back and how much it hurts, plus a single "power" score that sums it all up
+  combatProfile(m = null) {
+    const ref = m || this.referenceMonster()
+    const ps = this.playerStats(ref), mr = this.monsterRolls(ref)
+    const accuracy = this.hitChance(ps.accRoll, mr.defRoll) * (1 - this.traitValue(ref, 'evade', {}))
+    const crit = this.critChance(), critMult = this.critMult()
+    const avgHit = ((1 + ps.maxHit) / 2) * (1 + crit * (critMult - 1)) * (1 - this.traitValue(ref, 'armour', {}))
+    // Statuses the weapon leaves add damage over time on top of each landed hit
+    let dot = 0
+    for (const f of this.heroEffects()) { const d = STATUSES[f.id]; if (d.dot) dot += f.chance * d.dot * d.time }
+    const speed = this.attackSpeed()
+    const dps = (accuracy * avgHit * (1 + dot)) / speed
+    const hitTaken = this.hitChance(mr.accRoll, ps.defRoll) * (1 - this.dodgeChance())
+    const avgTaken = (ref.maxHit / 2) * (1 - this.blockChance() / 2)
+    const takenPerSec = (hitTaken * avgTaken) / ref.speed
+    const maxHp = this.maxHp()
+    const killTime = dps > 0 ? ref.hp / dps : Infinity
+    // How long the hero lasts against the reference opponent, and how fast it falls
+    const lasts = takenPerSec > 0 ? maxHp / takenPerSec : 600
+    const power = Math.round(Math.sqrt(dps * Math.min(lasts, 600)) * 10)
+    return {
+      maxHit: ps.maxHit, avgHit, accuracy, speed, dps, crit, critMult, accRoll: ps.accRoll, defRoll: ps.defRoll,
+      hitTaken, takenPerSec, dodge: this.dodgeChance(), block: this.blockChance(), maxHp, killTime,
+      // Share of the hero's health lost per kill: under 0.3 is safe, over 1 means trouble
+      risk: killTime === Infinity ? Infinity : (takenPerSec * killTime) / maxHp, power,
+    }
+  },
+  // Works out something as if an item were worn, then puts everything back as it was
+  withGear(id, fn) {
+    const it = ITEMS[id]
+    const eq = toRaw(this.s.equipment), raw = toRaw(this.s)
+    const saved = { ...eq }, style = raw.combatStyle
+    eq[it.slot] = id
+    if (it.twoHanded) eq.shield = null
+    if (it.slot === 'shield' && eq.weapon && ITEMS[eq.weapon].twoHanded) eq.weapon = null
+    // A weapon of another style is judged with its own style
+    if (it.slot === 'weapon') {
+      const type = it.style || 'melee'
+      if (type !== this.styleType()) raw.combatStyle = type === 'melee' ? 'attack' : type
+    }
+    try { return fn() } finally { Object.assign(eq, saved); raw.combatStyle = style }
   },
 
   /* ================= statuses ================= */

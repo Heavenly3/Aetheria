@@ -115,3 +115,36 @@ describe('elites', () => {
     expect(state.activity.elite).toBe(null)
   })
 })
+
+describe('combat profile', () => {
+  beforeEach(() => newHero())
+
+  it('sums up the hero in numbers that grow with better gear', () => {
+    const before = G.combatProfile()
+    expect(before.dps).toBeGreaterThan(0)
+    expect(before.power).toBeGreaterThan(0)
+    expect(before.hitTaken).toBeGreaterThan(0)
+    G.addItem('rune_sword', 1)
+    const better = G.withGear('rune_sword', () => G.combatProfile())
+    expect(better.maxHit).toBeGreaterThan(before.maxHit)
+    expect(better.dps).toBeGreaterThan(before.dps)
+    expect(better.power).toBeGreaterThan(before.power)
+    // Nothing really changed
+    expect(G.combatProfile().power).toBe(before.power)
+    expect(state.equipment.weapon).not.toBe('rune_sword')
+  })
+
+  it('judges a weapon of another style with that style, and puts everything back', () => {
+    const style = state.combatStyle
+    const bow = G.withGear('magic_bow', () => ({ type: G.styleType(), shield: state.equipment.shield }))
+    expect(bow).toEqual({ type: 'ranged', shield: null })
+    expect(state.combatStyle).toBe(style)
+    expect(state.equipment.shield).toBeTruthy()
+  })
+
+  it('tells how long a kill takes and how risky it is', () => {
+    const easy = G.combatProfile(MONSTERS.chicken), hard = G.combatProfile(MONSTERS.red_dragon)
+    expect(easy.killTime).toBeLessThan(hard.killTime)
+    expect(easy.risk).toBeLessThan(hard.risk)
+  })
+})

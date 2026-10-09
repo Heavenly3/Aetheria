@@ -4,8 +4,9 @@ import Button from 'primevue/button'
 import { G, state } from '../game/engine.js'
 import { monsterLevel } from '../game/data/combat.js'
 import { ITEMS } from '../game/data/items.js'
-import { fmt, pct } from '../game/format.js'
-import { chanceNote } from '../ui/tips.js'
+import { fmt, fmtDec, pct } from '../game/format.js'
+import { chanceNote, tip } from '../ui/tips.js'
+import { useI18n } from 'vue-i18n'
 import ItemTile from './ItemTile.vue'
 
 const props = defineProps({ monster: Object, kind: { type: String, default: 'area' }, locked: Boolean, lockText: String })
@@ -17,6 +18,17 @@ const danger = computed(() => (ml.value <= cl.value ? 'ok' : ml.value <= cl.valu
 const fighting = computed(() => state.activity?.type === 'combat' && state.activity.kind === props.kind && state.activity.target === m.value.id)
 const slayerLocked = computed(() => m.value.slayer && G.level('slayer') < m.value.slayer)
 const kills = computed(() => state.killsBy[m.value.id] || 0)
+// How the hero would fare: time per kill and the share of health lost per kill
+const { t } = useI18n()
+const fight = computed(() => (void state.equipment, void state.combatStyle, G.combatProfile(G.scaleMonster(m.value))))
+const risk = computed(() => { const r = fight.value.risk; return r < 0.3 ? 'low' : r < 0.8 ? 'mid' : 'high' })
+const killText = computed(() => (fight.value.killTime === Infinity ? '∞' : fight.value.killTime < 60 ? `${Math.max(1, Math.round(fight.value.killTime))} s` : `${fmtDec(fight.value.killTime / 60)} min`))
+const fightTip = computed(() => tip(t(`power.risk.${risk.value}`), t('power.riskHint'), [
+  { text: t('power.killTime', { t: killText.value }), kind: 'muted' },
+  { text: `${t('power.dps')}: ${fmtDec(fight.value.dps)}`, kind: 'muted' },
+  { text: `${t('power.accuracy')}: ${pct(fight.value.accuracy)}`, kind: 'muted' },
+  { text: `${t('power.hitTaken')}: ${pct(fight.value.hitTaken)}`, kind: 'muted' },
+]))
 </script>
 
 <template>
@@ -27,6 +39,7 @@ const kills = computed(() => state.killsBy[m.value.id] || 0)
         <div class="card-name">{{ m.name }}</div>
         <div class="row wrap" style="gap:6px;margin-top:4px">
           <span class="tag" :class="danger">{{ $t('common.lvlShort', { n: ml }) }}</span>
+          <span class="tag" :class="{ ok: risk === 'low', gold: risk === 'mid', bad: risk === 'high' }" v-tooltip.top="fightTip"><i class="pi pi-stopwatch" /> {{ killText }}</span>
           <span v-if="G.onTask(m)" class="tag arcane">{{ $t('combat.task') }}</span>
           <span v-if="m.slayer" class="tag" :class="slayerLocked ? 'bad' : 'arcane'">{{ $t('skills.slayer.name') }} {{ m.slayer }}</span>
         </div>

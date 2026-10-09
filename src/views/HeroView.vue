@@ -27,6 +27,7 @@ import ItemTile from '../components/ItemTile.vue'
 import AttributesPanel from '../components/AttributesPanel.vue'
 import TalentsPanel from '../components/TalentsPanel.vue'
 import SetBonuses from '../components/SetBonuses.vue'
+import CombatStats from '../components/CombatStats.vue'
 import AppearanceDialog from '../components/AppearanceDialog.vue'
 import { titled } from '../game/data/cosmetics.js'
 
@@ -67,7 +68,6 @@ function askUnequipTool(type) {
 }
 const appearance = ref(false)
 const b = computed(() => G.bonuses())
-const ps = computed(() => G.playerStats(null))
 const activeBlessings = computed(() => BLESSINGS.filter(x => G.blessed(x.id)))
 const drink = computed(() => (state.tavern.drink ? DRINKS.find(d => d.id === state.tavern.drink.id) : null))
 const prayer = computed(() => PRAYERS.find(p => p.id === state.prayer) || null)
@@ -143,10 +143,11 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               </div>
             </div>
 
+            <CombatStats />
+
             <div class="panel pad">
               <h3 class="panel-title"><GameIcon name="checked-shield" /> {{ $t('hero.gearBonuses') }}</h3>
               <div v-for="r in statRows" :key="r.k" class="kv"><span>{{ r.l }} <HelpTip :k="'stats.' + r.k" /></span><b>{{ r.v }}</b></div>
-              <div class="kv"><span>{{ $t('hero.maxHitCurrent') }} <HelpTip k="stats.maxHit" /></span><b class="gold-text">{{ ps.maxHit }}</b></div>
               <template v-if="sets.length">
                 <div class="section-title" style="margin:18px 0 10px">{{ $t('sets.title') }} <HelpTip k="sections.sets" /></div>
                 <div class="stack" style="gap:8px"><SetBonuses v-for="x in sets" :key="x.set.id" :set="x.set" pieces /></div>

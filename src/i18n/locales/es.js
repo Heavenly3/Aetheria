@@ -564,6 +564,21 @@ export default {
 
   // Ayuda de los tooltips, agrupada por dónde aparece (ver src/ui/tips.js)
   help: {
+    power: {
+      dps: { title: "Daño por segundo", body: "El daño medio que haces cada segundo, contando fallos, críticos y los estados que deja tu arma." },
+      maxHit: { title: "Golpe máximo", body: "El máximo daño que puede hacer un golpe normal. Los críticos lo superan." },
+      avgHit: { title: "Golpe medio", body: "Lo que hace de media un golpe acertado, contando los críticos." },
+      speed: { title: "Velocidad de ataque", body: "Segundos entre ataques. Depende de tu arma; los hechizos de aire se lanzan más rápido." },
+      accuracy: { title: "Probabilidad de acertar", body: "Cada cuánto aciertan tus ataques contra un rival de tu nivel." },
+      crit: { title: "Golpes críticos", body: "La probabilidad de crítico y cuánto multiplica el daño." },
+      accRoll: { title: "Índice de precisión", body: "Tu nivel de ataque y la precisión del equipo juntos. Cuanto más alto, más aciertas." },
+      maxHp: { title: "Vida máxima", body: "Cuánta vida tienes. Sube con Vitalidad y algunas bonificaciones." },
+      defRoll: { title: "Índice de defensa", body: "Tu nivel de Defensa y la defensa del equipo juntos. Cuanto más alto, menos te aciertan." },
+      hitTaken: { title: "Probabilidad de que te acierten", body: "Cada cuánto te acierta un rival de tu nivel, después de esquivar." },
+      dodge: { title: "Esquiva", body: "La probabilidad de evitar un golpe por completo. Sube con Agilidad." },
+      block: { title: "Bloqueo", body: "Con escudo, la probabilidad de bloquear la mitad de un golpe." },
+      takenPerSec: { title: "Daño recibido por segundo", body: "El daño medio que te hace cada segundo un rival de tu nivel." },
+    },
     // Una guía por pantalla, en el "?" junto al título de la pantalla
     screens: {
       journal: { title: 'Diario', body: 'La historia de Aetheria, contada en capítulos cortos que se desbloquean al explorar, derrotar jefes y presenciar prodigios. Abre una página para leerla y vuelve a ella cuando quieras. El diario se conserva al ascender, y cada ascensión trae un recuerdo de una vida pasada.' },
@@ -591,6 +606,7 @@ export default {
     },
     // Ayuda de las secciones principales de cada pantalla
     sections: {
+      power: { title: "Poder de combate", body: "Una sola cifra que resume lo fuerte que eres en combate: sube con tu daño por segundo y con lo que aguantas. Todas las cifras de abajo se calculan al momento con tu equipo, niveles, estilo y bonificaciones." },
       equipment: { title: 'Equipo', body: 'Lo que llevas puesto. Pulsa una ranura para quitarte el objeto; equipa lo nuevo desde el inventario. Pasa el ratón por un objeto para ver sus estadísticas.' },
       tools: { title: 'Herramientas', body: 'Un pico, hacha o caña mejores te dejan recolectar recursos de más nivel y aceleran esas habilidades.' },
       sets: { title: 'Bonus de conjunto', body: 'Llevar varias piezas del mismo conjunto añade bonificaciones extra. Cuantas más piezas, más bonificaciones.' },
@@ -696,6 +712,35 @@ export default {
     storm: { name: 'Tormenta eléctrica', desc: 'Los relámpagos parten el cielo y los truenos ruedan sobre las montañas.' },
     heatwave: { name: 'Ola de calor', desc: 'El aire tiembla. Hasta los ríos parecen cansados.' },
     blizzard: { name: 'Ventisca', desc: 'Viento aullante y una nieve tan espesa que no ves ni tu mano.' },
+  },
+
+  power: {
+    title: "Poder de combate",
+    label: "Poder",
+    offence: "Ataque",
+    defence: "Defensa",
+    inCombat: "En combate",
+    dps: "Daño por segundo",
+    maxHit: "Golpe máximo",
+    avgHit: "Golpe medio",
+    speed: "Velocidad de ataque",
+    accuracy: "Probabilidad de acertar",
+    crit: "Golpes críticos",
+    accRoll: "Índice de precisión",
+    maxHp: "Vida máxima",
+    defRoll: "Índice de defensa",
+    hitTaken: "Probabilidad de que te acierten",
+    dodge: "Esquiva",
+    block: "Bloqueo",
+    takenPerSec: "Daño recibido por segundo",
+    note: "Calculado contra un rival de tu nivel de combate ({lvl}). Mejor equipo, niveles y bonificaciones suben estas cifras.",
+    risk: {
+      low: "Combate fácil",
+      mid: "Combate igualado",
+      high: "Combate peligroso",
+    },
+    riskHint: "Una estimación según tu equipo y niveles: cuánto tardas en cada muerte y cuánta vida pierdes en ella.",
+    killTime: "Unos {t} por muerte",
   },
 
   fighting: {

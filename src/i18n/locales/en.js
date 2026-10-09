@@ -564,6 +564,21 @@ export default {
 
   // Tooltip help, grouped by where it appears (see src/ui/tips.js)
   help: {
+    power: {
+      dps: { title: "Damage per second", body: "The average damage you deal each second, counting misses, critical hits and statuses your weapon leaves." },
+      maxHit: { title: "Max hit", body: "The most damage a normal hit can do. Critical hits go above it." },
+      avgHit: { title: "Average hit", body: "What a landed hit does on average, critical hits included." },
+      speed: { title: "Attack speed", body: "Seconds between attacks. It depends on your weapon; air spells are cast faster." },
+      accuracy: { title: "Hit chance", body: "How often your attacks land against an opponent of your level." },
+      crit: { title: "Critical hits", body: "The chance of a critical hit and how much it multiplies the damage." },
+      accRoll: { title: "Accuracy rating", body: "Your attack level and gear accuracy combined. Higher means you hit more often." },
+      maxHp: { title: "Max HP", body: "How much health you have. It grows with Hitpoints and some bonuses." },
+      defRoll: { title: "Defence rating", body: "Your Defence level and gear defence combined. Higher means you are hit less often." },
+      hitTaken: { title: "Chance to be hit", body: "How often an opponent of your level lands a blow on you, after dodging." },
+      dodge: { title: "Dodge", body: "The chance to avoid a blow completely. It grows with Agility." },
+      block: { title: "Block", body: "With a shield, the chance to block half of a blow." },
+      takenPerSec: { title: "Damage taken per second", body: "The damage an opponent of your level deals you each second, on average." },
+    },
     // One guide per screen, shown by the "?" next to the screen title
     screens: {
       journal: { title: 'Journal', body: 'The story of Aetheria, told in short chapters that unlock as you explore, defeat bosses and witness omens. Open a page to read it, and come back to it whenever you like. The journal is kept when you ascend, and each ascension brings back a memory of a past life.' },
@@ -591,6 +606,7 @@ export default {
     },
     // Help for the main sections inside screens
     sections: {
+      power: { title: "Combat power", body: "A single score for how strong you are in a fight: it grows with your damage per second and with how long you last. Every number below is worked out live from your gear, levels, style and bonuses." },
       equipment: { title: 'Equipment', body: 'What you wear. Click a slot to take the item off; equip new gear from the inventory. Hover an item to see its stats.' },
       tools: { title: 'Tools', body: 'A better pickaxe, axe or rod lets you gather higher tier resources and makes those skills faster.' },
       sets: { title: 'Set bonuses', body: 'Wearing several pieces of the same set adds extra bonuses. The more pieces, the more bonuses.' },
@@ -696,6 +712,35 @@ export default {
     storm: { name: 'Thunderstorm', desc: 'Lightning splits the sky and thunder rolls over the mountains.' },
     heatwave: { name: 'Heatwave', desc: 'The air shimmers. Even the rivers seem tired.' },
     blizzard: { name: 'Blizzard', desc: 'Howling wind and snow so thick you cannot see your hand.' },
+  },
+
+  power: {
+    title: "Combat power",
+    label: "Power",
+    offence: "Offence",
+    defence: "Defence",
+    inCombat: "In combat",
+    dps: "Damage per second",
+    maxHit: "Max hit",
+    avgHit: "Average hit",
+    speed: "Attack speed",
+    accuracy: "Hit chance",
+    crit: "Critical hits",
+    accRoll: "Accuracy rating",
+    maxHp: "Max HP",
+    defRoll: "Defence rating",
+    hitTaken: "Chance to be hit",
+    dodge: "Dodge",
+    block: "Block",
+    takenPerSec: "Damage taken per second",
+    note: "Worked out against an opponent of your combat level ({lvl}). Better gear, levels and bonuses raise these numbers.",
+    risk: {
+      low: "Easy fight",
+      mid: "Fair fight",
+      high: "Dangerous fight",
+    },
+    riskHint: "An estimate from your gear and levels: how long each kill takes and how much health you lose doing it.",
+    killTime: "About {t} per kill",
   },
 
   fighting: {
