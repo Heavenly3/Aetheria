@@ -114,6 +114,7 @@ onMounted(() => {
   G.on('mastery', d => state.settings.quietToasts || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
   G.on('rare', d => { play('rare'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
   G.on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
+  G.on('elite', e => { play('rare'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
   G.on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
   G.on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   G.on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })

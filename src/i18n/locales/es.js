@@ -62,6 +62,8 @@ export default {
   },
 
   toast: {
+    elite: '¡Aparece un élite: <b>{name}</b>!',
+    eliteDown: 'Élite derrotado: <b>{name}</b>',
     chapter: 'Nueva página del diario: <b>{name}</b>',
     levelUp: '<b>{skill}</b> alcanza el nivel <b>{level}</b>', heroLevel: '¡Héroe nivel <b>{level}</b>!', heroLevelPlain: 'Héroe nivel {level}',
     pointsToSpend: 'Tienes puntos por repartir', mastery: 'Maestría {level}: <b>{name}</b>', rare: 'Botín raro: <b>{item}</b>',
@@ -233,6 +235,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    elite: 'Élite derrotado: {monster} {kind}.',
     chapter: 'Nueva página del diario: {chapter}.',
     start: '{name} empieza su aventura como {role}.', heroLevel: 'Nivel de héroe {level} (+{points} puntos).',
     levelUp: '{skill} sube a nivel {level}.', mastery: 'Maestría {level} en {name}.', found: 'Encontrado: {item}.',
@@ -652,6 +655,10 @@ export default {
       offline: { title: 'Progreso sin conexión', body: 'Con el juego cerrado tu héroe sigue trabajando hasta este número de horas. Mejora el dormitorio de tu hogar para ampliarlo.' },
     },
     combat: {
+      speed: { title: "Velocidad de ataque", body: "Cada cuánto atacas. Cada arma tiene su ritmo: los arcos son rápidos y los martillos, lentos pero contundentes. Los hechizos de aire se lanzan más rápido." },
+      crit: { title: "Golpes críticos", body: "La probabilidad de que un golpe acertado haga daño extra. Se muestra con un número dorado." },
+      dodge: { title: "Esquiva", body: "Tu probabilidad de evitar un golpe por completo. Sube con tu nivel de Agilidad." },
+      block: { title: "Bloqueo", body: "Con un escudo equipado puedes bloquear la mitad de un golpe." },
       style: { title: 'Estilo de combate', body: 'Decide qué habilidad gana XP y qué estadísticas se usan. Los estilos cuerpo a cuerpo necesitan un arma cuerpo a cuerpo; Distancia, un arco y flechas; Magia, runas.' },
       spell: { title: 'Hechizo', body: 'Los hechizos más fuertes golpean más pero gastan más runas por lanzamiento. Necesitas el nivel de Magia que aparece junto a cada uno.' },
       ammo: { title: 'Munición', body: 'Cada disparo gasta una flecha. Las mejores flechas suman a tu fuerza a distancia. Equípalas desde el inventario.' },
@@ -689,6 +696,101 @@ export default {
     storm: { name: 'Tormenta eléctrica', desc: 'Los relámpagos parten el cielo y los truenos ruedan sobre las montañas.' },
     heatwave: { name: 'Ola de calor', desc: 'El aire tiembla. Hasta los ríos parecen cansados.' },
     blizzard: { name: 'Ventisca', desc: 'Viento aullante y una nieve tan espesa que no ves ni tu mano.' },
+  },
+
+  fighting: {
+    crit: "¡Crítico!",
+    dodged: "Esquivado",
+    blocked: "Bloqueado",
+    evaded: "Lo esquiva",
+    elite: "Élite",
+    speed: "{v} s por ataque",
+    critChance: "{v} crítico",
+    dodge: "{v} esquiva",
+    block: "{v} bloqueo",
+    traitsTitle: "Rasgos",
+    eliteName: "{name} {kind}",
+    eliteHint: "Los élites son más duros de lo normal, pero sueltan mucho más: {gold}× oro, {drops}× probabilidad de botín y polvo estelar.",
+    weaponLine: "Ataca cada {speed} s · {crit} de crítico",
+    weaponFx: "{chance} de causar {status}",
+    statuses: {
+      bleed: {
+        name: "Sangrado",
+        desc: "Pierde vida cada segundo.",
+      },
+      poison: {
+        name: "Envenenado",
+        desc: "Pierde vida cada segundo. Se acumula hasta tres veces.",
+      },
+      burn: {
+        name: "En llamas",
+        desc: "Pierde mucha vida cada segundo, durante poco tiempo.",
+      },
+      stun: {
+        name: "Aturdido",
+        desc: "No puede atacar.",
+      },
+      slow: {
+        name: "Ralentizado",
+        desc: "Ataca un 35% más despacio.",
+      },
+      weaken: {
+        name: "Debilitado",
+        desc: "Hace un 25% menos de daño.",
+      },
+    },
+    traits: {
+      venom: {
+        name: "Venenoso",
+        desc: "Sus golpes pueden envenenarte.",
+      },
+      bleeds: {
+        name: "Salvaje",
+        desc: "Sus golpes pueden hacerte sangrar.",
+      },
+      burns: {
+        name: "Ígneo",
+        desc: "Sus golpes pueden prenderte fuego.",
+      },
+      chills: {
+        name: "Gélido",
+        desc: "Sus golpes pueden ralentizarte.",
+      },
+      stuns: {
+        name: "Aplastante",
+        desc: "Sus golpes pueden aturdirte.",
+      },
+      curses: {
+        name: "Maldito",
+        desc: "Sus golpes pueden debilitarte.",
+      },
+      armour: {
+        name: "Acorazado",
+        desc: "Ignora el 20% del daño que recibe.",
+      },
+      regen: {
+        name: "Regenerativo",
+        desc: "Se cura un poco cada segundo.",
+      },
+      drain: {
+        name: "Bebedor de vida",
+        desc: "Se cura la mitad del daño que hace.",
+      },
+      enrage: {
+        name: "Frenético",
+        desc: "Golpea un 40% más fuerte con menos del 30% de vida.",
+      },
+      evasive: {
+        name: "Escurridizo",
+        desc: "Esquiva el 20% de tus ataques.",
+      },
+    },
+    elites: {
+      fierce: "feroz",
+      armoured: "de coraza",
+      swift: "veloz",
+      ancient: "ancestral",
+    },
   },
 
   changelog: {

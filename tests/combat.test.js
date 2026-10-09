@@ -49,8 +49,9 @@ describe('fighting', () => {
   it('a landed hit always deals at least 1 damage', () => {
     fixRandom(0)
     G.startCombat('area', 'cow')
+    const full = G.getMonster(state.activity).hp
     run(2.5, 0.1)
-    expect(state.activity.mHp).toBeLessThan(MONSTERS.cow.hp)
+    expect(state.activity.mHp).toBeLessThan(full)
   })
 
   it('dying stops the fight, refills HP and counts the death', () => {

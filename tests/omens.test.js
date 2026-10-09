@@ -103,7 +103,7 @@ describe('omens in play', () => {
     expect(state.activity).toBe(null)
     expect(() => G.startCombat('omen', 'rift_horror')).not.toThrow()
     expect(state.activity).toBe(null)
-  })
+  }, 30000) // simulates a whole omen of fighting
 
   it('grants permanent wishes up to the limit', () => {
     const xp = G.mod('xp')

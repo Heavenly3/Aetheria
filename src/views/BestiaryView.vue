@@ -6,6 +6,8 @@ import { G } from '../game/engine.js'
 import { monsterLevel } from '../game/data/combat.js'
 import { ITEMS } from '../game/data/items.js'
 import { BESTIARY, KNOWLEDGE, HUNT_BONUS, killsFor } from '../game/data/bestiary.js'
+import { TRAITS, traitsOf } from '../game/data/fighting.js'
+import { tip } from '../ui/tips.js'
 import { fmt } from '../game/format.js'
 import { modText } from '../i18n/mods.js'
 import { play } from '../game/sound.js'
@@ -79,6 +81,9 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
             <span v-if="m.weak"><i class="pi pi-bullseye" /> {{ $t(`combat.types.${m.weak}`) }}</span>
             <span v-if="G.knows(m, 'hunted')" class="ok-text">+{{ Math.round(HUNT_BONUS * 100) }}% {{ $t('bestiary.vsThis') }}</span>
           </div>
+          <div v-if="G.knowledge(m) && traitsOf(m.id).length" class="row wrap traits">
+            <span v-for="tr in traitsOf(m.id)" :key="tr" class="tag" v-tooltip.top="tip($t(`fighting.traits.${tr}.name`), $t(`fighting.traits.${tr}.desc`))"><GameIcon :name="TRAITS[tr].icon" :size="11" /> {{ $t(`fighting.traits.${tr}.name`) }}</span>
+          </div>
 
           <div v-if="G.knowledge(m)" class="drops">
             <span v-for="d in m.drops" :key="d.item" class="drop" :class="{ unknown: !G.knows(m, 'studied') && !G.dropSeen(m.id, d.item) }"
@@ -120,6 +125,8 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
 .beast.k-hunted { border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
 .hidden :deep(svg) { filter: brightness(0.25); }
 .stats { gap: 6px 14px; }
+.traits { gap: 5px; }
+.traits .tag { font-size: 11px; }
 .lore { margin: 0; font-size: 13px; font-style: italic; color: var(--ink-2); line-height: 1.5; }
 .drops { display: flex; flex-wrap: wrap; gap: 6px; }
 .drop { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }

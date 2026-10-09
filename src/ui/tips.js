@@ -14,6 +14,7 @@ import { SET_OF } from '../game/data/sets.js'
 import { RARITY_TINT } from '../game/data/omens.js'
 import { itemCategory } from '../game/data/categories.js'
 import { fmt } from '../game/format.js'
+import { weaponProfile } from '../game/data/fighting.js'
 
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c])
@@ -51,6 +52,12 @@ export function itemTip(id, note) {
     : { text: (it.rare ? t('inventory.rare') + ' · ' : '') + kind.join(' · '), color: it.rare ? 'var(--gold)' : null }
   const lines = []
   for (const [k, v] of Object.entries(it.stats || {})) lines.push({ text: statText(k, v), kind: 'ok' })
+  // Weapons: their pace, crit chance and the status they can leave
+  if (it.slot === 'weapon') {
+    const w = weaponProfile(id)
+    lines.push({ text: t('fighting.weaponLine', { speed: w.speed, crit: Math.round(w.crit * 100) + '%' }), kind: 'gold' })
+    if (w.fx) lines.push({ text: t('fighting.weaponFx', { chance: Math.round(w.fx.chance * 100) + '%', status: t(`fighting.statuses.${w.fx.id}.name`).toLowerCase() }), kind: 'gold' })
+  }
   if (it.type === 'tool') lines.push({ text: t('hero.toolTier', { tool: TOOL_TYPES[it.toolType].name, n: it.tier }), kind: 'ok' })
   if (it.heal) lines.push({ text: `${t('inventory.heals')} ${t('inventory.hp', { n: G.foodHeal(id) })}`, kind: 'ok' })
   for (const [sk, v] of Object.entries(it.buff || {})) lines.push({ text: `${SKILLS[sk].name} ${t('inventory.boost', { flat: v[0], pct: Math.round(v[1] * 100) })}`, kind: 'ok' })

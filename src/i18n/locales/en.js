@@ -62,6 +62,8 @@ export default {
   },
 
   toast: {
+    elite: 'An elite appears: <b>{name}</b>!',
+    eliteDown: 'Elite defeated: <b>{name}</b>',
     chapter: 'New journal page: <b>{name}</b>',
     levelUp: '<b>{skill}</b> reached level <b>{level}</b>', heroLevel: 'Hero level <b>{level}</b>!', heroLevelPlain: 'Hero level {level}',
     pointsToSpend: 'You have points to spend', mastery: 'Mastery {level}: <b>{name}</b>', rare: 'Rare drop: <b>{item}</b>',
@@ -233,6 +235,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    elite: 'Defeated an elite: {kind} {monster}.',
     chapter: 'New journal page: {chapter}.',
     start: '{name} begins their adventure as a {role}.', heroLevel: 'Reached hero level {level} (+{points} points).',
     levelUp: '{skill} reached level {level}.', mastery: 'Mastery {level} in {name}.', found: 'Found: {item}.',
@@ -652,6 +655,10 @@ export default {
       offline: { title: 'Offline progress', body: 'While the game is closed your hero keeps working for up to this many hours. Upgrade the bedroom at home to raise it.' },
     },
     combat: {
+      speed: { title: "Attack speed", body: "How often you attack. Each weapon has its own pace: bows are quick, hammers slow but heavy. Air spells are cast faster." },
+      crit: { title: "Critical hits", body: "The chance that a landed blow deals extra damage. Shown as a golden number." },
+      dodge: { title: "Dodge", body: "Your chance to avoid a blow completely. It grows with your Agility level." },
+      block: { title: "Block", body: "With a shield equipped, you can block half of a blow." },
       style: { title: 'Combat style', body: 'Decides which skill earns XP and which of your stats are used. Melee styles need a melee weapon, Ranged needs a bow and arrows, Magic needs runes.' },
       spell: { title: 'Spell', body: 'Stronger spells hit harder but cost more runes per cast. You need the Magic level shown next to each one.' },
       ammo: { title: 'Ammunition', body: 'Every shot uses one arrow. Better arrows add to your ranged strength. Equip them from the inventory.' },
@@ -689,6 +696,101 @@ export default {
     storm: { name: 'Thunderstorm', desc: 'Lightning splits the sky and thunder rolls over the mountains.' },
     heatwave: { name: 'Heatwave', desc: 'The air shimmers. Even the rivers seem tired.' },
     blizzard: { name: 'Blizzard', desc: 'Howling wind and snow so thick you cannot see your hand.' },
+  },
+
+  fighting: {
+    crit: "Crit!",
+    dodged: "Dodged",
+    blocked: "Blocked",
+    evaded: "Evaded",
+    elite: "Elite",
+    speed: "{v} s per attack",
+    critChance: "{v} crit",
+    dodge: "{v} dodge",
+    block: "{v} block",
+    traitsTitle: "Traits",
+    eliteName: "{kind} {name}",
+    eliteHint: "Elites are tougher than usual, but they drop far more: {gold}× gold, {drops}× drop chances and stardust.",
+    weaponLine: "Attacks every {speed} s · {crit} crit chance",
+    weaponFx: "{chance} chance to cause {status}",
+    statuses: {
+      bleed: {
+        name: "Bleeding",
+        desc: "Loses health every second.",
+      },
+      poison: {
+        name: "Poisoned",
+        desc: "Loses health every second. Stacks up to three times.",
+      },
+      burn: {
+        name: "Burning",
+        desc: "Loses a lot of health every second, for a short time.",
+      },
+      stun: {
+        name: "Stunned",
+        desc: "Cannot attack.",
+      },
+      slow: {
+        name: "Slowed",
+        desc: "Attacks 35% more slowly.",
+      },
+      weaken: {
+        name: "Weakened",
+        desc: "Deals 25% less damage.",
+      },
+    },
+    traits: {
+      venom: {
+        name: "Venomous",
+        desc: "Its hits can poison you.",
+      },
+      bleeds: {
+        name: "Savage",
+        desc: "Its hits can make you bleed.",
+      },
+      burns: {
+        name: "Fiery",
+        desc: "Its hits can set you on fire.",
+      },
+      chills: {
+        name: "Freezing",
+        desc: "Its hits can slow you down.",
+      },
+      stuns: {
+        name: "Crushing",
+        desc: "Its hits can stun you.",
+      },
+      curses: {
+        name: "Cursed",
+        desc: "Its hits can weaken you.",
+      },
+      armour: {
+        name: "Armoured",
+        desc: "Ignores 20% of the damage it takes.",
+      },
+      regen: {
+        name: "Regenerating",
+        desc: "Heals a little every second.",
+      },
+      drain: {
+        name: "Life drinker",
+        desc: "Heals for half the damage it deals.",
+      },
+      enrage: {
+        name: "Frenzied",
+        desc: "Hits 40% harder below 30% health.",
+      },
+      evasive: {
+        name: "Elusive",
+        desc: "Dodges 20% of your attacks.",
+      },
+    },
+    elites: {
+      fierce: "Fierce",
+      armoured: "Armoured",
+      swift: "Swift",
+      ancient: "Ancient",
+    },
   },
 
   changelog: {

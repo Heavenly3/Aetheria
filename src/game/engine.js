@@ -20,6 +20,8 @@ import { companions, companionsState } from './companions.js'
 import { weekly, weeklyState } from './weekly.js'
 import { relicForge, relicForgeState } from './relicforge.js'
 import { journal, journalState } from './journal.js'
+import { fighting } from './fighting.js'
+import { STATUSES, TRAITS, ELITE_LOOT } from './data/fighting.js'
 import { weatherAt, skyTotals } from './data/weather.js'
 import { FEATURES } from './features.js'
 import { OMEN_MAP } from './data/omens.js'
@@ -861,7 +863,7 @@ export const G = {
     const effDef = this.boosted('defense') + 8 + (st === 'defense' ? 3 : 0)
     return {
       accRoll: acc * accMult,
-      maxHit: Math.max(1, Math.floor(maxHit * dmgMult)),
+      maxHit: Math.max(1, Math.floor(maxHit * dmgMult * this.weapon().dmg)),
       defRoll: effDef * (b.def + 64) * (1 + this.room('armory') * 0.05 + (this.blessed('protection') ? 0.1 : 0) + this.mod('defense')),
     }
   },
@@ -902,7 +904,8 @@ export const G = {
     }
     if (act.kind === 'omen') return this.omenCreature(act.target)
     if (act.kind === 'weekly') return this.weeklyMonster(act)
-    return MONSTERS[act.target] && this.scaleMonster(MONSTERS[act.target])
+    const m = MONSTERS[act.target] && this.scaleMonster(MONSTERS[act.target])
+    return m && act.elite ? this.eliteMonster(m, act.elite) : m
   },
 
   startCombat(kind, target, opts = {}) {
@@ -934,8 +937,8 @@ export const G = {
     }
     const floor = kind === 'tower' ? Math.max(1, Math.floor(this.s.tower.best / 10) * 10 + 1) : null
     if (this.s.hp <= 0) this.s.hp = 1
-    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0 }
-    act.mHp = this.getMonster(act).hp
+    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0, elite: null, fx: null }
+    this.spawn(act)
     if (kind === 'weekly') this.beginWeeklyAttempt(act)
     this.s.activity = act
     this.emit('activity')
@@ -947,30 +950,44 @@ export const G = {
     if (!m) return this.stop()
     if (act.respawn > 0) {
       act.respawn -= dt
-      if (act.respawn <= 0) { act.mHp = this.getMonster(act).hp; act.pTimer = 0; act.mTimer = 0 }
+      if (act.respawn <= 0) this.spawn(act)
       return
     }
     // The weekly boss runs its own mechanics first (they can end the attempt)
     if (act.kind === 'weekly' && this.weeklyTick(act, dt, m)) return
+    // Statuses tick first: bleeding, poison or burns can finish a fight on their own
+    const fell = this.tickStatuses(act, dt)
+    if (fell === 'monster') return this.killMonster(m)
+    if (fell === 'player') return this.die(m)
     const ps = this.playerStats(m)
     const mr = this.monsterRolls(m)
+    const regen = this.traitValue(m, 'regen')
+    if (regen && act.kind !== 'weekly') act.mHp = Math.min(m.hp, act.mHp + m.hp * regen * dt)
 
-    act.pTimer += act.kind === 'weekly' ? dt * this.weeklyPace(act) : dt
-    if (act.pTimer >= PLAYER_ATTACK_SPEED) {
-      act.pTimer -= PLAYER_ATTACK_SPEED
+    // The hero swings at the weapon's pace; a stun stops the clock and a slow stretches it
+    if (!this.hasStatus(act, 'player', 'stun')) act.pTimer += (act.kind === 'weekly' ? dt * this.weeklyPace(act) : dt) / (1 + this.slowOf(act, 'player'))
+    const speed = this.attackSpeed()
+    if (act.pTimer >= speed) {
+      act.pTimer -= speed
       const blocker = this.attackBlocker()
       if (blocker) return this.stop(blocker)
       const type = this.styleType()
       if (type === 'ranged' && Math.random() >= this.mod('ammoSave')) this.removeItem(this.s.equipment.ammo, 1)
       if (type === 'magic' && Math.random() >= this.mod('runeSave')) Object.entries(this.currentSpell().runes).forEach(([r, q]) => this.removeItem(r, q))
-      const hit = Math.random() < this.hitChance(ps.accRoll, mr.defRoll)
-      const dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
+      const evaded = Math.random() < this.traitValue(m, 'evade')
+      const hit = !evaded && Math.random() < this.hitChance(ps.accRoll, mr.defRoll)
+      let dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
+      const crit = hit && Math.random() < this.critChance()
+      if (crit) dmg = Math.floor(dmg * this.critMult())
+      if (hit) dmg = Math.max(1, Math.round(dmg * (1 - this.traitValue(m, 'armour')) * (1 - this.weakenOf(act, 'player'))))
       const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
       act.mHp -= dealt
       if (type === 'magic') this.addXp('magic', this.currentSpell().xp + dealt * 2)
       else if (dealt > 0) this.addXp(COMBAT_STYLES[this.s.combatStyle].skill, dealt * 4)
       if (dealt > 0) this.addXp('hitpoints', dealt * 1.33)
-      this.emit('hit', { who: 'player', dmg })
+      this.emit('hit', { who: 'player', dmg, crit, evaded })
+      // Weapons and spells can leave a status; the weekly boss keeps its own rules
+      if (dealt > 0 && act.kind !== 'weekly') for (const f of this.heroEffects()) if (Math.random() < f.chance) this.addStatus(act, 'monster', f.id, dealt)
       if (act.kind === 'weekly' && this.weeklyDealt(act, dealt)) return
       if (act.mHp <= 0) return this.killMonster(m)
     }
@@ -987,14 +1004,25 @@ export const G = {
       }
     }
 
-    act.mTimer += dt
+    if (!this.hasStatus(act, 'monster', 'stun')) act.mTimer += dt / (1 + this.slowOf(act, 'monster'))
     if (act.mTimer >= m.speed) {
       act.mTimer -= m.speed
       if (Math.random() < 1 / (1 + act.mercs.length)) {
+        // Agility dodges the blow; a shield may block half of it
+        if (Math.random() < this.dodgeChance()) { this.emit('hit', { who: 'monster', dmg: 0, dodged: true }); return }
         const hit = Math.random() < this.hitChance(mr.accRoll, ps.defRoll)
-        const dmg = hit ? rand(0, m.maxHit) : 0
+        let dmg = hit ? rand(0, m.maxHit) : 0
+        const enraged = act.mHp < m.hp * 0.3 ? this.traitValue(m, 'enrage') : 0
+        dmg = Math.round(dmg * (1 + enraged) * (1 - this.weakenOf(act, 'monster')))
+        const blocked = dmg > 0 && Math.random() < this.blockChance()
+        if (blocked) dmg = Math.floor(dmg / 2)
         this.s.hp -= dmg
-        this.emit('hit', { who: 'monster', dmg })
+        this.emit('hit', { who: 'monster', dmg, blocked })
+        if (dmg > 0) {
+          const drain = this.traitValue(m, 'drain')
+          if (drain) act.mHp = Math.min(m.hp, act.mHp + Math.round(dmg * drain))
+          for (const id of this.monsterTraits(m)) { const on = TRAITS[id].on; if (on && Math.random() < on.chance) this.addStatus(act, 'player', on.id, dmg) }
+        }
         this.autoEat()
         if (this.s.hp <= 0) return this.die(m)
       } else this.emit('hit', { who: 'monster-merc', dmg: 0 })
@@ -1011,9 +1039,18 @@ export const G = {
     this.festivalKill(m)
     act.runKills++
     if (this.tracker) this.tracker.kills[m.id] = (this.tracker.kills[m.id] || 0) + 1
-    const gold = this.addGold(rand(m.gold[0], m.gold[1]), true)
+    // Elites pay far better: more gold, likelier drops and a little stardust
+    const elite = !!act.elite
+    const gold = this.addGold(rand(m.gold[0], m.gold[1]) * (elite ? ELITE_LOOT.gold : 1), true)
     const loot = []
-    const lootMult = 1 + this.mod('loot')
+    const lootMult = (1 + this.mod('loot')) * (elite ? ELITE_LOOT.drops : 1)
+    if (elite) {
+      const dust = rand(...ELITE_LOOT.stardust)
+      this.addItem('stardust', dust)
+      loot.push({ item: 'stardust', n: dust })
+      st.stats.elites = (st.stats.elites || 0) + 1
+      this.log('crowned-skull', 'log.elite', { monster: '@monster:' + m.id, kind: '@elite:' + act.elite })
+    }
     m.drops.forEach(d => {
       // A Blood Moon makes rare drops (under 5%) more likely on top of the loot bonus
       if (Math.random() < Math.min(1, d.chance * lootMult * (d.chance < 0.05 ? this.omenRareMult() : 1))) {
@@ -1291,6 +1328,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting)
 
 export { SKILLS, ITEMS }
