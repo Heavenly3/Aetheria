@@ -21,6 +21,7 @@ import { weekly, weeklyState } from './weekly.js'
 import { relicForge, relicForgeState } from './relicforge.js'
 import { journal, journalState } from './journal.js'
 import { fighting, fightingState } from './fighting.js'
+import { guilds, guildsState } from './guilds.js'
 import { TRAITS, ELITE_LOOT, ENERGY } from './data/fighting.js'
 import { weatherAt, skyTotals } from './data/weather.js'
 import { FEATURES } from './features.js'
@@ -105,6 +106,7 @@ export function newState(profile = {}) {
     ...relicForgeState(),
     ...journalState(),
     ...fightingState(),
+    ...guildsState(),
   }
 }
 
@@ -208,6 +210,7 @@ export const G = {
     this.ensureWeekly()
     this.ensureJournal()
     this.checkJournal()
+    this.ensureGuilds()
     this.s.tutorial = { step: 0, done: false, base: null }
     this.log(ROLES[this.s.role].icon, 'log.start', { name: this.s.name, role: '@role:' + this.s.role })
     this.save()
@@ -278,6 +281,8 @@ export const G = {
     this.syncCare()
     this.ensureWeekly()
     this.checkJournal(true)
+    this.ensureGuilds()
+    this.ensureContracts()
   },
 
   /* ================= levels ================= */
@@ -371,7 +376,7 @@ export const G = {
   /* ================= modifiers ================= */
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -1343,6 +1348,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds)
 
 export { SKILLS, ITEMS }

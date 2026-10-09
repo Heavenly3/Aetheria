@@ -76,6 +76,7 @@ Requires Node.js 18 or newer.
 - **Weather**: the sky changes every three hours, the same for every player: clear days and starry nights, overcast, rain, fog, wind and snow, plus rarer climate events (thunderstorms, heatwaves and blizzards) that follow the real seasons. Every weather, season and the night change modifiers (rain helps fishing and farming, fog helps thieving, storms boost magic but make monsters stronger…), listed in the top bar tooltip, and each change is announced.
 - **Journal and story**: the story of Aetheria told in chapters that unlock as you explore, beat bosses and witness omens, with the people you meet (a new cast of names in every game) and a memory of a past life with each ascension. The tavern keeper comments on the story, the astrologer leaves notes on omens and studied creatures reveal their lore.
 - **Music and ambience**: generative music made with WebAudio that follows where you are and the time of day, and weather sounds (rain, wind, thunder, birds, crickets), with their own volumes in Settings. No audio files.
+- **Guilds**: every new world founds twelve guilds with their own name, crest, motto, guildmaster, members, tier (1–5) and focus: one role, a few roles, or open to all. Meet a guild's requirements, pay its fee and pass the entry trial (a task plus a riddle, a rune sequence or a code lock) to join. Members take contracts that renew every four hours for guild marks, gold and reputation, climb six ranks, earn a perk that grows with rank and tier, and spend marks in the guild shop. A ranking orders the guilds by renown, which grows every day and with the hero's work.
 - **Titles and appearance**: 20 titles shown next to the hero's name, plus extra portraits and colours unlocked by achievements and festivals.
 - **Ascension**: start the whole hero over for Aether shards and spend them in a three-branch tree of permanent upgrades.
 - **Tavern**: hire staff (11 specialities, 4 rarities, traits and levels) who work in parallel for a wage. Includes 1/4/8 h expeditions, daily orders, drinks, dice and a mystery chest.
@@ -100,6 +101,7 @@ Requires Node.js 18 or newer.
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.
 - `src/game/fighting.js`: weapon pace, crits, statuses, creature traits, elites, abilities, boss phases, streaks and the combat power numbers (tuning in `src/game/data/fighting.js`).
+- `src/game/guilds.js`: founding the guilds, applications, the entry trial and its puzzles, contracts, ranks, perks and the guild shop (tuning in `src/game/data/guilds.js`).
 - `src/game/journal.js`: the story journal, its chapters and memories (texts in the locales, chapters and characters in `src/game/data/journal.js`).
 - `src/game/music.js`: generative music and weather ambience.
 - `src/game/loop.js`: game loop, offline progress and autosave.
@@ -109,7 +111,7 @@ Requires Node.js 18 or newer.
 - `src/components/` and `src/views/`: the UI.
 - `public/`: app manifest, service worker (offline play) and icons.
 - `scripts/`: icon extraction, the translation checker and the balance report.
-- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, the relic forge, cosmetics, pets, enchanting, daily tasks, ascension, combat mechanics and abilities, weather effects, the journal, music moods, update notes and translations.
+- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, the relic forge, cosmetics, pets, enchanting, daily tasks, ascension, combat mechanics and abilities, weather effects, guilds, the journal, music moods, update notes and translations.
 
 ## Adding a language
 

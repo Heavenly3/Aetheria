@@ -11,7 +11,7 @@ import { UPGRADES, UPGRADE_MAP, ASCEND_MIN_TOTAL } from './data/ascension.js'
 const START_SKILLS = ['mining', 'woodcutting', 'fishing', 'farming', 'thieving', 'smithing', 'cooking', 'firemaking', 'fletching', 'crafting', 'herblore', 'runecrafting', 'agility', 'prayer']
 
 // What survives an ascension; everything else goes back to a fresh character
-const KEPT = ['created', 'name', 'role', 'avatar', 'tint', 'difficulty', 'pets', 'achievements', 'stats', 'history', 'settings', 'daily', 'ascension', 'bestiary', 'cosmetics', 'festival', 'omens', 'companions', 'weekly', 'relicForge', 'journal', 'abilities', 'log']
+const KEPT = ['created', 'name', 'role', 'avatar', 'tint', 'difficulty', 'pets', 'achievements', 'stats', 'history', 'settings', 'daily', 'ascension', 'bestiary', 'cosmetics', 'festival', 'omens', 'companions', 'weekly', 'relicForge', 'journal', 'abilities', 'guilds', 'log']
 
 export const ascensionState = () => ({
   ascension: { shards: 0, total: 0, count: 0, upgrades: {} },
@@ -59,6 +59,7 @@ export const ascension = {
     if (!this.canAscend()) return 0
     const gained = this.shardsForAscension()
     const tasks = this.taskSnapshot()
+    const guildTasks = this.guildSnapshot()
     const kept = {}
     for (const k of KEPT) kept[k] = JSON.parse(JSON.stringify(this.s[k] ?? null))
     const fresh = this.freshState({ name: kept.name, role: kept.role, avatar: kept.avatar, tint: kept.tint, difficulty: kept.difficulty })
@@ -73,6 +74,7 @@ export const ascension = {
     this.s.gold += Math.floor(this.ascensionMods('startGold'))
     this.s.hp = this.maxHp()
     this.restoreTasks(tasks)
+    this.restoreGuildTasks(guildTasks)
     this.log('ankh', 'log.ascend', { n: asc.count, shards: gained })
     this.emit('ascend', { count: asc.count, shards: gained })
     this.save()

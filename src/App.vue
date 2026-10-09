@@ -24,6 +24,7 @@ import NavMenu from './components/NavMenu.vue'
 import HelpTip from './components/HelpTip.vue'
 import { weatherAt, nextWeather, skyMods } from './game/data/weather.js'
 import { modText } from './i18n/mods.js'
+import { guildName } from './i18n/names.js'
 import ActivityDock from './components/ActivityDock.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
@@ -121,6 +122,7 @@ onMounted(() => {
   on('elite', e => { play('rare'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
   on('bossPhase', e => push(e.monster.icon, t('toast.bossPhase', { name: e.monster.name, phase: t(`fighting.phases.${e.id}.name`).toLowerCase() }), 'warn', 4500))
   on('huntStreak', e => { play('quest'); push('flame', t('toast.huntStreak', { n: e.n, v: fmtDec(e.bonus * 100) }), 'success', 5000) })
+  on('guildRank', e => { play('level'); push('star-medal', t('guilds.rankUp', { guild: guildName(e.guild), rank: t(`guilds.ranks.${e.rank}`) }), 'success', 5500) })
   on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
   on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })

@@ -22,6 +22,7 @@ const routes = [
   { path: '/pets', name: 'pets', component: () => import('./views/PetsView.vue'), meta: { titleKey: 'nav.pets' } },
   { path: '/forge', name: 'forge', component: () => import('./views/ForgeView.vue'), meta: { titleKey: 'nav.forge' } },
   { path: '/stats', name: 'stats', component: () => import('./views/StatsView.vue'), meta: { titleKey: 'nav.stats' } },
+  { path: '/guilds', name: 'guilds', component: () => import('./views/GuildsView.vue'), meta: { titleKey: 'nav.guilds' } },
   { path: '/tavern', name: 'tavern', component: () => import('./views/TavernView.vue'), meta: { titleKey: 'nav.tavern' } },
   { path: '/home', name: 'home', component: () => import('./views/HousingView.vue'), meta: { titleKey: 'nav.home' } },
   { path: '/church', name: 'church', component: () => import('./views/ChurchView.vue'), meta: { titleKey: 'nav.church' } },

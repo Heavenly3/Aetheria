@@ -14,6 +14,7 @@ import { BESTIARY } from '../game/data/bestiary.js'
 import { SET_MAP } from '../game/data/sets.js'
 import { WEEKLY_MAP } from '../game/data/weekly.js'
 import { CHAPTER_MAP } from '../game/data/journal.js'
+import { G } from '../game/engine.js'
 
 const byId = list => id => list.find(x => x.id === id)?.name ?? id
 const allMonsters = id => MONSTERS[id]?.name ?? BOSSES.find(b => b.id === id)?.name ?? DUNGEONS.find(d => d.boss.id === id)?.boss.name ?? id
@@ -38,6 +39,8 @@ registerNames('pet', id => PET_MAP[id]?.name ?? id)
 registerNames('weekly', id => WEEKLY_MAP[id]?.name ?? id)
 registerNames('bond', id => t(`pets.bond.${id}`))
 registerNames('elite', id => t(`fighting.elites.${id}`))
+registerNames('guild', id => { const g = G.guildById(id); return g ? guildName(g) : id })
+registerNames('guildRank', id => t(`guilds.ranks.${id}`))
 registerNames('chapter', id => (CHAPTER_MAP[id] ? t(`journal.chapters.${id}.title`) : id))
 registerNames('beasts', byId(BESTIARY))
 registerNames('set', id => SET_MAP[id]?.name ?? id)
@@ -47,3 +50,6 @@ registerNames('rarity', id => RARITIES[id]?.name ?? id)
 registerNames('role', id => ROLES[id]?.name ?? id)
 registerNames('tavern', id => TAVERN_LEVELS[Number(id) - 1]?.name ?? id)
 registerNames('action', ref => { const [skill, id] = ref.split('/'); return findAction(skill, id)?.name ?? id })
+
+// A guild's name is put together from its group and emblem: "Order of the Silver Wolf"
+export const guildName = g => t('guilds.nameTpl', { group: t(`guilds.groups.${g.group}`), emblem: t(`guilds.emblems.${g.emblem}`) })
