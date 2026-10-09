@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    guardian: "<b>{name}</b> falls! First-defeat reward claimed.",
     favour: "Favour with the Order: level <b>{n}</b>",
     masterwork: "Masterwork! <b>{item}</b>",
     huntStreak: 'Hunting streak: <b>{n} kills</b> · +{v}% combat XP and loot',
@@ -246,6 +247,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    guardian: "You defeated {guardian} on floor {floor} for the first time.",
     favour: "Your favour with the Order of the Dawn rose to level {n}.",
     codexPage: "You completed the compendium page \"{page}\".",
     codexMaster: "You reached {n} masterworks in the compendium.",
@@ -409,6 +411,14 @@ export default {
   },
 
   tower: {
+    weekTitle: "This week's floors",
+    floorsRange: "Floors {a}–{b}",
+    noAffix: "No twist",
+    affixTokens: "+{n}% tokens on these floors.",
+    guardiansTitle: "Guardians",
+    rivalsTitle: "Race to the top",
+    affixes: { regen: { name: "Regenerating", desc: "Creatures heal a little every second." }, armoured: { name: "Armoured", desc: "Creatures soak part of every blow." }, venom: { name: "Venomous", desc: "Creatures can poison you." }, vampiric: { name: "Vampiric", desc: "Creatures heal from the damage they deal." }, frenzied: { name: "Frenzied", desc: "Creatures hit harder as they get hurt." }, elusive: { name: "Elusive", desc: "Creatures dodge some of your attacks." }, swift: { name: "Swift", desc: "Creatures attack a quarter faster." }, brutal: { name: "Brutal", desc: "Creatures hit up to 30% harder." } },
+    guardians: { bellkeeper: "The Bellkeeper", stonewarden: "The Stonewarden", emberlord: "The Ember Lord", frostwidow: "The Frost Widow", hollow_king: "The Hollow King", starbound: "The Starbound", last_watcher: "The Last Watcher" },
     title: 'Endless Tower', desc: 'Every floor is harder than the last. A ★ guardian and a checkpoint wait every 10 floors. If you fall, you go back to the last checkpoint.',
     best: 'Record: floor {n}', startAt: 'You start on floor {n}', tokens: '{n} tokens', leave: 'Leave', enter: 'Enter the Tower',
     next: 'Upcoming floors', floorN: 'Floor {n}', hp: '{n} HP', shop: 'Tower shop', monster: '{title} of floor {floor}',
@@ -713,6 +723,8 @@ export default {
       },
       order: { title: "Order of the Dawn", body: "A new offering every day. Offer it for favour and Prayer XP. Favour levels make blessings last longer, open a blessing slot at level 3 and make blessings cheaper at level 5." },
       graceful: { title: "Graceful outfit", body: "Four light pieces bought with marks of grace from the agility courses. Worn together they speed up gathering, boost Agility XP, make thieving safer and speed up every action." },
+      towerAffixes: { title: "This week's floors", body: "From floor 6 on, every block of five floors has a twist that changes each week, the same for everyone. Floors with a twist pay a quarter more tokens." },
+      towerRivals: { title: "Race to the top", body: "The best climbers of the realm's guilds and how high they have reached. They keep climbing as the days go by." },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -1860,6 +1872,10 @@ export default {
   },
 
   towerShop: {
+    climbers_amulet: { name: "Climber's amulet", desc: "+9 to every combat bonus." },
+    sigils: { name: "Slayer sigils", desc: "Five sigils for the imbued slayer helm." },
+    overloads: { name: "Overloads", desc: "Two overload potions." },
+    shard: { name: "Starlight shard", desc: "Protects an enchantment or seals a relic." },
     tower_cape: { name: 'Tower Cape', desc: '+4 to every combat bonus.' },
     tower_cape2: { name: 'Cape of the Ascended', desc: '+10 to every bonus and +5% magic damage.' },
     gem_chest: { name: 'Gem chest', desc: 'Holds uncut gems.' },
@@ -1916,6 +1932,7 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    climbers_amulet: "Climber's amulet",
     graceful_hood: "Graceful hood",
     graceful_cape: "Graceful cape",
     graceful_legs: "Graceful legs",

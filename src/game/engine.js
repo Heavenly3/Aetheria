@@ -25,11 +25,14 @@ import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
 import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
+import { TOWER_AFFIXES, AFFIX_TOKENS, affixOf, guardianOf, guardianReward, rivalBest } from './data/tower.js'
+import { guildRoster } from './data/guilds.js'
+import { t } from '../i18n/index.js'
 import { TRAITS, ELITE_LOOT, ENERGY } from './data/fighting.js'
 import { weatherAt, skyTotals } from './data/weather.js'
 import { FEATURES } from './features.js'
 import { OMEN_MAP } from './data/omens.js'
-import { cloneNamed } from '../i18n/bind.js'
+import { cloneNamed, named } from '../i18n/bind.js'
 import '../i18n/names.js'
 
 const SLOT_KEY = i => `aetheria-slot-${i}`
@@ -94,7 +97,7 @@ export function newState(profile = {}) {
     rooms: {},
     prestige: {},
     slayer: { task: null, points: 0, completed: 0, streak: 0, offers: [], perks: {}, blocked: [] },
-    tower: { best: 0, tokens: 0 },
+    tower: { best: 0, tokens: 0, cleared: {} },
     stats: { actions: 0, kills: 0, goldEarned: 0, deaths: 0, burnt: 0, rares: 0, playTime: 0, harvests: 0 },
     log: [],
     // Old saves load with the tutorial finished; only new characters get it
@@ -891,7 +894,7 @@ export const G = {
   scaleMonster(m) {
     const f = this.monsterMult()
     if (f === 1) return m
-    const key = m.id + '|' + f
+    const key = m.id + '|' + f + '|' + (m.affix || '')
     let s = scaledCache.get(key)
     if (!s) {
       s = cloneNamed(m, { hp: Math.round(m.hp * f), att: Math.round(m.att * f), def: Math.round(m.def * f), maxHit: Math.max(1, Math.round(m.maxHit * f)) })
@@ -962,8 +965,8 @@ export const G = {
       return this.scaleMonster(act.room < dg.rooms.length ? MONSTERS[dg.rooms[act.room]] : dg.boss)
     }
     if (act.kind === 'tower') {
-      const key = act.floor + '|' + this.monsterMult()
-      if (towerCache.key !== key) towerCache = { key, m: this.scaleMonster(towerMonster(act.floor)) }
+      const key = act.floor + '|' + this.monsterMult() + '|' + affixOf(act.floor)
+      if (towerCache.key !== key) towerCache = { key, m: this.scaleMonster(this.towerFloor(act.floor)) }
       return towerCache.m
     }
     if (act.kind === 'omen') return this.omenCreature(act.target)
@@ -1134,7 +1137,17 @@ export const G = {
       if (task.left <= 0) this.completeSlayerTask()
     }
     if (act.kind === 'tower') {
-      const tokens = (1 + Math.floor(m.floor / 10)) * (m.floor % 10 === 0 ? 3 : 1)
+      const tokens = Math.round((1 + Math.floor(m.floor / 10)) * (m.floor % 10 === 0 ? 3 : 1) * (m.affix ? AFFIX_TOKENS : 1))
+      // A guardian's first defeat pays a reward of its own
+      st.tower.cleared ||= {}
+      if (m.floor % 10 === 0 && !st.tower.cleared[m.floor]) {
+        st.tower.cleared[m.floor] = true
+        const r = guardianReward(m.floor)
+        st.tower.tokens += r.tokens
+        Object.entries(r.items).forEach(([k, n]) => this.addItem(k, n))
+        this.log('stone-tower', 'log.guardian', { guardian: '@guardian:' + guardianOf(m.floor), floor: m.floor })
+        this.emit('guardian', { floor: m.floor, id: guardianOf(m.floor), reward: r })
+      }
       st.tower.tokens += tokens
       if (this.tracker) this.tracker.tokens = (this.tracker.tokens || 0) + tokens
       if (m.floor > st.tower.best && m.floor % 10 === 0) this.log('stone-tower', 'log.towerFloor', { floor: m.floor })
@@ -1180,6 +1193,33 @@ export const G = {
   },
 
   /* ================= tower ================= */
+  // A tower floor's creature with this week's affix, and a named guardian on every tenth floor
+  towerFloor(floor) {
+    let m = towerMonster(floor)
+    const id = affixOf(floor), a = id && TOWER_AFFIXES[id]
+    if (a) {
+      m = cloneNamed(m, {
+        affix: id, traits: a.trait ? [a.trait] : [],
+        speed: m.speed * (a.speed || 1), maxHit: Math.max(1, Math.round(m.maxHit * (a.maxHit || 1))),
+      })
+    }
+    if (floor % 10 === 0) {
+      const g = guardianOf(floor)
+      m = named(cloneNamed(m, { guardian: g }), () => t(`tower.guardians.${g}`) + ' ★')
+    }
+    return m
+  },
+  // The hero against the best climbers of the realm's guilds
+  towerRivals() {
+    const s = this.s.guilds
+    const day = Math.floor(Date.now() / 86400e3), days = Math.max(0, day - (s?.founded || day))
+    const list = []
+    for (const g of this.guildList()) {
+      for (const m of guildRoster(g, day, s.founded).slice(0, 3)) list.push({ name: m.name, role: m.role, guild: g.id, best: rivalBest(m, g.tier, days) })
+    }
+    list.push({ name: this.s.name, role: this.s.role, best: this.s.tower.best, hero: true })
+    return list.sort((a, b) => b.best - a.best || (b.hero ? 1 : 0) - (a.hero ? 1 : 0)).map((r, i) => ({ ...r, place: i + 1 }))
+  },
   buyTower(id) {
     const it = TOWER_SHOP.find(x => x.id === id)
     if (!it || this.s.tower.tokens < it.cost) return false

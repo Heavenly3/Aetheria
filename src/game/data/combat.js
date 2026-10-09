@@ -184,6 +184,10 @@ export const TOWER_SHOP = [
   { id: 'tower_cape2',   icon: 'cape',                cost: 900, item: 'tower_cape2' },
   { id: 'gem_chest',     icon: 'open-treasure-chest', cost: 35,  items: { gem_chest: 1 } },
   { id: 'wisdom_elixir', icon: 'bubbling-flask',      cost: 25,  items: { wisdom_elixir: 1 } },
+  { id: 'climbers_amulet', icon: 'gem-pendant',       cost: 400, item: 'climbers_amulet' },
+  { id: 'sigils',        icon: 'star-medal',          cost: 90,  items: { slayer_sigil: 5 } },
+  { id: 'overloads',     icon: 'round-potion',        cost: 160, items: { overload: 2 } },
+  { id: 'shard',         icon: 'floating-crystal',    cost: 250, items: { starlight_shard: 1 } },
 ]
 TOWER_SHOP.forEach(s => named(s, `towerShop.${s.id}.name`, `towerShop.${s.id}.desc`))
 

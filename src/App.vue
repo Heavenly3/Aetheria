@@ -125,6 +125,7 @@ onMounted(() => {
   on('guildRank', e => { play('level'); push('star-medal', t('guilds.rankUp', { guild: guildName(e.guild), rank: t(`guilds.ranks.${e.rank}`) }), 'success', 5500) })
   on('masterwork', e => { play('rare'); push('anvil-impact', t('toast.masterwork', { item: ITEMS[e.item].name }), 'rare', 6000) })
   on('favour', e => { play('level'); push('holy-symbol', t('toast.favour', { n: e.level }), 'success', 5000) })
+  on('guardian', e => { play('rare'); push('stone-tower', t('toast.guardian', { name: t(`tower.guardians.${e.id}`) }), 'rare', 6000) })
   on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
   on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })

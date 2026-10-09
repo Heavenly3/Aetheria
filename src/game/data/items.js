@@ -250,6 +250,7 @@ def('slayer_sigil',  { icon: 'star-medal', value: 120, tint: '#d36bff', hasDesc:
 def('slayer_cape',   { icon: 'vampire-cape', type: 'equip', slot: 'cape', value: 0, tint: '#b5179e', stats: { atk: 6, str: 6, rAtk: 6, mAtk: 6, def: 6 }, req: { slayer: 50 } })
 def('tower_cape',    { icon: 'cape', type: 'equip', slot: 'cape', value: 0, tint: '#f0c040', stats: { atk: 4, str: 4, def: 4, rAtk: 4, mAtk: 4 }, req: {} })
 def('tower_cape2',   { icon: 'cape', type: 'equip', slot: 'cape', value: 0, tint: '#ff7ad9', stats: { atk: 10, str: 10, def: 10, rAtk: 10, rStr: 6, mAtk: 10, mDmg: 0.05 }, req: {} })
+def('climbers_amulet', { icon: 'gem-pendant', type: 'equip', slot: 'amulet', value: 0, tint: '#e2b65a', stats: { atk: 9, str: 9, def: 9, rAtk: 9, mAtk: 9 }, req: {} })
 def('wisdom_elixir', { icon: 'bubbling-flask', type: 'potion', value: 0, tint: '#f0c040', elixir: true })
 
 /* ---------------- Beyond the Abyss ---------------- */

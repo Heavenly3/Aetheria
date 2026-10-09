@@ -50,7 +50,7 @@ export const fighting = {
 
   /* ================= creatures ================= */
   monsterTraits(m, act = this.s.activity) {
-    const list = [...traitsOf(m.id)]
+    const list = [...traitsOf(m.id), ...(m.traits || [])]
     const e = act?.elite && ELITES[act.elite]
     if (e?.trait && !list.includes(e.trait)) list.push(e.trait)
     return list

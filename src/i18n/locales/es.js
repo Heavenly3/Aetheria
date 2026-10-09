@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    guardian: "¡<b>{name}</b> cae! Recompensa de primera victoria cobrada.",
     favour: "Favor con la Orden: nivel <b>{n}</b>",
     masterwork: "¡Obra maestra! <b>{item}</b>",
     huntStreak: 'Racha de caza: <b>{n} muertes</b> · +{v}% de XP de combate y botín',
@@ -246,6 +247,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    guardian: "Derrotaste por primera vez a {guardian} en el piso {floor}.",
     favour: "Tu favor con la Orden del Alba ha subido a nivel {n}.",
     codexPage: "Completaste la página «{page}» del compendio.",
     codexMaster: "Alcanzaste {n} obras maestras en el compendio.",
@@ -409,10 +411,18 @@ export default {
   },
 
   tower: {
+    weekTitle: "Los pisos de esta semana",
+    floorsRange: "Pisos {a}–{b}",
+    noAffix: "Sin cambios",
+    affixTokens: "+{n} % de fichas en estos pisos.",
+    guardiansTitle: "Guardianes",
+    rivalsTitle: "Carrera a la cima",
+    affixes: { regen: { name: "Regeneración", desc: "Las criaturas se curan un poco cada segundo." }, armoured: { name: "Acorazados", desc: "Las criaturas absorben parte de cada golpe." }, venom: { name: "Venenosos", desc: "Las criaturas pueden envenenarte." }, vampiric: { name: "Vampíricos", desc: "Las criaturas se curan con el daño que hacen." }, frenzied: { name: "Frenéticos", desc: "Las criaturas golpean más fuerte cuanto más heridas están." }, elusive: { name: "Esquivos", desc: "Las criaturas esquivan parte de tus ataques." }, swift: { name: "Veloces", desc: "Las criaturas atacan un cuarto más rápido." }, brutal: { name: "Brutales", desc: "Las criaturas golpean hasta un 30 % más fuerte." } },
+    guardians: { bellkeeper: "La Guardiana de la Campana", stonewarden: "El Centinela de Piedra", emberlord: "El Señor de las Brasas", frostwidow: "La Viuda de Escarcha", hollow_king: "El Rey Hueco", starbound: "El Atado a las Estrellas", last_watcher: "El Último Vigía" },
     title: 'Torre infinita', desc: 'Cada piso es más duro que el anterior. Cada 10 pisos te espera un guardián ★ y un punto de control. Si caes, vuelves al último punto de control.',
     best: 'Récord: piso {n}', startAt: 'Empiezas en el piso {n}', tokens: '{n} fichas', leave: 'Abandonar', enter: 'Entrar en la Torre',
     next: 'Próximos pisos', floorN: 'Piso {n}', hp: '{n} PV', shop: 'Tienda de la Torre', monster: '{title} del piso {floor}',
-    titles: ['Centinela', 'Guardián', 'Campeón', 'Aparecido', 'Coloso', 'Arconte', 'Titán'],
+    titles: ['Centinela', 'Celador', 'Campeón', 'Aparecido', 'Coloso', 'Arconte', 'Titán'],
   },
 
   quests: {
@@ -713,6 +723,8 @@ export default {
       },
       order: { title: "Orden del Alba", body: "Cada día hay una ofrenda nueva. Entrégala para ganar favor y XP de Oración. Los niveles de favor alargan las bendiciones, abren un hueco de bendición en el nivel 3 y las abaratan en el nivel 5." },
       graceful: { title: "Conjunto ligero", body: "Cuatro piezas ligeras que se compran con marcas de gracia de las pistas de Agilidad. Juntas aceleran la recolección, aumentan la XP de Agilidad, hacen más seguro el robo y aceleran todas las acciones." },
+      towerAffixes: { title: "Los pisos de esta semana", body: "Desde el piso 6, cada bloque de cinco pisos tiene un cambio que varía cada semana, igual para todos. Los pisos con cambio dan un cuarto más de fichas." },
+      towerRivals: { title: "Carrera a la cima", body: "Los mejores escaladores de los gremios del reino y hasta dónde han llegado. Siguen subiendo con el paso de los días." },
       slayerShop: { title: 'Tienda del cazador', body: 'Gasta los puntos de Cazador en equipo, provisiones y saltos de encargo.' },
       towerNext: { title: 'Próximos pisos', body: 'Los siguientes guardianes y su vida. Los pisos ★ son puntos de control con un guardián más duro y más fichas.' },
       towerShop: { title: 'Tienda de la torre', body: 'Gasta las fichas de la torre en capas, cofres y elixires.' },
@@ -1860,6 +1872,10 @@ export default {
   },
 
   towerShop: {
+    climbers_amulet: { name: "Amuleto del escalador", desc: "+9 a todas las bonificaciones de combate." },
+    sigils: { name: "Sellos de cazador", desc: "Cinco sellos para el yelmo de cazador imbuido." },
+    overloads: { name: "Sobrecargas", desc: "Dos pociones de sobrecarga." },
+    shard: { name: "Fragmento de luz estelar", desc: "Protege un encantamiento o sella una reliquia." },
     tower_cape: { name: 'Capa de la Torre', desc: '+4 a todos los bonos de combate.' },
     tower_cape2: { name: 'Capa del Ascendido', desc: '+10 a todos los bonos y +5% daño mágico.' },
     gem_chest: { name: 'Cofre de gemas', desc: 'Contiene gemas sin tallar.' },
@@ -1916,6 +1932,7 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    climbers_amulet: "Amuleto del escalador",
     graceful_hood: "Capucha ligera",
     graceful_cape: "Capa ligera",
     graceful_legs: "Calzas ligeras",
