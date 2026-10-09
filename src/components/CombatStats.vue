@@ -23,6 +23,7 @@ const defence = computed(() => [
   { k: 'maxHp', v: fmt(p.value.maxHp), gold: true },
   { k: 'defRoll', v: fmt(p.value.defRoll) },
   { k: 'hitTaken', v: pct(p.value.hitTaken) },
+  { k: 'reduction', v: pct(p.value.reduction) },
   { k: 'dodge', v: pct(p.value.dodge) },
   { k: 'block', v: p.value.block ? pct(p.value.block) : '—' },
   { k: 'takenPerSec', v: num(p.value.takenPerSec) },

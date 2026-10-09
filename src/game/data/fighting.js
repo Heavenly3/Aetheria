@@ -160,3 +160,8 @@ export const STREAK_STEP = 25
 export const STREAK_BONUS = 0.025
 export const STREAK_MAX = 0.25
 export const COMBAT_SKILLS = ['attack', 'strength', 'defense', 'ranged', 'magic', 'hitpoints', 'slayer']
+
+/* ================= armour ================= */
+// Gear defence also soaks part of every blow: defence / (defence + ARMOUR_K), up to ARMOUR_CAP
+export const ARMOUR_K = 600
+export const ARMOUR_CAP = 0.4

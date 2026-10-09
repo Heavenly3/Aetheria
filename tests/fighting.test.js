@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { G, state, newHero, run, fixRandom } from './helpers.js'
 import { MONSTERS, BOSSES } from '../src/game/data/combat.js'
-import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT, ABILITY_MAP, ENERGY, STREAK_STEP, STREAK_BONUS } from '../src/game/data/fighting.js'
+import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT, ABILITY_MAP, ENERGY, STREAK_STEP, STREAK_BONUS, ARMOUR_CAP } from '../src/game/data/fighting.js'
 import { BESTIARY } from '../src/game/data/bestiary.js'
 import { i18n } from '../src/i18n/index.js'
+import { itemTip } from '../src/ui/tips.js'
 
 describe('weapons', () => {
   beforeEach(() => newHero())
@@ -268,5 +269,23 @@ describe('live numbers', () => {
     expect(live.killsH).toBeGreaterThan(0)
     expect(live.xpH).toBeGreaterThan(0)
     expect(state.activity.notes.length).toBeGreaterThan(0)
+  })
+})
+
+describe('armour', () => {
+  beforeEach(() => newHero())
+
+  it('soaks part of every blow, more with better gear, up to a cap', () => {
+    const base = G.damageReduction()
+    const better = G.withGear('rune_body', () => G.damageReduction())
+    expect(better).toBeGreaterThan(base)
+    expect(G.withGear('rune_body', () => G.combatProfile().takenPerSec)).toBeLessThan(G.combatProfile().takenPerSec)
+    vi.spyOn(G, 'bonuses').mockReturnValue({ atk: 0, str: 0, def: 1e6, rAtk: 0, rStr: 0, mAtk: 0, mDmg: 0 })
+    expect(G.damageReduction()).toBe(ARMOUR_CAP)
+  })
+
+  it('tells in the tooltip what a piece would change', () => {
+    const html = itemTip('rune_body').value
+    expect(html).toMatch(/power \+\d+%/)
   })
 })

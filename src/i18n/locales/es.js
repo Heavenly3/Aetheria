@@ -568,6 +568,7 @@ export default {
   // Ayuda de los tooltips, agrupada por dónde aparece (ver src/ui/tips.js)
   help: {
     power: {
+      reduction: { title: "Reducción de daño", body: "La parte de cada golpe que absorbe tu armadura. Sale de la defensa de tu equipo, hasta un 40%." },
       dps: { title: "Daño por segundo", body: "El daño medio que haces cada segundo, contando fallos, críticos y los estados que deja tu arma." },
       maxHit: { title: "Golpe máximo", body: "El máximo daño que puede hacer un golpe normal. Los críticos lo superan." },
       avgHit: { title: "Golpe medio", body: "Lo que hace de media un golpe acertado, contando los críticos." },
@@ -770,6 +771,7 @@ export default {
   },
 
   power: {
+    reduction: "Reducción de daño", tipEffect: "Si lo llevas: poder {power} · daño/s {dps} · daño recibido {taken}",
     title: "Poder de combate",
     label: "Poder",
     offence: "Ataque",

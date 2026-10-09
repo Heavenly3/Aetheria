@@ -52,6 +52,8 @@ const combat = computed(() => {
     { label: t('power.maxHit'), now: now.maxHit, next: next.maxHit, fmt: v => fmt(v) },
     { label: t('power.accuracy'), now: now.accuracy, next: next.accuracy, fmt: pct },
     { label: t('power.hitTaken'), now: now.hitTaken, next: next.hitTaken, fmt: pct, lower: true },
+    { label: t('power.reduction'), now: now.reduction, next: next.reduction, fmt: pct },
+    { label: t('power.takenPerSec'), now: now.takenPerSec, next: next.takenPerSec, fmt: one, lower: true },
     { label: t('power.maxHp'), now: now.maxHp, next: next.maxHp, fmt: v => fmt(v) },
   ].filter(r => r.key || r.fmt(r.next) !== r.fmt(r.now))
 })

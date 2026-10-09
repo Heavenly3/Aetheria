@@ -568,6 +568,7 @@ export default {
   // Tooltip help, grouped by where it appears (see src/ui/tips.js)
   help: {
     power: {
+      reduction: { title: "Damage reduction", body: "The share of every blow your armour soaks up. It comes from the defence on your gear, up to 40%." },
       dps: { title: "Damage per second", body: "The average damage you deal each second, counting misses, critical hits and statuses your weapon leaves." },
       maxHit: { title: "Max hit", body: "The most damage a normal hit can do. Critical hits go above it." },
       avgHit: { title: "Average hit", body: "What a landed hit does on average, critical hits included." },
@@ -770,6 +771,7 @@ export default {
   },
 
   power: {
+    reduction: "Damage reduction", tipEffect: "If worn: power {power} · damage/s {dps} · damage taken {taken}",
     title: "Combat power",
     label: "Power",
     offence: "Offence",

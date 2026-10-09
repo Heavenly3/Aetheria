@@ -10,7 +10,7 @@ import { COMBAT_STYLES } from './data/combat.js'
 import {
   weaponProfile, SPELL_FX, AIR_SPEED, STATUSES, TRAITS, traitsOf, ELITES, ELITE_IDS, ELITE_CHANCE,
   ABILITIES, ABILITY_MAP, ABILITY_SKILL, BUFFS, ENERGY, ENERGY_MAX, BAR_SIZE, defaultBar,
-  BOSS_PHASES, STREAK_STEP, STREAK_BONUS, STREAK_MAX, COMBAT_SKILLS,
+  BOSS_PHASES, STREAK_STEP, STREAK_BONUS, STREAK_MAX, COMBAT_SKILLS, ARMOUR_K, ARMOUR_CAP,
 } from './data/fighting.js'
 
 const eliteCache = new Map()
@@ -34,6 +34,11 @@ export const fighting = {
   // Agility makes the hero harder to hit; a shield can block half a blow
   dodgeChance() { return Math.min(0.25, this.level('agility') * 0.0015 + this.mod('dodge')) },
   blockChance() { return this.s.equipment.shield ? Math.min(0.4, 0.12 + this.mod('block')) : 0 },
+  // Share of every blow the hero's armour soaks up, from the defence on their gear
+  damageReduction() {
+    const d = Math.max(0, this.bonuses().def)
+    return Math.min(ARMOUR_CAP, d / (d + ARMOUR_K) + this.mod('reduction'))
+  },
   // Statuses the hero's hits can leave: the weapon's, plus the spell element's
   heroEffects() {
     const out = []
@@ -101,7 +106,8 @@ export const fighting = {
     const speed = this.attackSpeed()
     const dps = (accuracy * avgHit * (1 + dot)) / speed
     const hitTaken = this.hitChance(mr.accRoll, ps.defRoll) * (1 - this.dodgeChance())
-    const avgTaken = (ref.maxHit / 2) * (1 - this.blockChance() / 2)
+    const reduction = this.damageReduction()
+    const avgTaken = (ref.maxHit / 2) * (1 - this.blockChance() / 2) * (1 - reduction)
     const takenPerSec = (hitTaken * avgTaken) / ref.speed
     const maxHp = this.maxHp()
     const killTime = dps > 0 ? ref.hp / dps : Infinity
@@ -110,7 +116,7 @@ export const fighting = {
     const power = Math.round(Math.sqrt(dps * Math.min(lasts, 600)) * 10)
     return {
       maxHit: ps.maxHit, avgHit, accuracy, speed, dps, crit, critMult, accRoll: ps.accRoll, defRoll: ps.defRoll,
-      hitTaken, takenPerSec, dodge: this.dodgeChance(), block: this.blockChance(), maxHp, killTime,
+      hitTaken, takenPerSec, dodge: this.dodgeChance(), block: this.blockChance(), reduction, maxHp, killTime,
       // Share of the hero's health lost per kill: under 0.3 is safe, over 1 means trouble
       risk: killTime === Infinity ? Infinity : (takenPerSec * killTime) / maxHp, power,
     }

@@ -66,6 +66,14 @@ export function itemTip(id, note) {
   }
   if (note) lines.push({ text: note, kind: 'gold' })
   if (SET_OF[id]) lines.push({ text: t('help.item.set', { set: SET_OF[id].name }), kind: 'gold' })
+  // Gear: what wearing it would change in a fight, worked out from the hero's own numbers
+  if (it.type === 'equip' && it.slot && G.s.equipment[it.slot] !== id) {
+    const now = G.combatProfile(), next = G.withGear(id, () => G.combatProfile())
+    const rel = (a, b) => (a > 0 ? Math.round(((b - a) / a) * 100) : 0)
+    const sign = v => (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v) + '%'
+    const power = rel(now.power, next.power), dps = rel(now.dps, next.dps), taken = rel(now.takenPerSec, next.takenPerSec)
+    lines.push({ text: t('power.tipEffect', { power: sign(power), dps: sign(dps), taken: sign(taken) }), kind: power > 0 ? 'ok' : power < 0 ? 'bad' : 'muted' })
+  }
   if (it.value) lines.push({ text: t('help.item.value', { gold: fmt(G.sellPrice(id)) }), kind: 'muted' })
   const owned = G.qty(id)
   if (owned) lines.push({ text: t('help.item.owned', { n: fmt(owned) }), kind: 'muted' })
