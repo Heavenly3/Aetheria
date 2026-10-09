@@ -18,11 +18,12 @@ import ActionRow from '../components/ActionRow.vue'
 import GameIcon from '../components/GameIcon.vue'
 import FarmPlots from '../components/FarmPlots.vue'
 import ItemTile from '../components/ItemTile.vue'
-import { GRACE_COSTS, GRACE_SPEED } from '../game/data/extras.js'
+import { GRACE_COSTS, GRACE_SPEED, GRACEFUL } from '../game/data/extras.js'
 import { intlLocale } from '../i18n/index.js'
 import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
+function buyGraceful(g) { if (G.buyGraceful(g.id)) G.toast(ITEMS[g.id].icon, 'common.bought', { name: ITEMS[g.id].name }, 'success') }
 function buyGrace() { if (G.buyGrace()) G.toast('star-swirl', 'skill.graceBought', { v: Math.round(GRACE_SPEED * 100) }, 'success') }
 
 const route = useRoute()
@@ -111,6 +112,18 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
       <Button v-if="G.graceCost() !== null" :label="$t('skill.graceUpgrade', { n: G.graceCost() })" icon="pi pi-arrow-up" :disabled="G.qty('mark_of_grace') < G.graceCost()" @click="buyGrace" />
       <span v-else class="tag ok">{{ $t('skill.graceDone') }}</span>
     </div>
+    <div v-if="skill === 'agility'" class="graceful">
+      <div class="section-title">{{ $t('skill.gracefulTitle') }} <HelpTip k="sections.graceful" /></div>
+      <div class="grid-wide">
+        <div v-for="g in GRACEFUL" :key="g.id" class="card" :class="{ locked: G.level('agility') < g.lvl }">
+          <div class="row">
+            <ItemTile :item="g.id" size="md" />
+            <div class="grow"><div class="card-name">{{ ITEMS[g.id].name }}</div><div class="card-sub">{{ $t('common.levelN', { n: g.lvl }) }} · {{ $t('skill.owned', { n: G.qty(g.id) }) }}</div></div>
+          </div>
+          <Button :label="$t('skill.gracefulBuy', { n: g.cost })" icon="pi pi-shopping-cart" fluid size="small" style="margin-top:12px" :disabled="!G.canBuyGraceful(g)" @click="buyGraceful(g)" />
+        </div>
+      </div>
+    </div>
 
     <template v-if="all.length">
       <div class="filters panel" :style="{ '--c': s.color }">
@@ -164,6 +177,7 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
 </template>
 
 <style scoped>
+.graceful { margin-top: 26px; }
 .filters { position: sticky; top: 76px; z-index: 5; margin: 20px 0 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
   background: var(--glass); backdrop-filter: blur(18px); }
 .search { min-width: 220px; }

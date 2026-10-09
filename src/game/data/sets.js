@@ -44,6 +44,11 @@ export const SETS = [
     { n: 2, mods: { magicAcc: 0.05 } },
     { n: 3, mods: { magicDmg: 0.04, runeSave: 0.08 } },
   ]),
+  set('graceful', 'sprint', '#4ecdc4', ['graceful_hood', 'graceful_cape', 'graceful_legs', 'graceful_top'], [
+    { n: 2, mods: { 'speed.gathering': 0.04 } },
+    { n: 3, mods: { 'xp.agility': 0.1, thieving: 0.05 } },
+    { n: 4, mods: { speed: 0.04, offline: 1 } },
+  ]),
   set('slayer', 'black-knight-helm', '#b5179e', ['slayer_helm', 'slayer_cape'], [
     { n: 2, mods: { meleeDmg: 0.04, rangedDmg: 0.04, magicDmg: 0.04, loot: 0.05 } },
   ]),

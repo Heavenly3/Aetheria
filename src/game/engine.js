@@ -24,6 +24,7 @@ import { fighting, fightingState } from './fighting.js'
 import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
 import { slayer } from './slayer.js'
+import { church, churchState } from './church.js'
 import { TRAITS, ELITE_LOOT, ENERGY } from './data/fighting.js'
 import { weatherAt, skyTotals } from './data/weather.js'
 import { FEATURES } from './features.js'
@@ -110,6 +111,7 @@ export function newState(profile = {}) {
     ...fightingState(),
     ...guildsState(),
     ...codexState(),
+    ...churchState(),
   }
 }
 
@@ -289,6 +291,7 @@ export const G = {
     this.ensureCodex()
     this.ensureContracts()
     this.ensureSlayer()
+    this.ensureChurch()
   },
 
   /* ================= levels ================= */
@@ -423,8 +426,8 @@ export const G = {
   },
   goldMult() { return (1 + this.room('vault') * 0.06 + (this.blessed('fortune') ? 0.15 : 0) + this.mod('gold')) * this.diff().gold },
   offlineCapHours() { return (8 + this.room('bedroom') * 2 + this.mod('offline')) * this.diff().offline },
-  maxBlessings() { return 1 + Math.floor(this.level('prayer') / 30) },
-  blessingDuration() { return BLESSING_DURATION * (1 + 0.25 * this.room('chapel') + this.mod('blessing')) },
+  maxBlessings() { return 1 + Math.floor(this.level('prayer') / 30) + this.favourPerk('slot') },
+  blessingDuration() { return BLESSING_DURATION * (1 + 0.25 * this.room('chapel') + this.mod('blessing') + this.favourPerk('duration')) },
   healMult() { return 1 + this.room('kitchen') * 0.1 + this.mod('heal') },
 
   /* ================= XP ================= */
@@ -651,7 +654,7 @@ export const G = {
   hasTool(a) { return !a.tool || this.toolTier(a.tool.type) >= a.tool.tier },
   canDo(skill, a) { return this.level(skill) >= a.lvl && this.hasItems(a.in) && this.hasTool(a) },
   burnChance(skill, a) { return Math.max(0, 0.45 - (this.level(skill) - a.lvl) * 0.025) * (1 - this.room('kitchen') * 0.3) },
-  failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving'))) },
+  failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving') - Math.min(0.12, this.level('agility') * 0.0012))) },
   runeMult(skill, a) { return 1 + Math.floor((this.level(skill) - a.lvl) / 12) },
 
   startSkill(skill, actionId) {
@@ -1268,9 +1271,9 @@ export const G = {
   activeBlessings() { return Object.values(this.s.blessings).filter(v => v > 0).length },
   bless(id) {
     const b = BLESSINGS.find(x => x.id === id)
-    if (!b || this.level('prayer') < b.lvl || this.s.gold < b.cost) return false
+    if (!b || this.level('prayer') < b.lvl || this.s.gold < this.blessingCost(b)) return false
     if (!this.blessed(id) && this.activeBlessings() >= this.maxBlessings()) return false
-    this.s.gold -= b.cost
+    this.s.gold -= this.blessingCost(b)
     this.s.blessings[id] = this.blessingDuration()
     return true
   },
@@ -1349,6 +1352,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church)
 
 export { SKILLS, ITEMS }

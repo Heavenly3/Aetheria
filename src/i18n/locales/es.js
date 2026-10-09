@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    favour: "Favor con la Orden: nivel <b>{n}</b>",
     masterwork: "¡Obra maestra! <b>{item}</b>",
     huntStreak: 'Racha de caza: <b>{n} muertes</b> · +{v}% de XP de combate y botín',
     bossPhase: '¡{name} está <b>{phase}</b>!',
@@ -199,6 +200,9 @@ export default {
   },
 
   skill: {
+    gracefulTitle: "Conjunto ligero",
+    gracefulBuy: "{n} marcas de gracia",
+    owned: "Tienes {n}",
     xpToNext: '{xp} XP para el nivel {level}', maxLevel: 'Nivel máximo alcanzado', xpMultTip: 'Multiplicador de XP', speedTip: 'Bono de velocidad de acciones',
     speed: 'Velocidad', agilityBonus: 'Agilidad: +{v} de velocidad en todo', requiresLevel: 'Requiere nivel {n}', requiresTool: 'Requiere {tool} de nivel {tier}',
     xpPerHour: 'XP por hora', burnChance: '{v} de quemar', failChance: '{v} de fallar', doubleTip: 'Probabilidad de resultado doble',
@@ -242,6 +246,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    favour: "Tu favor con la Orden del Alba ha subido a nivel {n}.",
     codexPage: "Completaste la página «{page}» del compendio.",
     codexMaster: "Alcanzaste {n} obras maestras en el compendio.",
     masterwork: "¡Has fabricado una obra maestra: {item}!",
@@ -522,6 +527,25 @@ export default {
   },
 
   church: {
+    orderTitle: "Orden del Alba",
+    orderText: "El hermano {priest} pide una ofrenda al día. Cada ofrenda te da favor con la Orden, y el favor hace más fuertes tus bendiciones.",
+    favour: "Favor (nivel {n})",
+    nextFavour: "Siguiente nivel: {perks}",
+    todayOffering: "Ofrenda de hoy: {n}× {item}",
+    offeringReward: "+{n} de favor y XP de Oración",
+    give: "Ofrecer",
+    given: "Ofrecida hoy",
+    offered: "La Orden te lo agradece: +{n} de favor",
+    perkDuration: "las bendiciones duran un {n} % más",
+    perkSlot: "+1 hueco de bendición",
+    perkDiscount: "las bendiciones cuestan un {n} % menos",
+    waterTitle: "Agua bendita",
+    waterText: "Se prepara con Herbología. Rocía un frasco para renovar al máximo todas las bendiciones activas.",
+    consecrate: "Consagrar",
+    consecrated: "Tus bendiciones se han renovado",
+    altarTitle: "El altar",
+    altarText: "Ofrece huesos en el altar desde la habilidad de Oración: más lento que enterrarlos, pero da el triple de XP de Oración.",
+    toAltar: "Ir al altar",
     title: 'Iglesia de la Luz', desc: 'Haz una ofrenda y recibe una bendición temporal. Tu nivel de Plegaria desbloquea bendiciones más poderosas y permite mantener varias a la vez. El tiempo también corre mientras no juegas.',
     active: 'Activas {n} / {max}', duration: 'Duración {n} min', blessings: 'Bendiciones', remaining: 'Quedan {time}', renew: 'Renovar · {gold} de oro',
     offer: 'Ofrenda · {gold} de oro', blessed: '<b>{name}</b> activa durante {n} minutos', maxActive: 'Ya tienes el máximo de bendiciones activas. Sube Plegaria para tener más.',
@@ -687,6 +711,8 @@ export default {
         title: "Mejoras de cazador",
         body: "Mejoras permanentes que se compran con puntos de cazador. Cada una se compra una vez y funciona en todos los encargos desde entonces.",
       },
+      order: { title: "Orden del Alba", body: "Cada día hay una ofrenda nueva. Entrégala para ganar favor y XP de Oración. Los niveles de favor alargan las bendiciones, abren un hueco de bendición en el nivel 3 y las abaratan en el nivel 5." },
+      graceful: { title: "Conjunto ligero", body: "Cuatro piezas ligeras que se compran con marcas de gracia de las pistas de Agilidad. Juntas aceleran la recolección, aumentan la XP de Agilidad, hacen más seguro el robo y aceleran todas las acciones." },
       slayerShop: { title: 'Tienda del cazador', body: 'Gasta los puntos de Cazador en equipo, provisiones y saltos de encargo.' },
       towerNext: { title: 'Próximos pisos', body: 'Los siguientes guardianes y su vida. Los pisos ★ son puntos de control con un guardián más duro y más fichas.' },
       towerShop: { title: 'Tienda de la torre', body: 'Gasta las fichas de la torre en capas, cofres y elixires.' },
@@ -1579,6 +1605,7 @@ export default {
   },
 
   sets: {
+    graceful: "Conjunto ligero",
     cloth: "Ropajes de {mat}",
     hide: "Cazador de {mat}",
     title: 'Bonificaciones de conjunto', worn: '{n}/{total} puestas', pieces: '{n} piezas', metal: 'Armadura de {mat}',
@@ -1727,6 +1754,11 @@ export default {
   },
 
   prayers: {
+    rapid_heal: { name: "Curación rápida", desc: "+25 % de curación y +4 PV máximos" },
+    evasion: { name: "Evasión", desc: "+6 % de esquiva y +5 % de defensa" },
+    keen_edge: { name: "Filo certero", desc: "+5 % de crítico y +20 % de daño crítico" },
+    rigour: { name: "Rigor", desc: "+15 % de daño a distancia, +10 % de precisión y defensa" },
+    augury: { name: "Augurio", desc: "+15 % de daño mágico, +10 % de precisión y defensa" },
     stone_skin: { name: 'Piel de piedra', desc: '+8% defensa' },
     clarity: { name: 'Claridad', desc: '+6% precisión' },
     might: { name: 'Fuerza divina', desc: '+8% daño cuerpo a cuerpo' },
@@ -1835,6 +1867,8 @@ export default {
   },
 
   groups: {
+    bury: "Enterrar",
+    altar: "Altar",
     hides: "Pieles",
     cloth: "Telas y túnicas",
     actions: 'Acciones', smelting: 'Fundición', tools: 'Herramientas', forging: 'Forja', fish: 'Pescado', dishes: 'Platos', arrows: 'Flechas',
@@ -1854,6 +1888,7 @@ export default {
   recipes: { tanLeather: 'Curtir cuero', tanDragonhide: 'Curtir piel de dragón' },
 
   tpl: {
+    offer: "Ofrecer {item}",
     relic: '{relic} ({quality})',
     made: '{thing} de {mat}', raw: '{fish} sin cocinar', cooked: '{fish}', seed: '{crop} (semilla)', uncut: '{gem} sin tallar', amulet: 'Amuleto de {gem}',
     burn: 'Quemar {item}', cut: 'Tallar {gem}', bury: 'Enterrar {item}', scatter: 'Esparcir {item}',
@@ -1881,6 +1916,11 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    graceful_hood: "Capucha ligera",
+    graceful_cape: "Capa ligera",
+    graceful_legs: "Calzas ligeras",
+    graceful_top: "Jubón ligero",
+    holy_water: "Agua bendita",
     slayer_helm_i: "Yelmo de cazador imbuido",
     slayer_sigil: "Sello de cazador",
     snake_skin: "Piel de serpiente",
@@ -1912,6 +1952,7 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    holy_water: "Bendecida por la Orden del Alba. En la iglesia renueva todas las bendiciones activas.",
     slayer_helm_i: "Con un encargo activo: +25 % de precisión y daño contra el objetivo. Cuenta como yelmo de cazador para su conjunto.",
     slayer_sigil: "Arrancado a criaturas Superiores. Imbuye el yelmo de cazador en la mesa de artesanía.",
     colossus_bulwark: 'Tallado del pecho del Coloso de Piedra. Aún está tibio.', hydra_heart: 'Sigue latiendo, lento y paciente, mucho después de que cayera la hidra.',

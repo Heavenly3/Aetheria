@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    favour: "Favour with the Order: level <b>{n}</b>",
     masterwork: "Masterwork! <b>{item}</b>",
     huntStreak: 'Hunting streak: <b>{n} kills</b> · +{v}% combat XP and loot',
     bossPhase: '{name} is now <b>{phase}</b>!',
@@ -199,6 +200,9 @@ export default {
   },
 
   skill: {
+    gracefulTitle: "Graceful outfit",
+    gracefulBuy: "{n} marks of grace",
+    owned: "{n} owned",
     xpToNext: '{xp} XP to level {level}', maxLevel: 'Max level reached', xpMultTip: 'XP multiplier', speedTip: 'Action speed bonus',
     speed: 'Speed', agilityBonus: 'Agility: +{v} speed in everything', requiresLevel: 'Requires level {n}', requiresTool: 'Requires {tool} tier {tier}',
     xpPerHour: 'XP per hour', burnChance: '{v} burn chance', failChance: '{v} fail chance', doubleTip: 'Chance of a double result',
@@ -242,6 +246,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    favour: "Your favour with the Order of the Dawn rose to level {n}.",
     codexPage: "You completed the compendium page \"{page}\".",
     codexMaster: "You reached {n} masterworks in the compendium.",
     masterwork: "You made a masterwork: {item}!",
@@ -522,6 +527,25 @@ export default {
   },
 
   church: {
+    orderTitle: "Order of the Dawn",
+    orderText: "Brother {priest} asks for one offering a day. Every offering earns favour with the Order, and favour makes your blessings stronger.",
+    favour: "Favour (level {n})",
+    nextFavour: "Next level: {perks}",
+    todayOffering: "Today's offering: {n}× {item}",
+    offeringReward: "+{n} favour and Prayer XP",
+    give: "Offer",
+    given: "Offered today",
+    offered: "The Order thanks you: +{n} favour",
+    perkDuration: "blessings last {n}% longer",
+    perkSlot: "+1 blessing slot",
+    perkDiscount: "blessings cost {n}% less",
+    waterTitle: "Holy water",
+    waterText: "Brewed with Herblore. Sprinkle one vial to renew every active blessing to its full length.",
+    consecrate: "Consecrate",
+    consecrated: "Your blessings are renewed",
+    altarTitle: "The altar",
+    altarText: "Offer bones at the altar in the Prayer skill: slower than burying them, but three times the Prayer XP.",
+    toAltar: "Go to the altar",
     title: 'Church of Light', desc: 'Make an offering and receive a temporary blessing. Your Prayer level unlocks stronger blessings and lets you keep several at once. Time keeps running while you are away.',
     active: 'Active {n} / {max}', duration: 'Duration {n} min', blessings: 'Blessings', remaining: '{time} left', renew: 'Renew · {gold} gold',
     offer: 'Offering · {gold} gold', blessed: '<b>{name}</b> active for {n} minutes', maxActive: 'You already have the most blessings you can hold. Raise Prayer to keep more.',
@@ -687,6 +711,8 @@ export default {
         title: "Slayer perks",
         body: "Permanent upgrades bought with slayer points. Each one is bought once and works on every task from then on.",
       },
+      order: { title: "Order of the Dawn", body: "A new offering every day. Offer it for favour and Prayer XP. Favour levels make blessings last longer, open a blessing slot at level 3 and make blessings cheaper at level 5." },
+      graceful: { title: "Graceful outfit", body: "Four light pieces bought with marks of grace from the agility courses. Worn together they speed up gathering, boost Agility XP, make thieving safer and speed up every action." },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -1579,6 +1605,7 @@ export default {
   },
 
   sets: {
+    graceful: "Graceful outfit",
     cloth: "{mat} robes",
     hide: "{mat} hunter",
     title: 'Set bonuses', worn: '{n}/{total} worn', pieces: '{n} pieces', metal: '{mat} armour',
@@ -1727,6 +1754,11 @@ export default {
   },
 
   prayers: {
+    rapid_heal: { name: "Rapid Heal", desc: "+25% healing and +4 max HP" },
+    evasion: { name: "Evasion", desc: "+6% dodge and +5% defence" },
+    keen_edge: { name: "Keen Edge", desc: "+5% crit chance and +20% crit damage" },
+    rigour: { name: "Rigour", desc: "+15% ranged damage, +10% accuracy and defence" },
+    augury: { name: "Augury", desc: "+15% magic damage, +10% accuracy and defence" },
     stone_skin: { name: 'Stone Skin', desc: '+8% defence' },
     clarity: { name: 'Clarity', desc: '+6% accuracy' },
     might: { name: 'Divine Might', desc: '+8% melee damage' },
@@ -1835,6 +1867,8 @@ export default {
   },
 
   groups: {
+    bury: "Bury",
+    altar: "Altar",
     hides: "Hides",
     cloth: "Cloth and robes",
     actions: 'Actions', smelting: 'Smelting', tools: 'Tools', forging: 'Forging', fish: 'Fish', dishes: 'Dishes', arrows: 'Arrows',
@@ -1854,6 +1888,7 @@ export default {
   recipes: { tanLeather: 'Tan leather', tanDragonhide: 'Tan dragonhide' },
 
   tpl: {
+    offer: "Offer {item}",
     relic: '{relic} ({quality})',
     made: '{mat} {thing}', raw: 'Raw {fish}', cooked: '{fish}', seed: '{crop} seed', uncut: 'Uncut {gem}', amulet: '{gem} amulet',
     burn: 'Burn {item}', cut: 'Cut {gem}', bury: 'Bury {item}', scatter: 'Scatter {item}',
@@ -1881,6 +1916,11 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    graceful_hood: "Graceful hood",
+    graceful_cape: "Graceful cape",
+    graceful_legs: "Graceful legs",
+    graceful_top: "Graceful top",
+    holy_water: "Holy water",
     slayer_helm_i: "Imbued slayer helm",
     slayer_sigil: "Slayer sigil",
     snake_skin: "Snake skin",
@@ -1912,6 +1952,7 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    holy_water: "Blessed by the Order of the Dawn. At the church it renews every active blessing.",
     slayer_helm_i: "With an active task: +25% accuracy and damage against the target. Counts as a slayer helm for its set.",
     slayer_sigil: "Torn from Superior creatures. Imbues the slayer helm at the crafting table.",
     colossus_bulwark: 'Hewn from the chest of the Stone Colossus. Still warm.', hydra_heart: 'It keeps beating, slow and patient, long after the hydra fell.',

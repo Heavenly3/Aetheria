@@ -169,6 +169,7 @@ POTIONS.forEach(p => add('herblore', {
   id: p.id, icon: 'round-potion', tint: p.tint, lvl: p.lvl, xp: p.xp, time: 2.4,
   in: { [p.herb]: 1, vial_water: 1 }, out: { [p.id]: 1 },
 }))
+add('herblore', { id: 'holy_water', icon: 'vial', tint: '#f1e3b0', lvl: 20, xp: 45, time: 2.4, in: { vial_water: 1, guam: 1, ashes: 2 }, out: { holy_water: 1 } })
 add('herblore', { id: 'compost', icon: 'fertilizer-bag', tint: '#6b8a3a', lvl: 5, xp: 20, time: 2.4, in: { ashes: 2, potato: 1 }, out: { compost: 1 } })
 ACTIONS.herblore.sort((a, b) => a.lvl - b.lvl)
 
@@ -180,13 +181,18 @@ RUNES.forEach(r => add('runecrafting', {
 /* ---------- Prayer ---------- */
 ;[['bones', 4.5], ['big_bones', 15], ['dragon_bones', 72], ['demon_ashes', 110]].forEach(([id, xp], i) => add('prayer', {
   id: 'bury_' + id, nameFn: () => t(id === 'demon_ashes' ? 'tpl.scatter' : 'tpl.bury', { item: ITEMS[id].name }),
-  icon: ITEMS[id].icon, tint: ITEMS[id].tint, lvl: [1, 1, 1, 30][i], xp, time: 1.5, in: { [id]: 1 },
+  icon: ITEMS[id].icon, tint: ITEMS[id].tint, group: 'groups.bury', lvl: [1, 1, 1, 30][i], xp, time: 1.5, in: { [id]: 1 },
+}))
+// Offered at the church altar instead: slower, but three times the Prayer XP
+;[['bones', 4.5], ['big_bones', 15], ['dragon_bones', 72], ['demon_ashes', 110]].forEach(([id, xp], i) => add('prayer', {
+  id: 'offer_' + id, nameFn: () => t('tpl.offer', { item: ITEMS[id].name }),
+  icon: 'church', tint: ITEMS[id].tint, group: 'groups.altar', lvl: [10, 10, 25, 40][i], xp: xp * 3, time: 2.2, in: { [id]: 1 },
 }))
 
 /* ---------- Agility ---------- */
 ;[[1, 100, 30], [15, 180, 34], [30, 310, 38], [45, 500, 42], [60, 740, 48], [75, 1080, 54], [90, 1450, 58]].forEach(([lvl, xp, time], i) => add('agility', {
   id: 'course_' + i, nameKey: `courses.${i}`, icon: i < 2 ? 'run' : 'sprint', tint: '#4ecdc4', lvl, xp, time,
-  extra: [{ item: 'mark_of_grace', chance: 0.04 + i * 0.01, qty: [1, 1] }],
+  extra: [{ item: 'mark_of_grace', chance: 0.04 + i * 0.01, qty: [1, 1] }, { item: 'coin_pouch', chance: 0.02 + i * 0.004, qty: [1, 1] }, { item: 'bird_nest', chance: 0.012, qty: [1, 1] }],
 }))
 
 /* ---------- Material tag for each recipe (used by the skill filters) ---------- */

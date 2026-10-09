@@ -70,6 +70,8 @@ Requires Node.js 18 or newer.
 - **Enchanting**: raise each equipment slot from +1 to +10. Higher levels can fail and drop a level unless protected with a starlight shard.
 - **Relic forge**: work omen relics at the anvil. Reforge one to roll its quality again with the exact odds shown first (a starlight shard seals it so it cannot drop), and every roll that does not improve it heats the forge for better odds next time. Fuse three relics of a quality into one of the next, of the kind you choose, or reshape a relic into another kind. Worn relics are reforged in place.
 - **In-game help**: every screen has a "?" next to its title that explains what it is for and how to use it, and the main sections, settings and numbers carry their own "?" hints. Hovering any item shows its full card (stats, effects, requirements, set, value and drop chance). On touch screens the hints open with a tap.
+- **Church and the Order of the Dawn**: blessings bought with gold, a daily offering for Brother {priest} that earns favour (longer blessings, an extra slot, cheaper blessings), holy water brewed with Herblore that renews every active blessing, and an altar where bones give three times the Prayer XP. Twelve combat prayers, from Stone Skin to Augury.
+- **Agility**: courses pay marks of grace (and now coin pouches and nests), spent on permanent speed and on the four-piece graceful outfit. Agility also makes thieving safer and helps dodge blows.
 - **Daily and weekly tasks** with a day streak that boosts rewards.
 - **Equipment sets**: 13 sets (every metal, leather, dragonhide, wizard, slayer, dragonbane and the endgame regalia) with bonuses for 2, 3, 4 or 5 pieces worn.
 - **Compendium**: three books in one. Creatures: every creature you defeat is recorded; learn its drops, master it for a combat bonus against it and complete each area for a permanent reward. Items: every item you have ever held, on twenty pages that each pay a permanent bonus when full. Masterworks: the best quality you have crafted of every piece of gear, with milestones for distinct masterworks.
@@ -101,6 +103,7 @@ Requires Node.js 18 or newer.
 - `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/slayer.js`: slayer tasks and offers, Superior creatures, perks and blocked creatures (tuning in `src/game/data/slayer.js`).
+- `src/game/church.js`: the Order's favour, daily offerings, holy water and the graceful outfit (tuning in `src/game/data/church.js`).
 - `src/game/codex.js`: the compendium's item pages and masterwork milestones (pages and rewards in `src/game/data/codex.js`).
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.
