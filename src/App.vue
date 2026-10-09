@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Toast from 'primevue/toast'
@@ -105,38 +105,42 @@ const menuItems = computed(() => [
 ])
 
 const SEVERITY = { warn: 'warn', success: 'success', error: 'error', rare: 'secondary', info: 'info' }
+const offs = []
+onUnmounted(() => offs.splice(0).forEach(off => off()))
 const push = (icon, detail, kind = 'info', life = 3500) => toast.add({ severity: SEVERITY[kind] || 'info', summary: '', detail, life, icon })
 
 onMounted(() => {
-  G.on('toast', e => push(e.icon, tm(e.msg), e.kind))
-  G.on('levelup', d => { if (state.settings.quietToasts) return; play('level'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
-  G.on('herolevel', l => { play('quest'); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000); notify(t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')) })
-  G.on('mastery', d => state.settings.quietToasts || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
-  G.on('rare', d => { play('rare'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
-  G.on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
-  G.on('elite', e => { play('rare'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
-  G.on('bossPhase', e => push(e.monster.icon, t('toast.bossPhase', { name: e.monster.name, phase: t(`fighting.phases.${e.id}.name`).toLowerCase() }), 'warn', 4500))
-  G.on('huntStreak', e => { play('quest'); push('flame', t('toast.huntStreak', { n: e.n, v: fmtDec(e.bonus * 100) }), 'success', 5000) })
-  G.on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
-  G.on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
-  G.on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })
-  G.on('petEgg', () => { play('rare'); push('cosmic-egg', t('toast.petEgg'), 'rare', 8000); notify(t('toast.petEggPlain'), t('toast.petEggHint')) })
-  G.on('petLevel', d => { play('level'); push(d.pet.icon, t('toast.petLevel', { name: G.petName(d.pet.id), level: d.level }), 'success', 4500) })
-  G.on('petBond', d => { play('quest'); push(d.pet.icon, t('toast.petBond', { name: G.petName(d.pet.id), tier: t(`pets.bond.${d.tier}`) }), 'success', 5500) })
-  G.on('weeklyKill', d => { play('quest'); push(d.boss.icon, t(d.trophy ? 'toast.weeklyKill' : 'toast.weeklyKillAgain', { name: d.boss.name }), 'rare', 8000); notify(d.boss.name, t('weekly.slainHint')) })
-  G.on('streak', d => { play('quest'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
-  G.on('death', m => { play('bad'); push('broken-skull', t('toast.death', { name: m.name }), 'error', 5000) })
-  G.on('expedition', r => { play(r.ok ? 'quest' : 'bad'); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })
-  G.on('dungeon', d => {
+  // Every subscription is dropped again on unmount, so a reloaded interface never shows a message twice
+  const on = (evt, fn) => offs.push(G.on(evt, fn))
+  on('toast', e => push(e.icon, tm(e.msg), e.kind))
+  on('levelup', d => { if (state.settings.quietToasts) return; play('level'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
+  on('herolevel', l => { play('quest'); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000); notify(t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')) })
+  on('mastery', d => state.settings.quietToasts || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
+  on('rare', d => { play('rare'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
+  on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
+  on('elite', e => { play('rare'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
+  on('bossPhase', e => push(e.monster.icon, t('toast.bossPhase', { name: e.monster.name, phase: t(`fighting.phases.${e.id}.name`).toLowerCase() }), 'warn', 4500))
+  on('huntStreak', e => { play('quest'); push('flame', t('toast.huntStreak', { n: e.n, v: fmtDec(e.bonus * 100) }), 'success', 5000) })
+  on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
+  on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
+  on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })
+  on('petEgg', () => { play('rare'); push('cosmic-egg', t('toast.petEgg'), 'rare', 8000); notify(t('toast.petEggPlain'), t('toast.petEggHint')) })
+  on('petLevel', d => { play('level'); push(d.pet.icon, t('toast.petLevel', { name: G.petName(d.pet.id), level: d.level }), 'success', 4500) })
+  on('petBond', d => { play('quest'); push(d.pet.icon, t('toast.petBond', { name: G.petName(d.pet.id), tier: t(`pets.bond.${d.tier}`) }), 'success', 5500) })
+  on('weeklyKill', d => { play('quest'); push(d.boss.icon, t(d.trophy ? 'toast.weeklyKill' : 'toast.weeklyKillAgain', { name: d.boss.name }), 'rare', 8000); notify(d.boss.name, t('weekly.slainHint')) })
+  on('streak', d => { play('quest'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
+  on('death', () => play('bad')) // the fight's stop message already tells who won and the gold lost
+  on('expedition', r => { play(r.ok ? 'quest' : 'bad'); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })
+  on('dungeon', d => {
     play('rare')
     const loot = Object.entries(d.got).map(([k, n]) => `${n}× ${ITEMS[k].name}`).join(', ') || t('common.nothing')
     push(d.dg.icon, t('toast.dungeon', { name: d.dg.name, loot }), 'success', 5000)
   })
-  G.on('event', e => { play('rare'); push(e.ev.icon, tm(e.msg), 'rare', 7000) })
-  G.on('omenSign', e => push('crystal-ball', tm(e.msg), 'info', 7000))
-  G.on('boon', b => { play('quest'); push('sparkles', t('toast.boon', { name: t(`omens.boons.${b.id}.name`) }), 'success', 6000) })
-  G.on('wish', w => { play('rare'); push('burning-meteor', t('toast.wish', { wish: t(`omens.wishes.${w.id}`) }), 'rare', 7000) })
-  G.on('notify', n => notify(t('notify.title'), tm(n)))
+  on('event', e => { play('rare'); push(e.ev.icon, tm(e.msg), 'rare', 7000) })
+  on('omenSign', e => push('crystal-ball', tm(e.msg), 'info', 7000))
+  on('boon', b => { play('quest'); push('sparkles', t('toast.boon', { name: t(`omens.boons.${b.id}.name`) }), 'success', 6000) })
+  on('wish', w => { play('rare'); push('burning-meteor', t('toast.wish', { wish: t(`omens.wishes.${w.id}`) }), 'rare', 7000) })
+  on('notify', n => notify(t('notify.title'), tm(n)))
 })
 
 const off = computed(() => session.offline)
