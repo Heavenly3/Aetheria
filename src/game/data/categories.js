@@ -25,7 +25,7 @@ const HERBS = new Set(CROPS.filter(c => c.herb).map(c => c.id))
 const CROP_IDS = new Set(CROPS.map(c => c.id))
 const GEMS = new Set(['sapphire', 'emerald', 'ruby', 'diamond'])
 const REMAINS = new Set(['bones', 'big_bones', 'dragon_bones', 'demon_ashes', 'ashes'])
-const HIDES = new Set(['cowhide', 'leather', 'green_dhide', 'green_dleather', 'wolf_pelt', 'feathers'])
+const HIDES = new Set(['cowhide', 'leather', 'green_dhide', 'green_dleather', 'wolf_pelt', 'feathers', 'snake_skin', 'wyvern_scale', 'wolf_leather', 'snake_leather', 'wyvern_leather'])
 const SPECIAL = new Set(['mark_of_grace', 'void_essence', 'starlight_shard', 'stardust', 'ectoplasm', 'ice_shard', 'venom_sac', 'troll_tusk'])
 
 function categoryOf(it) {

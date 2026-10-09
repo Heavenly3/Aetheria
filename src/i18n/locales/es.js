@@ -16,7 +16,7 @@ export default {
     journal: 'Diario', hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
     settings: 'Ajustes', realm: 'Reino', town: 'Pueblo',
-    pets: 'Mascotas', forge: 'Forja', bestiary: 'Bestiario', festival: 'Festival', omens: 'Prodigios', weekly: 'Jefe semanal',
+    pets: 'Mascotas', forge: 'Forja', bestiary: 'Compendio', festival: 'Festival', omens: 'Prodigios', weekly: 'Jefe semanal',
     groups: { hero: 'Héroe', adventure: 'Aventura', progress: 'Progreso', town: 'Pueblo' },
     ascension: 'Renacimiento',
     skills: 'Habilidades', more: 'Menú', main: 'Navegación principal',
@@ -242,6 +242,8 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    codexPage: "Completaste la página «{page}» del compendio.",
+    codexMaster: "Alcanzaste {n} obras maestras en el compendio.",
     masterwork: "¡Has fabricado una obra maestra: {item}!",
     guildApply: "Solicitaste entrar en {guild}.",
     guildJoin: "Entraste en {guild}.",
@@ -616,7 +618,7 @@ export default {
       quests: { title: 'Misiones y tareas', body: 'Las misiones de la historia piden objetos o hazañas y abren nuevas zonas, jefes y mazmorras. Las tareas diarias y semanales se renuevan solas; completarlas todas cada día alarga una racha que mejora sus recompensas.' },
       achievements: { title: 'Logros', body: 'Metas de todo el juego. Cada uno da oro una vez, y algunos desbloquean títulos, retratos o colores para tu héroe. Se conservan al renacer.' },
       ascension: { title: 'Renacimiento', body: 'Empieza de nuevo desde el nivel 1 a cambio de fragmentos de Éter, que compran mejoras permanentes en el árbol. Cada vida nueva va más rápida. Conservas logros, mascotas y estadísticas.' },
-      bestiary: { title: 'Bestiario', body: 'Cada criatura que derrotas queda registrada. Con más bajas descubres sus estadísticas, después su botín y al final la dominas para un bonus permanente contra ella. Completa un grupo entero para reclamar su recompensa.' },
+      bestiary: { title: 'Compendio', body: 'Tres libros en uno. Criaturas: cada criatura que derrotas queda registrada; con más bajas descubres sus estadísticas, después su botín y al final la dominas para un bonus permanente contra ella. Objetos: cada objeto que has tenido, página a página. Obras maestras: la mejor calidad que has fabricado de cada pieza de equipo. Completa un grupo, una página o un hito para cobrar su recompensa.' },
       weekly: { title: 'Jefe semanal', body: 'Un jefe por semana cuyas heridas duran toda la semana. Los intentos duran cinco minutos y caer no cuesta oro. Usa el estilo al que es débil, reclama los hitos de daño y derrótalo para conseguir su trofeo.' },
       omens: { title: 'Prodigios', body: 'Fenómenos raros que llegan sin avisar, anunciados por una señal. Mientras dura uno, sigue entrenando o luchando para participar: esconden mascotas, reliquias, deseos y bendiciones que no hay en ningún otro sitio.' },
       festival: { title: 'Festival', body: 'Cuatro festivales al año en sus fechas reales. Mientras hay uno, todo lo que haces da sus fichas, que compran recompensas exclusivas en su tienda antes de que termine.' },
@@ -1007,6 +1009,20 @@ export default {
     chancesHelp: "El equipo que fabricas puede salir Fino (+5 % de estadísticas), Superior (+10 %) u Obra maestra (+20 %). Las probabilidades crecen con tu maestría en la receta; las obras maestras empiezan con maestría 50.",
   },
 
+  codex: {
+    tabs: {
+      beasts: "Criaturas",
+      items: "Objetos",
+      masterworks: "Obras maestras",
+    },
+    itemsIntro: "Aquí queda anotado cada objeto que has tenido, página a página. Los que nunca has tenido aparecen como siluetas: pasa el cursor por encima para ver qué son. Completa una página entera para cobrar su recompensa.",
+    masterIntro: "Todas las piezas de equipo que puedes fabricar, con la mejor calidad que has conseguido. Las obras maestras salen con mucha maestría en una receta; cada una nueva te acerca al siguiente hito.",
+    milestones: "Hitos de obras maestras",
+    pageComplete: "¡Página completa! Cobra tu recompensa.",
+    claimed: "Página completa: {page}",
+    claimedTag: "Recompensa cobrada",
+    milestoneClaimed: "Hito alcanzado: {n} obras maestras",
+  },
   guilds: {
     nameTpl: "{group} {emblem}",
     groups: {

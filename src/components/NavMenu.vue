@@ -26,7 +26,7 @@ const sections = computed(() => [
     { to: '/slayer', icon: 'death-skull', key: 'nav.slayer', badge: state.slayer.task ? state.slayer.task.left : null },
     { to: '/tower', icon: 'stone-tower', key: 'nav.tower', pulse: inCombat('tower') },
     { to: '/weekly', icon: 'crowned-skull', key: 'nav.weekly', badge: G.claimableMilestones() || null, pulse: inCombat('weekly') },
-    { to: '/bestiary', icon: 'open-book', key: 'nav.bestiary', badge: G.claimableGroups() || null },
+    { to: '/bestiary', icon: 'open-book', key: 'nav.bestiary', badge: G.claimableGroups() + G.codexClaimable() || null },
     { to: '/omens', icon: 'crystal-ball', key: 'nav.omens', badge: G.omenSign() ? '?' : null, pulse: !!G.activeOmen() },
   ] },
   { id: 'progress', key: 'nav.groups.progress', items: [

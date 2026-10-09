@@ -16,7 +16,7 @@ export default {
     journal: 'Journal', hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
     settings: 'Settings', realm: 'Realm', town: 'Town',
-    pets: 'Pets', forge: 'Forge', bestiary: 'Bestiary', festival: 'Festival', omens: 'Omens', weekly: 'Weekly boss',
+    pets: 'Pets', forge: 'Forge', bestiary: 'Compendium', festival: 'Festival', omens: 'Omens', weekly: 'Weekly boss',
     groups: { hero: 'Hero', adventure: 'Adventure', progress: 'Progress', town: 'Town' },
     ascension: 'Ascension',
     skills: 'Skills', more: 'Menu', main: 'Main navigation',
@@ -242,6 +242,8 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    codexPage: "You completed the compendium page \"{page}\".",
+    codexMaster: "You reached {n} masterworks in the compendium.",
     masterwork: "You made a masterwork: {item}!",
     guildApply: "You applied to join {guild}.",
     guildJoin: "You joined {guild}.",
@@ -616,7 +618,7 @@ export default {
       quests: { title: 'Quests and tasks', body: 'Story quests ask for items or deeds and open new areas, bosses and dungeons. Daily and weekly tasks refresh on their own; finishing all of them each day grows a streak that raises their rewards.' },
       achievements: { title: 'Achievements', body: 'Goals across the whole game. Each one pays gold once, and some unlock titles, portraits or colours for your hero. They are kept when you ascend.' },
       ascension: { title: 'Ascension', body: 'Start over from level 1 in exchange for Aether shards, which buy permanent upgrades in the tree. Each new life goes faster. You keep achievements, pets and statistics.' },
-      bestiary: { title: 'Bestiary', body: 'Every creature you defeat is recorded. More kills reveal its stats, then its drops, and finally master it for a permanent bonus against it. Complete a whole group to claim its reward.' },
+      bestiary: { title: 'Compendium', body: 'Three books in one. Creatures: every creature you defeat is recorded; more kills reveal its stats, then its drops, and finally master it for a permanent bonus against it. Items: every item you have ever held, page by page. Masterworks: the best quality you have crafted of every piece of gear. Complete a group, a page or a milestone to claim its reward.' },
       weekly: { title: 'Weekly boss', body: 'One boss a week whose wounds last all week. Attempts last five minutes and falling costs no gold. Use the style it is weak to, claim the damage milestones and slay it for its trophy.' },
       omens: { title: 'Omens', body: 'Rare phenomena that arrive without warning, announced by a sign. While one lasts, keep training or fighting to take part: omens hide pets, relics, wishes and boons found nowhere else.' },
       festival: { title: 'Festival', body: 'Four festivals a year on their real dates. While one is on, everything you do earns its tokens, which buy exclusive rewards in its shop before it ends.' },
@@ -1007,6 +1009,20 @@ export default {
     chancesHelp: "Gear you craft can come out Fine (+5% stats), Superior (+10%) or Masterwork (+20%). The chances grow with your mastery of the recipe; masterworks start at mastery 50.",
   },
 
+  codex: {
+    tabs: {
+      beasts: "Creatures",
+      items: "Items",
+      masterworks: "Masterworks",
+    },
+    itemsIntro: "Every item you have ever held is written down here, page by page. Items you have never had show as faded shapes: hover them to see what they are. Fill a whole page to claim its reward.",
+    masterIntro: "Every piece of gear you can craft, shown at the best quality you have made. Masterworks come from high mastery of a recipe; each new one brings you closer to the next milestone.",
+    milestones: "Masterwork milestones",
+    pageComplete: "Page complete! Claim your reward.",
+    claimed: "Page complete: {page}",
+    claimedTag: "Reward claimed",
+    milestoneClaimed: "Milestone reached: {n} masterworks",
+  },
   guilds: {
     nameTpl: "{group} of {emblem}",
     groups: {

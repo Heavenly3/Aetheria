@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
+import SelectButton from 'primevue/selectbutton'
 import { G } from '../game/engine.js'
 import { monsterLevel } from '../game/data/combat.js'
 import { ITEMS } from '../game/data/items.js'
@@ -13,8 +14,18 @@ import { modText } from '../i18n/mods.js'
 import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
+import CodexItems from '../components/CodexItems.vue'
+import CodexMasterworks from '../components/CodexMasterworks.vue'
 
 const { t } = useI18n()
+// The compendium: creatures, every item ever held, and masterworks; the last tab is remembered
+const TAB_KEY = 'aetheria-codex-tab'
+const tab = ref((() => { try { return localStorage.getItem(TAB_KEY) || 'beasts' } catch { return 'beasts' } })())
+const tabs = computed(() => ['beasts', 'items', 'masterworks'].map(v => {
+  const n = v === 'beasts' ? G.claimableGroups() : v === 'items' ? G.codexClaimable() - G.masterworksClaimable() : G.masterworksClaimable()
+  return { value: v, label: t(`codex.tabs.${v}`) + (n ? ` (${n})` : '') }
+}))
+function setTab(v) { tab.value = v; try { localStorage.setItem(TAB_KEY, v) } catch { /* storage unavailable */ } }
 const progress = computed(() => G.bestiaryProgress())
 // Groups with something discovered and a reward still to claim start open; the rest start folded
 const open = ref(Object.fromEntries(BESTIARY.map(g => [g.id, !G.groupClaimed(g) && g.monsters.some(m => G.knowledge(m))])))
@@ -34,6 +45,10 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
 
 <template>
   <div>
+    <SelectButton :modelValue="tab" @update:modelValue="setTab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" style="margin-bottom:18px" />
+    <CodexItems v-if="tab === 'items'" />
+    <CodexMasterworks v-else-if="tab === 'masterworks'" />
+    <template v-else>
     <div class="panel pad" style="margin-bottom:20px">
       <div class="row wrap">
         <p class="intro grow" style="margin:0">{{ $t('bestiary.intro', { pct: Math.round(HUNT_BONUS * 100) }) }}</p>
@@ -107,6 +122,7 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
         </div>
       </div>
     </section>
+    </template>
   </div>
 </template>
 
