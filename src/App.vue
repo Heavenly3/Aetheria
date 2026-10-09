@@ -31,7 +31,7 @@ import TitleScreen from './components/TitleScreen.vue'
 import BottomNav from './components/BottomNav.vue'
 import TutorialCoach from './components/TutorialCoach.vue'
 import UpdateNotes from './components/UpdateNotes.vue'
-import { newsUnseen, markNewsSeen, latestUpdate } from './ui/news.js'
+import { newsUnseen, markNewsSeen, unseenUpdates } from './ui/news.js'
 import { titled, cosmeticsForAch } from './game/data/cosmetics.js'
 import { RARITY_TINT } from './game/data/omens.js'
 
@@ -146,10 +146,11 @@ onMounted(() => {
 const off = computed(() => session.offline)
 // After an update, returning players see what changed once; new players start with it seen
 const news = ref(false)
+const newsList = ref([])
 watch(() => session.inGame, on => {
   if (!on) return
   if (session.welcome) markNewsSeen()
-  else news.value = newsUnseen()
+  else if (newsUnseen()) { newsList.value = unseenUpdates(); news.value = true }
 }, { immediate: true })
 function closeNews(all) {
   news.value = false
@@ -265,14 +266,17 @@ function startAdventure() {
   <ConfirmDialog style="width: min(460px, calc(100vw - 32px))" />
 
   <Dialog :visible="news && !off && !session.welcome" modal :header="$t('changelog.whatsNew')" style="width: min(560px, calc(100vw - 32px))" @update:visible="closeNews(false)">
-    <div class="row news-head">
-      <ItemTile :icon="latestUpdate().icon" size="md" :tip="false" />
-      <div class="grow">
-        <b class="news-title">{{ $t(`changelog.entries.${latestUpdate().id}.title`) }}</b>
-        <div class="small muted">{{ latestUpdate().version ? $t('changelog.beta', { v: latestUpdate().version.split('beta.')[1] }) : $t('changelog.live') }}</div>
+    <!-- Every update since the one last seen, newest first -->
+    <section v-for="(e, i) in newsList" :key="e.id" :class="{ 'news-more': i > 0 }">
+      <div class="row news-head">
+        <ItemTile :icon="e.icon" size="md" :tip="false" />
+        <div class="grow">
+          <b class="news-title">{{ $t(`changelog.entries.${e.id}.title`) }}</b>
+          <div class="small muted">{{ e.version ? $t('changelog.beta', { v: e.version.split('beta.')[1] }) : $t('changelog.live') }}</div>
+        </div>
       </div>
-    </div>
-    <UpdateNotes :entry="latestUpdate()" />
+      <UpdateNotes :entry="e" />
+    </section>
     <template #footer>
       <Button :label="$t('changelog.seeAll')" icon="pi pi-list" severity="secondary" text @click="closeNews(true)" />
       <Button :label="$t('changelog.gotIt')" icon="pi pi-check" @click="closeNews(false)" />
@@ -343,6 +347,7 @@ function startAdventure() {
 .fest-chip .gi { color: var(--c); }
 .screen-help { font-size: 14px; margin-inline-start: 8px; }
 .news-head { gap: 14px; margin-bottom: 16px; }
+.news-more { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
 .news-title { font-family: var(--font-display); font-size: 19px; letter-spacing: 0.03em; }
 .wx-chip .gi, .wx-chip .pi { color: var(--c); }
 .wx-chip .pi { font-size: 14px; }
