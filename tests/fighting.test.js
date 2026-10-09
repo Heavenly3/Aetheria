@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { G, state, newHero, run, fixRandom } from './helpers.js'
 import { MONSTERS } from '../src/game/data/combat.js'
-import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT } from '../src/game/data/fighting.js'
+import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT, ABILITY_MAP, ENERGY } from '../src/game/data/fighting.js'
 import { BESTIARY } from '../src/game/data/bestiary.js'
 import { i18n } from '../src/i18n/index.js'
 
@@ -146,5 +146,64 @@ describe('combat profile', () => {
     const easy = G.combatProfile(MONSTERS.chicken), hard = G.combatProfile(MONSTERS.red_dragon)
     expect(easy.killTime).toBeLessThan(hard.killTime)
     expect(easy.risk).toBeLessThan(hard.risk)
+  })
+})
+
+describe('abilities', () => {
+  beforeEach(() => newHero())
+
+  it('build energy with attacks and fire on their own from the bar', () => {
+    state.hp = 999
+    G.startCombat('area', 'cow')
+    const act = state.activity
+    act.mHp = 9999
+    const used = vi.fn()
+    const off = G.on('ability', used)
+    run(30, 0.1)
+    off()
+    expect(used).toHaveBeenCalled()
+    expect(used.mock.calls[0][0].id).toBe('power_strike')
+    expect(act.cd.power_strike ?? 0).toBeLessThanOrEqual(ABILITY_MAP.power_strike.cd)
+    expect(ENERGY.attack).toBeGreaterThan(0)
+  })
+
+  it('can be chosen, reordered and switched off', () => {
+    state.skills.attack.xp = 2e6
+    expect(G.toggleAbility('whirlwind')).toBe(true)
+    expect(G.abilityBar()).toEqual(['power_strike', 'whirlwind'])
+    G.moveAbility('whirlwind', -1)
+    expect(G.abilityBar()).toEqual(['whirlwind', 'power_strike'])
+    expect(G.toggleAbility('aimed_shot')).toBe(false) // another style's ability
+    G.toggleAbility('rending_slash')
+    expect(G.toggleAbility('shield_bash')).toBe(false) // the bar is full
+    state.abilities.auto = false
+    G.startCombat('area', 'cow')
+    state.activity.energy = 100
+    expect(G.readyAbility(state.activity)).toBe(null)
+  })
+
+  it('keep healing for when it is needed, and boons wear off', () => {
+    state.skills.attack.xp = 2e6
+    state.abilities.bar.melee = ['second_wind', 'berserk']
+    G.startCombat('area', 'cow')
+    const act = state.activity
+    act.energy = 100
+    expect(G.readyAbility(act).id).toBe('berserk') // full health: no heal yet
+    state.hp = 1
+    expect(G.readyAbility(act).id).toBe('second_wind')
+    state.hp = 999
+    // The bar is a priority list: a cheaper ability waits while the first one charges
+    state.abilities.bar.melee = ['whirlwind', 'power_strike']
+    act.energy = 40
+    expect(G.readyAbility(act)).toBe(null)
+    act.energy = 60
+    expect(G.readyAbility(act).id).toBe('whirlwind')
+    act.cd = { whirlwind: 5 }
+    act.energy = 30
+    expect(G.readyAbility(act).id).toBe('power_strike')
+    act.hb = { berserk: { t: 1 } }
+    expect(G.buffValue(act, 'dmg')).toBeGreaterThan(0)
+    G.tickAbilities(act, 2)
+    expect(G.buffValue(act, 'dmg')).toBe(0)
   })
 })

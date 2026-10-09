@@ -3,7 +3,8 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { MERCENARIES, COMBAT_STYLES, DUNGEONS } from '../game/data/combat.js'
-import { STATUSES, TRAITS, ELITES, ELITE_LOOT } from '../game/data/fighting.js'
+import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX } from '../game/data/fighting.js'
+import { abilityText } from '../ui/abilities.js'
 import { pct, fmt } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
 import GameIcon from './GameIcon.vue'
@@ -23,11 +24,18 @@ const traits = computed(() => G.monsterTraits(m.value))
 const statuses = side => Object.entries(act.value?.fx?.[side] || {}).map(([id, s]) => ({ id, ...STATUSES[id], left: Math.ceil(s.t), n: s.n }))
 const statusTip = s => tip(t(`fighting.statuses.${s.id}.name`), t(`fighting.statuses.${s.id}.desc`), [{ text: `${s.left} s`, kind: 'muted' }])
 const traitTip = id => tip(t(`fighting.traits.${id}.name`), t(`fighting.traits.${id}.desc`))
+// The ability bar of the current style, with cooldowns and whether there is energy for each
+const bar = computed(() => G.abilityBar().filter(id => ABILITY_MAP[id] && G.abilityUnlocked(ABILITY_MAP[id])).map(id => {
+  const a = ABILITY_MAP[id], cd = act.value.cd?.[id] || 0
+  return { a, cd, cdPct: cd / a.cd, ready: !cd && (act.value.energy || 0) >= a.cost }
+}))
+const abilityTip = a => tip(t(`abilities.list.${a.id}`), abilityText(a), [{ text: `${t('abilities.cost', { n: a.cost })} · ${t('abilities.cooldown', { n: a.cd })}`, kind: 'muted' }])
+const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))
 
 const splats = ref([])
 const shake = ref({ player: 0, monster: 0 })
 let id = 0
-let off
+let off, offAb
 
 onMounted(() => {
   off = G.on('hit', d => {
@@ -40,8 +48,14 @@ onMounted(() => {
     setTimeout(() => (splats.value = splats.value.filter(x => x.id !== s.id)), 900)
     if (d.dmg > 0 && !d.fx) shake.value[target]++
   })
+  // An ability's name pops over the hero when it fires
+  offAb = G.on('ability', d => {
+    const s = { id: ++id, target: 'player', text: t(`abilities.list.${d.id}`), cast: true }
+    splats.value.push(s)
+    setTimeout(() => (splats.value = splats.value.filter(x => x.id !== s.id)), 1100)
+  })
 })
-onUnmounted(() => off && off())
+onUnmounted(() => { off && off(); offAb && offAb() })
 </script>
 
 <template>
@@ -52,7 +66,17 @@ onUnmounted(() => off && off())
       <div class="bar thick hp-ok"><i :style="{ width: (Math.max(0, state.hp) / G.maxHp()) * 100 + '%' }" /></div>
       <div class="small muted tnum" style="margin-top:5px">{{ Math.max(0, state.hp) }} / {{ G.maxHp() }} {{ $t('common.hp') }}</div>
       <div class="bar thin" style="margin-top:8px"><i :style="{ width: (alive ? Math.min(1, act.pTimer / G.attackSpeed()) : 0) * 100 + '%' }" /></div>
+      <div class="bar thin energy" style="margin-top:6px" v-tooltip.top="help('combat.energy')"><i :style="{ width: ((act.energy || 0) / ENERGY_MAX) * 100 + '%' }" /></div>
+      <div v-if="bar.length" class="ab-row">
+        <span v-for="b in bar" :key="b.a.id" class="ab-slot" :class="{ ready: b.ready }" v-tooltip.top="abilityTip(b.a)">
+          <ItemTile :icon="b.a.icon" tint="#6a4fbf" size="sm" :tip="false" />
+          <span v-if="b.cd" class="ab-cd" :style="{ '--p': b.cdPct * 360 + 'deg' }"><b>{{ Math.ceil(b.cd) }}</b></span>
+        </span>
+      </div>
       <div class="fx-row">
+        <span v-for="bf in buffs" :key="bf.id" class="fx" :style="{ '--c': bf.color }" v-tooltip.top="tip($t(`abilities.list.${Object.keys(ABILITY_MAP).find(k => ABILITY_MAP[k].buff === bf.id)}`), $t(`abilities.buffs.${bf.id}`, { t: bf.time }))">
+          <GameIcon :name="bf.icon" :size="13" />{{ bf.left }}
+        </span>
         <span v-for="s in statuses('player')" :key="s.id" class="fx" :style="{ '--c': s.color }" v-tooltip.top="statusTip(s)">
           <GameIcon :name="s.icon" :size="13" />{{ s.left }}<sup v-if="s.n > 1">×{{ s.n }}</sup>
         </span>
@@ -62,7 +86,7 @@ onUnmounted(() => off && off())
           <ItemTile :icon="MERCENARIES.find(x => x.id === mid).icon" tint="#6a3fbf" size="sm" :tip="false" />
         </span>
       </div>
-      <div v-for="s in splats.filter(x => x.target === 'player')" :key="s.id" class="splat" :class="{ miss: s.miss, soft: s.soft, fx: s.fx }" :style="s.color ? { background: s.color } : null">{{ s.text }}</div>
+      <div v-for="s in splats.filter(x => x.target === 'player')" :key="s.id" class="splat" :class="{ miss: s.miss, soft: s.soft, fx: s.fx, cast: s.cast }" :style="s.color ? { background: s.color } : null">{{ s.text }}</div>
     </div>
 
     <div class="vs">VS</div>
@@ -116,5 +140,12 @@ onUnmounted(() => off && off())
 .is-elite { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--elite) 55%, transparent), 0 0 40px -18px var(--elite); }
 .splat.crit { background: linear-gradient(135deg, #f8e3a8, #e2b65a 50%, #a87a2a); color: #1a1206; font-size: 19px; }
 .splat.soft { background: #2a3550; font-size: 13px; }
+.energy { --c: #a98bff; }
+.ab-row { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+.ab-slot { position: relative; opacity: 0.55; transition: opacity 0.2s; }
+.ab-slot.ready { opacity: 1; filter: drop-shadow(0 0 6px #a98bff); }
+.ab-cd { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 10px; font-size: 12px; color: #fff;
+  background: conic-gradient(rgba(10, 8, 20, 0.75) var(--p), rgba(10, 8, 20, 0.25) 0); }
+.splat.cast { background: linear-gradient(135deg, #8b6dff, #5b3fbf); font-size: 13px; top: -14px; white-space: nowrap; animation-duration: 1.1s; }
 .splat.fx { font-size: 13px; min-width: 26px; padding: 2px 7px; top: 34px; color: #10121a; }
 </style>

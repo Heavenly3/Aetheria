@@ -20,8 +20,8 @@ import { companions, companionsState } from './companions.js'
 import { weekly, weeklyState } from './weekly.js'
 import { relicForge, relicForgeState } from './relicforge.js'
 import { journal, journalState } from './journal.js'
-import { fighting } from './fighting.js'
-import { STATUSES, TRAITS, ELITE_LOOT } from './data/fighting.js'
+import { fighting, fightingState } from './fighting.js'
+import { TRAITS, ELITE_LOOT, ENERGY } from './data/fighting.js'
 import { weatherAt, skyTotals } from './data/weather.js'
 import { FEATURES } from './features.js'
 import { OMEN_MAP } from './data/omens.js'
@@ -104,6 +104,7 @@ export function newState(profile = {}) {
     ...weeklyState(),
     ...relicForgeState(),
     ...journalState(),
+    ...fightingState(),
   }
 }
 
@@ -937,7 +938,7 @@ export const G = {
     }
     const floor = kind === 'tower' ? Math.max(1, Math.floor(this.s.tower.best / 10) * 10 + 1) : null
     if (this.s.hp <= 0) this.s.hp = 1
-    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0, elite: null, fx: null }
+    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0, elite: null, fx: null, energy: 0, cd: {}, hb: {} }
     this.spawn(act)
     if (kind === 'weekly') this.beginWeeklyAttempt(act)
     this.s.activity = act
@@ -957,6 +958,7 @@ export const G = {
     if (act.kind === 'weekly' && this.weeklyTick(act, dt, m)) return
     // Statuses tick first: bleeding, poison or burns can finish a fight on their own
     const fell = this.tickStatuses(act, dt)
+    this.tickAbilities(act, dt)
     if (fell === 'monster') return this.killMonster(m)
     if (fell === 'player') return this.die(m)
     const ps = this.playerStats(m)
@@ -974,22 +976,9 @@ export const G = {
       const type = this.styleType()
       if (type === 'ranged' && Math.random() >= this.mod('ammoSave')) this.removeItem(this.s.equipment.ammo, 1)
       if (type === 'magic' && Math.random() >= this.mod('runeSave')) Object.entries(this.currentSpell().runes).forEach(([r, q]) => this.removeItem(r, q))
-      const evaded = Math.random() < this.traitValue(m, 'evade')
-      const hit = !evaded && Math.random() < this.hitChance(ps.accRoll, mr.defRoll)
-      let dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
-      const crit = hit && Math.random() < this.critChance()
-      if (crit) dmg = Math.floor(dmg * this.critMult())
-      if (hit) dmg = Math.max(1, Math.round(dmg * (1 - this.traitValue(m, 'armour')) * (1 - this.weakenOf(act, 'player'))))
-      const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
-      act.mHp -= dealt
-      if (type === 'magic') this.addXp('magic', this.currentSpell().xp + dealt * 2)
-      else if (dealt > 0) this.addXp(COMBAT_STYLES[this.s.combatStyle].skill, dealt * 4)
-      if (dealt > 0) this.addXp('hitpoints', dealt * 1.33)
-      this.emit('hit', { who: 'player', dmg, crit, evaded })
-      // Weapons and spells can leave a status; the weekly boss keeps its own rules
-      if (dealt > 0 && act.kind !== 'weekly') for (const f of this.heroEffects()) if (Math.random() < f.chance) this.addStatus(act, 'monster', f.id, dealt)
-      if (act.kind === 'weekly' && this.weeklyDealt(act, dealt)) return
-      if (act.mHp <= 0) return this.killMonster(m)
+      const r = this.heroTurn(act, m, ps, mr)
+      if (r === 'end') return
+      if (r === 'kill') return this.killMonster(m)
     }
 
     if (act.mercs.length) {
@@ -1009,16 +998,17 @@ export const G = {
       act.mTimer -= m.speed
       if (Math.random() < 1 / (1 + act.mercs.length)) {
         // Agility dodges the blow; a shield may block half of it
-        if (Math.random() < this.dodgeChance()) { this.emit('hit', { who: 'monster', dmg: 0, dodged: true }); return }
+        if (Math.random() < this.dodgeChance() + this.buffValue(act, 'dodge')) { this.emit('hit', { who: 'monster', dmg: 0, dodged: true }); return }
         const hit = Math.random() < this.hitChance(mr.accRoll, ps.defRoll)
         let dmg = hit ? rand(0, m.maxHit) : 0
         const enraged = act.mHp < m.hp * 0.3 ? this.traitValue(m, 'enrage') : 0
-        dmg = Math.round(dmg * (1 + enraged) * (1 - this.weakenOf(act, 'monster')))
+        dmg = Math.round(dmg * (1 + enraged) * (1 - this.weakenOf(act, 'monster')) * (1 - this.buffValue(act, 'ward')))
         const blocked = dmg > 0 && Math.random() < this.blockChance()
         if (blocked) dmg = Math.floor(dmg / 2)
         this.s.hp -= dmg
         this.emit('hit', { who: 'monster', dmg, blocked })
         if (dmg > 0) {
+          this.gainEnergy(act, ENERGY.struck)
           const drain = this.traitValue(m, 'drain')
           if (drain) act.mHp = Math.min(m.hp, act.mHp + Math.round(dmg * drain))
           for (const id of this.monsterTraits(m)) { const on = TRAITS[id].on; if (on && Math.random() < on.chance) this.addStatus(act, 'player', on.id, dmg) }

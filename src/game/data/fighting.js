@@ -96,3 +96,52 @@ export const ELITES = {
 export const ELITE_IDS = Object.keys(ELITES)
 // What an elite pays on top: drop chances multiplied, gold multiplied, and a bonus stardust
 export const ELITE_LOOT = { drops: 2.5, gold: 4, stardust: [1, 3] }
+
+/* ================= the hero's abilities ================= */
+/*
+  Every attack builds energy (crits and blows taken build more). Abilities on the bar fire on their
+  own in place of a normal attack when there is enough energy and their cooldown is over; the bar is
+  read left to right, so the first slot has priority.
+  - mult: damage of each hit · hits: number of hits · acc: extra hit chance · crit: extra crit chance
+  - fx: statuses always left on a landed hit · heal: share of max HP restored · buff: a boon on the hero
+*/
+export const ENERGY_MAX = 100
+export const ENERGY = { attack: 14, crit: 10, struck: 5 }
+export const BAR_SIZE = 3
+const A = (id, icon, lvl, cost, cd, effect) => ({ id, icon, lvl, cost, cd, mult: 1, hits: 1, acc: 0, crit: 0, fx: [], heal: 0, buff: null, ...effect })
+// skill: the level that unlocks each style's abilities
+export const ABILITY_SKILL = { melee: 'attack', ranged: 'ranged', magic: 'magic' }
+export const ABILITIES = {
+  melee: [
+    A('power_strike', 'broadsword', 1, 30, 6, { mult: 1.8, acc: 0.2 }),
+    A('rending_slash', 'blood', 10, 35, 10, { mult: 1.2, fx: ['bleed'] }),
+    A('shield_bash', 'shield-reflect', 20, 40, 14, { mult: 0.8, fx: ['stun'], acc: 0.15 }),
+    A('second_wind', 'glass-heart', 30, 50, 30, { mult: 0, heal: 0.22 }),
+    A('whirlwind', 'swords-emblem', 45, 60, 16, { mult: 0.7, hits: 3 }),
+    A('berserk', 'biceps', 60, 70, 40, { mult: 1, buff: 'berserk' }),
+  ],
+  ranged: [
+    A('aimed_shot', 'archery-target', 1, 30, 6, { mult: 1.6, acc: 0.4 }),
+    A('poison_arrow', 'arrowhead', 10, 35, 10, { mult: 1.1, fx: ['poison', 'poison'] }),
+    A('volley', 'arrow-flights', 20, 45, 12, { mult: 0.6, hits: 3 }),
+    A('crippling_shot', 'eye-target', 30, 45, 16, { mult: 1, fx: ['slow', 'weaken'] }),
+    A('evasion', 'sprint', 45, 50, 30, { mult: 0, buff: 'evasion' }),
+    A('deadeye', 'high-shot', 60, 75, 30, { mult: 2.6, crit: 1, acc: 0.5 }),
+  ],
+  magic: [
+    A('arcane_bolt', 'magic-swirl', 1, 30, 6, { mult: 1.7, acc: 0.2 }),
+    A('flame_burst', 'fire-spell-cast', 10, 40, 10, { mult: 1.2, fx: ['burn'] }),
+    A('frost_nova', 'ice-spell-cast', 20, 45, 14, { mult: 0.9, fx: ['slow', 'stun'] }),
+    A('mana_shield', 'magic-shield', 30, 50, 30, { mult: 0, buff: 'ward' }),
+    A('chain_lightning', 'sparkles', 45, 60, 16, { mult: 0.55, hits: 4 }),
+    A('meteor', 'burning-meteor', 60, 80, 32, { mult: 3.2, acc: 0.3 }),
+  ],
+}
+export const ABILITY_MAP = Object.fromEntries(Object.values(ABILITIES).flat().map(a => [a.id, a]))
+// Boons the hero gives themself: dmg and crit add, dodge adds, ward cuts damage taken
+export const BUFFS = {
+  berserk: { icon: 'biceps', color: '#ff7a59', time: 10, dmg: 0.3, crit: 0.1 },
+  evasion: { icon: 'sprint', color: '#9fd8c8', time: 8, dodge: 0.3 },
+  ward: { icon: 'magic-shield', color: '#7ad7ff', time: 8, ward: 0.4 },
+}
+export const defaultBar = () => ({ melee: ['power_strike'], ranged: ['aimed_shot'], magic: ['arcane_bolt'] })

@@ -9,9 +9,14 @@ import { ITEMS } from './data/items.js'
 import { COMBAT_STYLES } from './data/combat.js'
 import {
   weaponProfile, SPELL_FX, AIR_SPEED, STATUSES, TRAITS, traitsOf, ELITES, ELITE_IDS, ELITE_CHANCE,
+  ABILITIES, ABILITY_MAP, ABILITY_SKILL, BUFFS, ENERGY, ENERGY_MAX, BAR_SIZE, defaultBar,
 } from './data/fighting.js'
 
 const eliteCache = new Map()
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
+
+// bar: the abilities chosen for each style, in priority order; auto: whether they fire on their own
+export const fightingState = () => ({ abilities: { bar: defaultBar(), auto: true } })
 
 export const fighting = {
   /* ================= the hero ================= */
@@ -118,6 +123,102 @@ export const fighting = {
       if (type !== this.styleType()) raw.combatStyle = type === 'melee' ? 'attack' : type
     }
     try { return fn() } finally { Object.assign(eq, saved); raw.combatStyle = style }
+  },
+
+  /* ================= abilities ================= */
+  abilityUnlocked(a, type = this.styleType()) { return this.level(ABILITY_SKILL[type]) >= a.lvl },
+  abilitiesFor(type = this.styleType()) { return ABILITIES[type] },
+  abilityBar(type = this.styleType()) {
+    const ab = this.s.abilities
+    ab.bar ||= defaultBar()
+    return (ab.bar[type] ||= [])
+  },
+  // Put an ability on the bar, or take it off if it is already there
+  toggleAbility(id) {
+    const a = ABILITY_MAP[id], type = this.styleType()
+    if (!a || !ABILITIES[type].includes(a) || !this.abilityUnlocked(a, type)) return false
+    const bar = this.abilityBar(type), i = bar.indexOf(id)
+    if (i >= 0) bar.splice(i, 1)
+    else if (bar.length < BAR_SIZE) bar.push(id)
+    else return false
+    return true
+  },
+  moveAbility(id, dir) {
+    const bar = this.abilityBar(), i = bar.indexOf(id), j = i + dir
+    if (i < 0 || j < 0 || j >= bar.length) return
+    ;[bar[i], bar[j]] = [bar[j], bar[i]]
+  },
+  buffValue(act, key) {
+    let v = 0
+    for (const id in act?.hb || {}) v += BUFFS[id][key] || 0
+    return v
+  },
+  // The first ability on the bar that is ready and worth using now. The bar is a priority list:
+  // while an earlier ability is off cooldown but still charging, later ones keep its energy aside
+  readyAbility(act) {
+    if (this.s.abilities?.auto === false) return null
+    const type = this.styleType(), energy = act.energy || 0
+    let reserve = 0
+    for (const id of this.abilityBar(type)) {
+      const a = ABILITY_MAP[id]
+      if (!a || !this.abilityUnlocked(a, type) || (act.cd?.[id] || 0) > 0) continue
+      if (a.heal && this.s.hp > this.maxHp() * 0.7) continue // healing waits until it is needed
+      if (a.buff && act.hb?.[a.buff]) continue
+      if (energy - a.cost >= reserve) return a
+      reserve = Math.max(reserve, a.cost)
+    }
+    return null
+  },
+  // Cooldowns and the hero's boons run down with time
+  tickAbilities(act, dt) {
+    for (const id in act.cd || {}) if ((act.cd[id] -= dt) <= 0) delete act.cd[id]
+    for (const id in act.hb || {}) if ((act.hb[id].t -= dt) <= 0) delete act.hb[id]
+  },
+  gainEnergy(act, n) { act.energy = Math.min(ENERGY_MAX, (act.energy || 0) + n) },
+  // One blow from the hero: a normal attack, or one hit of an ability.
+  // Returns 'kill' or 'end' (the weekly attempt is over) when the fight must stop, else whether it crit
+  heroHit(act, m, ps, mr, ab = null, first = true) {
+    const type = this.styleType()
+    const evaded = Math.random() < this.traitValue(m, 'evade')
+    const hit = !evaded && Math.random() < Math.min(1, this.hitChance(ps.accRoll, mr.defRoll) + (ab?.acc || 0))
+    let dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
+    const crit = hit && Math.random() < this.critChance() + (ab?.crit || 0) + this.buffValue(act, 'crit')
+    if (crit) dmg = Math.floor(dmg * this.critMult())
+    if (hit) dmg = Math.max(1, Math.round(dmg * (ab ? ab.mult : 1) * (1 + this.buffValue(act, 'dmg')) * (1 - this.traitValue(m, 'armour')) * (1 - this.weakenOf(act, 'player'))))
+    const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
+    act.mHp -= dealt
+    if (type === 'magic') this.addXp('magic', (first ? this.currentSpell().xp : 0) + dealt * 2)
+    else if (dealt > 0) this.addXp(COMBAT_STYLES[this.s.combatStyle].skill, dealt * 4)
+    if (dealt > 0) this.addXp('hitpoints', dealt * 1.33)
+    this.emit('hit', { who: 'player', dmg, crit, evaded, ability: ab?.id })
+    // Weapons, spells and abilities can leave statuses; the weekly boss keeps its own rules
+    if (dealt > 0 && act.kind !== 'weekly') {
+      for (const f of this.heroEffects()) if (Math.random() < f.chance) this.addStatus(act, 'monster', f.id, dealt)
+      for (const id of ab?.fx || []) this.addStatus(act, 'monster', id, dealt)
+    }
+    if (act.kind === 'weekly' && this.weeklyDealt(act, dealt)) return 'end'
+    if (act.mHp <= 0) return 'kill'
+    return crit
+  },
+  // The hero's turn: an ability if one is ready, else a normal attack that builds energy
+  heroTurn(act, m, ps, mr) {
+    const ab = this.readyAbility(act)
+    if (ab) {
+      act.energy -= ab.cost
+      ;(act.cd ||= {})[ab.id] = ab.cd
+      if (ab.heal) this.heal(Math.round(this.maxHp() * ab.heal))
+      if (ab.buff) (act.hb ||= {})[ab.buff] = { t: BUFFS[ab.buff].time }
+      this.emit('ability', { id: ab.id })
+      for (let i = 0; i < (ab.mult > 0 ? ab.hits : 0); i++) {
+        const r = this.heroHit(act, m, ps, mr, ab, i === 0)
+        if (r === 'kill' || r === 'end') return r
+      }
+      return null
+    }
+    const r = this.heroHit(act, m, ps, mr)
+    if (r === 'kill' || r === 'end') return r
+    this.gainEnergy(act, ENERGY.attack + (r ? ENERGY.crit : 0))
+    return null
   },
 
   /* ================= statuses ================= */
