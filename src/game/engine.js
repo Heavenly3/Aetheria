@@ -23,6 +23,7 @@ import { journal, journalState } from './journal.js'
 import { fighting, fightingState } from './fighting.js'
 import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
+import { slayer } from './slayer.js'
 import { TRAITS, ELITE_LOOT, ENERGY } from './data/fighting.js'
 import { weatherAt, skyTotals } from './data/weather.js'
 import { FEATURES } from './features.js'
@@ -91,7 +92,7 @@ export function newState(profile = {}) {
     achievements: {},
     rooms: {},
     prestige: {},
-    slayer: { task: null, points: 0, completed: 0, streak: 0 },
+    slayer: { task: null, points: 0, completed: 0, streak: 0, offers: [], perks: {}, blocked: [] },
     tower: { best: 0, tokens: 0 },
     stats: { actions: 0, kills: 0, goldEarned: 0, deaths: 0, burnt: 0, rares: 0, playTime: 0, harvests: 0 },
     log: [],
@@ -287,6 +288,7 @@ export const G = {
     this.ensureGuilds()
     this.ensureCodex()
     this.ensureContracts()
+    this.ensureSlayer()
   },
 
   /* ================= levels ================= */
@@ -914,7 +916,8 @@ export const G = {
     }
     let accMult = 1 + (this.blessed('vigor') ? 0.1 : 0) + this.mod(type + 'Acc')
     let dmgMult = 1 + (this.blessed('vigor') ? 0.1 : 0) + this.room('trophy') * 0.04 + this.mod(type + 'Dmg')
-    if (this.s.equipment.head === 'slayer_helm' && this.onTask(m)) { accMult += 0.15; dmgMult += 0.15 }
+    const helm = this.taskHelmBonus()
+    if (helm && this.onTask(m)) { accMult += helm; dmgMult += helm }
     const hunt = this.huntBonus(m)
     accMult += hunt
     dmgMult += hunt
@@ -1105,6 +1108,7 @@ export const G = {
       loot.push({ item: 'stardust', n: dust })
       st.stats.elites = (st.stats.elites || 0) + 1
       this.log('crowned-skull', 'log.elite', { monster: '@monster:' + m.id, kind: '@elite:' + act.elite })
+      if (act.elite === 'superior') loot.push({ item: 'slayer_sigil', n: this.superiorLoot(m) })
     }
     m.drops.forEach(d => {
       // A Blood Moon makes rare drops (under 5%) more likely on top of the loot bonus
@@ -1122,7 +1126,7 @@ export const G = {
     })
     const task = st.slayer.task
     if (task && task.monster === m.id) {
-      this.addXp('slayer', m.hp)
+      this.addXp('slayer', Math.round(m.hp * this.slayerXpMult()))
       task.left--
       if (task.left <= 0) this.completeSlayerTask()
     }
@@ -1170,45 +1174,6 @@ export const G = {
     else if (act.kind === 'weekly') this.stop(msg('weekly.drivenBack', { boss: '@weekly:' + m.id, dmg: Math.round(act.dealt) }))
     else this.stop(msg('msg.died', { monster: '@monster:' + m.id, gold: lost }))
     this.emit('death', m)
-  },
-
-  /* ================= slayer ================= */
-  slayerCandidates() {
-    const cl = this.combatLevel(), sl = this.level('slayer')
-    return Object.values(MONSTERS).filter(m => {
-      const area = AREAS.find(a => a.id === m.area)
-      return this.areaUnlocked(area) && monsterLevel(m) <= cl + 8 && (!m.slayer || sl >= m.slayer)
-    })
-  },
-  newSlayerTask() {
-    if (this.s.slayer.task) return
-    const pool = this.slayerCandidates()
-    const m = pool[Math.floor(Math.pow(Math.random(), 0.7) * pool.length)]
-    const total = rand(12, 30) + Math.floor(this.level('slayer') / 4)
-    this.s.slayer.task = { monster: m.id, left: total, total }
-  },
-  completeSlayerTask() {
-    const sl = this.s.slayer
-    const m = MONSTERS[sl.task.monster]
-    sl.streak++
-    const pts = (4 + Math.floor(monsterLevel(m) / 8)) * (sl.streak % 10 === 0 ? 5 : 1)
-    sl.points += pts
-    sl.completed++
-    const gold = this.addGold(sl.task.total * monsterLevel(m), true)
-    this.log('death-skull', 'log.slayerTask', { monster: '@monster:' + m.id })
-    this.toast('death-skull', 'msg.slayerDone', { pts, gold }, 'success')
-    sl.task = null
-    this.rollPet(src => src.slayer)
-  },
-  buySlayer(id) {
-    const it = SLAYER_SHOP.find(x => x.id === id)
-    const sl = this.s.slayer
-    if (!it || sl.points < it.cost) return false
-    if (id === 'skip') { if (!sl.task) return false; sl.task = null }
-    sl.points -= it.cost
-    if (it.item) this.addItem(it.item, 1)
-    if (it.items) Object.entries(it.items).forEach(([k, q]) => this.addItem(k, q))
-    return true
   },
 
   /* ================= tower ================= */
@@ -1384,6 +1349,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer)
 
 export { SKILLS, ITEMS }

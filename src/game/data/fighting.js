@@ -94,8 +94,10 @@ export const ELITES = {
   armoured: { color: '#9fb3c8', hp: 2.2, att: 1, def: 1.6, maxHit: 1.1, speed: 1, trait: 'armour' },
   swift:    { color: '#9fd8c8', hp: 1.8, att: 1.2, def: 1, maxHit: 1.1, speed: 0.65, trait: 'evasive' },
   ancient:  { color: '#e2b65a', hp: 3, att: 1.35, def: 1.35, maxHit: 1.4, speed: 0.9, trait: 'regen' },
+  // Only steps up while the creature is the hero's slayer task
+  superior: { color: '#d36bff', hp: 3.5, att: 1.4, def: 1.3, maxHit: 1.5, speed: 0.9, trait: 'enrage' },
 }
-export const ELITE_IDS = Object.keys(ELITES)
+export const ELITE_IDS = Object.keys(ELITES).filter(k => k !== 'superior')
 // What an elite pays on top: drop chances multiplied, gold multiplied, and a bonus stardust
 export const ELITE_LOOT = { drops: 2.5, gold: 4, stardust: [1, 3] }
 

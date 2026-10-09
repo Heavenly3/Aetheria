@@ -59,6 +59,7 @@ Requires Node.js 18 or newer.
 - **Crafting quality**: every piece of gear made at the anvil, the fletching bench or the crafting table can come out Fine (+5% stats), Superior (+10%) or Masterwork (+20%). The chances grow with your mastery of the recipe, so mastering a recipe pays off. Mage robes are woven from flax in four cloths (linen, silk, spellweave, starweave) and ranger hides are stitched from wolf pelts, snake skins and wyvern scales, each with its own set bonus.
 - **Farming**: plots grow in real time, even offline, with optional auto-replant.
 - **Combat**: 10 areas, 7 bosses with mercenaries, 6 multi-room dungeons, an endless tower, slayer tasks, prayers and loadouts.
+  - **Slayer**: pick one of three hunts (easy, standard or hard) that pay points, gold and Slayer XP. While a creature is your task, a tougher Superior version can step up and drop slayer sigils, used to imbue the slayer helm. Points buy permanent perks (longer hunts, bounties, Superior tracking, insight), blocked creatures and supplies, and long streaks pay gem chests.
   - Every weapon has its own attack speed, crit chance and sometimes a status it leaves: bleeding, burns, poison, stuns, slows or weakness. Agility dodges, shields block and armour soaks part of every blow.
   - **Abilities**: six per style (melee, ranged, magic), unlocked by level. Attacks build energy, and up to three abilities on the bar fire on their own in priority order.
   - Creatures have traits (venom, armour, regeneration, life drain, frenzy, evasion), rare elites spawn with much better loot, and bosses turn enraged and then desperate as their health drops.
@@ -99,6 +100,7 @@ Requires Node.js 18 or newer.
 - `src/game/relicforge.js`: reforging, fusing and reshaping relics (costs and odds in `src/game/data/relicforge.js`).
 - `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
+- `src/game/slayer.js`: slayer tasks and offers, Superior creatures, perks and blocked creatures (tuning in `src/game/data/slayer.js`).
 - `src/game/codex.js`: the compendium's item pages and masterwork milestones (pages and rewards in `src/game/data/codex.js`).
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.

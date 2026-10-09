@@ -357,6 +357,45 @@ export default {
   slots: { weapon: 'Arma', shield: 'Escudo', head: 'Cabeza', body: 'Torso', legs: 'Piernas', cape: 'Capa', amulet: 'Amuleto', ammo: 'Munición' },
 
   slayer: {
+    kinds: {
+      easy: "Fácil",
+      standard: "Normal",
+      hard: "Difícil",
+    },
+    pick: "Elige tu próxima cacería. Los encargos difíciles te mandan a por criaturas más duras y piden más bajas, pero pagan muchos más puntos, oro y XP de Cazador.",
+    reroll: "Nuevas ofertas · {n} puntos",
+    noTargets: "Ahora mismo ninguna criatura encaja con tu nivel de combate.",
+    ptsShort: "ptos",
+    block: "Bloquear · {n}",
+    blockTip: "No volverán a mandarte a por esta criatura. Anula el encargo actual.",
+    blocked: "Criaturas bloqueadas ({n}/{max})",
+    unblock: "Volver a permitir",
+    blockedToast: "{monster} ya no saldrá como encargo",
+    superiorChance: "Superior {pct}",
+    superiorTip: "Mientras una criatura sea tu encargo, puede aparecer una versión Superior: mucho más dura, con botín de élite, XP de Cazador extra y sellos de cazador.",
+    nextChest: "Próximo cofre de gemas",
+    superiors: "Superiores abatidos",
+    perks: "Mejoras de cazador",
+    owned: "Desbloqueada",
+    perkBought: "Mejora desbloqueada: {name}",
+    perkList: {
+      extend: {
+        name: "Cacerías largas",
+        desc: "Los encargos piden un 50 % más de bajas y pagan un 50 % más de puntos.",
+      },
+      bounty: {
+        name: "Recompensa",
+        desc: "Los encargos pagan un 50 % más de oro.",
+      },
+      superior: {
+        name: "Rastreo superior",
+        desc: "Las criaturas Superiores aparecen el doble de a menudo.",
+      },
+      insight: {
+        name: "Instinto de cazador",
+        desc: "+15 % de XP de Cazador por cada baja del encargo.",
+      },
+    },
     current: 'Encargo actual', left: 'Quedan {n} de {total}', hunt: 'Cazar ahora', viewArea: 'Ver zona',
     explain: 'Cada monstruo del encargo da XP de Cazador igual a su vida. Al terminar recibes puntos y oro; cada 10 encargos seguidos, puntos ×5.',
     noTask: 'El maestro Vannaka te asignará monstruos adecuados a tu nivel de combate ({lvl}). Hay {n} posibles objetivos.',
@@ -644,6 +683,10 @@ export default {
       supplies: { title: 'Provisiones', body: 'Comida, poción y plegaria que tu héroe usa solo durante el combate.' },
       slayerTask: { title: 'Encargo actual', body: 'El monstruo que debes cazar y cuántos quedan. Las bajas cuentan en cualquier sitio. Puedes saltarte un encargo que no te guste en la tienda del cazador.' },
       slayerRecord: { title: 'Historial del cazador', body: 'Tus puntos, encargos terminados y racha. Cada décimo encargo seguido da cinco veces los puntos.' },
+      slayerPerks: {
+        title: "Mejoras de cazador",
+        body: "Mejoras permanentes que se compran con puntos de cazador. Cada una se compra una vez y funciona en todos los encargos desde entonces.",
+      },
       slayerShop: { title: 'Tienda del cazador', body: 'Gasta los puntos de Cazador en equipo, provisiones y saltos de encargo.' },
       towerNext: { title: 'Próximos pisos', body: 'Los siguientes guardianes y su vida. Los pisos ★ son puntos de control con un guardián más duro y más fichas.' },
       towerShop: { title: 'Tienda de la torre', body: 'Gasta las fichas de la torre en capas, cofres y elixires.' },
@@ -937,6 +980,7 @@ export default {
       },
     },
     elites: {
+      superior: "Superior",
       fierce: "feroz",
       armoured: "de coraza",
       swift: "veloz",
@@ -1837,6 +1881,8 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    slayer_helm_i: "Yelmo de cazador imbuido",
+    slayer_sigil: "Sello de cazador",
     snake_skin: "Piel de serpiente",
     wyvern_scale: "Escama de guiverno",
     wolf_leather: "Cuero de lobo",
@@ -1866,6 +1912,8 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    slayer_helm_i: "Con un encargo activo: +25 % de precisión y daño contra el objetivo. Cuenta como yelmo de cazador para su conjunto.",
+    slayer_sigil: "Arrancado a criaturas Superiores. Imbuye el yelmo de cazador en la mesa de artesanía.",
     colossus_bulwark: 'Tallado del pecho del Coloso de Piedra. Aún está tibio.', hydra_heart: 'Sigue latiendo, lento y paciente, mucho después de que cayera la hidra.',
     lich_shroud: 'Tejido con el último aliento de una reina que se negó a morir.', wyrm_crown: 'Ceniza y brasa, forjadas en corona por fuego de dragón.',
     abyssal_mantle: 'Frío como el abismo. Bajo su peso las flechas vuelan más certeras.', rime_locket: 'Una astilla de Corazón de Escarcha que nunca se derrite.',

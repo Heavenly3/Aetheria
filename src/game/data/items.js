@@ -240,6 +240,8 @@ def('night_staff',   { icon: 'skull-staff', type: 'equip', slot: 'weapon', style
 def('dragon_blade',  { icon: 'shining-sword', type: 'equip', slot: 'weapon', style: 'melee', value: 40000, tint: '#e0402a', stats: { atk: 95, str: 90 }, req: { attack: 75 }, rare: true })
 def('dragon_shield', { icon: 'dragon-shield', type: 'equip', slot: 'shield', value: 35000, tint: '#e0402a', stats: { def: 70 }, req: { defense: 75 }, rare: true })
 def('slayer_helm',   { icon: 'black-knight-helm', type: 'equip', slot: 'head', value: 0, tint: '#b5179e', stats: { def: 12 }, req: { defense: 20 }, hasDesc: true })
+def('slayer_helm_i', { icon: 'black-knight-helm', base: 'slayer_helm', type: 'equip', slot: 'head', value: 0, tint: '#d36bff', stats: { def: 22, atk: 4, rAtk: 4, mAtk: 4 }, req: { defense: 40, slayer: 50 }, hasDesc: true })
+def('slayer_sigil',  { icon: 'star-medal', value: 120, tint: '#d36bff', hasDesc: true })
 def('slayer_cape',   { icon: 'vampire-cape', type: 'equip', slot: 'cape', value: 0, tint: '#b5179e', stats: { atk: 6, str: 6, rAtk: 6, mAtk: 6, def: 6 }, req: { slayer: 50 } })
 def('tower_cape',    { icon: 'cape', type: 'equip', slot: 'cape', value: 0, tint: '#f0c040', stats: { atk: 4, str: 4, def: 4, rAtk: 4, mAtk: 4 }, req: {} })
 def('tower_cape2',   { icon: 'cape', type: 'equip', slot: 'cape', value: 0, tint: '#ff7ad9', stats: { atk: 10, str: 10, def: 10, rAtk: 10, rStr: 6, mAtk: 10, mDmg: 0.05 }, req: {} })

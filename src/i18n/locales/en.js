@@ -357,6 +357,45 @@ export default {
   slots: { weapon: 'Weapon', shield: 'Shield', head: 'Head', body: 'Body', legs: 'Legs', cape: 'Cape', amulet: 'Amulet', ammo: 'Ammo' },
 
   slayer: {
+    kinds: {
+      easy: "Easy",
+      standard: "Standard",
+      hard: "Hard",
+    },
+    pick: "Choose your next hunt. Harder tasks send you after tougher creatures and ask for more kills, but pay far more points, gold and Slayer XP.",
+    reroll: "New offers · {n} points",
+    noTargets: "No creature suits your combat level right now.",
+    ptsShort: "pts",
+    block: "Block · {n}",
+    blockTip: "Never be sent after this creature again. Drops the current task.",
+    blocked: "Blocked creatures ({n}/{max})",
+    unblock: "Allow again",
+    blockedToast: "{monster} will no longer be a task",
+    superiorChance: "Superior {pct}",
+    superiorTip: "While a creature is your task, a Superior version can step up: much tougher, with elite loot, bonus Slayer XP and slayer sigils.",
+    nextChest: "Next gem chest",
+    superiors: "Superiors slain",
+    perks: "Slayer perks",
+    owned: "Unlocked",
+    perkBought: "Perk unlocked: {name}",
+    perkList: {
+      extend: {
+        name: "Long hunts",
+        desc: "Tasks ask for 50% more kills and pay 50% more points.",
+      },
+      bounty: {
+        name: "Bounty",
+        desc: "Tasks pay 50% more gold.",
+      },
+      superior: {
+        name: "Superior tracking",
+        desc: "Superior creatures step up twice as often.",
+      },
+      insight: {
+        name: "Hunter's insight",
+        desc: "+15% Slayer XP from every kill on task.",
+      },
+    },
     current: 'Current task', left: '{n} of {total} left', hunt: 'Hunt now', viewArea: 'View area',
     explain: 'Every task monster gives Slayer XP equal to its hitpoints. Finishing a task pays points and gold, and every 10 tasks in a row give 5× points.',
     noTask: 'Master Vannaka will assign monsters that suit your combat level ({lvl}). There are {n} possible targets.',
@@ -644,6 +683,10 @@ export default {
       supplies: { title: 'Supplies', body: 'Food, potion and prayer your hero uses on their own during a fight.' },
       slayerTask: { title: 'Current task', body: 'The monster you must hunt and how many are left. Kills anywhere count. You can skip a task you do not like in the slayer shop.' },
       slayerRecord: { title: 'Slayer record', body: 'Your points, finished tasks and streak. Every tenth task in a row gives five times the points.' },
+      slayerPerks: {
+        title: "Slayer perks",
+        body: "Permanent upgrades bought with slayer points. Each one is bought once and works on every task from then on.",
+      },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -937,6 +980,7 @@ export default {
       },
     },
     elites: {
+      superior: "Superior",
       fierce: "Fierce",
       armoured: "Armoured",
       swift: "Swift",
@@ -1837,6 +1881,8 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    slayer_helm_i: "Imbued slayer helm",
+    slayer_sigil: "Slayer sigil",
     snake_skin: "Snake skin",
     wyvern_scale: "Wyvern scale",
     wolf_leather: "Wolf leather",
@@ -1866,6 +1912,8 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    slayer_helm_i: "With an active task: +25% accuracy and damage against the target. Counts as a slayer helm for its set.",
+    slayer_sigil: "Torn from Superior creatures. Imbues the slayer helm at the crafting table.",
     colossus_bulwark: 'Hewn from the chest of the Stone Colossus. Still warm.', hydra_heart: 'It keeps beating, slow and patient, long after the hydra fell.',
     lich_shroud: 'Woven from the last breath of a queen who refused to die.', wyrm_crown: 'Ash and ember, shaped into a crown by dragonfire.',
     abyssal_mantle: 'Cold as the deep. Arrows fly truer under its weight.', rime_locket: 'A sliver of Rimeheart that never melts.',

@@ -148,6 +148,8 @@ CLOTHS.forEach(c => {
     in: { [c.id + '_cloth']: r.cloth }, out: { [`${c.id}_${r.id}`]: 1 },
   }))
 })
+// Sigils from Superior creatures imbue the slayer helm
+add('crafting', { id: 'slayer_helm_i', icon: 'black-knight-helm', tint: '#d36bff', group: 'groups.jewellery', lvl: 55, xp: 400, time: 6, in: { slayer_helm: 1, slayer_sigil: 25, ruby: 2 }, out: { slayer_helm_i: 1 } })
 add('crafting', { id: 'gold_amulet', icon: 'necklace', tint: '#e3b23c', group: 'groups.jewellery', lvl: 8, xp: 30, time: 3, in: { gold_bar: 1 }, out: { gold_amulet: 1 } })
 GEMS.forEach(g => {
   add('crafting', { id: 'cut_' + g.id, nameFn: () => t('tpl.cut', { gem: t(`gems.${g.id}`) }), icon: 'cut-diamond', tint: g.tint, group: 'groups.jewellery', lvl: g.cutLvl, xp: g.cutXp, time: 2.4, in: { ['uncut_' + g.id]: 1 }, out: { [g.id]: 1 } })
@@ -237,7 +239,7 @@ const scaleStat = (v, mult) => (Number.isInteger(v) ? (v > 0 ? Math.max(v + 1, M
 QUALITY_SKILLS.forEach(sk => ACTIONS[sk].forEach(a => {
   const [id] = Object.keys(a.out)
   const it = ITEMS[id]
-  if (!it || it.type !== 'equip' || it.stackEquip) return
+  if (!it || it.type !== 'equip' || it.stackEquip || it.base) return
   a.quality = true
   if (ITEMS[withQuality(id, 1)]) return
   QUALITIES.forEach((q, n) => {

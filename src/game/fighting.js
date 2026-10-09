@@ -74,7 +74,8 @@ export const fighting = {
   // A new creature steps up: only open-field fights can bring an elite
   spawn(act) {
     act.elite = null
-    if (act.kind === 'area' && Math.random() < ELITE_CHANCE + this.mod('eliteChance')) act.elite = ELITE_IDS[Math.floor(Math.random() * ELITE_IDS.length)]
+    if (this.rollSuperior(act)) act.elite = 'superior'
+    else if (act.kind === 'area' && Math.random() < ELITE_CHANCE + this.mod('eliteChance')) act.elite = ELITE_IDS[Math.floor(Math.random() * ELITE_IDS.length)]
     act.fx = { player: act.fx?.player || {}, monster: {} }
     act.phase = 0
     act.mHp = this.getMonster(act).hp
