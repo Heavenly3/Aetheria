@@ -58,6 +58,11 @@ Requires Node.js 18 or newer.
 - **Tools**: tiered pickaxes, axes and fishing rods gate advanced resources.
 - **Farming**: plots grow in real time, even offline, with optional auto-replant.
 - **Combat**: 10 areas, 7 bosses with mercenaries, 6 multi-room dungeons, an endless tower, slayer tasks, prayers and loadouts.
+  - Every weapon has its own attack speed, crit chance and sometimes a status it leaves: bleeding, burns, poison, stuns, slows or weakness. Agility dodges, shields block and armour soaks part of every blow.
+  - **Abilities**: six per style (melee, ranged, magic), unlocked by level. Attacks build energy, and up to three abilities on the bar fire on their own in priority order.
+  - Creatures have traits (venom, armour, regeneration, life drain, frenzy, evasion), rare elites spawn with much better loot, and bosses turn enraged and then desperate as their health drops.
+  - **Hunting streaks** of kills without dying add up to +25% combat XP and loot.
+  - A **combat power** panel shows damage per second, defence and more, gear comparisons and item tooltips show what a piece really changes, monster cards show the time per kill, and the arena shows live damage, kill, XP and gold rates.
 - **Endgame beyond the Abyss**: the Void Rift and the Celestial Spire, aether gear forged at level 90 and boss-only uniques.
 - **Pets**: 34 very rare companions from skilling, bosses, slayer tasks, dice, omens and festivals. A lucky find arrives as an egg that hatches in the incubator. Pick one as your companion, name it, feed it its favourite food (ores for the golem, fish for the heron…) and pet it: it learns alongside you up to level 20, grows its bond from Wary to Soulbound, doubles its bonus while fed and brings gifts to a basket. Hunger, hatching and gifts follow the clock, so they keep going offline.
 - **Enchanting**: raise each equipment slot from +1 to +10. Higher levels can fail and drop a level unless protected with a starlight shard.
@@ -68,16 +73,18 @@ Requires Node.js 18 or newer.
 - **Bestiary**: every creature you defeat is recorded. Learn its drops, master it for a combat bonus against it, and complete each area for a permanent reward.
 - **Omens**: twelve rare world phenomena that arrive unannounced, from the common Starfall to the mythic Eye that Opens. Each omen announces itself with its own cryptic sign, which also marks it in the chronicle until you witness it; then a Blood Moon, an Arcane Eclipse, a Gilded Goblin to chase, a Wandering Rift with a horror that scales with you, a Veiled Caravan, a Comet of Wishes… They hide rewards found nowhere else: seven pets, relics of random quality, permanent wishes and boons rolled when an omen ends. A chronicle records the ones you have witnessed; the rest stay a mystery.
 - **Weekly boss**: from combat level 30, a different boss every week (the same one for every player, picked by a seeded rotation). Six bosses, each resisting one style, weak to another and with its own mechanic: stone skin, regrowth, thralls, fire breath, reflecting scales or rime that slows you. Its health lasts all week, attempts last up to five minutes while its fury grows, and falling costs no gold. Damage milestones pay gold, chests, starlight shards and relics, and the first kill of each boss drops its exclusive trophy.
-- **Weather**: the sky changes every three hours, the same for every player: clear days and starry nights, overcast, rain, fog, wind and snow, plus rarer climate events (thunderstorms, heatwaves and blizzards) that follow the real seasons. It shows in the top bar, and climate events are announced when they begin. For now it is atmosphere only.
+- **Weather**: the sky changes every three hours, the same for every player: clear days and starry nights, overcast, rain, fog, wind and snow, plus rarer climate events (thunderstorms, heatwaves and blizzards) that follow the real seasons. Every weather, season and the night change modifiers (rain helps fishing and farming, fog helps thieving, storms boost magic but make monsters stronger…), listed in the top bar tooltip, and each change is announced.
+- **Journal and story**: the story of Aetheria told in chapters that unlock as you explore, beat bosses and witness omens, with the people you meet (a new cast of names in every game) and a memory of a past life with each ascension. The tavern keeper comments on the story, the astrologer leaves notes on omens and studied creatures reveal their lore.
+- **Music and ambience**: generative music made with WebAudio that follows where you are and the time of day, and weather sounds (rain, wind, thunder, birds, crickets), with their own volumes in Settings. No audio files.
 - **Titles and appearance**: 20 titles shown next to the hero's name, plus extra portraits and colours unlocked by achievements and festivals.
 - **Ascension**: start the whole hero over for Aether shards and spend them in a three-branch tree of permanent upgrades.
 - **Tavern**: hire staff (11 specialities, 4 rarities, traits and levels) who work in parallel for a wage. Includes 1/4/8 h expeditions, daily orders, drinks, dice and a mystery chest.
 - **Action queue** that moves on to the next task by itself, and **chained crafting**: when a recipe runs out, the game makes the missing materials first (mine, smelt, then forge) and goes back to it.
-- **Guided tutorial** for new heroes: twelve short steps over the first ten minutes (mine, smelt, fight, meet the tavern), with the next button highlighted. It can be hidden, skipped or restarted from Settings.
+- **Guided tutorial** for new heroes: thirteen short steps over the first ten minutes (mine, smelt, fight, meet the tavern, open the journal), with the next button highlighted. It can be hidden, skipped or restarted from Settings.
 - **Light and dark themes**, or follow the device setting.
 - **Phone friendly**: a bottom navigation bar, larger touch targets and a layout that fits narrow screens.
 - **Backup and transfer**: download the save as a file, load it again anywhere, or send yourself a transfer link that opens the hero on another device. No account or server involved.
-- **Quality of life**: search and filters on every skill, item locking, bulk selling, a daily market, random events, charts, sound and browser notifications.
+- **Quality of life**: search and filters on every skill, item locking, bulk selling, a daily market, charts, browser notifications, update notes in Settings with a What's new window, and options for fewer pop-ups, full numbers and reduced animations.
 - **Offline progress** up to a cap that grows as you play.
 
 ## Project layout
@@ -92,6 +99,9 @@ Requires Node.js 18 or newer.
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/collection.js`: equipment set bonuses, the bestiary, cosmetics and festivals.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.
+- `src/game/fighting.js`: weapon pace, crits, statuses, creature traits, elites, abilities, boss phases, streaks and the combat power numbers (tuning in `src/game/data/fighting.js`).
+- `src/game/journal.js`: the story journal, its chapters and memories (texts in the locales, chapters and characters in `src/game/data/journal.js`).
+- `src/game/music.js`: generative music and weather ambience.
 - `src/game/loop.js`: game loop, offline progress and autosave.
 - `src/game/tutorial.js`: the guided first steps.
 - `src/game/transfer.js`: save files and transfer links (the save is deflated and base64url-encoded into the link).
@@ -99,7 +109,7 @@ Requires Node.js 18 or newer.
 - `src/components/` and `src/views/`: the UI.
 - `public/`: app manifest, service worker (offline play) and icons.
 - `scripts/`: icon extraction, the translation checker and the balance report.
-- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, the relic forge, cosmetics, pets, enchanting, daily tasks, ascension and translations.
+- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, the relic forge, cosmetics, pets, enchanting, daily tasks, ascension, combat mechanics and abilities, weather effects, the journal, music moods, update notes and translations.
 
 ## Adding a language
 

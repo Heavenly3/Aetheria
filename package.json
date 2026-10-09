@@ -1,7 +1,7 @@
 {
   "name": "aetheria",
   "private": true,
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "description": "A fantasy idle RPG for the browser built with Vue 3 and PrimeVue.",
   "license": "MIT",
   "type": "module",
