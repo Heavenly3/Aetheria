@@ -239,7 +239,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               <div class="grow" style="min-width:220px">
                 <label class="small muted" for="exp-who">{{ $t('tavern.adventurer') }}</label>
                 <Select inputId="exp-who" v-model="sendWho" :options="whoOpts" optionLabel="label" optionValue="value" optionDisabled="disabled" :placeholder="$t('tavern.pickAdventurer')"
-                  :emptyMessage="$t('tavern.noAdventurers')" class="w-full" />
+                  :emptyMessage="$t('tavern.noAdventurers')" appendTo="self" class="w-full" />
               </div>
               <div>
                 <div class="small muted">{{ $t('inventory.duration') }}</div>
