@@ -263,8 +263,8 @@ export default {
     foodSwitched: 'Se acabó esa comida: ahora comes {item}.',
     needLevel: 'Necesitas nivel {lvl} de {skill}', needTool: 'Necesitas {tool} de nivel {tier}', noMaterials: 'Te faltan materiales',
     faintedThieving: 'Te han pillado y te has desmayado. Toca descansar.', queueSkipMaterials: 'Se salta {action}: faltan materiales',
-    outOfMaterials: 'Sin materiales para {action}', noSeeds: 'No tienes {item}', needBow: 'Necesitas un arco equipado',
-    noArrows: 'No tienes flechas equipadas', spellLevel: '{spell} requiere Magia {lvl}', noRunes: 'No tienes runas para {spell}',
+    outOfMaterials: 'Sin materiales para {action}', noSeeds: 'No tienes {item}', needBow: 'Necesitas un arco equipado. Fabrícalo con troncos en Flechería (Arcos) o cómpralo en la tienda.',
+    noArrows: 'No tienes flechas equipadas. Fabrícalas en Flechería (astiles, plumas y puntas forjadas en Herrería) o compra flechas de bronce en la tienda.', spellLevel: '{spell} requiere Magia {lvl}', noRunes: 'No tienes runas para {spell}',
     bossLocked: 'Completa antes la misión necesaria', mercGold: 'No tienes oro para los mercenarios', areaLocked: 'Esta zona está bloqueada',
     dungeonLocked: 'Esta mazmorra está bloqueada', diedDungeon: 'Has caído en {dungeon}, sala {room}. Pierdes {gold} de oro.',
     diedTower: 'Has caído en el piso {floor} (récord {best}). Pierdes {gold} de oro.', died: 'Derrotado por {monster}. Pierdes {gold} de oro.',
@@ -273,6 +273,8 @@ export default {
   },
 
   combat: {
+    equipItem: "Equipar {item}",
+    equipped: "{item} equipado",
     weaponMismatch: "Esta arma es para {style}: con este estilo lucha mucho peor.",
     useStyle: "Cambiar a {style}",
     weaponTitle: "Tu arma",

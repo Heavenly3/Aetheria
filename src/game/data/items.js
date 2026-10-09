@@ -77,7 +77,7 @@ METALS.forEach((m, i) => {
 
 /* ---------------- Wood, bows, staves and rods ---------------- */
 export const WOODS = [
-  { id: 'logs',        tree: 'normal', lvl: 1,  xp: 25,   time: 3,   value: 2,   tint: '#8b6b4a', burnXp: 40,    fm: 1,  bow: { lvl: 5,  xp: 10, rAtk: 8,  req: 1 },  staff: null },
+  { id: 'logs',        tree: 'normal', lvl: 1,  xp: 25,   time: 3,   value: 2,   tint: '#8b6b4a', burnXp: 40,    fm: 1,  bow: { lvl: 1,  xp: 10, rAtk: 8,  req: 1 },  staff: null },
   { id: 'oak_logs',    tree: 'oak',    lvl: 15, xp: 37.5, time: 4,   value: 6,   tint: '#a07845', burnXp: 60,    fm: 15, bow: { lvl: 20, xp: 25, rAtk: 14, req: 10 }, staff: { lvl: 10, xp: 30, mAtk: 10, mDmg: 0.05, req: 10 } },
   { id: 'willow_logs', tree: 'willow', lvl: 30, xp: 67.5, time: 4.5, value: 12,  tint: '#8f9a55', burnXp: 90,    fm: 30, bow: { lvl: 35, xp: 41, rAtk: 20, req: 20 }, staff: { lvl: 25, xp: 55, mAtk: 16, mDmg: 0.08, req: 20 } },
   { id: 'maple_logs',  tree: 'maple',  lvl: 45, xp: 100,  time: 5,   value: 25,  tint: '#c0632f', burnXp: 135,   fm: 45, bow: { lvl: 50, xp: 58, rAtk: 29, req: 30 }, staff: { lvl: 40, xp: 85, mAtk: 22, mDmg: 0.11, req: 30 } },

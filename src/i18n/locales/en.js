@@ -263,8 +263,8 @@ export default {
     foodSwitched: 'Out of that food: now eating {item}.',
     needLevel: 'You need {skill} level {lvl}', needTool: 'You need a {tool} of tier {tier}', noMaterials: 'You are missing materials',
     faintedThieving: 'You were caught and passed out. Taking a break.', queueSkipMaterials: 'Skipped {action}: missing materials',
-    outOfMaterials: 'Out of materials for {action}', noSeeds: 'You have no {item}', needBow: 'You need a bow equipped',
-    noArrows: 'You have no arrows equipped', spellLevel: '{spell} needs Magic level {lvl}', noRunes: 'Not enough runes for {spell}',
+    outOfMaterials: 'Out of materials for {action}', noSeeds: 'You have no {item}', needBow: 'You need a bow equipped. Make one from logs in Fletching (Bows) or buy one in the shop.',
+    noArrows: 'You have no arrows equipped. Make them in Fletching (shafts, feathers and arrowtips forged in Smithing) or buy bronze arrows in the shop.', spellLevel: '{spell} needs Magic level {lvl}', noRunes: 'Not enough runes for {spell}',
     bossLocked: 'Finish the required quest first', mercGold: 'Not enough gold for the mercenaries', areaLocked: 'This area is locked',
     dungeonLocked: 'This dungeon is locked', diedDungeon: 'You fell in {dungeon}, room {room}. Lost {gold} gold.',
     diedTower: 'You fell on floor {floor} (record {best}). Lost {gold} gold.', died: 'Defeated by {monster}. Lost {gold} gold.',
@@ -273,6 +273,8 @@ export default {
   },
 
   combat: {
+    equipItem: "Equip {item}",
+    equipped: "{item} equipped",
     weaponMismatch: "This weapon is made for {style}: with this style it fights much worse.",
     useStyle: "Switch to {style}",
     weaponTitle: "Your weapon",

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Select from 'primevue/select'
 import Slider from 'primevue/slider'
@@ -31,6 +32,21 @@ const spells = computed(() => SPELLS.map(sp => ({
 })))
 const spell = computed(() => G.currentSpell())
 const blocker = computed(() => G.attackBlocker())
+// Ways out of the blocker: gear already in the bag to put on, or where to make or buy it
+const router = useRouter()
+const ownedFor = key => Object.keys(state.inventory).filter(id => G.qty(id) > 0 && G.canEquip(id) && ITEMS[id].style === 'ranged'
+  && (key === 'msg.noArrows' ? ITEMS[id].stackEquip : ITEMS[id].slot === 'weapon' && !ITEMS[id].stackEquip))
+  .sort((a, b) => ITEMS[b].value - ITEMS[a].value)[0]
+const fixes = computed(() => {
+  const key = blocker.value?.key
+  if (key === 'msg.needBow' || key === 'msg.noArrows') {
+    const own = ownedFor(key)
+    return { equip: own, go: [['/skill/fletching', 'arrow-flights', 'skills.fletching'], ['/shop', 'shop', 'nav.shop']] }
+  }
+  if (key === 'msg.noRunes') return { go: [['/skill/runecrafting', 'rune-stone', 'skills.runecrafting'], ['/shop', 'shop', 'nav.shop']] }
+  return null
+})
+function equipFix(id) { if (G.equip(id)) G.toast(ITEMS[id].icon, 'combat.equipped', { item: '@item:' + id }, 'success') }
 const prayers = computed(() => PRAYERS.map(p => ({ value: p.id, label: `${p.name} — ${p.desc} · ${t('common.lvlShort', { n: p.lvl })}`, disabled: G.level('prayer') < p.lvl })))
 const bonesLeft = computed(() => ['bones', 'big_bones', 'dragon_bones', 'demon_ashes'].reduce((s, k) => s + G.qty(k), 0))
 const setName = ref(['', '', ''])
@@ -102,7 +118,17 @@ const weaponLine = computed(() => {
         <template v-if="ammo"><ItemTile :item="ammo" size="xs" /><b class="small">{{ ITEMS[ammo].name }} · {{ fmt(G.qty(ammo)) }}</b></template>
         <span v-else class="small bad-text">{{ $t('combat.equipArrows') }}</span>
       </div>
-      <div v-if="blocker" class="small bad-text" style="margin-top:12px"><i class="pi pi-exclamation-triangle" /> {{ tm(blocker) }}</div>
+      <div v-if="blocker" class="blocker">
+        <div class="small bad-text"><i class="pi pi-exclamation-triangle" /> {{ tm(blocker) }}</div>
+        <div v-if="fixes" class="row wrap" style="gap:8px;margin-top:8px">
+          <Button v-if="fixes.equip" size="small" @click="equipFix(fixes.equip)">
+            <ItemTile :item="fixes.equip" size="xs" :tip="false" /> {{ $t('combat.equipItem', { item: ITEMS[fixes.equip].name }) }}
+          </Button>
+          <Button v-for="[to, icon, key] in fixes.go" :key="to" size="small" severity="secondary" outlined @click="router.push(to)">
+            <GameIcon :name="icon" :size="14" /> {{ $t(key.startsWith('skills.') ? key + '.name' : key) }}
+          </Button>
+        </div>
+      </div>
     </div>
 
     <div v-if="show('supplies')" class="panel pad">
@@ -169,4 +195,5 @@ const weaponLine = computed(() => {
 .set { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: var(--tint-1); border: 1px solid var(--line); }
 @media (max-width: 900px) { .sets { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .styles { grid-template-columns: repeat(3, 1fr); } }
+.blocker { margin-top: 12px; }
 </style>
