@@ -1794,6 +1794,9 @@ export default {
   },
 
   statsView: {
+    records: "Records",
+    blocks: { general: "General", combat: "Combat", gathering: "Gathering and thieving", craft: "Crafting and compendium", town: "Town, tavern and guilds", story: "Story and omens" },
+    rows: { playTime: "Time played", heroActions: "Hero actions", goldEarned: "Gold earned", achievements: "Achievements", deaths: "Deaths", ascensions: "Ascensions", kills: "Monsters defeated", elites: "Elites defeated", superiors: "Superiors slain", bestStreak: "Best hunting streak", dungeons: "Dungeons cleared", towerBest: "Tower record", guardians: "Tower guardians defeated", slayerTasks: "Slayer tasks", weeklySlain: "Weekly bosses slain", harvests: "Harvests", bountiful: "Bountiful harvests", hybrids: "Hybrids discovered", fish: "Fish caught", heists: "Clean heists", jailed: "Times jailed", fenced: "Earned at the fence", fine: "Fine pieces crafted", superior: "Superior pieces crafted", masterworkRolls: "Masterworks crafted", masterworks: "Different masterworks", codexItems: "Compendium items", codexPages: "Compendium pages claimed", staffActions: "Staff actions", wages: "Wages paid", expeditions: "Expeditions", orders: "Orders delivered", patrons: "Patrons served", guests: "Special guests served", tavernRep: "Tavern reputation", dice: "Dice balance", guildRank: "Best guild rank", contracts: "Guild contracts", favour: "Favour with the Order", chapters: "Journal chapters", omens: "Omens witnessed", wishes: "Wishes received" },
     xpHour: 'XP per hour', goldHour: 'Gold per hour', killsHour: 'Monsters per hour', actionsHour: 'Actions per hour', lastHourAvg: 'last hour average',
     last24: 'last 24 h', xpUnit: 'XP/h', goldUnit: 'gold/h', perHour: '/h', xpBySkill: 'Total XP by skill', skillTip: '{skill}: {xp} XP (level {lvl})',
     counters: 'Counters', heroActions: 'Hero actions', staffActions: 'Staff actions', wages: 'Wages paid', expeditions: 'Expeditions',

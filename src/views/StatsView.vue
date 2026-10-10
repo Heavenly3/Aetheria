@@ -3,6 +3,12 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { SKILLS } from '../game/data/skills.js'
+import { ACHIEVEMENTS } from '../game/data/progression.js'
+import { CHAPTERS } from '../game/data/journal.js'
+import { HYBRIDS } from '../game/data/farm.js'
+import { RANKS } from '../game/data/guilds.js'
+import { CRAFTED_COUNT } from '../game/data/codex.js'
+import { WEEKLY_BOSSES } from '../game/data/weekly.js'
 import { fmt, fmtTime } from '../game/format.js'
 import LineChart from '../components/LineChart.vue'
 import GameIcon from '../components/GameIcon.vue'
@@ -41,20 +47,41 @@ const bySkill = computed(() => Object.entries(SKILLS)
   .sort((a, b) => b.xp - a.xp))
 const maxXp = computed(() => Math.max(1, ...bySkill.value.map(s => s.xp)))
 
-const counters = computed(() => [
-  { label: t('hero.playTime'), v: fmtTime(state.stats.playTime) },
-  { label: t('statsView.heroActions'), v: fmt(state.stats.actions) },
-  { label: t('statsView.staffActions'), v: fmt(state.stats.workerActions || 0) },
-  { label: t('statsView.wages'), v: t('inventory.goldAmount', { n: fmt(state.stats.wages || 0) }) },
-  { label: t('statsView.expeditions'), v: fmt(state.stats.expeditions || 0) },
-  { label: t('statsView.orders'), v: fmt(state.stats.orders || 0) },
-  { label: t('statsView.dungeons'), v: fmt(state.stats.dungeons || 0) },
-  { label: t('hero.harvests'), v: fmt(state.stats.harvests || 0) },
-  { label: t('hero.kills'), v: fmt(state.stats.kills) },
-  { label: t('hero.deaths'), v: fmt(state.stats.deaths) },
-  { label: t('statsView.dice'), v: t('inventory.goldAmount', { n: (state.tavern.dice.net >= 0 ? '+' : '') + fmt(state.tavern.dice.net) }) },
-  { label: t('hero.goldEarned'), v: fmt(state.stats.goldEarned) },
-])
+// Records, one block per part of the game
+const gold = n => t('inventory.goldAmount', { n: fmt(n) })
+const sum = o => Object.values(o || {}).reduce((x, y) => x + y, 0)
+const blocks = computed(() => {
+  const st = state.stats, q = st.quality || {}
+  const codex = G.codexProgress(), rank = G.bestGuildRank()
+  return [
+    { id: 'general', icon: 'hourglass', rows: [
+      ['playTime', fmtTime(st.playTime)], ['heroActions', fmt(st.actions)], ['goldEarned', fmt(st.goldEarned)],
+      ['achievements', `${Object.keys(state.achievements).length} / ${ACHIEVEMENTS.length}`], ['deaths', fmt(st.deaths)], ['ascensions', fmt(state.ascension?.count || 0)],
+    ] },
+    { id: 'combat', icon: 'crossed-swords', rows: [
+      ['kills', fmt(st.kills)], ['elites', fmt(st.elites || 0)], ['superiors', fmt(st.superiors || 0)], ['bestStreak', fmt(state.hunt?.best || 0)],
+      ['dungeons', fmt(st.dungeons || 0)], ['towerBest', fmt(state.tower.best)], ['guardians', fmt(Object.keys(state.tower.cleared || {}).length)],
+      ['slayerTasks', fmt(state.slayer.completed)], ['weeklySlain', `${G.weeklySlainCount()} / ${WEEKLY_BOSSES.length}`],
+    ] },
+    { id: 'gathering', icon: 'sickle', rows: [
+      ['harvests', fmt(st.harvests || 0)], ['bountiful', fmt(st.bountiful || 0)], ['hybrids', `${G.hybridsKnown()} / ${HYBRIDS.length}`], ['fish', fmt(st.fish || 0)],
+      ['heists', fmt(sum(state.thief?.done))], ['jailed', fmt(st.jailed || 0)], ['fenced', gold(st.fenced || 0)],
+    ] },
+    { id: 'craft', icon: 'anvil-impact', rows: [
+      ['fine', fmt(q[1] || 0)], ['superior', fmt(q[2] || 0)], ['masterworkRolls', fmt(q[3] || 0)], ['masterworks', `${G.masterworks()} / ${CRAFTED_COUNT}`],
+      ['codexItems', `${codex.done} / ${codex.total}`], ['codexPages', fmt(Object.keys(state.codex?.claimed || {}).filter(k => k.startsWith('page:')).length)],
+    ] },
+    { id: 'town', icon: 'beer-horn', rows: [
+      ['staffActions', fmt(st.workerActions || 0)], ['wages', gold(st.wages || 0)], ['expeditions', fmt(st.expeditions || 0)], ['orders', fmt(st.orders || 0)],
+      ['patrons', fmt(st.patrons || 0)], ['guests', fmt(st.guests || 0)], ['tavernRep', fmt(state.tavern.rep || 0)],
+      ['dice', gold((state.tavern.dice.net >= 0 ? '+' : '') + fmt(state.tavern.dice.net))],
+      ['guildRank', rank >= 0 ? t(`guilds.ranks.${RANKS[rank].id}`) : '—'], ['contracts', fmt(st.contracts || 0)], ['favour', fmt(G.favourLevel())],
+    ] },
+    { id: 'story', icon: 'quill-ink', rows: [
+      ['chapters', `${CHAPTERS.filter(c => G.chapterUnlocked(c.id)).length} / ${CHAPTERS.length}`], ['omens', fmt(G.omensSeen())], ['wishes', fmt(G.wishCount())],
+    ] },
+  ]
+})
 </script>
 
 <template>
@@ -93,12 +120,15 @@ const counters = computed(() => [
           <h3 class="panel-title"><GameIcon name="crossed-swords" /> {{ $t('statsView.killsHour') }}</h3>
           <LineChart :points="killRate" :unit="$t('statsView.perHour')" :label="$t('statsView.killsHour')" :color="MARK" />
         </div>
-        <div class="panel pad">
-          <h3 class="panel-title"><GameIcon name="scroll-unfurled" /> {{ $t('statsView.counters') }}</h3>
-          <div class="counters">
-            <div v-for="c in counters" :key="c.label" class="kv"><span>{{ c.label }}</span><b>{{ c.v }}</b></div>
-          </div>
-        </div>
+      </div>
+    </div>
+
+    <!-- Records of every part of the game -->
+    <div class="section-title" style="margin-top:24px">{{ $t('statsView.records') }}</div>
+    <div class="grid-wide records">
+      <div v-for="b in blocks" :key="b.id" class="panel pad">
+        <h3 class="panel-title"><GameIcon :name="b.icon" /> {{ $t(`statsView.blocks.${b.id}`) }}</h3>
+        <div v-for="[k, v] in b.rows" :key="k" class="kv"><span>{{ $t(`statsView.rows.${k}`) }}</span><b class="tnum">{{ v }}</b></div>
       </div>
     </div>
   </div>
@@ -114,7 +144,5 @@ const counters = computed(() => [
 .xp-track { height: 10px; border-radius: 4px; background: var(--tint-2); overflow: hidden; }
 .xp-track i { display: block; height: 100%; border-start-end-radius: 4px; border-end-end-radius: 4px; }
 .xp-val { text-align: end; color: var(--ink); }
-.counters { columns: 2; column-gap: 24px; }
-.counters .kv { break-inside: avoid; }
-@media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, 1fr); } .counters { columns: 1; } }
+@media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
 </style>
