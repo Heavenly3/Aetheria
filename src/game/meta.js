@@ -42,6 +42,13 @@ const TASKS = {
   dungeon: { read: G => G.s.stats.dungeons || 0, target: () => 3 },
   orders:  { read: G => G.s.stats.orders || 0, target: () => 2 },
   slayer:  { read: G => G.s.slayer.completed, target: () => 2 },
+  // Newer systems: each only offered once the hero can do it
+  fish:      { read: G => G.s.stats.fish || 0, target: G => 60 + G.level('fishing') },
+  elites:    { read: G => G.s.stats.elites || 0, target: () => 2 },
+  patrons:   { read: G => G.s.stats.patrons || 0, target: () => 3 },
+  contracts: { read: G => G.s.stats.contracts || 0, target: () => 2 },
+  bountiful: { read: G => G.s.stats.bountiful || 0, target: () => 1 },
+  heists:    { read: G => Object.values(G.s.thief?.done || {}).reduce((a, b) => a + b, 0), target: () => 1 },
 }
 const levelGap = lvl => XP_TABLE[Math.min(99, lvl + 1)] - XP_TABLE[Math.min(98, lvl)]
 const XP_SKILLS = ['mining', 'woodcutting', 'fishing', 'smithing', 'cooking', 'firemaking', 'fletching', 'crafting', 'herblore', 'runecrafting', 'agility', 'thieving']
@@ -127,6 +134,12 @@ export const meta = {
     const rng = seeded(seedKey + this.s.created)
     const pool = ['xp', 'xp', 'actions', 'kills', 'gold', 'harvest', 'dungeon', 'orders']
     if (this.level('slayer') >= 5) pool.push('slayer')
+    if (this.level('fishing') >= 5) pool.push('fish')
+    if (this.combatLevel() >= 20) pool.push('elites')
+    if (this.barMenu().length) pool.push('patrons')
+    if (this.s.guilds?.member) pool.push('contracts')
+    if (this.level('farming') >= 10) pool.push('bountiful')
+    if (this.level('thieving') >= 20 && this.toolTier('lockpick') >= 2) pool.push('heists')
     const out = []
     while (out.length < count && pool.length) {
       const type = pool.splice(Math.floor(rng() * pool.length), 1)[0]

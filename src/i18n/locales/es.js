@@ -2227,7 +2227,7 @@ export default {
   daily: {
     streak: 'Racha de {n} días', noStreak: 'Aún no tienes racha', streakHint: 'Completa todas las tareas diarias cada día para aumentar tu racha. Recompensas +{v}% (máximo a los {cap} días).',
     best: 'Mejor: {n} días', claimedTotal: '{n} tareas reclamadas', dailyTitle: 'Tareas diarias', weeklyTitle: 'Tareas semanales', resets: 'Se renueva en {time}',
-    task: {
+    task: { fish: "Pesca {n} peces", elites: "Derrota a {n} élites", patrons: "Sirve a {n} clientes en la taberna", contracts: "Cumple {n} contratos de gremio", bountiful: "Recoge {n} cosecha abundante", heists: "Da {n} golpe limpio",
       xp: 'Gana {n} XP de {skill}', actions: 'Completa {n} acciones de habilidad', kills: 'Derrota {n} monstruos', gold: 'Gana {n} de oro',
       harvest: 'Cosecha {n} parcelas', dungeon: 'Completa {n} mazmorras', orders: 'Entrega {n} encargos de la taberna', slayer: 'Completa {n} encargos de cazador',
     },

@@ -2227,7 +2227,7 @@ export default {
   daily: {
     streak: '{n}-day streak', noStreak: 'No streak yet', streakHint: 'Finish all daily tasks each day to grow your streak. Rewards +{v}% (max at {cap} days).',
     best: 'Best: {n} days', claimedTotal: '{n} tasks claimed', dailyTitle: 'Daily tasks', weeklyTitle: 'Weekly tasks', resets: 'Resets in {time}',
-    task: {
+    task: { fish: "Catch {n} fish", elites: "Defeat {n} elites", patrons: "Serve {n} tavern patrons", contracts: "Complete {n} guild contracts", bountiful: "Bring in {n} bountiful harvest", heists: "Pull off {n} clean heist",
       xp: 'Earn {n} {skill} XP', actions: 'Complete {n} skill actions', kills: 'Defeat {n} monsters', gold: 'Earn {n} gold',
       harvest: 'Harvest {n} plots', dungeon: 'Clear {n} dungeons', orders: 'Deliver {n} tavern orders', slayer: 'Complete {n} slayer tasks',
     },
