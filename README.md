@@ -56,6 +56,7 @@ Requires Node.js 18 or newer.
 - **21 skills** across gathering, artisan, support and combat, with per-action mastery and prestige.
 - **Hero level (1–100)** fed by 25% of all skill XP. Every level grants attribute points (STR, DEX, INT, VIT, WIS, LCK) and every 2 levels a talent point.
 - **Tools**: tiered pickaxes, axes and fishing rods gate advanced resources; a sickle makes crops grow faster and yield more, and lockpicks make thieving faster and safer.
+- **Thieving**: every theft raises the guard's heat, which makes thefts fail more often; getting caught on alert means jail (bribe your way out, or pay an informant to cool things down). Valuables lifted now and then sell best at the fence while the streets are calm, and four heists (from a merchant's vault to the royal treasury) play out in stages (plan, slip in, crack, get away) for gold, loot and the shadow outfit.
 - **Gathering finds**: geodes while mining, caskets while fishing, bird nests while woodcutting and seed pouches while harvesting. Mining has a gem rock, fishing reaches tuna and anglerfish, and thieving has stalls that pay in goods instead of coins.
 - **Crafting quality**: every piece of gear made at the anvil, the fletching bench or the crafting table can come out Fine (+5% stats), Superior (+10%) or Masterwork (+20%). The chances grow with your mastery of the recipe, so mastering a recipe pays off. Mage robes are woven from flax in four cloths (linen, silk, spellweave, starweave) and ranger hides are stitched from wolf pelts, snake skins and wyvern scales, each with its own set bonus.
 - **Farming**: plots grow in real time, even offline, with optional auto-replant.
@@ -112,6 +113,7 @@ Requires Node.js 18 or newer.
 - `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/slayer.js`: slayer tasks and offers, Superior creatures, perks and blocked creatures (tuning in `src/game/data/slayer.js`).
+- `src/game/thief.js`: heat, jail, the fence and heists (tuning in `src/game/data/thieving.js`).
 - `src/game/farm.js`: soil, plot events, hybrids, farm buildings and favourite seasons (tuning in `src/game/data/farm.js`).
 - `src/game/bar.js`: patrons, special guests and the hero's own brews (tuning in `src/game/data/bar.js`).
 - `src/game/church.js`: the Order's favour, daily offerings, holy water and the graceful outfit (tuning in `src/game/data/church.js`).

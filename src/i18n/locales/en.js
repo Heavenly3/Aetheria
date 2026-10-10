@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    jailed: "Caught! You are in jail.",
     hybrid: "New hybrid discovered: <b>{name}</b>!",
     guardian: "<b>{name}</b> falls! First-defeat reward claimed.",
     favour: "Favour with the Order: level <b>{n}</b>",
@@ -144,6 +145,7 @@ export default {
   },
 
   mods: {
+    heat: "-{v}% heat from thefts",
     quality: "+{v}% chance of finer crafted gear",
     xp: '+{v}% XP in every skill', speed: '+{v}% action speed', gold: '+{v}% gold', loot: '+{v}% loot chance',
     double: '+{v}% double resources', preserve: '+{v}% chance to keep materials', mastery: '+{v}% mastery XP', heal: '+{v}% healing',
@@ -248,6 +250,8 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    jailed: "You were caught thieving and thrown in jail.",
+    heist: "You pulled off {heist} for {gold} gold.",
     hybrid: "You crossed two crops and discovered {crop}!",
     guest: "{guest} visited your tavern and left a gift.",
     guardian: "You defeated {guardian} on floor {floor} for the first time.",
@@ -760,6 +764,9 @@ export default {
       patrons: { title: "Patrons", body: "Patrons drop in over time, even while you are away, each asking for some food or drink from your stores. Serve them for gold and a tip. Every patron served raises the tavern's reputation, so everyone pays more. Sometimes a special guest comes, asks for more and pays with rare goods. A bigger tavern brings more patrons." },
       farmYard: { title: "Farmyard", body: "Buildings for the farm. The coop and the beehive produce on their own, even while you are away, up to what they can store; collect their goods here. The scarecrow keeps pests off your plots and the well makes crops grow faster." },
       hybrids: { title: "Hybrids", body: "Plant two parent crops in plots side by side. When you harvest one of them, they may cross and give you seeds of a hybrid, a crop found nowhere else. Higher mastery of the crop makes it likelier." },
+      heat: { title: "The guard's eye", body: "Every theft raises the heat. More heat means more failed thefts and a worse price at the fence, and above 60 a failed theft can land you in jail. The heat cools with time; an informant halves it, and a bribe gets you out of jail." },
+      fence: { title: "The fence", body: "Valuables lifted while thieving are worth the most here, up to 60% more than their value while the heat is low." },
+      heists: { title: "Heists", body: "Big jobs played in four stages: plan, slip in, crack the lock and get away. Each stage can fail; failing to crack still pays a little, but failing to get away loses the loot and sends you to jail. Higher Thieving and Agility, better lockpicks and low heat raise the chances. Each heist has a cooldown, and the first clean jobs can pay a piece of the shadow outfit." },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -1140,6 +1147,7 @@ export default {
     claimedTag: "Reward claimed",
     milestoneClaimed: "Milestone reached: {n} masterworks",
   },
+  thief: { heatTitle: "The guard's eye", heat: { calm: "Calm streets", wary: "The guard is wary", alert: "On alert: getting caught means jail", alarm: "Alarm! Every guard is looking for you" }, heatEffect: "+{fail} failure chance · the fence pays {fence}%", jailed: "In jail", jailLeft: "Free in {time}", bribe: "Bribe · {n} gold", informant: "Pay an informant · {n} gold", informantTip: "False rumours send the guard elsewhere: the heat halves.", inJail: "You are in jail. Wait it out or bribe the guard.", jailedStop: "Caught! The guard drags you off to jail.", bribed: "The guard looks the other way. You are free.", informed: "The rumours spread: the heat halves.", fenceTitle: "The fence", fenceText: "Valuables lifted now and then while thieving. The fence pays well for them, best while the streets are calm.", noGoods: "Nothing to sell yet.", sell: "Sell all", fenced: "The fence paid {gold} gold", findable: "Can turn up:", fromLevel: "From Thieving level {n}", heistsTitle: "Heists", lockpickTier: "Lockpick tier {n}", startHeist: "Pull the heist", cooldown: "Lie low · {time}", gearChance: "May come with the job", stages: { plan: "Plan", slip: "Slip in", crack: "Crack", escape: "Get away" }, stageText: { plan: { ok: "the guard rounds are learned", bad: "the plan has a hole: you call it off" }, slip: { ok: "in without a sound", bad: "a dog barks: you back off" }, crack: { ok: "the lock gives", bad: "the lock holds: you grab what is at hand" }, escape: { ok: "gone into the night", bad: "the guard is waiting at the door" } }, heistOkLine: "A clean job! +{gold} gold", caughtLine: "Caught! The loot is lost and you are in jail.", failLine: "It went wrong. +{gold} gold", heistOk: "{heist}: clean job, +{gold} gold", heistCaught: "{heist}: caught on the way out!", heistFail: "{heist}: it went wrong", heists: { merchant_vault: { name: "The merchant's vault", desc: "A spice merchant who trusts his locks too much." }, bishop_reliquary: { name: "The bishop's reliquary", desc: "Relics, rings and holy water behind the altar." }, guild_vault: { name: "The guild vault", desc: "Where a rich guild keeps what it never shows." }, royal_treasury: { name: "The royal treasury", desc: "The crown's own gold. Nobody has done it twice." } } },
   guilds: {
     nameTpl: "{group} of {emblem}",
     groups: {
@@ -1652,6 +1660,7 @@ export default {
   },
 
   sets: {
+    shadow: "Shadow outfit",
     graceful: "Graceful outfit",
     cloth: "{mat} robes",
     hide: "{mat} hunter",
@@ -1994,6 +2003,13 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    silver_goblet: "Silver goblet",
+    jewelled_ring: "Jewelled ring",
+    old_painting: "Old painting",
+    noble_seal: "Noble seal",
+    shadow_mask: "Shadow mask",
+    shadow_cloak: "Shadow cloak",
+    shadow_garb: "Shadow garb",
     egg: "Egg",
     honey: "Honey",
     supercompost: "Supercompost",
@@ -2044,6 +2060,9 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    shadow_mask: "From a clean heist. Part of the shadow outfit.",
+    shadow_cloak: "From a clean heist. Part of the shadow outfit.",
+    shadow_garb: "From a clean heist. Part of the shadow outfit.",
     supercompost: "Rich compost mixed with moonroot. Worked into a growing plot it adds three to the harvest and makes a bountiful crop far likelier.",
     geode: "A plain rock that hides a hollow full of crystals. Holds ores, gems and a little stardust.",
     casket: "Fished up from the deep. Holds coins, gems, seeds and, now and then, a treasure map.",

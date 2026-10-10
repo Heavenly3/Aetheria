@@ -49,6 +49,10 @@ export const SETS = [
     { n: 3, mods: { 'xp.agility': 0.1, thieving: 0.05 } },
     { n: 4, mods: { speed: 0.04, offline: 1 } },
   ]),
+  set('shadow', 'hooded-assassin', '#5a4a7a', ['shadow_mask', 'shadow_cloak', 'shadow_garb'], [
+    { n: 2, mods: { thieving: 0.06, gold: 0.05 } },
+    { n: 3, mods: { heat: 0.35, 'double.gathering': 0.03 } },
+  ]),
   set('slayer', 'black-knight-helm', '#b5179e', ['slayer_helm', 'slayer_cape'], [
     { n: 2, mods: { meleeDmg: 0.04, rangedDmg: 0.04, magicDmg: 0.04, loot: 0.05 } },
   ]),

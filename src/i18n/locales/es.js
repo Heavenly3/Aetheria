@@ -65,6 +65,7 @@ export default {
   },
 
   toast: {
+    jailed: "¡Te han pillado! Estás en la cárcel.",
     hybrid: "¡Nuevo híbrido descubierto: <b>{name}</b>!",
     guardian: "¡<b>{name}</b> cae! Recompensa de primera victoria cobrada.",
     favour: "Favor con la Orden: nivel <b>{n}</b>",
@@ -144,6 +145,7 @@ export default {
   },
 
   mods: {
+    heat: "-{v} % de alerta al robar",
     quality: "+{v}% de probabilidad de fabricar equipo de mejor calidad",
     xp: '+{v}% XP en todas las habilidades', speed: '+{v}% velocidad de acciones', gold: '+{v}% oro', loot: '+{v}% probabilidad de botín',
     double: '+{v}% recursos dobles', preserve: '+{v}% de conservar materiales', mastery: '+{v}% XP de maestría', heal: '+{v}% curación',
@@ -248,6 +250,8 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    jailed: "Te pillaron robando y acabaste en la cárcel.",
+    heist: "Diste el golpe de {heist} y sacaste {gold} de oro.",
     hybrid: "¡Has cruzado dos cultivos y descubierto {crop}!",
     guest: "{guest} visitó tu taberna y dejó un regalo.",
     guardian: "Derrotaste por primera vez a {guardian} en el piso {floor}.",
@@ -760,6 +764,9 @@ export default {
       patrons: { title: "Clientes", body: "Los clientes van llegando con el tiempo, también mientras no juegas, y cada uno pide comida o bebida de tus provisiones. Sírvelos a cambio de oro y propina. Cada cliente servido sube la reputación de la taberna, así que todos pagan más. A veces llega un huésped especial, pide más y paga con objetos raros. Una taberna más grande atrae más clientes." },
       farmYard: { title: "Granja", body: "Edificios para la granja. El gallinero y la colmena producen solos, también mientras no juegas, hasta lo que pueden almacenar; recoge aquí lo que hagan. El espantapájaros aleja las plagas de tus parcelas y el pozo hace crecer más rápido los cultivos." },
       hybrids: { title: "Híbridos", body: "Planta dos cultivos padres en parcelas contiguas. Al cosechar uno de ellos pueden cruzarse y darte semillas de un híbrido, un cultivo que no existe en ningún otro sitio. Con más maestría del cultivo es más probable." },
+      heat: { title: "La mirada de la guardia", body: "Cada robo sube la alerta. Con más alerta fallas más y el perista paga peor, y por encima de 60 un robo fallido puede acabar en la cárcel. La alerta baja con el tiempo; un soplón la reduce a la mitad y un soborno te saca de la cárcel." },
+      fence: { title: "El perista", body: "Los objetos de valor que caen al robar valen más aquí: hasta un 60 % más que su valor si la alerta está baja." },
+      heists: { title: "Golpes", body: "Grandes trabajos en cuatro fases: planear, colarse, abrir la cerradura y escapar. Cada fase puede fallar; si no abres la cerradura aún te llevas algo, pero si no escapas pierdes el botín y vas a la cárcel. Más Robo y Agilidad, mejores ganzúas y poca alerta suben las probabilidades. Cada golpe tiene un tiempo de espera, y los primeros golpes limpios pueden dar una pieza del atuendo de la sombra." },
       slayerShop: { title: 'Tienda del cazador', body: 'Gasta los puntos de Cazador en equipo, provisiones y saltos de encargo.' },
       towerNext: { title: 'Próximos pisos', body: 'Los siguientes guardianes y su vida. Los pisos ★ son puntos de control con un guardián más duro y más fichas.' },
       towerShop: { title: 'Tienda de la torre', body: 'Gasta las fichas de la torre en capas, cofres y elixires.' },
@@ -1140,6 +1147,7 @@ export default {
     claimedTag: "Recompensa cobrada",
     milestoneClaimed: "Hito alcanzado: {n} obras maestras",
   },
+  thief: { heatTitle: "La mirada de la guardia", heat: { calm: "Calles tranquilas", wary: "La guardia sospecha", alert: "En alerta: si te pillan, a la cárcel", alarm: "¡Alarma! Todos los guardias te buscan" }, heatEffect: "+{fail} de probabilidad de fallo · el perista paga un {fence} %", jailed: "En la cárcel", jailLeft: "Libre en {time}", bribe: "Sobornar · {n} de oro", informant: "Pagar a un soplón · {n} de oro", informantTip: "Los rumores falsos mandan a la guardia a otra parte: la alerta baja a la mitad.", inJail: "Estás en la cárcel. Espera a salir o soborna al guardia.", jailedStop: "¡Te han pillado! La guardia te lleva a la cárcel.", bribed: "El guardia mira hacia otro lado. Eres libre.", informed: "Los rumores corren: la alerta baja a la mitad.", fenceTitle: "El perista", fenceText: "Objetos de valor que caen a veces al robar. El perista los paga bien, mejor aún si las calles están tranquilas.", noGoods: "Aún no tienes nada que vender.", sell: "Vender todo", fenced: "El perista te pagó {gold} de oro", findable: "Puede aparecer:", fromLevel: "Desde Robo nivel {n}", heistsTitle: "Golpes", lockpickTier: "Ganzúa nivel {n}", startHeist: "Dar el golpe", cooldown: "Pasar desapercibido · {time}", gearChance: "Puede venir con el golpe", stages: { plan: "Planear", slip: "Colarse", crack: "Abrir", escape: "Escapar" }, stageText: { plan: { ok: "las rondas de la guardia, aprendidas", bad: "el plan tiene un fallo: lo dejas" }, slip: { ok: "dentro sin un ruido", bad: "ladra un perro: te retiras" }, crack: { ok: "la cerradura cede", bad: "la cerradura aguanta: coges lo que hay a mano" }, escape: { ok: "te pierdes en la noche", bad: "la guardia espera en la puerta" } }, heistOkLine: "¡Un golpe limpio! +{gold} de oro", caughtLine: "¡Te han pillado! Pierdes el botín y vas a la cárcel.", failLine: "Ha salido mal. +{gold} de oro", heistOk: "{heist}: golpe limpio, +{gold} de oro", heistCaught: "{heist}: ¡te pillaron al salir!", heistFail: "{heist}: ha salido mal", heists: { merchant_vault: { name: "El almacén del mercader", desc: "Un mercader de especias que confía demasiado en sus cerraduras." }, bishop_reliquary: { name: "El relicario del obispo", desc: "Reliquias, anillos y agua bendita detrás del altar." }, guild_vault: { name: "La cámara del gremio", desc: "Donde un gremio rico guarda lo que nunca enseña." }, royal_treasury: { name: "El tesoro real", desc: "El oro de la corona. Nadie lo ha hecho dos veces." } } },
   guilds: {
     nameTpl: "{group} {emblem}",
     groups: {
@@ -1652,6 +1660,7 @@ export default {
   },
 
   sets: {
+    shadow: "Atuendo de la sombra",
     graceful: "Conjunto ligero",
     cloth: "Ropajes de {mat}",
     hide: "Cazador de {mat}",
@@ -1994,6 +2003,13 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    silver_goblet: "Copa de plata",
+    jewelled_ring: "Anillo enjoyado",
+    old_painting: "Cuadro antiguo",
+    noble_seal: "Sello noble",
+    shadow_mask: "Máscara de la sombra",
+    shadow_cloak: "Capa de la sombra",
+    shadow_garb: "Ropaje de la sombra",
     egg: "Huevo",
     honey: "Miel",
     supercompost: "Supercompost",
@@ -2044,6 +2060,9 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    shadow_mask: "De un golpe limpio. Parte del atuendo de la sombra.",
+    shadow_cloak: "De un golpe limpio. Parte del atuendo de la sombra.",
+    shadow_garb: "De un golpe limpio. Parte del atuendo de la sombra.",
     supercompost: "Compost rico mezclado con raíz lunar. En una parcela creciendo suma tres a la cosecha y hace mucho más probable una cosecha abundante.",
     geode: "Una roca corriente que esconde un hueco lleno de cristales. Contiene minerales, gemas y algo de polvo estelar.",
     casket: "Pescado en las profundidades. Contiene monedas, gemas, semillas y, a veces, un mapa del tesoro.",

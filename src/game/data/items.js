@@ -274,6 +274,15 @@ def('graceful_hood', { icon: 'hood',         type: 'equip', slot: 'head', value:
 def('graceful_cape', { icon: 'cape',         type: 'equip', slot: 'cape', value: 0, tint: '#4ecdc4', stats: { def: 3 }, req: { agility: 20 } })
 def('graceful_legs', { icon: 'armored-pants', type: 'equip', slot: 'legs', value: 0, tint: '#4ecdc4', stats: { def: 4 }, req: { agility: 30 } })
 def('graceful_top',  { icon: 'leather-vest', type: 'equip', slot: 'body', value: 0, tint: '#4ecdc4', stats: { def: 5 }, req: { agility: 40 } })
+// Valuables lifted while thieving, worth most at the fence
+def('silver_goblet', { icon: 'glass-celebration', value: 120,  tint: '#c8ccd2' })
+def('jewelled_ring', { icon: 'gem-pendant',       value: 380,  tint: '#e0a3ff' })
+def('old_painting',  { icon: 'scroll-unfurled',   value: 950,  tint: '#c9a04a' })
+def('noble_seal',    { icon: 'star-medal',        value: 2400, tint: '#f0c040' })
+// The shadow outfit, from heists
+def('shadow_mask',   { icon: 'hood',          type: 'equip', slot: 'head', value: 0, tint: '#5a4a7a', stats: { def: 6, rAtk: 4 }, req: { thieving: 20 }, hasDesc: true })
+def('shadow_cloak',  { icon: 'cloak',         type: 'equip', slot: 'cape', value: 0, tint: '#5a4a7a', stats: { def: 6, atk: 4 }, req: { thieving: 40 }, hasDesc: true })
+def('shadow_garb',   { icon: 'leather-armor', type: 'equip', slot: 'body', value: 0, tint: '#5a4a7a', stats: { def: 14, rAtk: 6 }, req: { thieving: 60 }, hasDesc: true })
 def('treasure_map',  { icon: 'treasure-map', value: 300, tint: '#c9a04a', hasDesc: true })
 def('holy_water',    { icon: 'vial', value: 40, tint: '#f1e3b0', hasDesc: true })
 def('slayer_sigil',  { icon: 'star-medal', value: 120, tint: '#d36bff', hasDesc: true })

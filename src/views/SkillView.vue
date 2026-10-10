@@ -17,6 +17,7 @@ import ActionCard from '../components/ActionCard.vue'
 import ActionRow from '../components/ActionRow.vue'
 import GameIcon from '../components/GameIcon.vue'
 import FarmPlots from '../components/FarmPlots.vue'
+import ThiefPanel from '../components/ThiefPanel.vue'
 import ItemTile from '../components/ItemTile.vue'
 import { GRACE_COSTS, GRACE_SPEED, GRACEFUL } from '../game/data/extras.js'
 import { intlLocale } from '../i18n/index.js'
@@ -102,6 +103,7 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
       </div>
     </template>
     <div v-if="skill === 'farming'" style="margin-top:20px"><FarmPlots /></div>
+    <div v-if="skill === 'thieving'" style="margin-top:20px"><ThiefPanel /></div>
     <div v-if="skill === 'agility'" class="panel pad grace">
       <ItemTile item="mark_of_grace" size="lg" :qty="G.qty('mark_of_grace')" />
       <div class="grow">

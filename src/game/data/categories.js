@@ -26,7 +26,7 @@ const CROP_IDS = new Set(CROPS.map(c => c.id))
 const GEMS = new Set(['sapphire', 'emerald', 'ruby', 'diamond'])
 const REMAINS = new Set(['bones', 'big_bones', 'dragon_bones', 'demon_ashes', 'ashes'])
 const HIDES = new Set(['cowhide', 'leather', 'green_dhide', 'green_dleather', 'wolf_pelt', 'feathers', 'snake_skin', 'wyvern_scale', 'wolf_leather', 'snake_leather', 'wyvern_leather'])
-const SPECIAL = new Set(['holy_water', 'treasure_map', 'mark_of_grace', 'void_essence', 'starlight_shard', 'stardust', 'ectoplasm', 'ice_shard', 'venom_sac', 'troll_tusk', 'slayer_sigil'])
+const SPECIAL = new Set(['holy_water', 'treasure_map', 'silver_goblet', 'jewelled_ring', 'old_painting', 'noble_seal', 'mark_of_grace', 'void_essence', 'starlight_shard', 'stardust', 'ectoplasm', 'ice_shard', 'venom_sac', 'troll_tusk', 'slayer_sigil'])
 
 function categoryOf(it) {
   if (it.type === 'equip') return SLOT_CAT[it.slot] || 'armour'

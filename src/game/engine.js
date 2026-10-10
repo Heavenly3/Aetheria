@@ -27,6 +27,7 @@ import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
 import { farm } from './farm.js'
+import { thief, thiefState } from './thief.js'
 import { TOWER_AFFIXES, AFFIX_TOKENS, affixOf, guardianOf, guardianReward, rivalBest } from './data/tower.js'
 import { guildRoster } from './data/guilds.js'
 import { t } from '../i18n/index.js'
@@ -118,6 +119,7 @@ export function newState(profile = {}) {
     ...guildsState(),
     ...codexState(),
     ...churchState(),
+    ...thiefState(),
   }
 }
 
@@ -299,6 +301,7 @@ export const G = {
     this.ensureSlayer()
     this.ensureChurch()
     this.ensureFarm()
+    this.ensureThief()
   },
 
   /* ================= levels ================= */
@@ -679,7 +682,7 @@ export const G = {
   hasTool(a) { return !a.tool || this.toolTier(a.tool.type) >= a.tool.tier },
   canDo(skill, a) { return this.level(skill) >= a.lvl && this.hasItems(a.in) && this.hasTool(a) },
   burnChance(skill, a) { return Math.max(0, 0.45 - (this.level(skill) - a.lvl) * 0.025) * (1 - this.room('kitchen') * 0.3) },
-  failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving') - Math.min(0.12, this.level('agility') * 0.0012) - this.toolTier('lockpick') * 0.015)) },
+  failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving') - Math.min(0.12, this.level('agility') * 0.0012) - this.toolTier('lockpick') * 0.015 + (skill === 'thieving' ? this.heatFail() : 0))) },
   runeMult(skill, a) { return 1 + Math.floor((this.level(skill) - a.lvl) / 12) },
 
   startSkill(skill, actionId) {
@@ -688,6 +691,7 @@ export const G = {
     const cur = this.s.activity
     if (cur && cur.type === 'skill' && cur.skill === skill && cur.action === actionId) return this.stop()
     if (this.level(skill) < a.lvl) return this.toast('padlock', 'msg.needLevel', { lvl: a.lvl, skill: '@skill:' + skill }, 'warn')
+    if (skill === 'thieving' && this.jailed()) return this.toast('padlock', 'thief.inJail', {}, 'warn')
     if (!this.hasTool(a)) return this.toast(TOOL_TYPES[a.tool.type].icon, 'msg.needTool', { tool: TOOL_TYPES[a.tool.type].name, tier: a.tool.tier }, 'warn')
     if (!this.hasItems(a.in) && !this.canChain(a)) return this.toast('knapsack', 'msg.noMaterials', {}, 'warn')
     this.s.activity = { type: 'skill', skill, action: actionId, progress: 0 }
@@ -764,6 +768,7 @@ export const G = {
       act.progress -= 2 // stunned
       this.autoEat()
       this.emit('gain', msg('gain.caught', { dmg }))
+      if (skill === 'thieving' && this.thiefCaught()) return
       if (this.s.hp <= 0) { this.s.hp = 1; this.stop(msg('msg.faintedThieving')) }
       return
     }
@@ -803,6 +808,7 @@ export const G = {
     })
     this.addXp(skill, a.xp)
     gain ||= msg('gain.xp', { n: Math.round(a.xp * this.xpMult(skill)) })
+    if (skill === 'thieving') { const loot = this.thiefSucceeded(a); if (loot) bonus = '@item:' + loot }
     this.emit('gain', { ...gain, double: double > 1, bonus })
   },
 
@@ -1418,6 +1424,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief)
 
 export { SKILLS, ITEMS }

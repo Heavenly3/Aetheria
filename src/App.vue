@@ -127,6 +127,7 @@ onMounted(() => {
   on('favour', e => { play('level'); push('holy-symbol', t('toast.favour', { n: e.level }), 'success', 5000) })
   on('guardian', e => { play('rare'); push('stone-tower', t('toast.guardian', { name: t(`tower.guardians.${e.id}`) }), 'rare', 6000) })
   on('hybrid', e => { play('rare'); push('sprout', t('toast.hybrid', { name: t(`crops.${e.id}`) }), 'rare', 7000) })
+  on('jailed', () => { play('bad'); push('padlock', t('toast.jailed'), 'warn', 6000) })
   on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
   on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })
