@@ -1,5 +1,5 @@
 import { AREAS, monsterLevel } from './combat.js'
-import { ACTIONS } from './actions.js'
+import { outputsOf } from './actions.js'
 import { ITEMS } from './items.js'
 import { XP_TABLE } from './skills.js'
 import { rollName } from './journal.js'
@@ -235,12 +235,11 @@ function huntTarget(G, rng) {
 // Something the hero can already gather or make in a skill
 function deliverTarget(G, skill, rng) {
   const lvl = G.level(skill)
-  const acts = (ACTIONS[skill] || []).filter(a => a.lvl <= lvl && Object.keys(a.out).length === 1)
-    .filter(a => { const id = Object.keys(a.out)[0]; return ITEMS[id] && !ITEMS[id].type || ITEMS[id]?.type === 'rune' })
-  if (!acts.length) return null
-  acts.sort((a, b) => b.lvl - a.lvl)
-  const a = pick(rng, acts.slice(0, 3))
-  return { item: Object.keys(a.out)[0], time: a.time }
+  const outs = outputsOf(skill).filter(o => o.lvl <= lvl && ITEMS[o.item] && (!ITEMS[o.item].type || ITEMS[o.item].type === 'rune'))
+  if (!outs.length) return null
+  outs.sort((a, b) => b.lvl - a.lvl)
+  const o = pick(rng, outs.slice(0, 3))
+  return { item: o.item, time: o.time / o.per }
 }
 
 // One task; `size` is about how many minutes of play it should take

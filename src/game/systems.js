@@ -6,7 +6,7 @@
    ========================================================= */
 import { XP_TABLE } from './data/skills.js'
 import { ITEMS, SLOTS } from './data/items.js'
-import { ACTIONS, findAction } from './data/actions.js'
+import { ACTIONS, findAction, outputsOf } from './data/actions.js'
 import { DUNGEONS } from './data/combat.js'
 import {
   SPECIALTIES, RARITIES, TRAITS, WORKER_NAMES, WAGE_BASE, HIRE_FEE_HOURS, BOARD_REFRESH, TAVERN_LEVELS,
@@ -189,6 +189,8 @@ export const systems = {
     if (a.fail && Math.random() < clamp(0.55 - (lvl - a.lvl) * 0.012 + clumsy, 0.05, 0.6)) return
     if (a.burn && Math.random() < Math.max(0, 0.45 - (lvl - a.lvl) * 0.025) + clumsy) { this.addItem('burnt_food', 1); return }
     const double = Math.random() < this.traitSum(w, 'double') ? 2 : 1
+    // Fishers cast into the water like the hero, without bait
+    if (a.catch) { this.addItem(this.rollCatch(a, lvl, false), double); w.made = (w.made || 0) + double }
     Object.entries(a.out).forEach(([k, q]) => {
       const n = (a.runeMult ? q * (1 + Math.floor((lvl - a.lvl) / 12)) : q) * double
       this.addItem(k, n)
@@ -252,15 +254,13 @@ export const systems = {
     tv.ordersDay = day
   },
   makeOrder(rng = Math.random, existing = []) {
-    const pool = ORDER_SKILLS.flatMap(sk => (ACTIONS[sk] || [])
-      .filter(a => {
-        const out = Object.keys(a.out)[0]
-        return out && this.level(sk) >= a.lvl && ['resource', 'food', 'potion', 'rune'].includes(ITEMS[out].type) && !existing.some(o => o.item === out)
-      })
-      .map(a => ({ sk, a })))
-    const { sk, a } = pool[Math.floor(rng() * pool.length)] || { sk: 'mining', a: findAction('mining', 'copper_ore') }
-    const item = Object.keys(a.out)[0]
-    const per = a.out[item]
+    const pool = ORDER_SKILLS.flatMap(sk => outputsOf(sk)
+      .filter(o => this.level(sk) >= o.lvl && ['resource', 'food', 'potion', 'rune'].includes(ITEMS[o.item].type) && !existing.some(x => x.item === o.item))
+      .map(o => ({ sk, o })))
+    const { sk, o } = pool[Math.floor(rng() * pool.length)] || { sk: 'mining', o: outputsOf('mining')[0] }
+    const a = { lvl: o.lvl, time: o.time, xp: o.xp }
+    const item = o.item
+    const per = o.per
     const qty = clamp(Math.round((480 / a.time) * per / 5) * 5, 10, 300)
     return {
       item, qty, skill: sk,

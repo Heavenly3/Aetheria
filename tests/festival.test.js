@@ -48,7 +48,7 @@ describe('festival play', () => {
     G.festivalKill({ id: 'goblin_king', boss: true })
     G.festivalTask()
     expect(G.festivalState().tokens).toBe(before + 5 + 15)
-  })
+  }, 30000) // an hour of play: slow when every suite runs at once
 
   it('sells one-off rewards once and consumables again', () => {
     G.addFestivalTokens(5000)

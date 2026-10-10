@@ -18,6 +18,7 @@ import ActionRow from '../components/ActionRow.vue'
 import GameIcon from '../components/GameIcon.vue'
 import FarmPlots from '../components/FarmPlots.vue'
 import ThiefPanel from '../components/ThiefPanel.vue'
+import FishingScene from '../components/FishingScene.vue'
 import ItemTile from '../components/ItemTile.vue'
 import { GRACE_COSTS, GRACE_SPEED, GRACEFUL } from '../game/data/extras.js'
 import { intlLocale } from '../i18n/index.js'
@@ -104,6 +105,7 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
     </template>
     <div v-if="skill === 'farming'" style="margin-top:20px"><FarmPlots /></div>
     <div v-if="skill === 'thieving'" style="margin-top:20px"><ThiefPanel /></div>
+    <div v-if="skill === 'fishing'" style="margin-top:20px"><FishingScene /></div>
     <div v-if="skill === 'agility'" class="panel pad grace">
       <ItemTile item="mark_of_grace" size="lg" :qty="G.qty('mark_of_grace')" />
       <div class="grow">
@@ -127,7 +129,7 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
       </div>
     </div>
 
-    <template v-if="all.length">
+    <template v-if="all.length && skill !== 'fishing'">
       <div class="filters panel" :style="{ '--c': s.color }">
         <div class="row wrap">
           <IconField class="grow search">

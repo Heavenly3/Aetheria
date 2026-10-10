@@ -167,7 +167,7 @@ BLESSINGS.forEach(b => named(b, `blessings.${b.id}.name`, `blessings.${b.id}.des
 
 /* ---------------- Shop ---------------- */
 export const SHOP = [
-  { cat: 'supplies', items: [['vial_water', 6], ['guam', 28], ['feathers', 3], ['rune_essence', 6], ['raw_shrimp', 4]] },
+  { cat: 'supplies', items: [['vial_water', 6], ['guam', 28], ['feathers', 3], ['rune_essence', 6], ['raw_shrimp', 4], ['bait_worms', 3]] },
   { cat: 'seeds', items: [['potato_seed', 5], ['flax_seed', 7], ['onion_seed', 10], ['tomato_seed', 18], ['guam_seed', 30], ['marrentill_seed', 50], ['tarromin_seed', 85], ['strawberry_seed', 75]] },
   { cat: 'runes', items: [['air_rune', 5], ['mind_rune', 5], ['water_rune', 6], ['earth_rune', 6], ['fire_rune', 7], ['chaos_rune', 55]] },
   { cat: 'tools', items: [['bronze_pickaxe', 40], ['bronze_axe', 40], ['rod', 35], ['iron_pickaxe', 160], ['iron_axe', 160], ['oak_rod', 140], ['steel_pickaxe', 600], ['steel_axe', 600], ['willow_rod', 500]] },

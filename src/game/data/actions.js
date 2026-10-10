@@ -1,3 +1,4 @@
+import { WATERS } from './fishing.js'
 import { ITEMS, METALS, PIECES, WOODS, FISH, POTIONS, RUNES, GEMS, CLOTHS, ROBES, HIDES, HIDE_PIECES, BREWS } from './items.js'
 import { named } from '../../i18n/bind.js'
 import { t } from '../../i18n/index.js'
@@ -47,10 +48,15 @@ WOODS.forEach((w, i) => add('woodcutting', {
 }))
 
 /* ---------- Fishing ---------- */
-FISH.forEach((f, i) => add('fishing', {
-  id: 'raw_' + f.id, nameKey: `fish.${f.id}`, icon: f.icon, tint: '#4a8fbf', lvl: f.lvl, xp: f.xp, time: f.time, out: { ['raw_' + f.id]: 1 },
-  tool: { type: 'rod', tier: [1, 1, 2, 2, 3, 3, 4, 5, 5][i] }, extra: [{ item: 'casket', chance: 1 / 120, qty: [1, 1] }],
+// Each water is one action; every cast lands a fish at random from its table (see data/fishing.js)
+const FISH_XP = Object.fromEntries(FISH.map(f => ['raw_' + f.id, f.xp]))
+WATERS.forEach(w => add('fishing', {
+  id: w.id, nameKey: `waters.${w.id}`, icon: w.icon, tint: w.tint, lvl: w.lvl, time: w.time, catch: w.fish,
+  xp: Math.min(...Object.keys(w.fish).map(id => FISH_XP[id])), tool: { type: 'rod', tier: w.rod },
+  extra: [{ item: 'casket', chance: 1 / 120, qty: [1, 1] }],
 }))
+// Level and XP of a fish, by its raw item
+export const FISH_INFO = Object.fromEntries(FISH.map(f => ['raw_' + f.id, { lvl: f.lvl, xp: f.xp }]))
 
 /* ---------- Farming uses real-time plots (see engine) ---------- */
 
@@ -130,6 +136,7 @@ WOODS.forEach(w => add('firemaking', {
 }))
 
 /* ---------- Fletching ---------- */
+add('fletching', { id: 'feather_fly', icon: 'feather', tint: '#e0c870', group: 'groups.bait', lvl: 15, xp: 18, time: 2.4, in: { feathers: 2, logs: 1 }, out: { feather_fly: 10 } })
 add('fletching', { id: 'arrow_shaft', icon: 'wood-stick', tint: '#a07845', group: 'groups.arrows', lvl: 1, xp: 5, time: 2, in: { logs: 1 }, out: { arrow_shaft: 15 } })
 add('fletching', { id: 'headless_arrow', icon: 'arrow-flights', tint: '#d8c7a0', group: 'groups.arrows', lvl: 1, xp: 15, time: 2.4, in: { arrow_shaft: 15, feathers: 15 }, out: { headless_arrow: 15 } })
 METALS.forEach((m, i) => add('fletching', {
@@ -171,6 +178,7 @@ CLOTHS.forEach(c => {
 })
 // Sigils from Superior creatures imbue the slayer helm
 add('crafting', { id: 'slayer_helm_i', icon: 'black-knight-helm', tint: '#d36bff', group: 'groups.jewellery', lvl: 55, xp: 400, time: 6, in: { slayer_helm: 1, slayer_sigil: 25, ruby: 2 }, out: { slayer_helm_i: 1 } })
+add('crafting', { id: 'glow_lure', icon: 'sparkles', tint: '#9fd8ff', group: 'groups.jewellery', lvl: 45, xp: 70, time: 3, in: { stardust: 1, linen_cloth: 1 }, out: { glow_lure: 5 } })
 add('crafting', { id: 'gold_amulet', icon: 'necklace', tint: '#e3b23c', group: 'groups.jewellery', lvl: 8, xp: 30, time: 3, in: { gold_bar: 1 }, out: { gold_amulet: 1 } })
 GEMS.forEach(g => {
   add('crafting', { id: 'cut_' + g.id, nameFn: () => t('tpl.cut', { gem: t(`gems.${g.id}`) }), icon: 'cut-diamond', tint: g.tint, group: 'groups.jewellery', lvl: g.cutLvl, xp: g.cutXp, time: 2.4, in: { ['uncut_' + g.id]: 1 }, out: { [g.id]: 1 } })
@@ -279,5 +287,20 @@ QUALITY_SKILLS.forEach(sk => ACTIONS[sk].forEach(a => {
     ITEMS[v.id] = named(v, () => t(`quality.names.${q.id}`, { item: it.name }))
   })
 }))
+
+// What a skill can produce, one entry per item: fixed outputs, plus every fish of every water.
+// Used where something needs "an item this skill makes" (orders, guild deliveries)
+export function outputsOf(skill) {
+  const out = []
+  for (const a of ACTIONS[skill] || []) {
+    const keys = Object.keys(a.out)
+    if (keys.length === 1) out.push({ item: keys[0], per: a.out[keys[0]], lvl: a.lvl, time: a.time, xp: a.xp, action: a })
+    if (a.catch) for (const id of Object.keys(a.catch)) {
+      const f = FISH_INFO[id]
+      if (!out.some(o => o.item === id)) out.push({ item: id, per: 1, lvl: Math.max(a.lvl, f.lvl), time: a.time, xp: f.xp, action: a })
+    }
+  }
+  return out
+}
 
 export const findAction = (skill, id) => (ACTIONS[skill] || []).find(a => a.id === id)

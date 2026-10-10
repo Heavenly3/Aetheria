@@ -283,6 +283,10 @@ def('noble_seal',    { icon: 'star-medal',        value: 2400, tint: '#f0c040' }
 def('shadow_mask',   { icon: 'hood',          type: 'equip', slot: 'head', value: 0, tint: '#5a4a7a', stats: { def: 6, rAtk: 4 }, req: { thieving: 20 }, hasDesc: true })
 def('shadow_cloak',  { icon: 'cloak',         type: 'equip', slot: 'cape', value: 0, tint: '#5a4a7a', stats: { def: 6, atk: 4 }, req: { thieving: 40 }, hasDesc: true })
 def('shadow_garb',   { icon: 'leather-armor', type: 'equip', slot: 'body', value: 0, tint: '#5a4a7a', stats: { def: 14, rAtk: 6 }, req: { thieving: 60 }, hasDesc: true })
+// Fishing bait
+def('bait_worms',  { icon: 'snail', value: 2, tint: '#c08a6a', hasDesc: true })
+def('feather_fly', { icon: 'feather', value: 6, tint: '#e0c870', hasDesc: true })
+def('glow_lure',   { icon: 'sparkles', value: 40, tint: '#9fd8ff', hasDesc: true })
 def('treasure_map',  { icon: 'treasure-map', value: 300, tint: '#c9a04a', hasDesc: true })
 def('holy_water',    { icon: 'vial', value: 40, tint: '#f1e3b0', hasDesc: true })
 def('slayer_sigil',  { icon: 'star-medal', value: 120, tint: '#d36bff', hasDesc: true })

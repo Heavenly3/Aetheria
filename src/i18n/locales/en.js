@@ -767,6 +767,8 @@ export default {
       heat: { title: "The guard's eye", body: "Every theft raises the heat. More heat means more failed thefts and a worse price at the fence, and above 60 a failed theft can land you in jail. The heat cools with time; an informant halves it, and a bribe gets you out of jail." },
       fence: { title: "The fence", body: "Valuables lifted while thieving are worth the most here, up to 60% more than their value while the heat is low." },
       heists: { title: "Heists", body: "Big jobs played in four stages: plan, slip in, crack the lock and get away. Each stage can fail; failing to crack still pays a little, but failing to get away loses the loot and sends you to jail. Higher Thieving and Agility, better lockpicks and low heat raise the chances. Each heist has a cooldown, and the first clean jobs can pay a piece of the shadow outfit." },
+      fishOdds: { title: "What bites here", body: "Every cast lands one fish at random from this water. Fish above your Fishing level never bite. Bait, your mastery of this water and luck make the finer fish likelier." },
+      bait: { title: "Bait", body: "Choose a bait to use one per cast while fishing. Worms are sold in the shop, feather flies are tied with Fletching and glowing lures are made with Crafting." },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -1148,6 +1150,8 @@ export default {
     milestoneClaimed: "Milestone reached: {n} masterworks",
   },
   thief: { heatTitle: "The guard's eye", heat: { calm: "Calm streets", wary: "The guard is wary", alert: "On alert: getting caught means jail", alarm: "Alarm! Every guard is looking for you" }, heatEffect: "+{fail} failure chance · the fence pays {fence}%", jailed: "In jail", jailLeft: "Free in {time}", bribe: "Bribe · {n} gold", informant: "Pay an informant · {n} gold", informantTip: "False rumours send the guard elsewhere: the heat halves.", inJail: "You are in jail. Wait it out or bribe the guard.", jailedStop: "Caught! The guard drags you off to jail.", bribed: "The guard looks the other way. You are free.", informed: "The rumours spread: the heat halves.", fenceTitle: "The fence", fenceText: "Valuables lifted now and then while thieving. The fence pays well for them, best while the streets are calm.", noGoods: "Nothing to sell yet.", sell: "Sell all", fenced: "The fence paid {gold} gold", findable: "Can turn up:", fromLevel: "From Thieving level {n}", heistsTitle: "Heists", lockpickTier: "Lockpick tier {n}", startHeist: "Pull the heist", cooldown: "Lie low · {time}", gearChance: "May come with the job", stages: { plan: "Plan", slip: "Slip in", crack: "Crack", escape: "Get away" }, stageText: { plan: { ok: "the guard rounds are learned", bad: "the plan has a hole: you call it off" }, slip: { ok: "in without a sound", bad: "a dog barks: you back off" }, crack: { ok: "the lock gives", bad: "the lock holds: you grab what is at hand" }, escape: { ok: "gone into the night", bad: "the guard is waiting at the door" } }, heistOkLine: "A clean job! +{gold} gold", caughtLine: "Caught! The loot is lost and you are in jail.", failLine: "It went wrong. +{gold} gold", heistOk: "{heist}: clean job, +{gold} gold", heistCaught: "{heist}: caught on the way out!", heistFail: "{heist}: it went wrong", heists: { merchant_vault: { name: "The merchant's vault", desc: "A spice merchant who trusts his locks too much." }, bishop_reliquary: { name: "The bishop's reliquary", desc: "Relics, rings and holy water behind the altar." }, guild_vault: { name: "The guild vault", desc: "Where a rich guild keeps what it never shows." }, royal_treasury: { name: "The royal treasury", desc: "The crown's own gold. Nobody has done it twice." } } },
+  waters: { dawn_river: "Dawn River", mirror_lake: "Mirror Lake", coral_coast: "Coral Coast", deep_sea: "Deep Sea", abyssal_trench: "Abyssal Trench" },
+  angling: { casting: "Line in the water…", idle: "Choose a bait and cast", cast: "Cast", reel: "Reel in", catchTitle: "What bites here", mastery: "Mastery of this water {n}", speed: "{s} s per cast", baitTitle: "Bait", baitOn: "One bait is used per cast.", baitOut: "Out of this bait: casting without it.", noBait: "No bait: the common fish bite most.", recent: "Latest catches" },
   guilds: {
     nameTpl: "{group} of {emblem}",
     groups: {
@@ -1941,6 +1945,7 @@ export default {
   },
 
   groups: {
+    bait: "Bait",
     pickpocket: "Pickpocketing",
     stalls: "Stalls",
     brews: "Brews",
@@ -2003,6 +2008,9 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    bait_worms: "Worms",
+    feather_fly: "Feather fly",
+    glow_lure: "Glowing lure",
     silver_goblet: "Silver goblet",
     jewelled_ring: "Jewelled ring",
     old_painting: "Old painting",
@@ -2060,6 +2068,9 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    bait_worms: "Cheap bait from the shop. Finer fish bite a little more often.",
+    feather_fly: "Tied at the fletching bench. Finer fish bite much more often.",
+    glow_lure: "A lure that glows in deep water. The finest fish bite far more often, and caskets turn up twice as often.",
     shadow_mask: "From a clean heist. Part of the shadow outfit.",
     shadow_cloak: "From a clean heist. Part of the shadow outfit.",
     shadow_garb: "From a clean heist. Part of the shadow outfit.",

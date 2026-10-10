@@ -7,8 +7,8 @@ import { TOOL_TYPES } from '../src/game/data/character.js'
 describe('gathering', () => {
   it('has a gem rock, two more fish and thieving stalls', () => {
     expect(findAction('mining', 'gem_rock').extra.some(e => e.item === 'uncut_diamond')).toBe(true)
-    expect(findAction('fishing', 'raw_tuna')).toBeTruthy()
-    expect(findAction('fishing', 'raw_anglerfish')).toBeTruthy()
+    expect(findAction('fishing', 'coral_coast').catch.raw_tuna).toBeGreaterThan(0)
+    expect(findAction('fishing', 'abyssal_trench').catch.raw_anglerfish).toBeGreaterThan(0)
     expect(findAction('cooking', 'tuna')).toBeTruthy()
     for (const id of ['bakery_stall', 'silk_stall', 'gem_stall']) expect(findAction('thieving', id).group).toBe('groups.stalls')
     // Every skill's list stays in level order
@@ -20,7 +20,7 @@ describe('gathering', () => {
 
   it('turns up rare finds while gathering', () => {
     expect(findAction('mining', 'iron_ore').extra.some(e => e.item === 'geode')).toBe(true)
-    expect(findAction('fishing', 'raw_trout').extra.some(e => e.item === 'casket')).toBe(true)
+    expect(findAction('fishing', 'dawn_river').extra.some(e => e.item === 'casket')).toBe(true)
     for (const id of ['geode', 'casket', 'seed_pouch']) expect(ITEMS[id].type).toBe('chest')
   })
 

@@ -1,7 +1,8 @@
 import { reactive, toRaw } from 'vue'
 import { SKILLS, XP_TABLE, MAX_LEVEL } from './data/skills.js'
 import { ITEMS, SLOTS, CROPS, GEMS, POTION_DURATION } from './data/items.js'
-import { ACTIONS, findAction, QUALITIES, qualityChances, withQuality } from './data/actions.js'
+import { ACTIONS, findAction, QUALITIES, qualityChances, withQuality, FISH_INFO } from './data/actions.js'
+import { BAITS, WATERS, MASTERY_LUCK } from './data/fishing.js'
 import {
   PLAYER_ATTACK_SPEED, COMBAT_STYLES, SPELLS, MONSTERS, AREAS, BOSSES, MERCENARIES,
   SLAYER_SHOP, TOWER_SHOP, towerMonster, monsterLevel, DUNGEONS,
@@ -85,6 +86,7 @@ export function newState(profile = {}) {
     equipment: Object.fromEntries(Object.keys(SLOTS).map(k => [k, null])),
     tools: { pickaxe: null, axe: null, rod: null, sickle: null, lockpick: null },
     farm: { plots: [], auto: true, buildings: {}, made: {}, almanac: {} },
+    bait: null,
     food: null,
     potion: null,
     spell: 'wind_strike',
@@ -302,6 +304,9 @@ export const G = {
     this.ensureChurch()
     this.ensureFarm()
     this.ensureThief()
+    const fm = st.mastery.fishing
+    if (fm) for (const w of WATERS) if (!fm[w.id]) { const best = Math.max(0, ...Object.keys(w.fish).map(id => fm[id] || 0)); if (best) fm[w.id] = best }
+    if (st.activity?.type === 'skill' && st.activity.skill === 'fishing' && !findAction('fishing', st.activity.action)) st.activity = null
   },
 
   /* ================= levels ================= */
@@ -705,7 +710,7 @@ export const G = {
     let best = null
     for (const [skill, list] of Object.entries(ACTIONS)) {
       for (const a of list) {
-        if (!a.out[item] || this.level(skill) < a.lvl || !this.hasTool(a)) continue
+        if (!(a.out[item] || (a.catch?.[item] && this.level('fishing') >= FISH_INFO[item].lvl)) || this.level(skill) < a.lvl || !this.hasTool(a)) continue
         if (best && a.lvl <= best.a.lvl) continue
         if (Object.entries(a.in).every(([k, q]) => this.qty(k) >= q || this.producerFor(k, depth + 1))) best = { skill, a }
       }
@@ -729,7 +734,7 @@ export const G = {
     const need = a.in[item] * batches - this.qty(item)
     this.s.activity = {
       type: 'skill', skill: p.skill, action: p.a.id, progress: 0, done: 0,
-      limit: Math.max(1, Math.ceil(need / p.a.out[item])),
+      limit: Math.max(1, Math.ceil(need / (p.a.out[item] || Math.max(0.05, this.catchChance(p.a, item))))),
       parent: { skill: act.skill, action: act.action, limit: act.limit, done: act.done || 0, parent: act.parent },
     }
     this.emit('activity')
@@ -780,6 +785,15 @@ export const G = {
     }
     const double = Math.random() < this.doubleChance(skill, a.id) ? 2 : 1
     let gain = null
+    let xp = a.xp
+    // Fishing waters: each cast lands one fish at random
+    if (a.catch) {
+      const fish = this.rollCatch(a)
+      this.addItem(fish, double)
+      xp = FISH_INFO[fish].xp
+      gain = msg('gain.item', { n: double, item: '@item:' + fish })
+      this.emit('catch', { fish, water: a.id, n: double })
+    }
     Object.entries(a.out).forEach(([k, q]) => {
       let n = q
       if (a.runeMult) n = q * this.runeMult(skill, a)
@@ -799,15 +813,15 @@ export const G = {
     if (a.gold) gain = msg('gain.gold', { n: this.addGold(rand(a.gold[0], a.gold[1]) * double, true) })
     let bonus = null
     ;(a.extra || []).forEach(e => {
-      if (Math.random() < e.chance * (1 + this.mod('loot'))) {
+      if (Math.random() < e.chance * (1 + this.mod('loot')) * (a.catch && e.item === 'casket' ? this.baitCasket() : 1)) {
         const n = rand(e.qty[0], e.qty[1])
         this.addItem(e.item, n)
         bonus = '@item:' + e.item
         if (e.chance < 0.02) { this.log(ITEMS[e.item].icon, 'log.found', { item: '@item:' + e.item }); this.emit('rare', { item: e.item, n }) }
       }
     })
-    this.addXp(skill, a.xp)
-    gain ||= msg('gain.xp', { n: Math.round(a.xp * this.xpMult(skill)) })
+    this.addXp(skill, xp)
+    gain ||= msg('gain.xp', { n: Math.round(xp * this.xpMult(skill)) })
     if (skill === 'thieving') { const loot = this.thiefSucceeded(a); if (loot) bonus = '@item:' + loot }
     this.emit('gain', { ...gain, double: double > 1, bonus })
   },
@@ -832,6 +846,34 @@ export const G = {
       this.emit('masterwork', { item: withQuality(out, 3), quality: QUALITIES[3] })
     }
     return q
+  },
+
+  /* ================= fishing ================= */
+  activeBait() { const b = this.s.bait; return b && BAITS[b] && this.qty(b) > 0 ? b : null },
+  baitCasket() { const b = this.activeBait(); return (b && BAITS[b].casket) || 1 },
+  // The fish a water can give the hero right now and the chance of each: finer fish get likelier with
+  // bait, mastery of the water and luck
+  catchTable(a, lvl = this.level('fishing'), bait = this.activeBait()) {
+    const all = Object.entries(a.catch).sort((x, y) => FISH_INFO[x[0]].lvl - FISH_INFO[y[0]].lvl)
+    const open = all.filter(([id]) => FISH_INFO[id].lvl <= lvl)
+    const list = open.length ? open : all.slice(0, 1)
+    const shift = (bait ? BAITS[bait].power : 0) + this.masteryLevel('fishing', a.id) * MASTERY_LUCK + this.mod('fishLuck')
+    const weights = list.map(([id, w], rank) => [id, w * (1 + shift * rank)])
+    const total = weights.reduce((s, [, w]) => s + w, 0)
+    return all.map(([id]) => {
+      const w = weights.find(x => x[0] === id)
+      return { id, lvl: FISH_INFO[id].lvl, chance: w ? w[1] / total : 0, locked: !w }
+    })
+  },
+  catchChance(a, fish) { return this.catchTable(a).find(r => r.id === fish)?.chance || 0 },
+  // One cast: uses a bait if one is chosen (workers do not)
+  rollCatch(a, lvl = this.level('fishing'), useBait = true) {
+    const bait = useBait ? this.activeBait() : null
+    const table = this.catchTable(a, lvl, bait).filter(r => !r.locked)
+    if (bait) this.removeItem(bait, 1)
+    let r = Math.random()
+    for (const row of table) { if ((r -= row.chance) < 0) return row.id }
+    return table[table.length - 1].id
   },
 
   updateSkill(dt) {
