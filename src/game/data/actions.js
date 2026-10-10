@@ -118,6 +118,8 @@ FISH.forEach(f => add('cooking', {
 }))
 add('cooking', { id: 'baked_potato', icon: 'potato', tint: '#d9a35b', group: 'groups.dishes', lvl: 7, xp: 45, time: 2.4, in: { potato: 1 }, out: { baked_potato: 1 }, burn: true })
 BREWS.forEach(b => add('cooking', { id: b.id, icon: b.icon, tint: b.tint, group: 'groups.brews', lvl: b.lvl, xp: b.xp, time: 3, in: b.in, out: { [b.id]: 1 } }))
+add('cooking', { id: 'omelette', icon: 'cooking-pot', tint: '#f2d35a', group: 'groups.dishes', lvl: 12, xp: 60, time: 2.4, in: { egg: 2, onion: 1 }, out: { omelette: 1 }, burn: true })
+add('cooking', { id: 'ember_stew', icon: 'cooking-pot', tint: '#ff7a3a', group: 'groups.dishes', lvl: 45, xp: 160, time: 3, in: { emberbloom: 1, potato: 1, egg: 1 }, out: { ember_stew: 1 }, burn: true })
 add('cooking', { id: 'stew', icon: 'cooking-pot', tint: '#c76b3a', group: 'groups.dishes', lvl: 25, xp: 117, time: 3, in: { potato: 1, onion: 1, tomato: 1 }, out: { stew: 1 }, burn: true })
 add('cooking', { id: 'strawberry_pie', icon: 'bread', tint: '#ff7a8a', group: 'groups.dishes', lvl: 60, xp: 190, time: 3.2, in: { strawberry: 3, potato: 1 }, out: { strawberry_pie: 1 }, burn: true })
 
@@ -189,6 +191,8 @@ POTIONS.forEach(p => add('herblore', {
   in: { [p.herb]: 1, vial_water: 1 }, out: { [p.id]: 1 },
 }))
 add('herblore', { id: 'holy_water', icon: 'vial', tint: '#f1e3b0', lvl: 20, xp: 45, time: 2.4, in: { vial_water: 1, guam: 1, ashes: 2 }, out: { holy_water: 1 } })
+add('herblore', { id: 'supercompost', icon: 'fertilizer-bag', tint: '#a8d84a', lvl: 35, xp: 70, time: 2.4, in: { compost: 2, moonroot: 1 }, out: { supercompost: 2 } })
+add('herblore', { id: 'wisdom_elixir', icon: 'bubbling-flask', tint: '#f0c040', lvl: 70, xp: 260, time: 3, in: { starpetal: 2, vial_water: 1 }, out: { wisdom_elixir: 1 } })
 add('herblore', { id: 'compost', icon: 'fertilizer-bag', tint: '#6b8a3a', lvl: 5, xp: 20, time: 2.4, in: { ashes: 2, potato: 1 }, out: { compost: 1 } })
 ACTIONS.herblore.sort((a, b) => a.lvl - b.lvl)
 

@@ -26,6 +26,7 @@ import { codex, codexState } from './codex.js'
 import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
+import { farm } from './farm.js'
 import { TOWER_AFFIXES, AFFIX_TOKENS, affixOf, guardianOf, guardianReward, rivalBest } from './data/tower.js'
 import { guildRoster } from './data/guilds.js'
 import { t } from '../i18n/index.js'
@@ -82,7 +83,7 @@ export function newState(profile = {}) {
     inventory: {},
     equipment: Object.fromEntries(Object.keys(SLOTS).map(k => [k, null])),
     tools: { pickaxe: null, axe: null, rod: null, sickle: null, lockpick: null },
-    farm: { plots: [], auto: true },
+    farm: { plots: [], auto: true, buildings: {}, made: {}, almanac: {} },
     food: null,
     potion: null,
     spell: 'wind_strike',
@@ -297,6 +298,7 @@ export const G = {
     this.ensureContracts()
     this.ensureSlayer()
     this.ensureChurch()
+    this.ensureFarm()
   },
 
   /* ================= levels ================= */
@@ -538,7 +540,7 @@ export const G = {
     const got = {}
     const give = (item, n) => { this.addItem(item, n); got[item] = (got[item] || 0) + n }
     if (id === 'bird_nest') {
-      const pool = CROPS.filter(c => c.lvl <= 60)
+      const pool = CROPS.filter(c => c.lvl <= 60 && !c.hybrid)
       const c = pool[Math.floor(Math.pow(Math.random(), 2) * pool.length)]
       give(c.id + '_seed', rand(1, 3))
       // Sometimes a stone sits among the eggs
@@ -553,11 +555,11 @@ export const G = {
     } else if (id === 'casket') {
       got.gold = this.addGold(rand(80, 300) + this.level('fishing') * 4, true)
       if (Math.random() < 0.5) give('uncut_' + GEMS[Math.floor(Math.pow(Math.random(), 1.8) * GEMS.length)].id, 1)
-      if (Math.random() < 0.35) { const c = CROPS[Math.floor(Math.random() * CROPS.length)]; give(c.id + '_seed', rand(1, 3)) }
+      if (Math.random() < 0.35) { const seeds = CROPS.filter(c => !c.hybrid), c = seeds[Math.floor(Math.random() * seeds.length)]; give(c.id + '_seed', rand(1, 3)) }
       if (Math.random() < 0.04) give('treasure_map', 1)
     } else if (id === 'seed_pouch') {
       // Better seeds than a nest: up to a little above the hero's Farming level
-      const pool = CROPS.filter(c => c.lvl <= this.level('farming') + 10)
+      const pool = CROPS.filter(c => c.lvl <= this.level('farming') + 10 && !c.hybrid)
       for (let i = 0, n = rand(2, 3); i < n; i++) { const c = pool[Math.floor(Math.pow(Math.random(), 0.7) * pool.length)]; give(c.id + '_seed', rand(1, 2)) }
     } else if (id === 'coin_pouch') {
       got.gold = this.addGold(rand(40, 160), true)
@@ -857,7 +859,7 @@ export const G = {
     const plots = this.s.farm.plots
     while (plots.length < this.plotCount()) plots.push(null)
   },
-  growTime(crop) { return crop.grow / (1 + this.mod('farmSpeed') + this.masteryLevel('farming', crop.id) * MASTERY.speedPer + this.toolTier('sickle') * TOOL_SPEED_PER_TIER) },
+  growTime(crop) { return crop.grow / (1 + this.mod('farmSpeed') + this.masteryLevel('farming', crop.id) * MASTERY.speedPer + this.toolTier('sickle') * TOOL_SPEED_PER_TIER + this.wellSpeed()) },
   plant(i, cropId) {
     const c = CROP_MAP[cropId]
     if (!c || this.s.farm.plots[i] || i >= this.plotCount()) return false
@@ -878,8 +880,9 @@ export const G = {
     if (!p || p.t > 0) return null
     const c = CROP_MAP[p.crop]
     const base = rand(c.yield[0], c.yield[1]) + Math.floor(this.mod('farmYield')) + Math.floor(this.masteryLevel('farming', c.id) / 20) + Math.floor(this.toolTier('sickle') / 2)
-    const n = base * (Math.random() < this.doubleChance('farming', c.id) ? 2 : 1)
+    const n = this.plotYield(p, base) * (Math.random() < this.doubleChance('farming', c.id) ? 2 : 1)
     this.addItem(c.id, n)
+    const cross = this.tryCross(i)
     this.addXp('farming', c.harvestXp)
     this.addMastery('farming', c.id, 10 + c.grow / 30)
     this.s.stats.harvests = (this.s.stats.harvests || 0) + 1
@@ -889,7 +892,7 @@ export const G = {
     this.omenAction(3)
     this.s.farm.plots[i] = null
     if (replant && this.qty(c.id + '_seed') > 0 && this.level('farming') >= c.lvl) this.plant(i, c.id)
-    return { item: c.id, n }
+    return { item: c.id, n, event: p.event || null, cross }
   },
   harvestAll() {
     let total = 0
@@ -902,6 +905,7 @@ export const G = {
       const p = plots[i]
       if (!p) continue
       if (p.t > 0) p.t = Math.max(0, p.t - dt)
+      if (!p.rolled && p.t <= p.total / 2) this.rollPlotEvent(p)
       if (p.t <= 0 && this.s.farm.auto) this.harvest(i, true)
     }
   },
@@ -1414,6 +1418,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm)
 
 export { SKILLS, ITEMS }

@@ -59,6 +59,10 @@ Requires Node.js 18 or newer.
 - **Gathering finds**: geodes while mining, caskets while fishing, bird nests while woodcutting and seed pouches while harvesting. Mining has a gem rock, fishing reaches tuna and anglerfish, and thieving has stalls that pay in goods instead of coins.
 - **Crafting quality**: every piece of gear made at the anvil, the fletching bench or the crafting table can come out Fine (+5% stats), Superior (+10%) or Masterwork (+20%). The chances grow with your mastery of the recipe, so mastering a recipe pays off. Mage robes are woven from flax in four cloths (linen, silk, spellweave, starweave) and ranger hides are stitched from wolf pelts, snake skins and wyvern scales, each with its own set bonus.
 - **Farming**: plots grow in real time, even offline, with optional auto-replant.
+  - Compost and supercompost raise the harvest; halfway through, a plot can turn bountiful (double harvest) or catch pests to shoo away (a scarecrow keeps them off).
+  - Every crop has a favourite season that yields 25% more.
+  - **Hybrids**: two parent crops growing side by side can cross into seeds of a crop found nowhere else (moonroot, emberbloom, sunberry, starpetal), recorded in an almanac.
+  - **Farmyard**: a chicken coop and a beehive that produce eggs, feathers and honey on their own, a scarecrow and a well.
 - **Combat**: 10 areas, 7 bosses with mercenaries, 6 multi-room dungeons, an endless tower, slayer tasks, prayers and loadouts.
   - **Endless tower**: from floor 6, every block of five floors has a weekly twist (regenerating, armoured, venomous, vampiric, frenzied, elusive, swift or brutal creatures) that pays more tokens. Named guardians on every tenth floor pay a reward on their first defeat, and the best climbers of the realm's guilds race the hero to the top.
   - **Slayer**: pick one of three hunts (easy, standard or hard) that pay points, gold and Slayer XP. While a creature is your task, a tougher Superior version can step up and drop slayer sigils, used to imbue the slayer helm. Points buy permanent perks (longer hunts, bounties, Superior tracking, insight), blocked creatures and supplies, and long streaks pay gem chests.
@@ -108,6 +112,7 @@ Requires Node.js 18 or newer.
 - `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/slayer.js`: slayer tasks and offers, Superior creatures, perks and blocked creatures (tuning in `src/game/data/slayer.js`).
+- `src/game/farm.js`: soil, plot events, hybrids, farm buildings and favourite seasons (tuning in `src/game/data/farm.js`).
 - `src/game/bar.js`: patrons, special guests and the hero's own brews (tuning in `src/game/data/bar.js`).
 - `src/game/church.js`: the Order's favour, daily offerings, holy water and the graceful outfit (tuning in `src/game/data/church.js`).
 - `src/game/codex.js`: the compendium's item pages and masterwork milestones (pages and rewards in `src/game/data/codex.js`).

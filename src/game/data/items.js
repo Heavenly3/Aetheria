@@ -106,6 +106,10 @@ WOODS.forEach((w, i) => {
 })
 def('ashes',          { icon: 'powder-bag', value: 2, tint: '#7a7470' })
 def('compost',        { icon: 'fertilizer-bag', value: 15, tint: '#6b8a3a', hasDesc: true })
+def('supercompost',   { icon: 'fertilizer-bag', value: 60, tint: '#a8d84a', hasDesc: true })
+// From the farm buildings
+def('egg',            { icon: 'nest-eggs', value: 6, tint: '#f2e6c8', type: 'food', heal: 2 })
+def('honey',          { icon: 'honeypot', value: 18, tint: '#f0b43a', type: 'food', heal: 4 })
 def('arrow_shaft',    { icon: 'wood-stick', value: 1, tint: '#a07845' })
 def('headless_arrow', { icon: 'arrow-flights', value: 1, tint: '#d8c7a0' })
 def('bird_nest',      { icon: 'nest-eggs', value: 30, tint: '#9c7b4f', type: 'chest' })
@@ -150,9 +154,14 @@ export const CROPS = [
   { id: 'kwuarm',      icon: 'herbs-bundle', lvl: 56, xp: 320, yield: [2, 4], value: 130, tint: '#7a9e3a', seedValue: 420, herb: true },
   { id: 'snapdragon',  icon: 'herbs-bundle', lvl: 62, xp: 420, yield: [2, 4], value: 180, tint: '#e0703a', seedValue: 600, herb: true },
   { id: 'torstol',     icon: 'herbs-bundle', lvl: 85, xp: 700, yield: [2, 4], value: 350, tint: '#b04ae0', seedValue: 1200, herb: true },
+  // Hybrids: only grown from seeds got by crossing two parent crops side by side (see data/farm.js)
+  { id: 'moonroot',    icon: 'carrot',       lvl: 20, xp: 150, yield: [2, 4], value: 45,  tint: '#9fc4ff', seedValue: 150, hybrid: true },
+  { id: 'emberbloom',  icon: 'fire',         lvl: 30, xp: 210, yield: [2, 4], value: 70,  tint: '#ff7a3a', seedValue: 220, hybrid: true },
+  { id: 'sunberry',    icon: 'strawberry',   lvl: 35, xp: 240, yield: [3, 6], value: 60,  tint: '#ffcf3a', seedValue: 200, hybrid: true, food: 18 },
+  { id: 'starpetal',   icon: 'clover',       lvl: 60, xp: 520, yield: [1, 3], value: 260, tint: '#c9b0ff', seedValue: 900, hybrid: true },
 ]
 // Real-time growth per plot (seconds)
-const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700 }
+const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700, moonroot: 900, emberbloom: 1000, sunberry: 1200, starpetal: 2400 }
 CROPS.forEach(c => {
   c.grow = GROW[c.id]
   // Higher crops grow slowly, so their harvest pays more per point of base XP
@@ -163,6 +172,8 @@ CROPS.forEach(c => {
 })
 def('baked_potato',   { icon: 'potato',      value: 12,  tint: '#d9a35b', type: 'food', heal: 6 })
 def('stew',           { icon: 'cooking-pot', value: 40,  tint: '#c76b3a', type: 'food', heal: 11 })
+def('omelette',       { icon: 'cooking-pot', value: 30,  tint: '#f2d35a', type: 'food', heal: 10 })
+def('ember_stew',     { icon: 'cooking-pot', value: 120, tint: '#ff7a3a', type: 'food', heal: 21 })
 def('strawberry_pie', { icon: 'bread',       value: 110, tint: '#ff7a8a', type: 'food', heal: 16 })
 
 /* ---------------- Herblore ---------------- */
@@ -185,7 +196,7 @@ POTIONS.forEach(p => def(p.id, { icon: 'round-potion', value: Math.round(ITEMS[p
 // Brewed at home from crops; each one can be drunk at the tavern instead of buying that drink
 export const BREWS = [
   { id: 'amber_ale',       drink: 'ale',  lvl: 8,  xp: 30,  in: { potato: 3, vial_water: 1 },                tint: '#d9a441', icon: 'beer-horn',         value: 45 },
-  { id: 'herbal_mead',     drink: 'mead', lvl: 25, xp: 55,  in: { tarromin: 1, potato: 2, vial_water: 1 },   tint: '#e8c25a', icon: 'honeypot',          value: 95 },
+  { id: 'herbal_mead',     drink: 'mead', lvl: 25, xp: 55,  in: { tarromin: 1, honey: 1, vial_water: 1 },   tint: '#e8c25a', icon: 'honeypot',          value: 95 },
   { id: 'strawberry_wine', drink: 'wine', lvl: 40, xp: 80,  in: { strawberry: 4, vial_water: 1 },            tint: '#c0304a', icon: 'glass-celebration', value: 150 },
   { id: 'fire_grog',       drink: 'grog', lvl: 55, xp: 110, in: { tomato: 3, fire_rune: 5, vial_water: 1 },  tint: '#e8572a', icon: 'fire-bottle',       value: 130 },
 ]
