@@ -155,6 +155,8 @@ export const guilds = {
     this.log('cross-mark', 'log.guildLeave', { guild: '@guild:' + g.id })
     return true
   },
+  // The highest rank the hero has ever held in any guild
+  bestGuildRank() { const s = this.s.guilds; return Math.max(-1, s?.member ? this.guildRank() : -1, ...Object.values(s?.best || {})) },
   guildRank(id = this.s.guilds.member) { return id ? rankIndex(this.guildRep(id)) : -1 },
   nextRank() { const i = this.guildRank(); return i >= 0 && i < RANKS.length - 1 ? RANKS[i + 1] : null },
   guildPerk(g = this.myGuild()) { return g ? guildPerk(g, this.guildRank(g.id)) : {} },

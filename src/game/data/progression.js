@@ -123,6 +123,35 @@ export const ACHIEVEMENTS = [
   ...tiers('wishes', [[1, 5000], [10, 50000]], 'burning-meteor', (G, n) => G.wishCount() >= n),
   ach('relic_mythic', 'relicMythic', 1, 'floating-crystal', G => (G.s.omens.relics.mythic || 0) >= 1, 50000),
   ach('set_full', 'setFull', 1, 'breastplate', G => G.activeSets().some(x => x.worn === x.set.pieces.length), 3000),
+  // Guilds
+  ach('guild_join', 'guildJoin', 1, 'swords-emblem', G => !!G.s.guilds?.member || Object.keys(G.s.guilds?.best || {}).length > 0, 1000),
+  ach('guild_rank_3', 'guildVeteran', 3, 'star-medal', G => G.bestGuildRank() >= 3, 20000),
+  ach('guild_rank_5', 'guildMaster', 5, 'star-medal', G => G.bestGuildRank() >= 5, 150000),
+  ...tiers('contracts', [[10, 3000], [100, 40000]], 'scroll-unfurled', (G, n) => (G.s.stats.contracts || 0) >= n),
+  // Compendium and craft
+  ...tiers('pages', [[1, 2000], [10, 40000]], 'open-book', (G, n) => Object.keys(G.s.codex?.claimed || {}).filter(k => k.startsWith('page:')).length >= n),
+  ...tiers('masterworks', [[1, 3000], [25, 60000]], 'anvil-impact', (G, n) => G.masterworks() >= n),
+  // Slayer, church and agility
+  ...tiers('superiors', [[1, 2000], [25, 30000]], 'crowned-skull', (G, n) => (G.s.stats.superiors || 0) >= n),
+  ach('favour_max', 'favourMax', 5, 'holy-symbol', G => G.favourLevel() >= 5, 50000),
+  ach('graceful_full', 'gracefulFull', 4, 'sprint', G => G.activeSets().some(x => x.set.id === 'graceful' && x.worn === 4), 10000),
+  // Tower
+  ...tiers('guardians', [[1, 3000], [7, 40000]], 'stone-tower', (G, n) => Object.keys(G.s.tower?.cleared || {}).length >= n),
+  // Tavern
+  ...tiers('patrons', [[10, 1000], [250, 25000]], 'beer-horn', (G, n) => (G.s.stats.patrons || 0) >= n),
+  ach('guest_1', 'guest', 1, 'hooded-figure', G => (G.s.stats.guests || 0) >= 1, 3000),
+  // Farm
+  ...tiers('hybrids', [[1, 3000], [4, 40000]], 'sprout', (G, n) => G.hybridsKnown() >= n),
+  ...tiers('bountiful', [[10, 2000], [100, 20000]], 'sparkles', (G, n) => (G.s.stats.bountiful || 0) >= n),
+  ach('yard_full', 'yardFull', 12, 'family-house', G => ['coop', 'hive', 'scarecrow', 'well'].every(b => G.building(b) >= 3), 50000),
+  // Thieving
+  ...tiers('heists', [[1, 3000], [25, 50000]], 'locked-chest', (G, n) => Object.values(G.s.thief?.done || {}).reduce((a, b) => a + b, 0) >= n),
+  ach('royal_heist', 'royalHeist', 1, 'crown', G => (G.s.thief?.done?.royal_treasury || 0) >= 1, 150000),
+  ach('jailed_1', 'jailed', 1, 'padlock', G => (G.s.stats.jailed || 0) >= 1, 100),
+  ...tiers('fenced', [[10000, 2000], [1000000, 50000]], 'robber-hand', (G, n) => (G.s.stats.fenced || 0) >= n),
+  // Fishing
+  ...tiers('fish', [[100, 500], [5000, 20000]], 'fishing', (G, n) => (G.s.stats.fish || 0) >= n),
+  ach('deep_catch', 'deepCatch', 1, 'fish-monster', G => G.codexHas('raw_anglerfish'), 25000),
 ]
 
 /* ---------------- Home ---------------- */

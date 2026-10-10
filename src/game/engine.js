@@ -813,6 +813,7 @@ export const G = {
       this.addItem(fish, double)
       xp = FISH_INFO[fish].xp
       gain = msg('gain.item', { n: double, item: '@item:' + fish })
+      this.s.stats.fish = (this.s.stats.fish || 0) + double
       this.emit('catch', { fish, water: a.id, n: double })
     }
     Object.entries(a.out).forEach(([k, q]) => {
@@ -952,6 +953,7 @@ export const G = {
     const n = this.plotYield(p, base) * (Math.random() < this.doubleChance('farming', c.id) ? 2 : 1)
     this.addItem(c.id, n)
     const cross = this.tryCross(i)
+    if (p.event === 'bountiful') this.s.stats.bountiful = (this.s.stats.bountiful || 0) + 1
     this.addXp('farming', c.harvestXp)
     this.addMastery('farming', c.id, 10 + c.grow / 30)
     this.s.stats.harvests = (this.s.stats.harvests || 0) + 1

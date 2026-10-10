@@ -65,6 +65,7 @@ export const bar = {
     this.s.stats.patrons = (this.s.stats.patrons || 0) + 1
     const reward = p.guest ? GUEST_MAP[p.guest].reward : null
     if (reward) {
+      this.s.stats.guests = (this.s.stats.guests || 0) + 1
       Object.entries(reward).forEach(([k, n]) => this.addItem(k, n))
       this.log(GUEST_MAP[p.guest].icon, 'log.guest', { guest: '@guest:' + p.guest })
     }
