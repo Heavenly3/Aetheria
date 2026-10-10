@@ -4,9 +4,26 @@ import { t, intlLocale } from '../../i18n/index.js'
 /* ---------------- Quests ---------------- */
 // Objectives: { type: 'item', item, qty } (handed in) | { type: 'kill', monster, qty } | { type: 'level', skill, lvl }
 //             { type: 'tower', floor } | { type: 'slayer', tasks }
+//             { type: 'stat', key, qty } (counted from when the quest starts) | { type: 'reach', key, qty } (a total to reach)
 const item = (i, q) => ({ type: 'item', item: i, qty: q })
 const kill = (m, q) => ({ type: 'kill', monster: m, qty: q })
 const level = (s, l) => ({ type: 'level', skill: s, lvl: l })
+const stat = (key, qty) => ({ type: 'stat', key, qty })
+const reach = (key, qty) => ({ type: 'reach', key, qty })
+// What 'stat' and 'reach' objectives read
+export const QUEST_STATS = {
+  fish: G => G.s.stats.fish || 0,
+  patrons: G => G.s.stats.patrons || 0,
+  contracts: G => G.s.stats.contracts || 0,
+  bountiful: G => G.s.stats.bountiful || 0,
+  superiors: G => G.s.stats.superiors || 0,
+  heists: G => Object.values(G.s.thief?.done || {}).reduce((a, b) => a + b, 0),
+  guildRank: G => G.bestGuildRank() + 1,
+  hybrids: G => G.hybridsKnown(),
+  guardians: G => Object.keys(G.s.tower?.cleared || {}).length,
+  masterworks: G => G.masterworks(),
+}
+export const QUEST_STAT_ICONS = { fish: 'fishing', patrons: 'beer-horn', contracts: 'scroll-unfurled', bountiful: 'sparkles', superiors: 'crowned-skull', heists: 'locked-chest', guildRank: 'star-medal', hybrids: 'sprout', guardians: 'stone-tower', masterworks: 'anvil-impact' }
 
 export const QUESTS = [
   { id: 'first_steps', icon: 'mining',
@@ -57,6 +74,25 @@ export const QUESTS = [
   { id: 'void_herald', icon: 'vortex',
     req: { quests: ['dragon_slayer'], levels: { slayer: 70 } }, obj: [kill('demon', 60), kill('hydra', 30), item('blood_rune', 200)],
     reward: { gold: 150000, xp: { slayer: 60000, magic: 40000 }, qp: 6, unlock: 'unlocks.void' } },
+  // Quests through the newer parts of the realm
+  { id: 'guild_initiation', icon: 'swords-emblem',
+    req: {}, obj: [reach('guildRank', 1), stat('contracts', 3)], reward: { gold: 3000, items: { coin_pouch: 3 }, qp: 2 } },
+  { id: 'angler_tales', icon: 'fishing',
+    req: { levels: { fishing: 20 } }, obj: [stat('fish', 150), item('raw_salmon', 20)], reward: { gold: 4000, xp: { fishing: 8000 }, items: { feather_fly: 60 }, qp: 2 } },
+  { id: 'green_thumb', icon: 'sprout',
+    req: { levels: { farming: 15 } }, obj: [stat('bountiful', 3), reach('hybrids', 1)], reward: { gold: 5000, xp: { farming: 10000 }, items: { seed_pouch: 5, supercompost: 4 }, qp: 2 } },
+  { id: 'full_house', icon: 'beer-horn',
+    req: {}, obj: [stat('patrons', 15)], reward: { gold: 4000, items: { honey: 10, amber_ale: 5 }, qp: 2 } },
+  { id: 'the_fence', icon: 'robber-hand',
+    req: { levels: { thieving: 20 } }, obj: [stat('heists', 1), item('silver_goblet', 3)], reward: { gold: 6000, xp: { thieving: 10000 }, items: { steel_lockpick: 1 }, qp: 3 } },
+  { id: 'superior_hunt', icon: 'crowned-skull',
+    req: { levels: { slayer: 20 } }, obj: [stat('superiors', 3)], reward: { gold: 10000, xp: { slayer: 20000 }, slayerPoints: 100, items: { slayer_sigil: 10 }, qp: 3 } },
+  { id: 'tower_guardians', icon: 'stone-tower',
+    req: { quests: ['tower_climber'] }, obj: [reach('guardians', 3)], reward: { gold: 25000, items: { gem_chest: 2 }, qp: 3 } },
+  { id: 'master_craftsman', icon: 'anvil-impact',
+    req: { levels: { smithing: 40 } }, obj: [reach('masterworks', 3)], reward: { gold: 30000, xp: { smithing: 30000, crafting: 20000 }, items: { starlight_shard: 1 }, qp: 4 } },
+  { id: 'deep_waters', icon: 'fish-monster',
+    req: { quests: ['angler_tales'], levels: { fishing: 70 } }, obj: [item('raw_shark', 30), item('raw_anglerfish', 5)], reward: { gold: 40000, xp: { fishing: 50000 }, items: { glow_lure: 20 }, qp: 4 } },
   { id: 'heavens_fall', icon: 'sun',
     req: { quests: ['void_herald'] }, obj: [kill('abyssal_titan', 40), item('aether_bar', 20), item('void_essence', 50)],
     reward: { gold: 300000, xp: { attack: 100000, strength: 100000, defense: 100000, ranged: 100000, magic: 100000 }, qp: 8, unlock: 'unlocks.celestial' } },

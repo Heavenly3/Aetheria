@@ -5,7 +5,7 @@ import SelectButton from 'primevue/selectbutton'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 import { G, state } from '../game/engine.js'
-import { QUESTS } from '../game/data/progression.js'
+import { QUESTS, QUEST_STAT_ICONS } from '../game/data/progression.js'
 import { MONSTERS } from '../game/data/combat.js'
 import { ITEMS } from '../game/data/items.js'
 import { SKILLS } from '../game/data/skills.js'
@@ -34,6 +34,7 @@ function objLabel(o) {
     case 'level': return t('quests.obj.level', { lvl: o.lvl, skill: SKILLS[o.skill].name })
     case 'tower': return t('quests.obj.tower', { floor: o.floor })
     case 'slayer': return t('quests.obj.slayer', { n: o.tasks })
+    case 'stat': case 'reach': return t(`quests.obj.${o.key}`, { n: o.qty })
   }
 }
 const reqText = q => [
@@ -73,7 +74,7 @@ const reqText = q => [
           <div v-for="(o, i) in q.obj" :key="i">
             <div class="row small">
               <ItemTile v-if="o.type === 'item'" :item="o.item" size="xs" />
-              <GameIcon v-else :name="o.type === 'kill' ? MONSTERS[o.monster].icon : o.type === 'level' ? SKILLS[o.skill].icon : o.type === 'tower' ? 'stone-tower' : 'death-skull'" :size="18" />
+              <GameIcon v-else :name="o.type === 'kill' ? MONSTERS[o.monster].icon : o.type === 'level' ? SKILLS[o.skill].icon : o.type === 'tower' ? 'stone-tower' : o.key ? QUEST_STAT_ICONS[o.key] : 'death-skull'" :size="18" />
               <span class="grow">{{ objLabel(o) }}</span>
               <b class="tnum" v-if="G.questStatus(q) !== 'done'">{{ fmt(G.objProgress(q, o).cur) }}/{{ fmt(G.objProgress(q, o).max) }}</b>
               <i v-else class="pi pi-check ok-text" />

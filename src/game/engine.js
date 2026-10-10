@@ -7,7 +7,7 @@ import {
   PLAYER_ATTACK_SPEED, COMBAT_STYLES, SPELLS, MONSTERS, AREAS, BOSSES, MERCENARIES,
   SLAYER_SHOP, TOWER_SHOP, towerMonster, monsterLevel, DUNGEONS,
 } from './data/combat.js'
-import { QUESTS, ACHIEVEMENTS, ROOMS, BLESSINGS, BLESSING_DURATION, PRESTIGE } from './data/progression.js'
+import { QUESTS, ACHIEVEMENTS, ROOMS, BLESSINGS, BLESSING_DURATION, PRESTIGE, QUEST_STATS } from './data/progression.js'
 import {
   SLOT_COUNT, DIFFICULTIES, ATTRIBUTES, ROLES, TALENTS, POINTS_PER_LEVEL, HERO_MAX_LEVEL, HERO_XP_SHARE, heroXpFor,
   TALENT_POINT_EVERY, MASTERY, masteryXpPerAction, TOOL_TYPES, TOOL_SPEED_PER_TIER,
@@ -1340,7 +1340,10 @@ export const G = {
     const q = QUESTS.find(x => x.id === id)
     if (!q || this.questStatus(q) !== 'available') return
     const base = {}
-    q.obj.forEach(o => { if (o.type === 'kill') base[o.monster] = this.s.killsBy[o.monster] || 0 })
+    q.obj.forEach(o => {
+      if (o.type === 'kill') base[o.monster] = this.s.killsBy[o.monster] || 0
+      if (o.type === 'stat') base['stat:' + o.key] = QUEST_STATS[o.key](this)
+    })
     this.s.quests[id] = { status: 'active', base, slayerBase: this.s.slayer.completed }
   },
   objProgress(q, o) {
@@ -1351,6 +1354,8 @@ export const G = {
       case 'level': return { cur: Math.min(this.level(o.skill), o.lvl), max: o.lvl }
       case 'tower': return { cur: Math.min(this.s.tower.best, o.floor), max: o.floor }
       case 'slayer': return { cur: Math.min(this.s.slayer.completed - (qs?.slayerBase || 0), o.tasks), max: o.tasks }
+      case 'stat': return { cur: Math.max(0, Math.min(QUEST_STATS[o.key](this) - (qs?.base?.['stat:' + o.key] || 0), o.qty)), max: o.qty }
+      case 'reach': return { cur: Math.min(QUEST_STATS[o.key](this), o.qty), max: o.qty }
     }
     return { cur: 0, max: 1 }
   },

@@ -24,7 +24,8 @@ const untilMonday = computed(() => {
   x.setHours(0, 0, 0, 0)
   return (x - now.value) / 1000
 })
-const ICONS = { xp: 'star-medal', actions: 'hourglass', kills: 'crossed-swords', gold: 'two-coins', harvest: 'sickle', dungeon: 'open-treasure-chest', orders: 'beer-horn', slayer: 'death-skull' }
+const ICONS = { xp: 'star-medal', actions: 'hourglass', kills: 'crossed-swords', gold: 'two-coins', harvest: 'sickle', dungeon: 'open-treasure-chest', orders: 'beer-horn', slayer: 'death-skull',
+  fish: 'fishing', elites: 'crowned-skull', patrons: 'beer-horn', contracts: 'scroll-unfurled', bountiful: 'sparkles', heists: 'locked-chest' }
 const label = tk => t('daily.task.' + tk.type, { n: fmt(tk.target), skill: tk.skill ? SKILLS[tk.skill].name : '' })
 const icon = tk => (tk.type === 'xp' ? SKILLS[tk.skill].icon : ICONS[tk.type])
 
