@@ -398,6 +398,27 @@ export const G = {
   },
 
   /* ================= modifiers ================= */
+  // Every source of a modifier and how much it adds, for the screens that explain a number
+  modSources(key) {
+    const out = []
+    const push = (src, v) => { if (v) out.push({ src, v }) }
+    push('role', ROLES[this.s.role]?.bonus[key] || 0)
+    for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) push('attr.' + a, per * this.attr(a)) }
+    const tal = this.s.hero.talents
+    push('talents', TALENTS.reduce((v, tt) => v + (tt.mod === key && tal[tt.id] ? tt.per * tal[tt.id] : 0), 0))
+    push('extra', this.extraMods(key))
+    push('pets', this.petMods(key))
+    push('ascension', this.ascensionMods(key))
+    push('sets', this.setMods(key))
+    push('bestiary', this.bestiaryMods(key))
+    push('festival', this.festivalMods(key))
+    push('omens', this.omenMods(key))
+    push('weather', this.weatherMods(key))
+    push('streak', this.streakMods(key))
+    push('guild', this.guildMods(key))
+    push('codex', this.codexMods(key))
+    return out
+  },
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
     let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key)

@@ -21,11 +21,11 @@ Object.entries(DIFFICULTIES).forEach(([k, d]) => named(d, `difficulty.${k}.name`
 // Each point adds `per` to every listed modifier
 export const ATTRIBUTES = {
   str:  { icon: 'biceps',         color: '#e0554b', mods: { meleeDmg: 0.008, 'speed.mining': 0.003, 'speed.woodcutting': 0.003, 'speed.smithing': 0.003 } },
-  dex:  { icon: 'archery-target', color: '#90be6d', mods: { meleeAcc: 0.006, rangedAcc: 0.006, rangedDmg: 0.008, thieving: 0.003, 'speed.fishing': 0.003, 'speed.fletching': 0.003 } },
+  dex:  { icon: 'archery-target', color: '#90be6d', mods: { meleeAcc: 0.006, rangedAcc: 0.006, rangedDmg: 0.008, atkSpeed: 0.0015, crit: 0.0005, thieving: 0.003, 'speed.fishing': 0.003, 'speed.fletching': 0.003 } },
   int:  { icon: 'brain',          color: '#4d96ff', mods: { magicDmg: 0.01, magicAcc: 0.006, 'xp.runecrafting': 0.005, 'xp.herblore': 0.005, 'xp.crafting': 0.005, runeSave: 0.003 } },
-  vit:  { icon: 'glass-heart',    color: '#d62839', mods: { maxHp: 0.5, heal: 0.01, defense: 0.004 } },
+  vit:  { icon: 'glass-heart',    color: '#d62839', mods: { maxHp: 0.5, heal: 0.01, defense: 0.004, reduction: 0.0008 } },
   wis:  { icon: 'open-book',      color: '#b38cff', mods: { xp: 0.004, mastery: 0.01 } },
-  luck: { icon: 'clover',         color: '#4ecdc4', mods: { double: 0.0015, loot: 0.005, gold: 0.005 } },
+  luck: { icon: 'clover',         color: '#4ecdc4', mods: { double: 0.0015, loot: 0.005, gold: 0.005, crit: 0.0008, eliteChance: 0.0002, fishLuck: 0.003 } },
 }
 Object.entries(ATTRIBUTES).forEach(([k, a]) => {
   named(a, `attributes.${k}.name`, `attributes.${k}.desc`)
@@ -111,18 +111,28 @@ export const TALENTS = [
   { id: 'fortune',    icon: 'open-treasure-chest', mod: 'loot',             per: 0.04, max: 5, lvl: 14 },
   { id: 'master',     icon: 'laurels-trophy',      mod: 'mastery',          per: 0.1,  max: 5, lvl: 16 },
   { id: 'dreamer',    icon: 'wood-cabin',          mod: 'offline',          per: 1,    max: 4, lvl: 20 },
+  { id: 'angler',     icon: 'fishing-pole',        mod: 'fishLuck',         per: 0.15, max: 3, lvl: 10 },
+  { id: 'tough',      icon: 'shield',              mod: 'reduction',        per: 0.015, max: 5, lvl: 22 },
+  { id: 'swift_blade', icon: 'sprint',             mod: 'atkSpeed',         per: 0.02, max: 5, lvl: 24 },
+  { id: 'hunter',     icon: 'crowned-skull',       mod: 'eliteChance',      per: 0.006, max: 4, lvl: 26 },
   { id: 'berserker',  icon: 'biceps',              mod: 'meleeDmg',         per: 0.05, max: 5, lvl: 8,  role: 'warrior' },
   { id: 'warlord',    icon: 'crossed-swords',      mod: 'meleeAcc',         per: 0.05, max: 5, lvl: 18, role: 'warrior' },
+  { id: 'shield_wall', icon: 'checked-shield',     mod: 'block',            per: 0.025, max: 4, lvl: 28, role: 'warrior' },
   { id: 'eagle_eye',  icon: 'archery-target',      mod: 'rangedDmg',        per: 0.05, max: 5, lvl: 8,  role: 'ranger' },
   { id: 'quiver',     icon: 'quiver',              mod: 'ammoSave',         per: 0.1,  max: 3, lvl: 18, role: 'ranger' },
+  { id: 'deadeye',    icon: 'eye-target',          mod: 'crit',             per: 0.015, max: 5, lvl: 28, role: 'ranger' },
   { id: 'arcane',     icon: 'fire-spell-cast',     mod: 'magicDmg',         per: 0.06, max: 5, lvl: 8,  role: 'mage' },
   { id: 'rune_saver', icon: 'rune-stone',          mod: 'runeSave',         per: 0.1,  max: 3, lvl: 18, role: 'mage' },
+  { id: 'quickcast',  icon: 'magic-swirl',         mod: 'atkSpeed',         per: 0.025, max: 4, lvl: 28, role: 'mage' },
   { id: 'efficient',  icon: 'anvil',               mod: 'speed.artisan',    per: 0.05, max: 5, lvl: 8,  role: 'artisan' },
   { id: 'perfection', icon: 'cut-diamond',         mod: 'double.artisan',   per: 0.03, max: 5, lvl: 18, role: 'artisan' },
+  { id: 'masterhand', icon: 'anvil-impact',        mod: 'quality',          per: 0.06, max: 5, lvl: 28, role: 'artisan' },
   { id: 'nimble',     icon: 'robber-hand',         mod: 'thieving',         per: 0.04, max: 5, lvl: 8,  role: 'rogue' },
   { id: 'lucky',      icon: 'clover',              mod: 'double',           per: 0.02, max: 5, lvl: 18, role: 'rogue' },
+  { id: 'assassin',   icon: 'hooded-assassin',     mod: 'crit',             per: 0.02, max: 5, lvl: 28, role: 'rogue' },
   { id: 'healer',     icon: 'healing-shield',      mod: 'heal',             per: 0.1,  max: 5, lvl: 8,  role: 'paladin' },
   { id: 'devout',     icon: 'prayer',              mod: 'blessing',         per: 0.15, max: 3, lvl: 18, role: 'paladin' },
+  { id: 'bulwark',    icon: 'bordered-shield',     mod: 'block',            per: 0.03, max: 5, lvl: 12, role: 'paladin' },
 ]
 TALENTS.forEach(tal => {
   named(tal, `talents.${tal.id}`)

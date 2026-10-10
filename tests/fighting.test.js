@@ -16,7 +16,9 @@ describe('weapons', () => {
     expect(weaponProfile('troll_hammer').dmg).toBeGreaterThan(1)
     expect(weaponProfile(null).speed).toBeGreaterThan(0)
     state.equipment.weapon = 'bronze_sword'
-    expect(G.attackSpeed()).toBe(weaponProfile('bronze_sword').speed)
+    // Attack speed bonuses (Dexterity among them) make every weapon swing faster
+    expect(G.attackSpeed()).toBeCloseTo(weaponProfile('bronze_sword').speed / (1 + G.mod('atkSpeed')))
+    expect(G.attackSpeed()).toBeLessThanOrEqual(weaponProfile('bronze_sword').speed)
   })
 
   it('land critical hits and leave statuses', () => {
@@ -287,5 +289,21 @@ describe('armour', () => {
   it('tells in the tooltip what a piece would change', () => {
     const html = itemTip('rune_body').value
     expect(html).toMatch(/power \+\d+%/)
+  })
+
+  it('lets attributes and talents raise the stats only gear used to set', () => {
+    const crit = G.critChance(), red = G.damageReduction(), speed = G.attackSpeed()
+    state.hero.attrs.luck = (state.hero.attrs.luck || 0) + 50
+    state.hero.attrs.vit = (state.hero.attrs.vit || 0) + 50
+    state.hero.attrs.dex = (state.hero.attrs.dex || 0) + 50
+    expect(G.critChance()).toBeGreaterThan(crit)
+    expect(G.damageReduction()).toBeGreaterThan(red)
+    expect(G.attackSpeed()).toBeLessThan(speed)
+    expect(G.mod('eliteChance')).toBeGreaterThan(0)
+    expect(G.mod('fishLuck')).toBeGreaterThan(0)
+    // Every source is listed, and they add up to the total
+    const total = G.modSources('crit').reduce((s, x) => s + x.v, 0)
+    expect(total).toBeCloseTo(G.mod('crit'))
+    expect(G.modSources('crit').some(x => x.src === 'attr.luck')).toBe(true)
   })
 })
