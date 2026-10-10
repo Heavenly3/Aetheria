@@ -172,7 +172,7 @@ export default {
     legend: { name: 'Leyenda', desc: 'Solo para leyendas. Morir cuesta el 15% de tu oro.' },
   },
 
-  tools: { pickaxe: 'Pico', axe: 'Hacha', rod: 'Caña de pescar' },
+  tools: { sickle: "Hoz", lockpick: "Ganzúa", pickaxe: 'Pico', axe: 'Hacha', rod: 'Caña de pescar' },
 
   skillCats: { gathering: 'Recolección', artisan: 'Artesanía', support: 'Apoyo', combat: 'Combate' },
 
@@ -710,7 +710,7 @@ export default {
       abilities: { title: "Habilidades", body: "Cada estilo de combate tiene seis habilidades que se desbloquean con su habilidad. Elige hasta tres para la barra: se lanzan solas en lugar de un ataque normal cuando hay energía suficiente y ha terminado su recarga. Las curaciones esperan a que estés herido y las mejoras no se repiten mientras duran." },
       power: { title: "Poder de combate", body: "Una sola cifra que resume lo fuerte que eres en combate: sube con tu daño por segundo y con lo que aguantas. Todas las cifras de abajo se calculan al momento con tu equipo, niveles, estilo y bonificaciones." },
       equipment: { title: 'Equipo', body: 'Lo que llevas puesto. Pulsa una ranura para quitarte el objeto; equipa lo nuevo desde el inventario. Pasa el ratón por un objeto para ver sus estadísticas.' },
-      tools: { title: 'Herramientas', body: 'Un pico, hacha o caña mejores te dejan recolectar recursos de más nivel y aceleran esas habilidades.' },
+      tools: { title: 'Herramientas', body: "Un pico, hacha o caña mejores te dejan recolectar recursos de más nivel y aceleran esas habilidades. Una hoz hace que los cultivos crezcan más rápido y den más, y las ganzúas hacen el robo más rápido y seguro." },
       sets: { title: 'Bonus de conjunto', body: 'Llevar varias piezas del mismo conjunto añade bonificaciones extra. Cuantas más piezas, más bonificaciones.' },
       effects: { title: 'Efectos activos', body: 'Pociones, bendiciones, prodigios, festivales y otras mejoras que te afectan ahora mismo, con el tiempo que les queda.' },
       skills: { title: 'Habilidades', body: 'Tu nivel en cada habilidad. Pulsa una para abrirla y empezar a entrenar.' },
@@ -1899,6 +1899,8 @@ export default {
   },
 
   groups: {
+    pickpocket: "Carterismo",
+    stalls: "Puestos",
     brews: "Bebidas",
     bury: "Enterrar",
     altar: "Altar",
@@ -1909,11 +1911,15 @@ export default {
   },
 
   nodes: {
+    gem_rock: "Roca de gemas",
     copper_ore: 'Veta de cobre', tin_ore: 'Veta de estaño', rune_essence: 'Cantera de esencia', iron_ore: 'Veta de hierro', coal: 'Veta de carbón',
     gold_ore: 'Veta de oro', mithril_ore: 'Veta de mithril', adamantite_ore: 'Veta de adamantita', runite_ore: 'Veta de runita', tree: 'Árbol',
     aetherium_ore: 'Veta de eterio',
   },
   marks: {
+    bakery_stall: "Puesto de panadería",
+    silk_stall: "Puesto de telas",
+    gem_stall: "Puesto de gemas",
     man: 'Aldeano', farmer: 'Granjero', warrior: 'Guerrera', rogue: 'Pícaro', mfarmer: 'Maestro granjero', guard: 'Guardia', knight: 'Caballero',
     paladin: 'Paladín', hero: 'Héroe legendario',
   },
@@ -1928,6 +1934,8 @@ export default {
     wood: { logs: 'Troncos de {wood}', rod: 'Caña de {wood}', bow: 'Arco de {wood}', staff: 'Bastón de {wood}', tree: 'Árbol de {wood}' },
   },
   things: {
+    sickle: "Hoz",
+    lockpick: "Ganzúa",
     cloth: "Tela",
     hood: "Capucha",
     robe_top: "Túnica",
@@ -1940,7 +1948,7 @@ export default {
   },
   mats: {linen: "lino", silk: "seda", spellweave: "tejido arcano", starweave: "tejido estelar", wolf: "lobo", snake: "serpiente", wyvern: "guiverno",  bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero', aether: 'éter' },
   woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia' },
-  fish: { shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
+  fish: { tuna: "Atún", anglerfish: "Rape", shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
   crops: {
     flax: "Lino",
     potato: 'Patata', onion: 'Cebolla', tomato: 'Tomate', strawberry: 'Fresa', guam: 'Guam', marrentill: 'Marrentill', tarromin: 'Tarromin',
@@ -1949,6 +1957,9 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    geode: "Geoda",
+    casket: "Cofrecillo",
+    seed_pouch: "Saquito de semillas",
     amber_ale: "Cerveza ámbar",
     herbal_mead: "Hidromiel de hierbas",
     strawberry_wine: "Vino de fresas",
@@ -1991,6 +2002,9 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    geode: "Una roca corriente que esconde un hueco lleno de cristales. Contiene minerales, gemas y algo de polvo estelar.",
+    casket: "Pescado en las profundidades. Contiene monedas, gemas, semillas y, a veces, un mapa del tesoro.",
+    seed_pouch: "Se encuentra al cosechar. Contiene semillas de hasta un poco por encima de tu nivel de Agricultura.",
     treasure_map: "Un mapa viejo marcado con una X. Un aventurero de tu taberna puede seguirlo en una expedición.",
     holy_water: "Bendecida por la Orden del Alba. En la iglesia renueva todas las bendiciones activas.",
     slayer_helm_i: "Con un encargo activo: +25 % de precisión y daño contra el objetivo. Cuenta como yelmo de cazador para su conjunto.",

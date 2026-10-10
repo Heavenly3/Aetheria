@@ -172,7 +172,7 @@ export default {
     legend: { name: 'Legend', desc: 'For legends only. Dying costs 15% of your gold.' },
   },
 
-  tools: { pickaxe: 'Pickaxe', axe: 'Axe', rod: 'Fishing rod' },
+  tools: { sickle: "Sickle", lockpick: "Lockpick", pickaxe: 'Pickaxe', axe: 'Axe', rod: 'Fishing rod' },
 
   skillCats: { gathering: 'Gathering', artisan: 'Artisan', support: 'Support', combat: 'Combat' },
 
@@ -710,7 +710,7 @@ export default {
       abilities: { title: "Abilities", body: "Each combat style has six abilities that unlock with its skill. Choose up to three for the bar: they fire on their own in place of a normal attack when there is enough energy and their cooldown is over. Healing waits until you are hurt, and boons are not recast while active." },
       power: { title: "Combat power", body: "A single score for how strong you are in a fight: it grows with your damage per second and with how long you last. Every number below is worked out live from your gear, levels, style and bonuses." },
       equipment: { title: 'Equipment', body: 'What you wear. Click a slot to take the item off; equip new gear from the inventory. Hover an item to see its stats.' },
-      tools: { title: 'Tools', body: 'A better pickaxe, axe or rod lets you gather higher tier resources and makes those skills faster.' },
+      tools: { title: 'Tools', body: "A better pickaxe, axe or rod lets you gather higher tier resources and makes those skills faster. A sickle makes crops grow faster and yield more, and lockpicks make thieving faster and safer." },
       sets: { title: 'Set bonuses', body: 'Wearing several pieces of the same set adds extra bonuses. The more pieces, the more bonuses.' },
       effects: { title: 'Active effects', body: 'Potions, blessings, omens, festivals and other boosts working on you right now, with the time they have left.' },
       skills: { title: 'Skills', body: 'Your level in every skill. Click one to open it and start training.' },
@@ -1899,6 +1899,8 @@ export default {
   },
 
   groups: {
+    pickpocket: "Pickpocketing",
+    stalls: "Stalls",
     brews: "Brews",
     bury: "Bury",
     altar: "Altar",
@@ -1909,11 +1911,15 @@ export default {
   },
 
   nodes: {
+    gem_rock: "Gem rock",
     copper_ore: 'Copper rock', tin_ore: 'Tin rock', rune_essence: 'Essence quarry', iron_ore: 'Iron rock', coal: 'Coal rock',
     gold_ore: 'Gold rock', mithril_ore: 'Mithril rock', adamantite_ore: 'Adamantite rock', runite_ore: 'Runite rock', tree: 'Tree',
     aetherium_ore: 'Aetherium vein',
   },
   marks: {
+    bakery_stall: "Bakery stall",
+    silk_stall: "Cloth stall",
+    gem_stall: "Gem stall",
     man: 'Villager', farmer: 'Farmer', warrior: 'Warrior', rogue: 'Rogue', mfarmer: 'Master farmer', guard: 'Guard', knight: 'Knight',
     paladin: 'Paladin', hero: 'Legendary hero',
   },
@@ -1928,6 +1934,8 @@ export default {
     wood: { logs: '{wood} logs', rod: '{wood} rod', bow: '{wood} bow', staff: '{wood} staff', tree: '{wood} tree' },
   },
   things: {
+    sickle: "sickle",
+    lockpick: "lockpick",
     cloth: "cloth",
     hood: "hood",
     robe_top: "robe top",
@@ -1940,7 +1948,7 @@ export default {
   },
   mats: {linen: "Linen", silk: "Silk", spellweave: "Spellweave", starweave: "Starweave", wolf: "Wolf", snake: "Snakeskin", wyvern: "Wyvern",  bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather', aether: 'Aether' },
   woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic' },
-  fish: { shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
+  fish: { tuna: "Tuna", anglerfish: "Anglerfish", shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
   crops: {
     flax: "Flax",
     potato: 'Potato', onion: 'Onion', tomato: 'Tomato', strawberry: 'Strawberry', guam: 'Guam', marrentill: 'Marrentill', tarromin: 'Tarromin',
@@ -1949,6 +1957,9 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    geode: "Geode",
+    casket: "Casket",
+    seed_pouch: "Seed pouch",
     amber_ale: "Amber ale",
     herbal_mead: "Herbal mead",
     strawberry_wine: "Strawberry wine",
@@ -1991,6 +2002,9 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    geode: "A plain rock that hides a hollow full of crystals. Holds ores, gems and a little stardust.",
+    casket: "Fished up from the deep. Holds coins, gems, seeds and, now and then, a treasure map.",
+    seed_pouch: "Found while harvesting. Holds seeds of up to a little above your Farming level.",
     treasure_map: "An old map with an X on it. An adventurer from your tavern can follow it on an expedition.",
     holy_water: "Blessed by the Order of the Dawn. At the church it renews every active blessing.",
     slayer_helm_i: "With an active task: +25% accuracy and damage against the target. Counts as a slayer helm for its set.",

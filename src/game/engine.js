@@ -50,6 +50,7 @@ const CHAIN_BATCH = 10  // batches to prepare for an endless action
 const GATHERING = ['mining', 'woodcutting', 'fishing', 'farming', 'thieving']
 const ARTISAN = ['smithing', 'cooking', 'firemaking', 'fletching', 'crafting', 'herblore', 'runecrafting', 'prayer']
 const skillCat = s => (GATHERING.includes(s) ? 'gathering' : ARTISAN.includes(s) ? 'artisan' : 'other')
+const SEED_POUCH_CHANCE = 0.04
 const TOOL_FOR = Object.fromEntries(Object.entries(TOOL_TYPES).map(([type, d]) => [d.skill, type]))
 const BOSS_MAP = Object.fromEntries(BOSSES.map(b => [b.id, b]))
 const CROP_MAP = Object.fromEntries(CROPS.map(c => [c.id, c]))
@@ -80,7 +81,7 @@ export function newState(profile = {}) {
     mastery: {},
     inventory: {},
     equipment: Object.fromEntries(Object.keys(SLOTS).map(k => [k, null])),
-    tools: { pickaxe: null, axe: null, rod: null },
+    tools: { pickaxe: null, axe: null, rod: null, sickle: null, lockpick: null },
     farm: { plots: [], auto: true },
     food: null,
     potion: null,
@@ -540,6 +541,24 @@ export const G = {
       const pool = CROPS.filter(c => c.lvl <= 60)
       const c = pool[Math.floor(Math.pow(Math.random(), 2) * pool.length)]
       give(c.id + '_seed', rand(1, 3))
+      // Sometimes a stone sits among the eggs
+      if (Math.random() < 0.06) give('uncut_' + GEMS[Math.floor(Math.pow(Math.random(), 2) * GEMS.length)].id, 1)
+    } else if (id === 'geode') {
+      // Ores of the hero's level, a gem or two and a pinch of stardust
+      const rocks = ['copper_ore', 'iron_ore', 'coal', 'gold_ore', 'mithril_ore', 'adamantite_ore', 'runite_ore'].filter(o => findAction('mining', o)?.lvl <= this.level('mining'))
+      const ore = rocks[Math.floor(Math.random() * rocks.length)] || 'copper_ore'
+      give(ore, rand(3, 8))
+      give('uncut_' + GEMS[Math.floor(Math.pow(Math.random(), 1.6) * GEMS.length)].id, rand(1, 2))
+      if (Math.random() < 0.5) give('stardust', rand(2, 6))
+    } else if (id === 'casket') {
+      got.gold = this.addGold(rand(80, 300) + this.level('fishing') * 4, true)
+      if (Math.random() < 0.5) give('uncut_' + GEMS[Math.floor(Math.pow(Math.random(), 1.8) * GEMS.length)].id, 1)
+      if (Math.random() < 0.35) { const c = CROPS[Math.floor(Math.random() * CROPS.length)]; give(c.id + '_seed', rand(1, 3)) }
+      if (Math.random() < 0.04) give('treasure_map', 1)
+    } else if (id === 'seed_pouch') {
+      // Better seeds than a nest: up to a little above the hero's Farming level
+      const pool = CROPS.filter(c => c.lvl <= this.level('farming') + 10)
+      for (let i = 0, n = rand(2, 3); i < n; i++) { const c = pool[Math.floor(Math.pow(Math.random(), 0.7) * pool.length)]; give(c.id + '_seed', rand(1, 2)) }
     } else if (id === 'coin_pouch') {
       got.gold = this.addGold(rand(40, 160), true)
     } else if (id === 'gem_chest') {
@@ -658,7 +677,7 @@ export const G = {
   hasTool(a) { return !a.tool || this.toolTier(a.tool.type) >= a.tool.tier },
   canDo(skill, a) { return this.level(skill) >= a.lvl && this.hasItems(a.in) && this.hasTool(a) },
   burnChance(skill, a) { return Math.max(0, 0.45 - (this.level(skill) - a.lvl) * 0.025) * (1 - this.room('kitchen') * 0.3) },
-  failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving') - Math.min(0.12, this.level('agility') * 0.0012))) },
+  failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving') - Math.min(0.12, this.level('agility') * 0.0012) - this.toolTier('lockpick') * 0.015)) },
   runeMult(skill, a) { return 1 + Math.floor((this.level(skill) - a.lvl) / 12) },
 
   startSkill(skill, actionId) {
@@ -838,7 +857,7 @@ export const G = {
     const plots = this.s.farm.plots
     while (plots.length < this.plotCount()) plots.push(null)
   },
-  growTime(crop) { return crop.grow / (1 + this.mod('farmSpeed') + this.masteryLevel('farming', crop.id) * MASTERY.speedPer) },
+  growTime(crop) { return crop.grow / (1 + this.mod('farmSpeed') + this.masteryLevel('farming', crop.id) * MASTERY.speedPer + this.toolTier('sickle') * TOOL_SPEED_PER_TIER) },
   plant(i, cropId) {
     const c = CROP_MAP[cropId]
     if (!c || this.s.farm.plots[i] || i >= this.plotCount()) return false
@@ -858,12 +877,14 @@ export const G = {
     const p = this.s.farm.plots[i]
     if (!p || p.t > 0) return null
     const c = CROP_MAP[p.crop]
-    const base = rand(c.yield[0], c.yield[1]) + Math.floor(this.mod('farmYield')) + Math.floor(this.masteryLevel('farming', c.id) / 20)
+    const base = rand(c.yield[0], c.yield[1]) + Math.floor(this.mod('farmYield')) + Math.floor(this.masteryLevel('farming', c.id) / 20) + Math.floor(this.toolTier('sickle') / 2)
     const n = base * (Math.random() < this.doubleChance('farming', c.id) ? 2 : 1)
     this.addItem(c.id, n)
     this.addXp('farming', c.harvestXp)
     this.addMastery('farming', c.id, 10 + c.grow / 30)
     this.s.stats.harvests = (this.s.stats.harvests || 0) + 1
+    // Now and then a harvest turns up a pouch of seeds
+    if (Math.random() < SEED_POUCH_CHANCE * (1 + this.mod('loot'))) this.addItem('seed_pouch', 1)
     this.rollSkillPet('farming')
     this.omenAction(3)
     this.s.farm.plots[i] = null

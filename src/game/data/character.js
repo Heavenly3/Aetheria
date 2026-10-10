@@ -144,6 +144,9 @@ export const TOOL_TYPES = {
   pickaxe: { skill: 'mining',      icon: 'war-pick' },
   axe:     { skill: 'woodcutting', icon: 'wood-axe' },
   rod:     { skill: 'fishing',     icon: 'fishing-pole' },
+  // Optional tools: no resource needs them, but they help the skill
+  sickle:   { skill: 'farming',  icon: 'sickle' },
+  lockpick: { skill: 'thieving', icon: 'robber-hand' },
 }
 Object.entries(TOOL_TYPES).forEach(([k, tt]) => named(tt, `tools.${k}`))
 export const TOOL_SPEED_PER_TIER = 0.05

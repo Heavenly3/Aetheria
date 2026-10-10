@@ -68,6 +68,8 @@ METALS.forEach((m, i) => {
   }))
   def(m.id + '_pickaxe', { icon: 'war-pick', type: 'tool', toolType: 'pickaxe', tier, value: m.barValue * 2 + 10, tint: m.tint, req: { mining: m.req }, name: made('pickaxe', m.id) })
   def(m.id + '_axe', { icon: 'wood-axe', type: 'tool', toolType: 'axe', tier, value: m.barValue * 2 + 10, tint: m.tint, req: { woodcutting: m.req }, name: made('axe', m.id) })
+  def(m.id + '_sickle', { icon: 'sickle', type: 'tool', toolType: 'sickle', tier, value: m.barValue * 2 + 10, tint: m.tint, req: { farming: m.req }, name: made('sickle', m.id) })
+  def(m.id + '_lockpick', { icon: 'robber-hand', type: 'tool', toolType: 'lockpick', tier, value: m.barValue + 8, tint: m.tint, req: { thieving: m.req }, name: made('lockpick', m.id) })
   def(m.id + '_arrowtips', { icon: 'arrowhead', value: Math.ceil(m.barValue / 12), tint: m.tint, name: made('arrowtips', m.id) })
   def(m.id + '_arrow', {
     icon: 'arrow-flights', type: 'equip', slot: 'ammo', value: Math.ceil(m.barValue / 8) + 1, name: made('arrow', m.id),
@@ -107,6 +109,10 @@ def('compost',        { icon: 'fertilizer-bag', value: 15, tint: '#6b8a3a', hasD
 def('arrow_shaft',    { icon: 'wood-stick', value: 1, tint: '#a07845' })
 def('headless_arrow', { icon: 'arrow-flights', value: 1, tint: '#d8c7a0' })
 def('bird_nest',      { icon: 'nest-eggs', value: 30, tint: '#9c7b4f', type: 'chest' })
+// Rare finds while gathering, opened from the bag
+def('geode',          { icon: 'stone-pile', value: 80, tint: '#8a7ac0', type: 'chest', hasDesc: true })
+def('casket',         { icon: 'locked-chest', value: 90, tint: '#4a8fbf', type: 'chest', hasDesc: true })
+def('seed_pouch',     { icon: 'fertilizer-bag', value: 60, tint: '#7aa83a', type: 'chest', hasDesc: true })
 
 /* ---------------- Fish and food ---------------- */
 export const FISH = [
@@ -114,9 +120,11 @@ export const FISH = [
   { id: 'sardine',   icon: 'flatfish',      lvl: 5,  xp: 20,  time: 3.2, value: 4,   heal: 4,  cookLvl: 5,  cookXp: 40 },
   { id: 'trout',     icon: 'circling-fish', lvl: 20, xp: 50,  time: 4,   value: 10,  heal: 7,  cookLvl: 15, cookXp: 70 },
   { id: 'salmon',    icon: 'double-fish',   lvl: 30, xp: 70,  time: 4.5, value: 16,  heal: 9,  cookLvl: 25, cookXp: 90 },
+  { id: 'tuna',      icon: 'circling-fish', lvl: 35, xp: 80,  time: 4.8, value: 22,  heal: 10, cookLvl: 30, cookXp: 100 },
   { id: 'lobster',   icon: 'crab-claw',     lvl: 40, xp: 90,  time: 5,   value: 30,  heal: 12, cookLvl: 40, cookXp: 120 },
   { id: 'swordfish', icon: 'angler-fish',   lvl: 50, xp: 125, time: 6,   value: 50,  heal: 14, cookLvl: 45, cookXp: 140 },
   { id: 'shark',     icon: 'shark-fin',     lvl: 76, xp: 175, time: 7,   value: 100, heal: 20, cookLvl: 80, cookXp: 210 },
+  { id: 'anglerfish', icon: 'fish-monster', lvl: 85, xp: 210, time: 7.5, value: 140, heal: 22, cookLvl: 84, cookXp: 240 },
 ]
 FISH.forEach(f => {
   named(f, `fish.${f.id}`)

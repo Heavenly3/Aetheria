@@ -55,7 +55,8 @@ Requires Node.js 18 or newer.
 - **Character creation**: name, portrait and colour, one of 6 roles (Warrior, Ranger, Mage, Artisan, Rogue, Paladin) and one of 4 difficulties.
 - **21 skills** across gathering, artisan, support and combat, with per-action mastery and prestige.
 - **Hero level (1–100)** fed by 25% of all skill XP. Every level grants attribute points (STR, DEX, INT, VIT, WIS, LCK) and every 2 levels a talent point.
-- **Tools**: tiered pickaxes, axes and fishing rods gate advanced resources.
+- **Tools**: tiered pickaxes, axes and fishing rods gate advanced resources; a sickle makes crops grow faster and yield more, and lockpicks make thieving faster and safer.
+- **Gathering finds**: geodes while mining, caskets while fishing, bird nests while woodcutting and seed pouches while harvesting. Mining has a gem rock, fishing reaches tuna and anglerfish, and thieving has stalls that pay in goods instead of coins.
 - **Crafting quality**: every piece of gear made at the anvil, the fletching bench or the crafting table can come out Fine (+5% stats), Superior (+10%) or Masterwork (+20%). The chances grow with your mastery of the recipe, so mastering a recipe pays off. Mage robes are woven from flax in four cloths (linen, silk, spellweave, starweave) and ranger hides are stitched from wolf pelts, snake skins and wyvern scales, each with its own set bonus.
 - **Farming**: plots grow in real time, even offline, with optional auto-replant.
 - **Combat**: 10 areas, 7 bosses with mercenaries, 6 multi-room dungeons, an endless tower, slayer tasks, prayers and loadouts.

@@ -22,6 +22,7 @@ const GEM_DROPS = [
   { item: 'uncut_emerald', chance: 1 / 500, qty: [1, 1] },
   { item: 'uncut_ruby', chance: 1 / 1000, qty: [1, 1] },
   { item: 'uncut_diamond', chance: 1 / 2500, qty: [1, 1] },
+  { item: 'geode', chance: 1 / 150, qty: [1, 1] },
 ]
 ;[
   ['copper_ore', 1, 17.5, 3, 1], ['tin_ore', 1, 17.5, 3, 1], ['rune_essence', 1, 5, 2.4, 1], ['iron_ore', 15, 35, 3.5, 1],
@@ -30,19 +31,25 @@ const GEM_DROPS = [
 ].forEach(([id, lvl, xp, time, tier]) => add('mining', {
   id, nameKey: `nodes.${id}`, icon: ITEMS[id].icon, tint: ITEMS[id].tint, lvl, xp, time, out: { [id]: 1 }, extra: GEM_DROPS, tool: { type: 'pickaxe', tier },
 }))
+// A rock full of gems: no ore, but every swing can turn up a stone
+add('mining', { id: 'gem_rock', nameKey: 'nodes.gem_rock', icon: 'gems', tint: '#7b5fd1', lvl: 40, xp: 65, time: 5, tool: { type: 'pickaxe', tier: 2 }, extra: [
+  { item: 'uncut_sapphire', chance: 0.4, qty: [1, 1] }, { item: 'uncut_emerald', chance: 0.22, qty: [1, 1] },
+  { item: 'uncut_ruby', chance: 0.1, qty: [1, 1] }, { item: 'uncut_diamond', chance: 0.035, qty: [1, 1] }, { item: 'geode', chance: 1 / 60, qty: [1, 1] },
+] })
+ACTIONS.mining.sort((a, b) => a.lvl - b.lvl)
 
 /* ---------- Woodcutting ---------- */
 WOODS.forEach((w, i) => add('woodcutting', {
   id: w.id, nameFn: () => (w.tree === 'normal' ? t('nodes.tree') : t('tpl.wood.tree', { wood: t(`woods.${w.tree}`) })),
   icon: w.id === 'magic_logs' ? 'evil-tree' : w.lvl >= 30 && w.lvl < 45 ? 'willow-tree' : 'pine-tree',
   tint: w.tint, lvl: w.lvl, xp: w.xp, time: w.time, out: { [w.id]: 1 },
-  extra: [{ item: 'bird_nest', chance: 1 / 120, qty: [1, 1] }], tool: { type: 'axe', tier: [1, 1, 2, 3, 4, 5][i] },
+  extra: [{ item: 'bird_nest', chance: 1 / 90, qty: [1, 1] }], tool: { type: 'axe', tier: [1, 1, 2, 3, 4, 5][i] },
 }))
 
 /* ---------- Fishing ---------- */
 FISH.forEach((f, i) => add('fishing', {
   id: 'raw_' + f.id, nameKey: `fish.${f.id}`, icon: f.icon, tint: '#4a8fbf', lvl: f.lvl, xp: f.xp, time: f.time, out: { ['raw_' + f.id]: 1 },
-  tool: { type: 'rod', tier: [1, 1, 2, 2, 3, 4, 5][i] },
+  tool: { type: 'rod', tier: [1, 1, 2, 2, 3, 3, 4, 5, 5][i] }, extra: [{ item: 'casket', chance: 1 / 120, qty: [1, 1] }],
 }))
 
 /* ---------- Farming uses real-time plots (see engine) ---------- */
@@ -64,9 +71,19 @@ FISH.forEach((f, i) => add('fishing', {
   { id: 'paladin', icon: 'holy-symbol',    lvl: 70, xp: 151,  time: 3.8, gold: [80, 160],  dmg: [3, 7], extra: [{ item: 'death_rune', chance: 0.08, qty: [1, 4] }, { item: 'uncut_ruby', chance: 0.01, qty: [1, 1] }] },
   { id: 'hero',    icon: 'laurel-crown',   lvl: 80, xp: 273,  time: 4,   gold: [200, 320], dmg: [4, 9], extra: [{ item: 'blood_rune', chance: 0.06, qty: [1, 3] }, { item: 'uncut_diamond', chance: 0.008, qty: [1, 1] }, { item: 'gem_chest', chance: 0.004, qty: [1, 1] }] },
 ].forEach(v => add('thieving', {
-  id: v.id, nameKey: `marks.${v.id}`, icon: v.icon, tint: '#9d79bc', lvl: v.lvl, xp: v.xp, time: v.time, gold: v.gold, fail: { dmg: v.dmg },
+  id: v.id, nameKey: `marks.${v.id}`, icon: v.icon, tint: '#9d79bc', group: 'groups.pickpocket', lvl: v.lvl, xp: v.xp, time: v.time, gold: v.gold, fail: { dmg: v.dmg },
   extra: v.lvl >= 25 ? [...v.extra, { item: 'treasure_map', chance: 0.0015 + v.lvl * 0.00004, qty: [1, 1] }] : v.extra,
 }))
+
+;[
+  { id: 'bakery_stall', icon: 'bread',        lvl: 5,  xp: 12, time: 3,   out: { baked_potato: 1 }, dmg: [1, 2], extra: [{ item: 'strawberry_pie', chance: 0.08, qty: [1, 1] }] },
+  { id: 'silk_stall',   icon: 'tie',          lvl: 20, xp: 24, time: 3.2, out: { linen_cloth: 1 },  dmg: [1, 3], extra: [{ item: 'silk_cloth', chance: 0.06, qty: [1, 1] }] },
+  { id: 'gem_stall',    icon: 'gems',         lvl: 50, xp: 70, time: 4,   out: {},                  dmg: [3, 6], extra: [
+    { item: 'uncut_sapphire', chance: 0.3, qty: [1, 1] }, { item: 'uncut_emerald', chance: 0.16, qty: [1, 1] }, { item: 'uncut_ruby', chance: 0.07, qty: [1, 1] }, { item: 'uncut_diamond', chance: 0.02, qty: [1, 1] }] },
+].forEach(v => add('thieving', {
+  id: v.id, nameKey: `marks.${v.id}`, icon: v.icon, tint: '#b38a5a', group: 'groups.stalls', lvl: v.lvl, xp: v.xp, time: v.time, out: v.out, fail: { dmg: v.dmg }, extra: v.extra,
+}))
+ACTIONS.thieving.sort((a, b) => a.lvl - b.lvl)
 
 /* ---------- Smithing ---------- */
 METALS.forEach(m => add('smithing', {
@@ -79,7 +96,7 @@ METALS.forEach(m => {
     id: m.id + '_arrowtips', icon: 'arrowhead', tint: m.tint, group: 'groups.forging', lvl: m.lvl + 4, xp: m.xp, time: 2.5,
     in: { [m.id + '_bar']: 1 }, out: { [m.id + '_arrowtips']: 15 },
   })
-  ;['pickaxe', 'axe'].forEach(tool => add('smithing', {
+  ;['pickaxe', 'axe', 'sickle', 'lockpick'].forEach(tool => add('smithing', {
     id: m.id + '_' + tool, icon: ITEMS[m.id + '_' + tool].icon, tint: m.tint, group: 'groups.tools',
     lvl: Math.min(99, m.lvl + 1), xp: Math.round(m.xp * 4), time: 3, in: { [m.id + '_bar']: 2 }, out: { [m.id + '_' + tool]: 1 },
   }))
