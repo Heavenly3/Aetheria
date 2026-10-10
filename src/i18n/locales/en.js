@@ -1798,7 +1798,7 @@ export default {
       openHero: { title: 'Meet your hero', text: 'Levels give hero XP and points for attributes and talents. Spend them here, and change your gear.' },
       openQuests: { title: 'Read the quest board', text: 'Quests unlock new areas and bosses, and daily tasks pay out every day.' },
       openTavern: { title: 'Visit the tavern', text: 'Hire staff who train skills for you, even while you are away. The keeper also has news about your story.' },
-      openJournal: { title: 'Open your journal', text: 'Your story is written in the <b>Journal</b>, and new pages appear as you explore. That is the guide done!' },
+      openJournal: { title: "Open your journal", text: "Your story is written in the <b>Journal</b>, and new pages appear as you explore. Three quick stops left, if you like." }, openGuilds: { title: "Visit the guilds", text: "A dozen <b>Guilds</b> compete across the realm. Find one that takes your role, pass its trial and take its contracts." }, openFarming: { title: "Look at your farm", text: "<b>Farming</b> keeps growing while you are away. Compost, seasons, hybrids and a farmyard make it richer the more you tend it." }, openCompendium: { title: "Open the compendium", text: "The <b>Compendium</b> records every creature, every item and every masterwork, and pays a reward for each full page. That is the guide done!" }
     },
   },
 

@@ -96,7 +96,7 @@ Requires Node.js 18 or newer.
   - **Brews**: amber ale, herbal mead, strawberry wine and fire grog, brewed with Cooking and drunk instead of buying the drink.
   - **Treasure maps** found while thieving open an expedition of their own.
 - **Action queue** that moves on to the next task by itself, and **chained crafting**: when a recipe runs out, the game makes the missing materials first (mine, smelt, then forge) and goes back to it.
-- **Guided tutorial** for new heroes: thirteen short steps over the first ten minutes (mine, smelt, fight, meet the tavern, open the journal), with the next button highlighted. It can be hidden, skipped or restarted from Settings.
+- **Guided tutorial** for new heroes: thirteen short steps over the first ten minutes (mine, smelt, fight, meet the tavern, open the journal) and a short tour of the guilds, the farm and the compendium, with the next button highlighted. It can be hidden, skipped or restarted from Settings.
 - **Light and dark themes**, or follow the device setting.
 - **Phone friendly**: a bottom navigation bar, larger touch targets and a layout that fits narrow screens.
 - **Backup and transfer**: download the save as a file, load it again anywhere, or send yourself a transfer link that opens the hero on another device. No account or server involved.

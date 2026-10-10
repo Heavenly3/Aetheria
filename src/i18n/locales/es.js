@@ -1798,7 +1798,7 @@ export default {
       openHero: { title: 'Conoce a tu héroe', text: 'Los niveles dan XP de héroe y puntos de atributos y talentos. Gástalos aquí y cambia tu equipo.' },
       openQuests: { title: 'Lee el tablón de misiones', text: 'Las misiones desbloquean zonas y jefes nuevos, y las tareas diarias dan premios cada día.' },
       openTavern: { title: 'Visita la taberna', text: 'Contrata personal que entrena habilidades por ti, incluso mientras no estás. El tabernero también tiene noticias sobre tu historia.' },
-      openJournal: { title: 'Abre tu diario', text: 'Tu historia queda escrita en el <b>Diario</b> y aparecen páginas nuevas a medida que exploras. ¡Ya has terminado la guía!' },
+      openJournal: { title: "Abre tu diario", text: "Tu historia queda escrita en el <b>Diario</b> y aparecen páginas nuevas a medida que exploras. Quedan tres paradas rápidas, si quieres." }, openGuilds: { title: "Visita los gremios", text: "Una docena de <b>Gremios</b> compiten por el reino. Busca uno que acepte tu rol, supera su prueba y acepta sus contratos." }, openFarming: { title: "Echa un vistazo a tu granja", text: "La <b>Agricultura</b> sigue creciendo mientras no juegas. El abono, las temporadas, los híbridos y la granja la hacen más rica cuanto más la cuidas." }, openCompendium: { title: "Abre el compendio", text: "El <b>Compendio</b> registra cada criatura, cada objeto y cada obra maestra, y da una recompensa por cada página completa. ¡Ya has terminado la guía!" }
     },
   },
 

@@ -1,7 +1,7 @@
 import { G, state } from './engine.js'
 
 /*
-  Guided first steps for a new character, about ten minutes of play.
+  Guided first steps for a new character, about ten minutes of play, then a short tour of the bigger systems.
   Each step has a goal (a screen to open or something to do) and the elements to highlight,
   matched by their data-tut attribute. Counting goals measure from where the step started,
   so a role that begins with items still has to do the work.
@@ -25,6 +25,10 @@ export const STEPS = [
   { id: 'openQuests', icon: 'scroll-unfurled', route: '/quests', targets: ['nav:/quests'] },
   { id: 'openTavern', icon: 'beer-horn', route: '/tavern', targets: ['nav:/tavern', 'nav:menu'] },
   { id: 'openJournal', icon: 'quill-ink', route: '/journal', targets: ['nav:/journal', 'nav:menu'] },
+  // A short tour of the bigger systems; the reward waits at the end, but skipping is fine
+  { id: 'openGuilds', icon: 'swords-emblem', route: '/guilds', targets: ['nav:/guilds', 'nav:menu'] },
+  { id: 'openFarming', icon: 'sprout', route: '/skill/farming', targets: ['nav:/skill/farming', 'nav:/skill/'] },
+  { id: 'openCompendium', icon: 'open-book', route: '/bestiary', targets: ['nav:/bestiary', 'nav:menu'] },
 ]
 
 export const tutorialActive = () => !state.tutorial.done && STEPS[state.tutorial.step]
