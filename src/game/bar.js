@@ -14,7 +14,7 @@ export const bar = {
   // What patrons may ask for: cooked food and brews the hero can already make (or nearly)
   barMenu() {
     const lvl = this.level('cooking')
-    return (ACTIONS.cooking || []).filter(a => a.lvl <= lvl + 5).map(a => Object.keys(a.out)[0]).filter(id => ITEMS[id] && ITEMS[id].type !== 'junk')
+    return (ACTIONS.cooking || []).filter(a => a.lvl <= lvl + 5).map(a => Object.keys(a.out)[0]).filter(id => ITEMS[id] && ITEMS[id].type !== 'junk' && !ITEMS[id].festival)
   },
   // Patrons come and go with the clock, so the bar fills up while the hero is away too
   ensurePatrons(now = Date.now()) {

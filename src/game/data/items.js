@@ -129,11 +129,13 @@ export const FISH = [
   { id: 'swordfish', icon: 'angler-fish',   lvl: 50, xp: 125, time: 6,   value: 50,  heal: 14, cookLvl: 45, cookXp: 140 },
   { id: 'shark',     icon: 'shark-fin',     lvl: 76, xp: 175, time: 7,   value: 100, heal: 20, cookLvl: 80, cookXp: 210 },
   { id: 'anglerfish', icon: 'fish-monster', lvl: 85, xp: 210, time: 7.5, value: 140, heal: 22, cookLvl: 84, cookXp: 240 },
+  // Only in the summer regatta
+  { id: 'sunfish',   icon: 'flatfish',      lvl: 1,  xp: 30,  time: 4,   value: 25,  heal: 12, cookLvl: 10, cookXp: 70, festival: true },
 ]
 FISH.forEach(f => {
   named(f, `fish.${f.id}`)
-  def('raw_' + f.id, { icon: f.icon, value: f.value, tint: '#4a8fbf', name: () => t('tpl.raw', { fish: t(`fish.${f.id}`) }) })
-  def(f.id, { icon: f.icon, value: Math.round(f.value * 1.6), tint: '#e08a3a', type: 'food', heal: f.heal, name: () => t('tpl.cooked', { fish: t(`fish.${f.id}`) }) })
+  def('raw_' + f.id, { icon: f.icon, value: f.value, tint: '#4a8fbf', festival: f.festival, name: () => t('tpl.raw', { fish: t(`fish.${f.id}`) }) })
+  def(f.id, { icon: f.icon, value: Math.round(f.value * 1.6), tint: '#e08a3a', type: 'food', heal: f.heal, festival: f.festival, name: () => t('tpl.cooked', { fish: t(`fish.${f.id}`) }) })
 })
 def('burnt_food', { icon: 'fishbone', value: 0, tint: '#4a3a30', type: 'junk' })
 
@@ -159,16 +161,18 @@ export const CROPS = [
   { id: 'emberbloom',  icon: 'fire',         lvl: 30, xp: 210, yield: [2, 4], value: 70,  tint: '#ff7a3a', seedValue: 220, hybrid: true },
   { id: 'sunberry',    icon: 'strawberry',   lvl: 35, xp: 240, yield: [3, 6], value: 60,  tint: '#ffcf3a', seedValue: 200, hybrid: true, food: 18 },
   { id: 'starpetal',   icon: 'clover',       lvl: 60, xp: 520, yield: [1, 3], value: 260, tint: '#c9b0ff', seedValue: 900, hybrid: true },
+  // Grown for the spring flower contest; its seeds only come from the festival
+  { id: 'bloomflower', icon: 'butterfly',    lvl: 1,  xp: 60,  yield: [1, 3], value: 20,  tint: '#f08fb8', seedValue: 0, festival: true },
 ]
 // Real-time growth per plot (seconds)
-const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700, moonroot: 900, emberbloom: 1000, sunberry: 1200, starpetal: 2400 }
+const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700, moonroot: 900, emberbloom: 1000, sunberry: 1200, starpetal: 2400, bloomflower: 480 }
 CROPS.forEach(c => {
   c.grow = GROW[c.id]
   // Higher crops grow slowly, so their harvest pays more per point of base XP
   c.harvestXp = Math.round(c.xp * (3 + c.lvl / 10))
   named(c, `crops.${c.id}`)
-  def(c.id + '_seed', { icon: 'plant-seed', value: c.seedValue, tint: c.tint, type: 'seed', name: () => t('tpl.seed', { crop: t(`crops.${c.id}`) }) })
-  def(c.id, { icon: c.icon, value: c.value, tint: c.tint, name: `crops.${c.id}`, ...(c.food ? { type: 'food', heal: c.food } : {}) })
+  def(c.id + '_seed', { icon: 'plant-seed', value: c.seedValue, tint: c.tint, type: 'seed', festival: c.festival, name: () => t('tpl.seed', { crop: t(`crops.${c.id}`) }) })
+  def(c.id, { icon: c.icon, value: c.value, tint: c.tint, name: `crops.${c.id}`, festival: c.festival, ...(c.food ? { type: 'food', heal: c.food } : {}) })
 })
 def('baked_potato',   { icon: 'potato',      value: 12,  tint: '#d9a35b', type: 'food', heal: 6 })
 def('stew',           { icon: 'cooking-pot', value: 40,  tint: '#c76b3a', type: 'food', heal: 11 })
@@ -276,9 +280,10 @@ def('graceful_legs', { icon: 'armored-pants', type: 'equip', slot: 'legs', value
 def('graceful_top',  { icon: 'leather-vest', type: 'equip', slot: 'body', value: 0, tint: '#4ecdc4', stats: { def: 5 }, req: { agility: 40 } })
 // Valuables lifted while thieving, worth most at the fence
 // The festive outfit, from the festival track
-def('festive_hat',   { icon: 'hood',       type: 'equip', slot: 'head', value: 0, tint: '#f2b233', stats: { def: 5 }, req: {}, hasDesc: true })
-def('festive_cloak', { icon: 'cape',       type: 'equip', slot: 'cape', value: 0, tint: '#f2b233', stats: { def: 5, atk: 3, rAtk: 3, mAtk: 3 }, req: {}, hasDesc: true })
-def('festive_coat',  { icon: 'leather-vest', type: 'equip', slot: 'body', value: 0, tint: '#f2b233', stats: { def: 10 }, req: {}, hasDesc: true })
+def('festive_hat',   { icon: 'hood',       type: 'equip', slot: 'head', value: 0, tint: '#f2b233', stats: { def: 5 }, req: {}, hasDesc: true, festival: true })
+def('festive_cloak', { icon: 'cape',       type: 'equip', slot: 'cape', value: 0, tint: '#f2b233', stats: { def: 5, atk: 3, rAtk: 3, mAtk: 3 }, req: {}, hasDesc: true, festival: true })
+def('festive_coat',  { icon: 'leather-vest', type: 'equip', slot: 'body', value: 0, tint: '#f2b233', stats: { def: 10 }, req: {}, hasDesc: true, festival: true })
+def('giant_vegetable', { icon: 'carrot', value: 60, tint: '#ff9a3c', festival: true, hasDesc: true })
 def('silver_goblet', { icon: 'glass-celebration', value: 120,  tint: '#c8ccd2' })
 def('jewelled_ring', { icon: 'gem-pendant',       value: 380,  tint: '#e0a3ff' })
 def('old_painting',  { icon: 'scroll-unfurled',   value: 950,  tint: '#c9a04a' })

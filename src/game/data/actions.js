@@ -51,10 +51,11 @@ WOODS.forEach((w, i) => add('woodcutting', {
 // Each water is one action; every cast lands a fish at random from its table (see data/fishing.js)
 const FISH_XP = Object.fromEntries(FISH.map(f => ['raw_' + f.id, f.xp]))
 WATERS.forEach(w => add('fishing', {
-  id: w.id, nameKey: `waters.${w.id}`, icon: w.icon, tint: w.tint, lvl: w.lvl, time: w.time, catch: w.fish,
+  id: w.id, nameKey: `waters.${w.id}`, icon: w.icon, tint: w.tint, lvl: w.lvl, time: w.time, catch: w.fish, festival: w.festival,
   xp: Math.min(...Object.keys(w.fish).map(id => FISH_XP[id])), tool: { type: 'rod', tier: w.rod },
   extra: [{ item: 'casket', chance: 1 / 120, qty: [1, 1] }],
 }))
+ACTIONS.fishing.sort((a, b) => a.lvl - b.lvl)
 // Level and XP of a fish, by its raw item
 export const FISH_INFO = Object.fromEntries(FISH.map(f => ['raw_' + f.id, { lvl: f.lvl, xp: f.xp }]))
 
@@ -293,6 +294,8 @@ QUALITY_SKILLS.forEach(sk => ACTIONS[sk].forEach(a => {
 export function outputsOf(skill) {
   const out = []
   for (const a of ACTIONS[skill] || []) {
+    // Festival-only actions and items are never asked for
+    if (a.festival || ITEMS[Object.keys(a.out)[0]]?.festival) continue
     const keys = Object.keys(a.out)
     if (keys.length === 1) out.push({ item: keys[0], per: a.out[keys[0]], lvl: a.lvl, time: a.time, xp: a.xp, action: a })
     if (a.catch) for (const id of Object.keys(a.catch)) {

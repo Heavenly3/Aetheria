@@ -45,5 +45,5 @@ export const SEASON_BONUS = 0.25
 export const FAVOURITE_SEASON = {
   potato: 'autumn', flax: 'summer', onion: 'spring', guam: 'spring', tomato: 'summer', marrentill: 'autumn', tarromin: 'winter',
   harralander: 'summer', strawberry: 'summer', ranarr: 'spring', irit: 'autumn', kwuarm: 'winter', snapdragon: 'spring', torstol: 'winter',
-  sunberry: 'summer', moonroot: 'winter', emberbloom: 'autumn', starpetal: 'spring',
+  sunberry: 'summer', moonroot: 'winter', emberbloom: 'autumn', starpetal: 'spring', bloomflower: 'spring',
 }

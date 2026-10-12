@@ -16,6 +16,9 @@ export const WATERS = [
   { id: 'abyssal_trench', icon: 'fish-monster',  lvl: 80, time: 7,   rod: 5, tint: '#5a3fbf', scene: ['#2a2a6a', '#07071f'],
     fish: { raw_shark: 46, raw_anglerfish: 40 } },
 ]
+// The summer regatta: open only during Midsummer Fires
+WATERS.push({ id: 'sunlit_bay', icon: 'flatfish', lvl: 1, time: 3.6, rod: 1, tint: '#f2b233', scene: ['#ffcf6a', '#d9772b'], festival: 'summer',
+  fish: { raw_sardine: 30, raw_trout: 25, raw_sunfish: 30 } })
 export const WATER_MAP = Object.fromEntries(WATERS.map(w => [w.id, w]))
 
 // Baits: consumed one per cast while chosen. `power` shifts the odds towards finer fish; `casket` multiplies caskets

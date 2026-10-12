@@ -708,7 +708,7 @@ export const G = {
   getAction: findAction,
   actionTime(skill, a) { return a.time / (this.speedFactor(skill) + this.masteryLevel(skill, a.id) * MASTERY.speedPer) },
   hasTool(a) { return !a.tool || this.toolTier(a.tool.type) >= a.tool.tier },
-  canDo(skill, a) { return this.level(skill) >= a.lvl && this.hasItems(a.in) && this.hasTool(a) },
+  canDo(skill, a) { return this.level(skill) >= a.lvl && this.hasItems(a.in) && this.hasTool(a) && this.festivalOpen(a) },
   burnChance(skill, a) { return Math.max(0, 0.45 - (this.level(skill) - a.lvl) * 0.025) * (1 - this.room('kitchen') * 0.3) },
   failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving') - Math.min(0.12, this.level('agility') * 0.0012) - this.toolTier('lockpick') * 0.015 + (skill === 'thieving' ? this.heatFail() : 0))) },
   runeMult(skill, a) { return 1 + Math.floor((this.level(skill) - a.lvl) / 12) },
@@ -720,6 +720,7 @@ export const G = {
     if (cur && cur.type === 'skill' && cur.skill === skill && cur.action === actionId) return this.stop()
     if (this.level(skill) < a.lvl) return this.toast('padlock', 'msg.needLevel', { lvl: a.lvl, skill: '@skill:' + skill }, 'warn')
     if (skill === 'thieving' && this.jailed()) return this.toast('padlock', 'thief.inJail', {}, 'warn')
+    if (!this.festivalOpen(a)) return this.toast('campfire', 'festival.closed', {}, 'warn')
     if (!this.hasTool(a)) return this.toast(TOOL_TYPES[a.tool.type].icon, 'msg.needTool', { tool: TOOL_TYPES[a.tool.type].name, tier: a.tool.tier }, 'warn')
     if (!this.hasItems(a.in) && !this.canChain(a)) return this.toast('knapsack', 'msg.noMaterials', {}, 'warn')
     this.s.activity = { type: 'skill', skill, action: actionId, progress: 0 }
@@ -817,6 +818,7 @@ export const G = {
       gain = msg('gain.item', { n: double, item: '@item:' + fish })
       this.s.stats.fish = (this.s.stats.fish || 0) + double
       this.fairCatch(FISH_INFO[fish].lvl)
+      this.festivalCatch(fish)
       this.emit('catch', { fish, water: a.id, n: double })
     }
     Object.entries(a.out).forEach(([k, q]) => {
@@ -956,6 +958,8 @@ export const G = {
     const n = this.plotYield(p, base) * (Math.random() < this.doubleChance('farming', c.id) ? 2 : 1)
     this.addItem(c.id, n)
     const cross = this.tryCross(i)
+    this.festivalHarvest(p, n)
+    this.festivalGiant()
     if (p.event === 'bountiful') this.s.stats.bountiful = (this.s.stats.bountiful || 0) + 1
     this.addXp('farming', c.harvestXp)
     this.addMastery('farming', c.id, 10 + c.grow / 30)
@@ -1071,6 +1075,7 @@ export const G = {
     }
     if (act.kind === 'omen') return this.omenCreature(act.target)
     if (act.kind === 'weekly') return this.weeklyMonster(act)
+    if (act.kind === 'festival') return this.festivalCreature()
     const m = MONSTERS[act.target] && this.scaleMonster(MONSTERS[act.target])
     return m && act.elite ? this.eliteMonster(m, act.elite) : m
   },
@@ -1096,6 +1101,7 @@ export const G = {
       if (m.slayer && this.level('slayer') < m.slayer) return this.toast('death-skull', 'msg.needLevel', { lvl: m.slayer, skill: '@skill:slayer' }, 'warn')
     }
     if (kind === 'omen' && !(this.canHunt() && this.activeOmen().hunt === target)) return this.toast('crystal-ball', 'omens.gone', {}, 'warn')
+    if (kind === 'festival' && !this.canFightWraith()) return this.toast('ice-spell-cast', 'festival.closed', {}, 'warn')
     if (kind === 'weekly' && !this.canWeekly()) return this.toast('crowned-skull', this.weeklyUnlocked() ? 'weekly.alreadySlain' : 'weekly.locked', {}, 'warn')
     if (kind === 'dungeon') {
       const dg = DUNGEONS.find(d => d.id === target)
@@ -1275,6 +1281,7 @@ export const G = {
     if (m.boss && !m.dungeon && st.killsBy[m.id] === 1) this.log('trophy', 'log.bossFirst', { monster: '@monster:' + m.id })
     if (m.boss) this.rollMonsterPet(m.id)
     this.omenKill(m)
+    if (act.kind === 'festival') this.festivalCreatureKilled()
     this.emit('kill', { monster: m, gold, loot })
   },
 
@@ -1284,7 +1291,7 @@ export const G = {
     if (act.kind !== 'weekly') this.loseStreak()
     this.s.hp = this.maxHp()
     // Falling to the weekly boss only ends the attempt
-    const lost = act.kind === 'weekly' ? 0 : Math.floor(this.s.gold * this.diff().death)
+    const lost = act.kind === 'weekly' || act.kind === 'festival' ? 0 : Math.floor(this.s.gold * this.diff().death)
     if (lost > 0) this.s.gold -= lost
     this.log('broken-skull', lost > 0 ? 'log.deathGold' : 'log.death', { monster: '@monster:' + m.id, gold: lost })
     if (act.kind === 'dungeon') this.stop(msg('msg.diedDungeon', { dungeon: '@dungeon:' + act.target, room: act.room + 1, gold: lost }))

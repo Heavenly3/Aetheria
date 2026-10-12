@@ -44,7 +44,7 @@ const info = computed(() => {
     icon: m.icon, tint: '#9b2a32', color: '#e0554b',
     title: `${t(KIND[a.kind] || 'dock.combat')} · ${m.name}`,
     progress: a.respawn > 0 ? 0 : a.mHp / m.hp,
-    to: a.kind === 'tower' ? '/tower' : a.kind === 'omen' ? '/omens' : a.kind === 'weekly' ? '/weekly' : '/combat',
+    to: a.kind === 'tower' ? '/tower' : a.kind === 'omen' ? '/omens' : a.kind === 'weekly' ? '/weekly' : a.kind === 'festival' ? '/festival' : '/combat',
   }
 })
 

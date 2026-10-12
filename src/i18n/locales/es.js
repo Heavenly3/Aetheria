@@ -734,6 +734,10 @@ export default {
   },
 
   festival: {
+    wraith: "Espectro de Hielo",
+    closed: "Solo está abierto durante su festival.",
+    onlyDuring: "Solo durante {name}",
+    act: { toFarm: "A la granja", toFish: "A pescar", deliver: "Entregar", seedsGot: "+{n} semillas de festival", fed: "La hoguera ruge: +{n}", delivered: "Los jueces están contentos: +{n} puntos", giants: "{n} verduras gigantes entregadas: +{p} puntos", gifted: "¡A {name} le encanta tu regalo!", spring: { title: "El concurso de flores", text: "Planta flores de festival en tu granja. Cada flor cosechada se juzga: {base} puntos, más con compost y supercompost, más en temporada, y el doble si la parcela salió abundante.", grown: "{n} flores cultivadas", best: "Mejor flor: {n} puntos", seeds: "Las {n} semillas de hoy" }, summer: { bonfire: "La hoguera", level: "Nivel {n} · +{v} % de fichas de festival", noLogs: "Trae troncos para alimentar la hoguera.", regatta: "La regata", regattaText: "La Bahía Soleada está abierta por el festival. Cada pez sol pescado da {p} puntos y {t} fichas.", sunfish: "{n} peces sol pescados" }, harvest: { stand: "El puesto de la feria", newDay: "Pedidos nuevos cada día.", giants: "Verduras gigantes", giantsText: "Cada cosecha tiene un {pct} % de probabilidad de dar una verdura gigante. Los jueces pagan {p} puntos por cada una.", giantsDone: "{n} entregadas" }, winter: { slain: "{n} abatidos · {p} puntos cada uno", fight: "Luchar", gifts: "Regalos de invierno", giftsText: "Una vez al día, regala a cada amigo algo que le guste: {p} puntos, y siempre te devuelven algo." } },
     pointsN: "{n} puntos de festival",
     tokensN: "{n} fichas",
     track: "Senda del festival",
@@ -839,6 +843,10 @@ export default {
       festTrack: { title: "Senda del festival", body: "Los puntos de festival nunca se gastan: cada ficha que ganas es también un punto, y la actividad del festival da más. Cada escalón de la senda da una recompensa una vez por festival, incluidas las tres piezas del atuendo festivo." },
       festRanking: { title: "Clasificación del festival", body: "Tus puntos de festival contra los mejores de los gremios del reino, que siguen sumando los suyos día a día." },
       festFair: { title: "Feria de fin de semana", body: "El segundo fin de semana de cada mes sin gran festival hay una feria: un concurso de pesca, un asalto a la torre, un día de mercado o una noche de prodigios. Cada una tiene su propia regla, y los puntos de feria dan tres recompensas." },
+      festSpring: { title: "El concurso de flores", body: "Recoge cada día tus semillas de festival gratis y plántalas como cualquier cultivo. Cada flor se juzga al cosecharla: el compost, el supercompost, la primavera y una parcela abundante suben su puntuación." },
+      festSummer: { title: "Hoguera y regata", body: "Los troncos que echas a la hoguera suben su nivel, y cada nivel hace que las fichas de festival lleguen más a menudo durante el resto del festival. La Bahía Soleada es un agua de pesca abierta solo ahora, con peces sol que dan puntos y fichas." },
+      festHarvest: { title: "La feria de la cosecha", body: "Tres pedidos al día de cultivos y platos, cada uno con más puntos que el anterior. Las verduras gigantes salen al cosechar y también dan puntos." },
+      festWinter: { title: "Invierno", body: "El Espectro de Hielo crece contigo y da puntos y fichas cada vez que cae; caer ante él no cuesta oro. Cada amigo del diario acepta un regalo al día." },
       slayerShop: { title: 'Tienda del cazador', body: 'Gasta los puntos de Cazador en equipo, provisiones y saltos de encargo.' },
       towerNext: { title: 'Próximos pisos', body: 'Los siguientes guardianes y su vida. Los pisos ★ son puntos de control con un guardián más duro y más fichas.' },
       towerShop: { title: 'Tienda de la torre', body: 'Gasta las fichas de la torre en capas, cofres y elixires.' },
@@ -1224,7 +1232,7 @@ export default {
     milestoneClaimed: "Hito alcanzado: {n} obras maestras",
   },
   thief: { heatTitle: "La mirada de la guardia", heat: { calm: "Calles tranquilas", wary: "La guardia sospecha", alert: "En alerta: si te pillan, a la cárcel", alarm: "¡Alarma! Todos los guardias te buscan" }, heatEffect: "+{fail} de probabilidad de fallo · el perista paga un {fence} %", jailed: "En la cárcel", jailLeft: "Libre en {time}", bribe: "Sobornar · {n} de oro", informant: "Pagar a un soplón · {n} de oro", informantTip: "Los rumores falsos mandan a la guardia a otra parte: la alerta baja a la mitad.", inJail: "Estás en la cárcel. Espera a salir o soborna al guardia.", jailedStop: "¡Te han pillado! La guardia te lleva a la cárcel.", bribed: "El guardia mira hacia otro lado. Eres libre.", informed: "Los rumores corren: la alerta baja a la mitad.", fenceTitle: "El perista", fenceText: "Objetos de valor que caen a veces al robar. El perista los paga bien, mejor aún si las calles están tranquilas.", noGoods: "Aún no tienes nada que vender.", sell: "Vender todo", fenced: "El perista te pagó {gold} de oro", findable: "Puede aparecer:", fromLevel: "Desde Robo nivel {n}", heistsTitle: "Golpes", lockpickTier: "Ganzúa nivel {n}", startHeist: "Dar el golpe", cooldown: "Pasar desapercibido · {time}", gearChance: "Puede venir con el golpe", stages: { plan: "Planear", slip: "Colarse", crack: "Abrir", escape: "Escapar" }, stageText: { plan: { ok: "las rondas de la guardia, aprendidas", bad: "el plan tiene un fallo: lo dejas" }, slip: { ok: "dentro sin un ruido", bad: "ladra un perro: te retiras" }, crack: { ok: "la cerradura cede", bad: "la cerradura aguanta: coges lo que hay a mano" }, escape: { ok: "te pierdes en la noche", bad: "la guardia espera en la puerta" } }, heistOkLine: "¡Un golpe limpio! +{gold} de oro", caughtLine: "¡Te han pillado! Pierdes el botín y vas a la cárcel.", failLine: "Ha salido mal. +{gold} de oro", heistOk: "{heist}: golpe limpio, +{gold} de oro", heistCaught: "{heist}: ¡te pillaron al salir!", heistFail: "{heist}: ha salido mal", heists: { merchant_vault: { name: "El almacén del mercader", desc: "Un mercader de especias que confía demasiado en sus cerraduras." }, bishop_reliquary: { name: "El relicario del obispo", desc: "Reliquias, anillos y agua bendita detrás del altar." }, guild_vault: { name: "La cámara del gremio", desc: "Donde un gremio rico guarda lo que nunca enseña." }, royal_treasury: { name: "El tesoro real", desc: "El oro de la corona. Nadie lo ha hecho dos veces." } } },
-  waters: { dawn_river: "Río del Alba", mirror_lake: "Lago Espejo", coral_coast: "Costa de Coral", deep_sea: "Mar Profundo", abyssal_trench: "Fosa Abisal" },
+  waters: { sunlit_bay: "Bahía Soleada", dawn_river: "Río del Alba", mirror_lake: "Lago Espejo", coral_coast: "Costa de Coral", deep_sea: "Mar Profundo", abyssal_trench: "Fosa Abisal" },
   angling: { waters: "Aguas de pesca", needsRod: "Requiere {tool} de nivel {n}", fishing: "Pescando", biting: "¡Algo está picando!", baitPower: "Peces mejores un {n} % más probables", casting: "Sedal en el agua…", idle: "Elige un cebo y lanza", cast: "Lanzar", reel: "Recoger", catchTitle: "Qué pica aquí", mastery: "Maestría en estas aguas {n}", speed: "{s} s por lance", baitTitle: "Cebo", baitOn: "Se gasta un cebo por lance.", baitOut: "Te quedaste sin este cebo: pescas sin él.", noBait: "Sin cebo: pican sobre todo los peces comunes.", recent: "Últimas capturas" },
   guilds: {
     nameTpl: "{group} {emblem}",
@@ -2073,8 +2081,9 @@ export default {
   },
   mats: {linen: "lino", silk: "seda", spellweave: "tejido arcano", starweave: "tejido estelar", wolf: "lobo", snake: "serpiente", wyvern: "guiverno",  bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero', aether: 'éter' },
   woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia' },
-  fish: { tuna: "Atún", anglerfish: "Rape", shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
+  fish: { sunfish: "Pez sol", tuna: "Atún", anglerfish: "Rape", shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
   crops: {
+    bloomflower: "Flor de festival",
     moonroot: "Raíz lunar",
     emberbloom: "Flor de brasa",
     sunberry: "Baya solar",
@@ -2086,6 +2095,7 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    giant_vegetable: "Verdura gigante",
     festive_hat: "Sombrero festivo",
     festive_cloak: "Capa festiva",
     festive_coat: "Casaca festiva",
@@ -2149,6 +2159,7 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    giant_vegetable: "Una verdura enorme de una cosecha de festival. A los jueces de la feria de la cosecha les encantan.",
     festive_hat: "De la senda de un festival. Parte del atuendo festivo.",
     festive_cloak: "De la senda de un festival. Parte del atuendo festivo.",
     festive_coat: "De la senda de un festival. Parte del atuendo festivo.",

@@ -35,7 +35,7 @@ export const PAGE_IDS = CATEGORY_GROUPS.flatMap(g => g.cats).filter(c => PAGE_RE
 // The items on each page: plain items only (no finer versions, no relics)
 export const PAGES = Object.fromEntries(PAGE_IDS.map(c => [c, []]))
 for (const it of Object.values(ITEMS)) {
-  if (it.base || it.relic) continue
+  if (it.base || it.relic || it.festival) continue
   const c = itemCategory(it.id)
   if (PAGES[c]) PAGES[c].push(it.id)
 }

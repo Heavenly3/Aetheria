@@ -9,8 +9,18 @@ import {
 import { guildRoster } from './data/guilds.js'
 import { PET_MAP } from './data/pets.js'
 import { FEATURES } from './features.js'
+import { CROPS, ITEMS } from './data/items.js'
+import { ACTIONS } from './data/actions.js'
+import { CHARACTERS } from './data/journal.js'
+import { seeded, dayKey } from './systems.js'
+import { named } from '../i18n/bind.js'
+import {
+  BLOOM_CROP, BLOOM_SCORE, FREE_SEEDS, LOG_VALUE, BONFIRE_LEVELS, BONFIRE_TOKENS, SUNFISH, STAND_REQUESTS, STAND_REWARD, GIANT,
+  WRAITH, wraithStats, GIFTS, GIFT_POINTS,
+} from './data/festivalActs.js'
 
 const DAY = 86400e3
+let wraithCache = { key: '', m: null }
 // Which festival or fair is on only changes by date, so it is looked up at most every 30 seconds
 let festCache = { at: 0, win: null, fair: null }
 const lookup = () => {
@@ -53,12 +63,14 @@ export const festivals = {
     const st = this.festivalState()
     st.points = (st.points || 0) + Math.round(n * (1 + this.mod('festPoints')))
   },
-  festivalAction(time) { if (this.activeFestival() && Math.random() < TOKENS.actionChance * time / 3) this.addFestivalTokens(1) },
+  festivalAction(time) { if (this.activeFestival() && Math.random() < TOKENS.actionChance * this.festTokenMult() * time / 3) this.addFestivalTokens(1) },
   festivalKill(m) {
     if (!this.activeFestival()) return
     if (m.boss) this.addFestivalTokens(TOKENS.boss)
-    else if (Math.random() < TOKENS.killChance) this.addFestivalTokens(1)
+    else if (Math.random() < TOKENS.killChance * this.festTokenMult()) this.addFestivalTokens(1)
   },
+  // The summer bonfire raises everyone's token income
+  festTokenMult() { return 1 + (this.activeFestival()?.id === 'summer' ? this.bonfireLevel() * BONFIRE_TOKENS : 0) },
   festivalTask() { this.addFestivalTokens(TOKENS.task) },
 
   /* ---------- the track ---------- */
@@ -152,5 +164,135 @@ export const festivals = {
   },
   fairInfo(id) { return FAIRS[id] },
 
-  festivalReady() { return this.trackClaimable() + this.fairClaimable() },
+  /* ================= the festival activities ================= */
+  festAct() { return this.festivalState().act },
+  festOn(id) { return this.activeFestival()?.id === id },
+
+  /* ---------- spring: blooms ---------- */
+  freeSeedsReady() { return this.festOn('spring') && this.festAct().seedsDay !== dayKey() },
+  claimFreeSeeds() {
+    if (!this.freeSeedsReady()) return 0
+    this.festAct().seedsDay = dayKey()
+    this.addItem(BLOOM_CROP + '_seed', FREE_SEEDS)
+    return FREE_SEEDS
+  },
+  // How a bloom is judged: soil, a bountiful plot and the season all count
+  bloomScore(p) {
+    return BLOOM_SCORE.base + BLOOM_SCORE.soil[p.soil || 0] + (this.inSeason(p.crop) ? BLOOM_SCORE.season : 0)
+  },
+  // Called when a festival crop is harvested
+  festivalHarvest(p, n) {
+    if (!this.festOn('spring') || p.crop !== BLOOM_CROP) return 0
+    const each = this.bloomScore(p) * (p.event === 'bountiful' ? BLOOM_SCORE.bountiful : 1)
+    const a = this.festAct()
+    a.blooms = (a.blooms || 0) + n
+    a.bestBloom = Math.max(a.bestBloom || 0, each)
+    this.addFestivalPoints(each * n)
+    this.addFestivalTokens(n)
+    return each * n
+  },
+
+  /* ---------- summer: the bonfire and the regatta ---------- */
+  bonfireFed() { return this.festAct().fed || 0 },
+  bonfireLevel() { const fed = this.s.festival?.act?.fed || 0; return BONFIRE_LEVELS.filter(x => fed >= x).length - 1 },
+  feedBonfire(item, n = this.qty(item)) {
+    n = Math.min(n, this.qty(item))
+    if (!this.festOn('summer') || !LOG_VALUE[item] || n <= 0) return 0
+    this.removeItem(item, n)
+    const v = LOG_VALUE[item] * n, a = this.festAct()
+    const before = this.bonfireLevel()
+    a.fed = (a.fed || 0) + v
+    this.addFestivalPoints(v)
+    if (this.bonfireLevel() > before) this.emit('bonfire', { level: this.bonfireLevel() })
+    return v
+  },
+  festivalCatch(fish) {
+    if (!this.festOn('summer') || fish !== SUNFISH.item) return
+    this.festAct().sunfish = (this.festAct().sunfish || 0) + 1
+    this.addFestivalPoints(SUNFISH.points)
+    this.addFestivalTokens(SUNFISH.tokens)
+  },
+  // Festival actions (the regatta water) only open while their festival runs
+  festivalOpen(a) { return !a.festival || this.festOn(a.festival) },
+
+  /* ---------- harvest: the fair stand and giant vegetables ---------- */
+  standRequests() {
+    if (!this.festOn('harvest')) return []
+    const a = this.festAct(), day = dayKey()
+    if (a.standDay !== day) {
+      const rng = seeded('stand' + day + this.s.created)
+      const crops = CROPS.filter(c => !c.hybrid && !c.festival && c.lvl <= this.level('farming') + 5).map(c => ({ item: c.id, qty: 10 + Math.floor(rng() * 16) }))
+      const dishes = (ACTIONS.cooking || []).filter(x => x.lvl <= this.level('cooking') && Object.keys(x.out).length === 1 && !ITEMS[Object.keys(x.out)[0]]?.festival)
+        .map(x => ({ item: Object.keys(x.out)[0], qty: 5 + Math.floor(rng() * 8) }))
+      const pool = [...crops, ...dishes]
+      const reqs = []
+      while (reqs.length < STAND_REQUESTS && pool.length) reqs.push({ ...pool.splice(Math.floor(rng() * pool.length), 1)[0], done: false })
+      Object.assign(a, { standDay: day, stand: reqs })
+    }
+    return a.stand
+  },
+  deliverStand(i) {
+    const r = this.standRequests()[i]
+    if (!r || r.done || this.qty(r.item) < r.qty) return null
+    this.removeItem(r.item, r.qty)
+    r.done = true
+    const pts = STAND_REWARD.points[i] || STAND_REWARD.points[0]
+    this.addFestivalPoints(pts)
+    this.addFestivalTokens(STAND_REWARD.tokens)
+    return pts
+  },
+  // A harvest during the harvest festival can turn up a giant vegetable
+  festivalGiant() {
+    if (this.festOn('harvest') && Math.random() < GIANT.chance) { this.addItem(GIANT.item, 1); return true }
+    return false
+  },
+  deliverGiants() {
+    const n = this.qty(GIANT.item)
+    if (!this.festOn('harvest') || !n) return 0
+    this.removeItem(GIANT.item, n)
+    this.festAct().giants = (this.festAct().giants || 0) + n
+    this.addFestivalPoints(GIANT.points * n)
+    this.addFestivalTokens(GIANT.tokens * n)
+    return n
+  },
+
+  /* ---------- winter: the Frost Wraith and gifts ---------- */
+  // A creature that grows with the hero, met only during the winter festival
+  festivalCreature() {
+    const cl = this.combatLevel(), f = this.monsterMult()
+    const key = cl + '|' + f
+    if (wraithCache.key !== key) {
+      const st = wraithStats(cl)
+      wraithCache = { key, m: named({
+        id: WRAITH.id, icon: WRAITH.icon, traits: ['chills'], weak: 'magic', festival: true, speed: st.speed, gold: st.gold,
+        hp: Math.round(st.hp * f), att: Math.round(st.att * f), def: Math.round(st.def * f), maxHit: Math.max(1, Math.round(st.maxHit * f)),
+        drops: [{ item: 'ice_shard', chance: 0.25, qty: [1, 2] }],
+      }, 'festival.wraith') }
+    }
+    return wraithCache.m
+  },
+  canFightWraith() { return this.festOn('winter') },
+  festivalCreatureKilled() {
+    if (!this.festOn('winter')) return
+    this.festAct().wraiths = (this.festAct().wraiths || 0) + 1
+    this.addFestivalPoints(WRAITH.points)
+    this.addFestivalTokens(WRAITH.tokens)
+  },
+  // The people of the journal the hero has met, and whether they had their gift today
+  giftPeople() { return CHARACTERS.filter(c => GIFTS[c.id] && this.chapterUnlocked(c.met)) },
+  giftGiven(id) { return this.festAct().gifts?.[id] === dayKey() },
+  canGift(id, item) { return this.festOn('winter') && !!GIFTS[id]?.likes.includes(item) && this.qty(item) > 0 && !this.giftGiven(id) },
+  giveGift(id, item) {
+    if (!this.canGift(id, item)) return null
+    this.removeItem(item, 1)
+    const a = this.festAct()
+    a.gifts = { ...(a.gifts || {}), [id]: dayKey() }
+    this.addFestivalPoints(GIFT_POINTS)
+    Object.entries(GIFTS[id].gives).forEach(([k, n]) => this.addItem(k, n))
+    return GIFTS[id].gives
+  },
+
+  festivalReady() {
+    return this.trackClaimable() + this.fairClaimable() + (this.freeSeedsReady() ? 1 : 0)
+  },
 }

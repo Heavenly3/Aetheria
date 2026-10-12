@@ -734,6 +734,10 @@ export default {
   },
 
   festival: {
+    wraith: "Frost Wraith",
+    closed: "That is only open during its festival.",
+    onlyDuring: "Only during {name}",
+    act: { toFarm: "To the farm", toFish: "To fishing", deliver: "Deliver", seedsGot: "+{n} festival seeds", fed: "The bonfire roars: +{n}", delivered: "The judges are pleased: +{n} points", giants: "{n} giant vegetables delivered: +{p} points", gifted: "{name} loves your gift!", spring: { title: "The flower contest", text: "Plant festival blooms on your farm. Every bloom harvested is judged: {base} points, more with compost and supercompost, more in season, and double for a bountiful plot.", grown: "{n} blooms grown", best: "Best bloom: {n} points", seeds: "Today's {n} seeds" }, summer: { bonfire: "The bonfire", level: "Level {n} · +{v}% festival tokens", noLogs: "Bring logs to feed the bonfire.", regatta: "The regatta", regattaText: "The Sunlit Bay is open for the festival. Every sunfish caught pays {p} points and {t} tokens.", sunfish: "{n} sunfish caught" }, harvest: { stand: "The fair stand", newDay: "New requests every day.", giants: "Giant vegetables", giantsText: "Every harvest has a {pct}% chance of a giant vegetable. The judges pay {p} points for each.", giantsDone: "{n} delivered" }, winter: { slain: "{n} slain · {p} points each", fight: "Fight", gifts: "Winter gifts", giftsText: "Once a day, give each friend something they like: {p} points, and they always give something back." } },
     pointsN: "{n} festival points",
     tokensN: "{n} tokens",
     track: "Festival track",
@@ -839,6 +843,10 @@ export default {
       festTrack: { title: "Festival track", body: "Festival points are never spent: every token you earn is also a point, and the festival activity gives more. Each step of the track pays a reward once per festival, including the three pieces of the festive outfit." },
       festRanking: { title: "Festival ranking", body: "Your festival points against the best of the realm's guilds, who keep earning theirs day by day." },
       festFair: { title: "Weekend fair", body: "The second weekend of every month without a big festival hosts a fair: a fishing derby, a tower rush, a market day or a night of omens. Each has its own rule, and fair points pay three rewards." },
+      festSpring: { title: "The flower contest", body: "Take your free festival seeds each day and plant them like any crop. Each bloom is judged when harvested: compost, supercompost, the spring season and a bountiful plot all raise its score." },
+      festSummer: { title: "Bonfire and regatta", body: "Logs fed to the bonfire raise its level, and every level makes festival tokens come more often for the rest of the festival. The Sunlit Bay is a fishing water open only now, with sunfish worth points and tokens." },
+      festHarvest: { title: "The harvest fair", body: "Three requests a day for crops and dishes, each worth more points than the last. Giant vegetables turn up while harvesting and are worth points too." },
+      festWinter: { title: "Winter", body: "The Frost Wraith grows with you and pays points and tokens every time it falls; falling to it costs no gold. Friends from the journal each take one gift a day." },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -1224,7 +1232,7 @@ export default {
     milestoneClaimed: "Milestone reached: {n} masterworks",
   },
   thief: { heatTitle: "The guard's eye", heat: { calm: "Calm streets", wary: "The guard is wary", alert: "On alert: getting caught means jail", alarm: "Alarm! Every guard is looking for you" }, heatEffect: "+{fail} failure chance · the fence pays {fence}%", jailed: "In jail", jailLeft: "Free in {time}", bribe: "Bribe · {n} gold", informant: "Pay an informant · {n} gold", informantTip: "False rumours send the guard elsewhere: the heat halves.", inJail: "You are in jail. Wait it out or bribe the guard.", jailedStop: "Caught! The guard drags you off to jail.", bribed: "The guard looks the other way. You are free.", informed: "The rumours spread: the heat halves.", fenceTitle: "The fence", fenceText: "Valuables lifted now and then while thieving. The fence pays well for them, best while the streets are calm.", noGoods: "Nothing to sell yet.", sell: "Sell all", fenced: "The fence paid {gold} gold", findable: "Can turn up:", fromLevel: "From Thieving level {n}", heistsTitle: "Heists", lockpickTier: "Lockpick tier {n}", startHeist: "Pull the heist", cooldown: "Lie low · {time}", gearChance: "May come with the job", stages: { plan: "Plan", slip: "Slip in", crack: "Crack", escape: "Get away" }, stageText: { plan: { ok: "the guard rounds are learned", bad: "the plan has a hole: you call it off" }, slip: { ok: "in without a sound", bad: "a dog barks: you back off" }, crack: { ok: "the lock gives", bad: "the lock holds: you grab what is at hand" }, escape: { ok: "gone into the night", bad: "the guard is waiting at the door" } }, heistOkLine: "A clean job! +{gold} gold", caughtLine: "Caught! The loot is lost and you are in jail.", failLine: "It went wrong. +{gold} gold", heistOk: "{heist}: clean job, +{gold} gold", heistCaught: "{heist}: caught on the way out!", heistFail: "{heist}: it went wrong", heists: { merchant_vault: { name: "The merchant's vault", desc: "A spice merchant who trusts his locks too much." }, bishop_reliquary: { name: "The bishop's reliquary", desc: "Relics, rings and holy water behind the altar." }, guild_vault: { name: "The guild vault", desc: "Where a rich guild keeps what it never shows." }, royal_treasury: { name: "The royal treasury", desc: "The crown's own gold. Nobody has done it twice." } } },
-  waters: { dawn_river: "Dawn River", mirror_lake: "Mirror Lake", coral_coast: "Coral Coast", deep_sea: "Deep Sea", abyssal_trench: "Abyssal Trench" },
+  waters: { sunlit_bay: "Sunlit Bay", dawn_river: "Dawn River", mirror_lake: "Mirror Lake", coral_coast: "Coral Coast", deep_sea: "Deep Sea", abyssal_trench: "Abyssal Trench" },
   angling: { waters: "Fishing waters", needsRod: "Needs a {tool} of tier {n}", fishing: "Fishing", biting: "Something is biting!", baitPower: "Finer fish {n}% likelier", casting: "Line in the water…", idle: "Choose a bait and cast", cast: "Cast", reel: "Reel in", catchTitle: "What bites here", mastery: "Mastery of this water {n}", speed: "{s} s per cast", baitTitle: "Bait", baitOn: "One bait is used per cast.", baitOut: "Out of this bait: casting without it.", noBait: "No bait: the common fish bite most.", recent: "Latest catches" },
   guilds: {
     nameTpl: "{group} of {emblem}",
@@ -2073,8 +2081,9 @@ export default {
   },
   mats: {linen: "Linen", silk: "Silk", spellweave: "Spellweave", starweave: "Starweave", wolf: "Wolf", snake: "Snakeskin", wyvern: "Wyvern",  bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather', aether: 'Aether' },
   woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic' },
-  fish: { tuna: "Tuna", anglerfish: "Anglerfish", shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
+  fish: { sunfish: "Sunfish", tuna: "Tuna", anglerfish: "Anglerfish", shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
   crops: {
+    bloomflower: "Festival bloom",
     moonroot: "Moonroot",
     emberbloom: "Emberbloom",
     sunberry: "Sunberry",
@@ -2086,6 +2095,7 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    giant_vegetable: "Giant vegetable",
     festive_hat: "Festive hat",
     festive_cloak: "Festive cloak",
     festive_coat: "Festive coat",
@@ -2149,6 +2159,7 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    giant_vegetable: "An enormous vegetable from a festival harvest. The judges at the harvest fair love these.",
     festive_hat: "From a festival track. Part of the festive outfit.",
     festive_cloak: "From a festival track. Part of the festive outfit.",
     festive_coat: "From a festival track. Part of the festive outfit.",
