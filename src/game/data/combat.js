@@ -3,14 +3,32 @@ import { t } from '../../i18n/index.js'
 
 export const PLAYER_ATTACK_SPEED = 2.4
 
+/*
+  Stances, grouped by the kind of fight (melee, ranged, magic). Each one trades something:
+  acc/str/def: effective levels added to accuracy, damage and defence · speed: time between attacks
+  (under 1 is quicker) · dmg: damage multiplier · crit: extra crit chance · guard: defence multiplier ·
+  xp: how the combat XP is shared between skills. `skill` is the one it mainly trains.
+  The first five keep their old ids, so older saves and loadouts still point at a stance.
+*/
+const stance = (type, icon, skill, o = {}) => ({ type, icon, skill, acc: 0, str: 0, def: 0, speed: 1, dmg: 1, crit: 0, guard: 1, xp: { [skill]: 1 }, ...o })
 export const COMBAT_STYLES = {
-  attack:   { icon: 'crossed-swords',  type: 'melee',  skill: 'attack' },
-  strength: { icon: 'biceps',          type: 'melee',  skill: 'strength' },
-  defense:  { icon: 'checked-shield',  type: 'melee',  skill: 'defense' },
-  ranged:   { icon: 'bow-arrow',       type: 'ranged', skill: 'ranged' },
-  magic:    { icon: 'fire-spell-cast', type: 'magic',  skill: 'magic' },
+  attack:     stance('melee', 'crossed-swords', 'attack', { acc: 3 }),
+  strength:   stance('melee', 'biceps', 'strength', { str: 3 }),
+  defense:    stance('melee', 'checked-shield', 'defense', { def: 3 }),
+  controlled: stance('melee', 'swords-emblem', 'attack', { acc: 1, str: 1, def: 1, xp: { attack: 1 / 3, strength: 1 / 3, defense: 1 / 3 } }),
+  berserk:    stance('melee', 'flame', 'strength', { str: 2, dmg: 1.12, guard: 0.8 }),
+  ranged:     stance('ranged', 'bow-arrow', 'ranged', { acc: 3 }),
+  rapid:      stance('ranged', 'arrow-flights', 'ranged', { speed: 0.85 }),
+  longrange:  stance('ranged', 'archery-target', 'ranged', { def: 3, xp: { ranged: 0.5, defense: 0.5 } }),
+  aimed:      stance('ranged', 'eye-target', 'ranged', { crit: 0.08, speed: 1.1 }),
+  magic:      stance('magic', 'fire-spell-cast', 'magic', { acc: 3 }),
+  swiftcast:  stance('magic', 'magic-swirl', 'magic', { speed: 0.85, dmg: 0.9 }),
+  overcharge: stance('magic', 'fire', 'magic', { dmg: 1.2, speed: 1.15 }),
+  warding:    stance('magic', 'magic-shield', 'magic', { def: 3, xp: { magic: 0.5, defense: 0.5 } }),
 }
 Object.entries(COMBAT_STYLES).forEach(([k, s]) => named(s, `styles.${k}.name`, `styles.${k}.desc`))
+export const STYLE_TYPES = ['melee', 'ranged', 'magic']
+export const stancesOf = type => Object.keys(COMBAT_STYLES).filter(k => COMBAT_STYLES[k].type === type)
 
 const spell = (id, lvl, max, runes, xp, el) => named({ id, lvl, max, runes, xp, el }, `spells.${id}`)
 export const SPELLS = [

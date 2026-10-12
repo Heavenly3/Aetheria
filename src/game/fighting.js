@@ -6,7 +6,7 @@
 import { toRaw } from 'vue'
 import { cloneNamed } from '../i18n/bind.js'
 import { ITEMS } from './data/items.js'
-import { COMBAT_STYLES } from './data/combat.js'
+import { COMBAT_STYLES, stancesOf } from './data/combat.js'
 import {
   weaponProfile, SPELL_FX, AIR_SPEED, STATUSES, TRAITS, traitsOf, ELITES, ELITE_IDS, ELITE_CHANCE,
   ABILITIES, ABILITY_MAP, ABILITY_SKILL, BUFFS, ENERGY, ENERGY_MAX, BAR_SIZE, defaultBar,
@@ -14,22 +14,75 @@ import {
 } from './data/fighting.js'
 
 const eliteCache = new Map()
+const msg = (key, params = {}) => ({ key, params })
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
 
 // bar: the abilities chosen for each style, in priority order; auto: whether they fire on their own
 // hunt: kills in a row without dying, and the best run ever
-export const fightingState = () => ({ abilities: { bar: defaultBar(), auto: true }, hunt: { streak: 0, best: 0 } })
+// stances: the last stance picked for each kind of fight · tactics: when to pull out of a fight
+export const fightingState = () => ({
+  abilities: { bar: defaultBar(), auto: true }, hunt: { streak: 0, best: 0 },
+  stances: { melee: 'attack', ranged: 'ranged', magic: 'magic' },
+  tactics: { retreat: false, retreatPct: 25, stopOnTask: false },
+})
+// Combat XP per point of damage: melee and ranged, and magic (whose spells also pay a little per cast)
+const XP_PER_DMG = { melee: 4, ranged: 4, magic: 2 }
 
 export const fighting = {
+  /* ================= stances ================= */
+  // Pick a stance; the kind of fight remembers it for the next time
+  setStance(id) {
+    const st = COMBAT_STYLES[id]
+    if (!st) return false
+    this.s.combatStyle = id
+    ;(this.s.stances ||= {})[st.type] = id
+    return true
+  },
+  // Switch to a kind of fight, in the stance last used for it
+  setStyleType(type) {
+    const last = this.s.stances?.[type]
+    return this.setStance(COMBAT_STYLES[last]?.type === type ? last : stancesOf(type)[0])
+  },
+  // Works something out as if another stance were in use, then puts the real one back
+  withStance(id, fn) {
+    const raw = toRaw(this.s), saved = raw.combatStyle
+    raw.combatStyle = id
+    try { return fn() } finally { raw.combatStyle = saved }
+  },
+  // Combat XP for damage dealt, shared between the skills the stance trains
+  styleXp(dealt, first = false) {
+    const st = this.stance()
+    if (st.type === 'magic' && first) this.addXp('magic', this.currentSpell().xp)
+    if (dealt <= 0) return
+    for (const [skill, share] of Object.entries(st.xp)) this.addXp(skill, dealt * XP_PER_DMG[st.type] * share)
+    this.addXp('hitpoints', dealt * 1.33)
+  },
+
+  /* ================= tactics ================= */
+  // Out of food and below the chosen health: the hero pulls out instead of falling. The weekly boss
+  // costs nothing to fall to, so it is fought to the end
+  shouldRetreat(act) {
+    const t = this.s.tactics
+    if (!t?.retreat || act.kind === 'weekly') return false
+    return this.s.hp > 0 && this.s.hp <= this.maxHp() * t.retreatPct / 100 && !this.hasFoodLeft()
+  },
+  hasFoodLeft() { return !!this.s.food && (this.qty(this.s.food) > 0 || !!this.bestFood()) },
+  retreat(m) {
+    this.s.stats.retreats = (this.s.stats.retreats || 0) + 1
+    this.log('run', 'log.retreat', { monster: '@monster:' + m.id })
+    this.stop(msg('tactics.retreated', { monster: '@monster:' + m.id }))
+    this.emit('retreat', m)
+  },
+
   /* ================= the hero ================= */
   weapon() { return weaponProfile(this.s.equipment.weapon) },
   // Seconds between the hero's attacks: the weapon's pace, quicker with air spells and speed bonuses
   attackSpeed() {
-    let s = this.weapon().speed
+    let s = this.weapon().speed * this.stance().speed
     if (this.styleType() === 'magic' && this.currentSpell().el === 'air') s *= AIR_SPEED
     return s / (1 + this.mod('atkSpeed'))
   },
-  critChance() { return Math.min(0.75, this.weapon().crit + this.mod('crit')) },
+  critChance() { return Math.min(0.75, this.weapon().crit + this.stance().crit + this.mod('crit')) },
   critMult() { return this.weapon().critDmg + this.mod('critDmg') },
   // Agility makes the hero harder to hit; a shield can block half a blow
   dodgeChance() { return Math.min(0.25, this.level('agility') * 0.0015 + this.mod('dodge')) },
@@ -201,9 +254,7 @@ export const fighting = {
     const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
     act.mHp -= dealt
     this.track(act, 'dealt', dealt)
-    if (type === 'magic') this.addXp('magic', (first ? this.currentSpell().xp : 0) + dealt * 2)
-    else if (dealt > 0) this.addXp(COMBAT_STYLES[this.s.combatStyle].skill, dealt * 4)
-    if (dealt > 0) this.addXp('hitpoints', dealt * 1.33)
+    this.styleXp(dealt, first)
     this.emit('hit', { who: 'player', dmg, crit, evaded, ability: ab?.id })
     if (crit && dmg >= ps.maxHit) this.note(act, 'bigCrit', { dmg })
     // Weapons, spells and abilities can leave statuses; the weekly boss keeps its own rules
@@ -346,11 +397,5 @@ export const fighting = {
     return null
   },
   // Damage over time trains the style that caused it, like a normal hit
-  dotXp(dealt) {
-    if (dealt <= 0) return
-    const type = this.styleType()
-    if (type === 'magic') this.addXp('magic', dealt * 2)
-    else this.addXp(COMBAT_STYLES[this.s.combatStyle].skill, dealt * 4)
-    this.addXp('hitpoints', dealt * 1.33)
-  },
+  dotXp(dealt) { this.styleXp(dealt) },
 }

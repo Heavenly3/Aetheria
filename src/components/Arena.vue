@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
-import { MERCENARIES, COMBAT_STYLES, DUNGEONS } from '../game/data/combat.js'
+import { MERCENARIES, DUNGEONS } from '../game/data/combat.js'
 import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES } from '../game/data/fighting.js'
 import { abilityText } from '../ui/abilities.js'
 import { pct, fmt, fmtDec } from '../game/format.js'
@@ -12,6 +12,7 @@ import { help, tip } from '../ui/tips.js'
 
 const { t } = useI18n()
 const act = computed(() => state.activity)
+const stance = computed(() => (void state.combatStyle, G.stance()))
 const m = computed(() => G.getMonster(act.value))
 const alive = computed(() => act.value.respawn <= 0)
 const ps = computed(() => G.playerStats(m.value))
@@ -124,7 +125,7 @@ onUnmounted(() => { off && off(); offAb && offAb() })
     </div>
 
     <div class="arena-meta">
-      <span class="tag" v-tooltip.top="tip(COMBAT_STYLES[state.combatStyle].name, COMBAT_STYLES[state.combatStyle].desc)"><GameIcon :name="COMBAT_STYLES[state.combatStyle].icon" :size="12" /> {{ COMBAT_STYLES[state.combatStyle].name }}</span>
+      <span class="tag" v-tooltip.top="tip(stance.name, stance.desc)"><GameIcon :name="stance.icon" :size="12" /> {{ $t(`combat.typeNames.${stance.type}`) }} · {{ stance.name }}</span>
       <span class="tag" v-tooltip.top="help('combat.accuracy')">{{ $t('combat.accuracy', { v: pct(G.hitChance(ps.accRoll, mr.defRoll)) }) }}</span>
       <span class="tag" v-tooltip.top="help('stats.maxHit')">{{ $t('combat.maxHit', { v: ps.maxHit }) }}</span>
       <span class="tag" v-tooltip.top="help('combat.speed')">{{ $t('fighting.speed', { v: +G.attackSpeed().toFixed(1) }) }}</span>

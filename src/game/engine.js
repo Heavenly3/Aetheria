@@ -12,7 +12,7 @@ import {
   SLOT_COUNT, DIFFICULTIES, ATTRIBUTES, ROLES, TALENTS, POINTS_PER_LEVEL, HERO_MAX_LEVEL, HERO_XP_SHARE, heroXpFor,
   TALENT_POINT_EVERY, MASTERY, masteryXpPerAction, TOOL_TYPES, TOOL_SPEED_PER_TIER,
 } from './data/character.js'
-import { systems, extraState } from './systems.js'
+import { systems, extraState, LOADOUT_SLOTS } from './systems.js'
 import { meta, metaState } from './meta.js'
 import { ascension, ascensionState } from './ascension.js'
 import { collection, collectionState } from './collection.js'
@@ -149,7 +149,8 @@ function replaceState(next) {
   ;['board', 'workers', 'orders', 'reports'].forEach(k => { if (!Array.isArray(state.tavern[k])) state.tavern[k] = [] })
   if (!Array.isArray(state.queue)) state.queue = []
   if (!Array.isArray(state.history)) state.history = []
-  if (!Array.isArray(state.loadouts) || state.loadouts.length !== 3) state.loadouts = [null, null, null]
+  if (!Array.isArray(state.loadouts)) state.loadouts = []
+  while (state.loadouts.length < LOADOUT_SLOTS) state.loadouts.push(null)
   state.settings = { ...ex.settings, ...(state.settings || {}) }
 }
 
@@ -990,7 +991,9 @@ export const G = {
   farmBusy() { return this.s.farm.plots.some(p => p && p.t > 0) },
 
   /* ================= combat ================= */
-  styleType() { return COMBAT_STYLES[this.s.combatStyle].type },
+  // The stance in use (an unknown one falls back to Accurate) and the kind of fight it belongs to
+  stance() { return COMBAT_STYLES[this.s.combatStyle] || COMBAT_STYLES.attack },
+  styleType() { return this.stance().type },
   currentSpell() { return SPELLS.find(sp => sp.id === this.s.spell) || SPELLS[0] },
   onTask(m) { return this.s.slayer.task && m && this.s.slayer.task.monster === m.id },
   areaUnlocked(area) { return !area.reqQuest || this.questDone(area.reqQuest) },
@@ -1008,34 +1011,34 @@ export const G = {
   },
 
   playerStats(m) {
-    const st = this.s.combatStyle, type = this.styleType(), b = this.bonuses()
+    const st = this.stance(), type = st.type, b = this.bonuses()
     let acc, maxHit
     if (type === 'melee') {
-      const effAtt = this.boosted('attack') + 8 + (st === 'attack' ? 3 : 0)
-      const effStr = this.boosted('strength') + 8 + (st === 'strength' ? 3 : 0)
+      const effAtt = this.boosted('attack') + 8 + st.acc
+      const effStr = this.boosted('strength') + 8 + st.str
       acc = effAtt * (b.atk + 64)
       maxHit = Math.floor(0.5 + effStr * (b.str + 64) / 640)
     } else if (type === 'ranged') {
       const eff = this.boosted('ranged') + 8
-      acc = eff * (b.rAtk + 64)
-      maxHit = Math.floor(0.5 + eff * (b.rStr + 64) / 640)
+      acc = (eff + st.acc) * (b.rAtk + 64)
+      maxHit = Math.floor(0.5 + (eff + st.str) * (b.rStr + 64) / 640)
     } else {
-      const eff = this.boosted('magic') + 8
+      const eff = this.boosted('magic') + 8 + st.acc
       acc = eff * (b.mAtk + 64)
       maxHit = Math.floor(this.currentSpell().max * (1 + b.mDmg))
     }
     let accMult = 1 + (this.blessed('vigor') ? 0.1 : 0) + this.mod(type + 'Acc')
-    let dmgMult = 1 + (this.blessed('vigor') ? 0.1 : 0) + this.room('trophy') * 0.04 + this.mod(type + 'Dmg')
+    let dmgMult = (1 + (this.blessed('vigor') ? 0.1 : 0) + this.room('trophy') * 0.04 + this.mod(type + 'Dmg')) * st.dmg
     const helm = this.taskHelmBonus()
     if (helm && this.onTask(m)) { accMult += helm; dmgMult += helm }
     const hunt = this.huntBonus(m)
     accMult += hunt
     dmgMult += hunt
-    const effDef = this.boosted('defense') + 8 + (st === 'defense' ? 3 : 0)
+    const effDef = this.boosted('defense') + 8 + st.def
     return {
       accRoll: acc * accMult,
       maxHit: Math.max(1, Math.floor(maxHit * dmgMult * this.weapon().dmg)),
-      defRoll: effDef * (b.def + 64) * (1 + this.room('armory') * 0.05 + (this.blessed('protection') ? 0.1 : 0) + this.mod('defense')),
+      defRoll: effDef * (b.def + 64) * (1 + this.room('armory') * 0.05 + (this.blessed('protection') ? 0.1 : 0) + this.mod('defense')) * st.guard,
     }
   },
   monsterRolls(m) {
@@ -1135,6 +1138,7 @@ export const G = {
     this.tickAbilities(act, dt)
     if (fell === 'monster') return this.killMonster(m)
     if (fell === 'player') return this.die(m)
+    if (this.shouldRetreat(act)) return this.retreat(m)
     const ps = this.playerStats(m)
     const mr = this.monsterRolls(m)
     const regen = this.traitValue(m, 'regen')
@@ -1194,6 +1198,7 @@ export const G = {
         }
         this.autoEat()
         if (this.s.hp <= 0) return this.die(m)
+        if (this.shouldRetreat(act)) return this.retreat(m)
       } else this.emit('hit', { who: 'monster-merc', dmg: 0 })
     }
   },
@@ -1237,10 +1242,11 @@ export const G = {
       }
     })
     const task = st.slayer.task
+    let taskDone = false
     if (task && task.monster === m.id) {
       this.addXp('slayer', Math.round(m.hp * this.slayerXpMult()))
       task.left--
-      if (task.left <= 0) this.completeSlayerTask()
+      if (task.left <= 0) { this.completeSlayerTask(); taskDone = true }
     }
     if (act.kind === 'tower') {
       const tokens = Math.round((1 + Math.floor(m.floor / 10)) * (m.floor % 10 === 0 ? 3 : 1) * (m.affix ? AFFIX_TOKENS : 1))
@@ -1283,6 +1289,8 @@ export const G = {
     this.omenKill(m)
     if (act.kind === 'festival') this.festivalCreatureKilled()
     this.emit('kill', { monster: m, gold, loot })
+    // Tactics: a finished slayer task can end the hunt in the open field
+    if (taskDone && this.s.tactics?.stopOnTask && act.kind === 'area') this.stop(msg('tactics.taskDone', { monster: '@monster:' + m.id }))
   },
 
   die(m) {

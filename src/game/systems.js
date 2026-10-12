@@ -32,11 +32,12 @@ export function seeded(str) {
 }
 export const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
+export const LOADOUT_SLOTS = 5
 export const extraState = () => ({
   tavern: { level: 1, board: [], boardAt: 0, workers: [], tokens: 0, orders: [], ordersDay: '', drink: null, uid: 0, reports: [], dice: { played: 0, won: 0, net: 0 }, patrons: [], patronAt: 0, rep: 0 },
   queue: [],
   locked: {},
-  loadouts: [null, null, null],
+  loadouts: Array(LOADOUT_SLOTS).fill(null),
   prayer: null,
   prayerTimer: 0,
   grace: 0,
@@ -373,7 +374,10 @@ export const systems = {
   /* ================= loadouts ================= */
   saveLoadout(i, name) {
     const st = this.s
-    st.loadouts[i] = { name: name || `#${i + 1}`, equipment: { ...st.equipment }, style: st.combatStyle, spell: st.spell, food: st.food, potion: st.potion, prayer: st.prayer }
+    st.loadouts[i] = {
+      name: name || `#${i + 1}`, equipment: { ...st.equipment }, style: st.combatStyle, spell: st.spell, food: st.food, potion: st.potion, prayer: st.prayer,
+      bar: [...this.abilityBar()],
+    }
   },
   applyLoadout(i) {
     const lo = this.s.loadouts[i]
@@ -386,8 +390,9 @@ export const systems = {
       if (this.qty(id) > 0 && this.canEquip(id)) this.equip(id)
       else missing.push(id)
     })
-    this.s.combatStyle = lo.style
+    this.setStance(lo.style)
     this.s.spell = lo.spell
+    if (Array.isArray(lo.bar)) this.abilityBar().splice(0, Infinity, ...lo.bar.filter(id => this.abilitiesFor().some(a => a.id === id)))
     if (lo.food && this.qty(lo.food) > 0) this.s.food = lo.food
     if (lo.potion && this.qty(lo.potion) > 0) this.s.potion = lo.potion
     if (lo.prayer === null || this.level('prayer') >= (PRAYERS.find(p => p.id === lo.prayer)?.lvl || 99)) this.s.prayer = lo.prayer ?? null

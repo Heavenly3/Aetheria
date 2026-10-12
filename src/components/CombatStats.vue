@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
 import { G, state } from '../game/engine.js'
-import { COMBAT_STYLES } from '../game/data/combat.js'
 import { fmt, fmtDec, pct } from '../game/format.js'
 import { useI18n } from 'vue-i18n'
 import { tip } from '../ui/tips.js'
@@ -10,7 +9,7 @@ import HelpTip from './HelpTip.vue'
 
 // The hero's fighting numbers, worked out against an opponent of the same combat level
 const p = computed(() => (void state.equipment, G.combatProfile()))
-const style = computed(() => COMBAT_STYLES[state.combatStyle])
+const style = computed(() => (void state.combatStyle, G.stance()))
 const num = fmtDec
 const { t } = useI18n()
 // Where a number comes from: its base and every bonus on top, for the tooltip on the value
@@ -55,7 +54,7 @@ const defence = computed(() => [
     <h3 class="panel-title"><GameIcon name="crossed-swords" /> {{ $t('power.title') }} <HelpTip k="sections.power" /></h3>
     <div class="power">
       <span class="power-n tnum">{{ fmt(p.power) }}</span>
-      <span class="small muted">{{ $t('power.label') }} · <GameIcon :name="style.icon" :size="12" /> {{ style.name }}</span>
+      <span class="small muted">{{ $t('power.label') }} · <GameIcon :name="style.icon" :size="12" /> {{ $t(`combat.typeNames.${style.type}`) }} · {{ style.name }}</span>
     </div>
     <div class="cols">
       <div>

@@ -34,6 +34,6 @@ const tabs = computed(() => [
 .prep { margin-bottom: 18px; }
 .prep-tabs { margin-bottom: 14px; flex-wrap: wrap; }
 .prep-tabs i { font-size: 13px; margin-inline-end: 4px; }
-.prep-style { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: start; }
+.prep-style { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 @media (max-width: 1100px) { .prep-style { grid-template-columns: 1fr; } }
 </style>
