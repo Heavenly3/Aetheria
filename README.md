@@ -134,7 +134,7 @@ Requires Node.js 18 or newer.
 - `src/components/` and `src/views/`: the UI.
 - `public/`: app manifest, service worker (offline play) and icons.
 - `scripts/`: icon extraction, the translation checker and the balance report.
-- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, the relic forge, cosmetics, pets, enchanting, daily tasks, ascension, combat mechanics and abilities, weather effects, guilds, the journal, music moods, update notes and translations.
+- `tests/`: Vitest suites for levels, actions, chained crafting, combat, saves, save transfer, the tutorial, sets, the bestiary, festivals, omens, the weekly boss, the relic forge, cosmetics, pets, enchanting, daily tasks, ascension, combat mechanics and abilities, weather effects, guilds, slayer, the tower, the tavern bar, the church, fishing, thieving, farming, gathering, crafting quality, the compendium, festival activities and ties, quests, achievements, statistics, the journal, music moods, update notes and translations.
 
 ## Adding a language
 
