@@ -155,6 +155,7 @@ export default {
   },
 
   mods: {
+    festPoints: "+{v} % de puntos de festival",
     atkSpeed: "+{v} % de velocidad de ataque",
     crit: "+{v} % de probabilidad de crítico",
     critDmg: "+{v} % de daño crítico",
@@ -728,13 +729,30 @@ export default {
   festivals: {
     harvest: { name: 'Fiesta de la Cosecha', desc: 'Los campos rebosan de grano y los pueblos encienden sus farolillos. Los cultivos crecen más rápido y los cocineros aprenden antes.' },
     winter: { name: 'Velo del Invierno', desc: 'La nieve cubre el reino y todos los hogares mantienen el fuego encendido. La comida cura más y la armadura aguanta mejor el frío.' },
-    spring: { name: 'Floración de Primavera', desc: 'El mundo despierta en flor. Todas las habilidades aprenden un poco más rápido.' },
-    summer: { name: 'Hogueras de San Juan', desc: 'Arden hogueras en cada colina durante los días más largos. Los mercaderes son generosos y el oro corre.' },
+    spring: { name: "Floración", desc: "El mundo despierta en flor. Todas las habilidades aprenden un poco más rápido y los cultivos crecen antes." },
+    summer: { name: "Fuegos de Verano", desc: "Arden hogueras en todas las colinas durante los días más largos. El oro corre y los peces pican rápido." },
   },
 
   festival: {
+    pointsN: "{n} puntos de festival",
+    tokensN: "{n} fichas",
+    track: "Senda del festival",
+    nextStep: "{n} puntos para el siguiente escalón",
+    trackDone: "¡Senda completa!",
+    claim: "Cobrar",
+    stepClaimed: "Escalón {n} cobrado",
+    ranking: "Clasificación del festival",
+    fairTitle: "Feria de fin de semana",
+    fairPoints: "{n} puntos de feria",
+    fairClaimed: "Recompensa de feria cobrada",
+    marketTitle: "El puesto del mercado",
+    stock: "Quedan {n}",
+    nextFair: "Próxima feria: {name}, en {time}.",
+    noFairs: "No hay ferias a la vista.",
+    weekendFair: "feria de fin de semana",
+    fairs: { derby: { name: "Gran Concurso de Pesca", rule: "Cada pez que pescas da puntos de feria; los mejores peces dan más." }, tower_rush: { name: "Asalto a la Torre", rule: "Fichas de la torre ×{x}, y cada piso superado da puntos de feria." }, market: { name: "Día de Mercado", rule: "Un puesto ambulante vende objetos raros por oro, con existencias limitadas. Cada compra da puntos de feria." }, omen_night: { name: "Noche de Prodigios", rule: "Los prodigios llegan ×{x} más a menudo, y cada prodigio presenciado da puntos de feria." } },
     endsIn: 'Termina en {time}', bonus: 'Bonificación del festival', tokens: 'Fichas del festival', howTitle: 'Cómo conseguir fichas',
-    how: {
+    how: { activity: "La actividad propia del festival da sus propias fichas y puntos.",
       actions: 'Cualquier acción de habilidad: un {pct}% de probabilidad por cada 3 segundos de acción.',
       kills: 'Monstruos: un {pct}% de probabilidad por cada uno, y {boss} fichas por cada jefe.',
       tasks: 'Tareas diarias y semanales: {n} fichas cada una.',
@@ -818,6 +836,9 @@ export default {
       heists: { title: "Golpes", body: "Grandes trabajos en cuatro fases: planear, colarse, abrir la cerradura y escapar. Cada fase puede fallar; si no abres la cerradura aún te llevas algo, pero si no escapas pierdes el botín y vas a la cárcel. Más Robo y Agilidad, mejores ganzúas y poca alerta suben las probabilidades. Cada golpe tiene un tiempo de espera, y los primeros golpes limpios pueden dar una pieza del atuendo de la sombra." },
       fishOdds: { title: "Qué pica aquí", body: "Cada lance saca un pez al azar de estas aguas. Los peces por encima de tu nivel de Pesca nunca pican. El cebo, tu maestría en estas aguas y la suerte hacen más probables los peces mejores." },
       bait: { title: "Cebo", body: "Elige un cebo para gastar uno por lance mientras pescas. Las lombrices se venden en la tienda, las moscas de pluma se atan con Flechería y los señuelos luminosos se hacen con Artesanía." },
+      festTrack: { title: "Senda del festival", body: "Los puntos de festival nunca se gastan: cada ficha que ganas es también un punto, y la actividad del festival da más. Cada escalón de la senda da una recompensa una vez por festival, incluidas las tres piezas del atuendo festivo." },
+      festRanking: { title: "Clasificación del festival", body: "Tus puntos de festival contra los mejores de los gremios del reino, que siguen sumando los suyos día a día." },
+      festFair: { title: "Feria de fin de semana", body: "El segundo fin de semana de cada mes sin gran festival hay una feria: un concurso de pesca, un asalto a la torre, un día de mercado o una noche de prodigios. Cada una tiene su propia regla, y los puntos de feria dan tres recompensas." },
       slayerShop: { title: 'Tienda del cazador', body: 'Gasta los puntos de Cazador en equipo, provisiones y saltos de encargo.' },
       towerNext: { title: 'Próximos pisos', body: 'Los siguientes guardianes y su vida. Los pisos ★ son puntos de control con un guardián más duro y más fichas.' },
       towerShop: { title: 'Tienda de la torre', body: 'Gasta las fichas de la torre en capas, cofres y elixires.' },
@@ -1717,6 +1738,7 @@ export default {
   },
 
   sets: {
+    festive: "Atuendo festivo",
     shadow: "Atuendo de la sombra",
     graceful: "Conjunto ligero",
     cloth: "Ropajes de {mat}",
@@ -2064,6 +2086,9 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    festive_hat: "Sombrero festivo",
+    festive_cloak: "Capa festiva",
+    festive_coat: "Casaca festiva",
     bait_worms: "Lombrices",
     feather_fly: "Mosca de pluma",
     glow_lure: "Señuelo luminoso",
@@ -2124,6 +2149,9 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    festive_hat: "De la senda de un festival. Parte del atuendo festivo.",
+    festive_cloak: "De la senda de un festival. Parte del atuendo festivo.",
+    festive_coat: "De la senda de un festival. Parte del atuendo festivo.",
     bait_worms: "Cebo barato de la tienda. Los peces mejores pican un poco más.",
     feather_fly: "Se ata en Flechería. Los peces mejores pican mucho más.",
     glow_lure: "Un señuelo que brilla en aguas profundas. Los mejores peces pican muchísimo más y los cofrecillos salen el doble.",

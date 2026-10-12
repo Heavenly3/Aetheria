@@ -3,8 +3,8 @@
   by flipping its switch; saves keep whatever the player already earned from it.
 */
 export const FEATURES = {
-  // Seasonal festivals (tokens, shop, bonuses). Turned off for now; festival rewards already owned stay.
-  festivals: false,
+  // Seasonal festivals and weekend fairs (tokens, points, track, shop, bonuses)
+  festivals: true,
   // Weather, seasons and the night change modifiers and monster strength (tests switch it off to stay predictable)
   weatherEffects: true,
 }

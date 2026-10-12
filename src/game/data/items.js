@@ -275,6 +275,10 @@ def('graceful_cape', { icon: 'cape',         type: 'equip', slot: 'cape', value:
 def('graceful_legs', { icon: 'armored-pants', type: 'equip', slot: 'legs', value: 0, tint: '#4ecdc4', stats: { def: 4 }, req: { agility: 30 } })
 def('graceful_top',  { icon: 'leather-vest', type: 'equip', slot: 'body', value: 0, tint: '#4ecdc4', stats: { def: 5 }, req: { agility: 40 } })
 // Valuables lifted while thieving, worth most at the fence
+// The festive outfit, from the festival track
+def('festive_hat',   { icon: 'hood',       type: 'equip', slot: 'head', value: 0, tint: '#f2b233', stats: { def: 5 }, req: {}, hasDesc: true })
+def('festive_cloak', { icon: 'cape',       type: 'equip', slot: 'cape', value: 0, tint: '#f2b233', stats: { def: 5, atk: 3, rAtk: 3, mAtk: 3 }, req: {}, hasDesc: true })
+def('festive_coat',  { icon: 'leather-vest', type: 'equip', slot: 'body', value: 0, tint: '#f2b233', stats: { def: 10 }, req: {}, hasDesc: true })
 def('silver_goblet', { icon: 'glass-celebration', value: 120,  tint: '#c8ccd2' })
 def('jewelled_ring', { icon: 'gem-pendant',       value: 380,  tint: '#e0a3ff' })
 def('old_painting',  { icon: 'scroll-unfurled',   value: 950,  tint: '#c9a04a' })

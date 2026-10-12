@@ -49,6 +49,10 @@ export const SETS = [
     { n: 3, mods: { 'xp.agility': 0.1, thieving: 0.05 } },
     { n: 4, mods: { speed: 0.04, offline: 1 } },
   ]),
+  set('festive', 'glass-celebration', '#f2b233', ['festive_hat', 'festive_cloak', 'festive_coat'], [
+    { n: 2, mods: { festPoints: 0.1, xp: 0.02 } },
+    { n: 3, mods: { festPoints: 0.15, gold: 0.04, loot: 0.03 } },
+  ]),
   set('shadow', 'hooded-assassin', '#5a4a7a', ['shadow_mask', 'shadow_cloak', 'shadow_garb'], [
     { n: 2, mods: { thieving: 0.06, gold: 0.05 } },
     { n: 3, mods: { heat: 0.35, 'double.gathering': 0.03 } },

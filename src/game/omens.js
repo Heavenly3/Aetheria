@@ -34,7 +34,7 @@ export const omens = {
   maybeEvent() {
     if (this.s.event) return
     const offering = !!this.s.omens.offering
-    if (Math.random() >= (offering ? OFFERING_CHANCE_PER_MIN : OMEN_CHANCE_PER_MIN)) return
+    if (Math.random() >= (offering ? OFFERING_CHANCE_PER_MIN : OMEN_CHANCE_PER_MIN * this.omenFairMult())) return
     this.s.omens.offering = false
     this.beginSign(rollOmen(Math.random, offering).id)
   },
@@ -49,6 +49,7 @@ export const omens = {
     if (!o) return
     const seen = this.s.omens.seen
     seen[id] = (seen[id] || 0) + 1
+    this.fairOmen()
     if (o.instant) { this.s.event = null; return this.lostChest(o) }
     const e = { id, phase: 'active', t: o.duration, total: o.duration, part: false }
     if (o.caravan) e.offers = this.caravanOffers()

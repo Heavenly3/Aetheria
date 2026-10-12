@@ -155,6 +155,7 @@ export default {
   },
 
   mods: {
+    festPoints: "+{v}% festival points",
     atkSpeed: "+{v}% attack speed",
     crit: "+{v}% critical chance",
     critDmg: "+{v}% critical damage",
@@ -728,13 +729,30 @@ export default {
   festivals: {
     harvest: { name: 'Harvest Festival', desc: 'The fields are heavy with grain and the villages light their lanterns. Crops grow faster and cooks learn quicker.' },
     winter: { name: "Winter's Veil", desc: 'Snow covers the realm and every hearth stays lit. Food heals more and armour holds better against the cold.' },
-    spring: { name: 'Spring Bloom', desc: 'The world wakes up in flower. Every skill learns a little faster.' },
-    summer: { name: 'Midsummer Fires', desc: 'Bonfires burn on every hill through the longest days. Merchants are generous and gold flows freely.' },
+    spring: { name: "Spring Bloom", desc: "The world wakes up in flower. Every skill learns a little faster and crops grow quicker." },
+    summer: { name: "Midsummer Fires", desc: "Bonfires burn on every hill through the longest days. Gold flows freely and the fish bite fast." },
   },
 
   festival: {
+    pointsN: "{n} festival points",
+    tokensN: "{n} tokens",
+    track: "Festival track",
+    nextStep: "{n} points to the next step",
+    trackDone: "Track complete!",
+    claim: "Claim",
+    stepClaimed: "Track step {n} claimed",
+    ranking: "Festival ranking",
+    fairTitle: "Weekend fair",
+    fairPoints: "{n} fair points",
+    fairClaimed: "Fair reward claimed",
+    marketTitle: "The market stall",
+    stock: "{n} left",
+    nextFair: "Next fair: {name}, in {time}.",
+    noFairs: "No fairs coming up.",
+    weekendFair: "weekend fair",
+    fairs: { derby: { name: "Fishing Derby", rule: "Every fish you catch scores fair points; finer fish score more." }, tower_rush: { name: "Tower Rush", rule: "Tower tokens ×{x}, and every floor cleared scores fair points." }, market: { name: "Market Day", rule: "A travelling stall sells rare goods for gold, in limited stock. Every purchase scores fair points." }, omen_night: { name: "Night of Omens", rule: "Omens come ×{x} as often, and every omen witnessed scores fair points." } },
     endsIn: 'Ends in {time}', bonus: 'Festival bonus', tokens: 'Festival tokens', howTitle: 'How to earn tokens',
-    how: {
+    how: { activity: "The festival's own activity pays tokens and points of its own.",
       actions: 'Any skill action: a {pct}% chance for every 3 seconds of action time.',
       kills: 'Monsters: a {pct}% chance per kill, and {boss} tokens for every boss.',
       tasks: 'Daily and weekly tasks: {n} tokens each.',
@@ -818,6 +836,9 @@ export default {
       heists: { title: "Heists", body: "Big jobs played in four stages: plan, slip in, crack the lock and get away. Each stage can fail; failing to crack still pays a little, but failing to get away loses the loot and sends you to jail. Higher Thieving and Agility, better lockpicks and low heat raise the chances. Each heist has a cooldown, and the first clean jobs can pay a piece of the shadow outfit." },
       fishOdds: { title: "What bites here", body: "Every cast lands one fish at random from this water. Fish above your Fishing level never bite. Bait, your mastery of this water and luck make the finer fish likelier." },
       bait: { title: "Bait", body: "Choose a bait to use one per cast while fishing. Worms are sold in the shop, feather flies are tied with Fletching and glowing lures are made with Crafting." },
+      festTrack: { title: "Festival track", body: "Festival points are never spent: every token you earn is also a point, and the festival activity gives more. Each step of the track pays a reward once per festival, including the three pieces of the festive outfit." },
+      festRanking: { title: "Festival ranking", body: "Your festival points against the best of the realm's guilds, who keep earning theirs day by day." },
+      festFair: { title: "Weekend fair", body: "The second weekend of every month without a big festival hosts a fair: a fishing derby, a tower rush, a market day or a night of omens. Each has its own rule, and fair points pay three rewards." },
       slayerShop: { title: 'Slayer shop', body: 'Spend Slayer points on gear, supplies and task skips.' },
       towerNext: { title: 'Upcoming floors', body: 'The next guardians and their health. The ★ floors are checkpoints with a tougher guardian and more tokens.' },
       towerShop: { title: 'Tower shop', body: 'Spend tower tokens on capes, chests and elixirs.' },
@@ -1717,6 +1738,7 @@ export default {
   },
 
   sets: {
+    festive: "Festive outfit",
     shadow: "Shadow outfit",
     graceful: "Graceful outfit",
     cloth: "{mat} robes",
@@ -2064,6 +2086,9 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    festive_hat: "Festive hat",
+    festive_cloak: "Festive cloak",
+    festive_coat: "Festive coat",
     bait_worms: "Worms",
     feather_fly: "Feather fly",
     glow_lure: "Glowing lure",
@@ -2124,6 +2149,9 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    festive_hat: "From a festival track. Part of the festive outfit.",
+    festive_cloak: "From a festival track. Part of the festive outfit.",
+    festive_coat: "From a festival track. Part of the festive outfit.",
     bait_worms: "Cheap bait from the shop. Finer fish bite a little more often.",
     feather_fly: "Tied at the fletching bench. Finer fish bite much more often.",
     glow_lure: "A lure that glows in deep water. The finest fish bite far more often, and caskets turn up twice as often.",

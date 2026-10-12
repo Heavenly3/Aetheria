@@ -89,6 +89,7 @@ Requires Node.js 18 or newer.
 - **Journal and story**: the story of Aetheria told in chapters that unlock as you explore, beat bosses and witness omens, with the people you meet (a new cast of names in every game) and a memory of a past life with each ascension. The tavern keeper comments on the story, the astrologer leaves notes on omens and studied creatures reveal their lore.
 - **Music and ambience**: generative music made with WebAudio that follows where you are and the time of day, and weather sounds (rain, wind, thunder, birds, crickets), with their own volumes in Settings. No audio files.
 - **Guilds**: every new world founds twelve guilds with their own name, crest, motto, guildmaster, members, tier (1–5) and focus: one role, a few roles, or open to all. Meet a guild's requirements, pay its fee and pass the entry trial (a task plus a riddle, a rune sequence or a code lock) to join. Members take contracts that renew every four hours for guild marks, gold and reputation, climb six ranks, earn a perk that grows with rank and tier, and spend marks in the guild shop. A ranking orders the guilds by renown, which grows every day and with the hero's work.
+- **Festivals and fairs**: four big festivals a year (Spring Bloom, Midsummer Fires, Harvest Festival, Winter's Veil), each about three weeks long with its own bonus, shop and pet. Every token earned is also a festival point that climbs a ten-step track (with the festive outfit) and a ranking against the guilds. On the second weekend of every other month a fair runs: a fishing derby, a tower rush, a market day or a night of omens, each with its own rule and rewards.
 - **Titles and appearance**: 38 titles shown next to the hero's name, plus extra portraits and colours unlocked by achievements and festivals.
 - **Ascension**: start the whole hero over for Aether shards and spend them in a three-branch tree of permanent upgrades.
 - **Tavern**: hire staff (11 specialities, 4 rarities, traits and levels) who work in parallel for a wage. Includes 1/4/8 h expeditions, daily orders, drinks, dice and a mystery chest.
@@ -114,6 +115,7 @@ Requires Node.js 18 or newer.
 - `src/game/weekly.js`: the weekly boss, its mechanics and milestones (bosses and tuning in `src/game/data/weekly.js`).
 - `src/game/ascension.js`: ascension (rebirth) and its upgrade tree.
 - `src/game/slayer.js`: slayer tasks and offers, Superior creatures, perks and blocked creatures (tuning in `src/game/data/slayer.js`).
+- `src/game/festivals.js`: festivals, their track and ranking, and the weekend fairs (dates and rewards in `src/game/data/festivals.js`).
 - `src/game/thief.js`: heat, jail, the fence and heists (tuning in `src/game/data/thieving.js`).
 - `src/game/farm.js`: soil, plot events, hybrids, farm buildings and favourite seasons (tuning in `src/game/data/farm.js`).
 - `src/game/bar.js`: patrons, special guests and the hero's own brews (tuning in `src/game/data/bar.js`).

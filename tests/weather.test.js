@@ -74,9 +74,11 @@ describe('weather effects', () => {
 describe('festivals switched off', () => {
   it('give no festival, bonus or tokens while the feature is off', () => {
     newHero()
-    expect(FEATURES.festivals).toBe(false)
+    FEATURES.festivals = false
     expect(G.activeFestival()).toBe(null)
     expect(G.festivalShop()).toEqual([])
     expect(G.festivalMods('xp')).toBe(0)
+    expect(G.activeFair()).toBe(null)
+    FEATURES.festivals = true
   })
 })

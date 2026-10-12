@@ -29,6 +29,7 @@ import { church, churchState } from './church.js'
 import { bar } from './bar.js'
 import { farm } from './farm.js'
 import { thief, thiefState } from './thief.js'
+import { festivals, festivalsState } from './festivals.js'
 import { TOWER_AFFIXES, AFFIX_TOKENS, affixOf, guardianOf, guardianReward, rivalBest } from './data/tower.js'
 import { guildRoster } from './data/guilds.js'
 import { t } from '../i18n/index.js'
@@ -122,6 +123,7 @@ export function newState(profile = {}) {
     ...codexState(),
     ...churchState(),
     ...thiefState(),
+    ...festivalsState(),
   }
 }
 
@@ -814,6 +816,7 @@ export const G = {
       xp = FISH_INFO[fish].xp
       gain = msg('gain.item', { n: double, item: '@item:' + fish })
       this.s.stats.fish = (this.s.stats.fish || 0) + double
+      this.fairCatch(FISH_INFO[fish].lvl)
       this.emit('catch', { fish, water: a.id, n: double })
     }
     Object.entries(a.out).forEach(([k, q]) => {
@@ -1245,8 +1248,10 @@ export const G = {
         this.log('stone-tower', 'log.guardian', { guardian: '@guardian:' + guardianOf(m.floor), floor: m.floor })
         this.emit('guardian', { floor: m.floor, id: guardianOf(m.floor), reward: r })
       }
-      st.tower.tokens += tokens
-      if (this.tracker) this.tracker.tokens = (this.tracker.tokens || 0) + tokens
+      const rushed = tokens * this.towerTokenMult()
+      st.tower.tokens += rushed
+      this.fairFloor()
+      if (this.tracker) this.tracker.tokens = (this.tracker.tokens || 0) + rushed
       if (m.floor > st.tower.best && m.floor % 10 === 0) this.log('stone-tower', 'log.towerFloor', { floor: m.floor })
       st.tower.best = Math.max(st.tower.best, m.floor)
       act.floor++
@@ -1494,6 +1499,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals)
 
 export { SKILLS, ITEMS }
