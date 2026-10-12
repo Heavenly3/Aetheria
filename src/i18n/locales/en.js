@@ -2,7 +2,7 @@ export default {
   app: { tagline: 'Idle Realms' },
 
   common: {
-    gold: 'gold', nothing: 'Nothing', lvlShort: 'Lv {n}', raw: '{v}', notNow: 'Not now', close: 'Close', buyFor: 'Buy for {price}',
+    showAll: 'Show all ({n})', showLess: 'Show less', gold: 'gold', nothing: 'Nothing', lvlShort: 'Lv {n}', raw: '{v}', notNow: 'Not now', close: 'Close', buyFor: 'Buy for {price}',
     cancel: 'Cancel', level: 'Level', levelN: 'Level {n}', seconds: '{n} s', add: 'Add', hp: 'HP', stop: 'Stop',
     moveUp: 'Move up', moveDown: 'Move down', remove: 'Remove', always: 'always', locked: 'Locked', equip: 'Equip',
     missingMaterials: 'Missing materials', notEnoughGold: 'Not enough gold', back: 'Back', next: 'Next',

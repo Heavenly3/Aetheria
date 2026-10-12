@@ -165,7 +165,7 @@ const buildingEffect = id => {
 
     <!-- The farmyard: coop, hive, scarecrow and well -->
     <div class="section-title">{{ $t('farm.yard') }} <HelpTip k="sections.farmYard" /></div>
-    <div class="grid-wide">
+    <div class="grid-wide building-grid">
       <div v-for="id in BUILDING_IDS" :key="id" class="card building" :class="{ locked: !G.building(id) }">
         <div class="row">
           <ItemTile :icon="BUILDINGS[id].icon" :tint="G.building(id) ? '#6b8a3a' : '#2a2838'" size="md" :tip="false" />
@@ -204,7 +204,7 @@ const buildingEffect = id => {
           <ItemTile v-else icon="perspective-dice-six-faces-random" tint="#2a2838" size="sm" :tip="false" />
           <div class="grow" style="min-width:0">
             <div class="card-name">{{ G.hybridKnown(h.id) ? CROP_MAP[h.id].name : '???' }}</div>
-            <div class="card-sub">{{ G.hybridKnown(h.id) ? $t(`farm.hybridUse.${h.id}`) : $t('farm.hybridHint') }}</div>
+            <div class="card-sub" :class="{ hint: !G.hybridKnown(h.id) }">{{ G.hybridKnown(h.id) ? $t(`farm.hybridUse.${h.id}`) : $t('farm.hybridHint') }}</div>
           </div>
         </div>
       </div>
@@ -287,4 +287,15 @@ const buildingEffect = id => {
 .seed-opt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border-radius: 10px; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; text-align: start; }
 .seed-opt:hover:not(:disabled) { background: var(--tint-2); }
 .seed-opt:disabled { opacity: 0.45; cursor: not-allowed; }
+/* Phones: the intro gets its own line, and plots and buildings take less room */
+@media (max-width: 600px) {
+  .farm-bar > .row > .grow { flex: 1 1 100%; }
+  .plot { min-height: 150px; padding: 12px 10px; }
+  .building-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .building { padding: 12px; }
+  .building .row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .building .card-name { font-size: 14px; }
+  .hybrid { padding: 12px; }
+  .hybrid .card-sub.hint { display: none; }
+}
 </style>

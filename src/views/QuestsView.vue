@@ -48,7 +48,7 @@ const reqText = q => [
     <DailyTasks />
     <div class="section-title" style="margin-top:0">{{ $t('quests.story') }} <HelpTip k="sections.story" /></div>
     <div class="row wrap" style="margin-bottom:18px">
-      <p class="intro grow" style="margin:0">{{ $t('quests.intro') }}</p>
+      <p class="intro grow" style="margin:0;flex-basis:280px">{{ $t('quests.intro') }}</p>
       <span class="tag gold">{{ $t('quests.summary', { n: G.questsDone(), total: QUESTS.length, qp: G.questPoints() }) }}</span>
     </div>
     <SelectButton v-model="filter" :options="filters" optionLabel="label" optionValue="value" :allowEmpty="false" size="small" style="margin-bottom:18px" />

@@ -146,5 +146,12 @@ span.heat-calm { color: var(--tag-ok); } span.heat-wary { color: var(--gold-hi);
 .run-step.ok { color: var(--tag-ok); } .run-step.bad { color: var(--tag-bad); }
 .run-end { margin-top: 6px; font-weight: 600; animation: pop 0.35s ease; }
 @keyframes pop { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-@media (max-width: 520px) { .stages { grid-template-columns: repeat(2, 1fr); } }
+/* Phones: the four stages stay on one line and the story line gives way, so each heist takes half the room */
+@media (max-width: 600px) {
+  .heist { padding: 12px; }
+  .heist .card-sub { display: none; }
+  .stages { gap: 4px; }
+  .stage { padding: 4px 2px; }
+  .stage .small { font-size: 11px; }
+}
 </style>

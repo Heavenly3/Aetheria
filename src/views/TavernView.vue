@@ -434,5 +434,5 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 @keyframes shakeDice { 25% { transform: rotate(-8deg) translateY(-2px); } 75% { transform: rotate(8deg) translateY(2px); } }
 .vs { font-family: var(--font-display); color: var(--gold); }
 .roll-result { text-align: center; margin-top: 10px; font-size: 15px; }
-@media (max-width: 900px) { .up-card { width: 100%; } }
+@media (max-width: 900px) { .up-card { width: 100%; order: 4; } }
 </style>

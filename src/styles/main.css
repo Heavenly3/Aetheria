@@ -353,6 +353,15 @@ html.embedded .title-screen .ts-foot { position: static; margin-top: 28px; }
   .chip { padding: 4px 10px; font-size: 13px; }
   .mini-hp { width: 40px; }
   .grid-cards, .grid-wide { grid-template-columns: 1fr; }
+  /* Banners: a smaller icon and title, so the page itself starts sooner */
+  .banner { padding: 16px; gap: 12px 14px; }
+  .banner > .tile { zoom: 0.62; }
+  .banner-title { font-size: 22px; }
+  .banner-desc { font-size: 14px; margin: 2px 0 10px; }
+  .banner .lvl-big { font-size: 38px; }
+  .banner-ghost { width: 150px; height: 150px; }
+  /* Long tags wrap instead of running off the screen */
+  .tag { white-space: normal; max-width: 100%; }
 }
 @media (pointer: coarse) {
   .p-button:not(.p-button-icon-only) { min-height: 44px; }

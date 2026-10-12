@@ -170,11 +170,11 @@ const calendar = computed(() => FESTIVALS.map(fe => {
             <ItemTile v-else :item="e.ref" size="md" />
             <div class="grow" style="min-width:0">
               <div class="card-name">{{ entryName(e) }}</div>
-              <div class="card-sub" :class="{ 'title-preview': e.kind === 'title' }">{{ entryDesc(e) }}</div>
+              <div class="card-sub" :class="{ 'title-preview': e.kind === 'title', plain: e.kind === 'item' }">{{ entryDesc(e) }}</div>
             </div>
           </div>
-          <div class="row" style="margin-top:12px">
-            <span class="grow tag gold tnum"><GameIcon :name="f.icon" :size="13" /> {{ fmt(e.cost) }}</span>
+          <div class="row buy-row">
+            <span class="grow tag gold tnum price"><GameIcon :name="f.icon" :size="13" /> {{ fmt(e.cost) }}</span>
             <span v-if="G.festivalOwned(e)" class="small ok-text"><i class="pi pi-check" /> {{ $t('festival.owned') }}</span>
             <Button v-else :label="$t('festival.buy')" size="small" :disabled="!G.canBuyFestival(e)" @click="buy(e)" />
           </div>
@@ -240,7 +240,7 @@ const calendar = computed(() => FESTIVALS.map(fe => {
           </div>
           <span class="tag tnum" :class="{ ok: c.owned === c.total }">{{ c.owned }}/{{ c.total }}</span>
         </div>
-        <p class="small muted" style="margin:10px 0 0">{{ c.fe.desc }}</p>
+        <p class="small muted cal-desc" style="margin:10px 0 0">{{ c.fe.desc }}</p>
         <p class="small" style="margin:6px 0 0"><span class="faint">{{ $t('festival.bonus') }}:</span> {{ bonus(c.fe) }}</p>
       </div>
       <div v-for="w in fairs" :key="w.key" class="card cal fair-cal" :class="{ active: fair === w.fair && fairWin?.key === w.key }" :style="{ '--c': FAIRS[w.fair].tint }">
@@ -251,7 +251,7 @@ const calendar = computed(() => FESTIVALS.map(fe => {
             <div class="card-sub">{{ dates(w) }} · {{ $t('festival.weekendFair') }}</div>
           </div>
         </div>
-        <p class="small muted" style="margin:10px 0 0">{{ fairRule(w.fair) }}</p>
+        <p class="small muted cal-desc" style="margin:10px 0 0">{{ fairRule(w.fair) }}</p>
       </div>
     </div>
   </div>
@@ -285,5 +285,17 @@ const calendar = computed(() => FESTIVALS.map(fe => {
 .section-title.sm { margin: 18px 0 10px; font-size: 12px; }
 .cal.active { border-color: color-mix(in srgb, var(--c) 60%, transparent); }
 .fair-cal { border-style: dashed; }
+.buy-row { margin-top: 12px; }
 @media (max-width: 900px) { .steps { grid-template-columns: repeat(5, minmax(0, 1fr)); } .fair-rewards { grid-template-columns: 1fr; } }
+/* Phones: shop entries become short rows with the price and button at the side, and the calendar keeps
+   the story of the running festival only */
+@media (max-width: 600px) {
+  .shop-entry { flex-direction: row; align-items: center; gap: 10px; padding: 12px; }
+  .shop-entry > .row:first-child { flex: 1; min-width: 0; gap: 10px; }
+  .shop-entry .card-sub.plain { display: none; }
+  .buy-row { margin-top: 0; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+  .buy-row .price { flex: 0 0 auto; }
+  .cal { padding: 12px; }
+  .cal:not(.active) .cal-desc { display: none; }
+}
 </style>

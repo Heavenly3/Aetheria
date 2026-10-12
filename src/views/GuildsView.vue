@@ -58,6 +58,15 @@ const table = computed(() => (now.value, G.guildTable()).filter(r => {
 const open = ref(null)
 const toggle = id => { open.value = open.value === id ? null : id }
 const members = g => G.guildMembers(g).slice(0, 12)
+// The hall's roster: the first ten (and the hero), unless unfolded
+const ROSTER_SHORT = 10
+const rosterOpen = ref(false)
+const roster = computed(() => {
+  const all = G.guildMembers(mine.value)
+  if (rosterOpen.value || all.length <= ROSTER_SHORT + 1) return all
+  const top = all.slice(0, ROSTER_SHORT), me = all.find(m => m.hero)
+  return me && !top.includes(me) ? [...top, me] : top
+})
 
 function apply(g) {
   if (!G.applyGuild(g.id)) return
@@ -218,7 +227,7 @@ function leave() {
         </div>
 
         <div class="section-title" style="margin-top:24px">{{ $t('guilds.shop.title') }}</div>
-        <div class="grid-wide">
+        <div class="grid-wide shop-grid">
           <div v-for="e in G.guildShop()" :key="e.id" class="card shop-item" :class="{ locked: rank < e.rank }">
             <div class="row wrap" style="gap:6px">
               <ItemTile v-for="(n, id) in e.items" :key="id" :item="id" :qty="n" size="sm" />
@@ -236,12 +245,16 @@ function leave() {
 
         <div class="section-title" style="margin-top:24px">{{ $t('guilds.members') }}</div>
         <div class="panel roster">
-          <div v-for="(m, i) in G.guildMembers(mine)" :key="m.name + i" class="member" :class="{ hero: m.hero }">
+          <div v-for="(m, i) in roster" :key="m.name + i" class="member" :class="{ hero: m.hero }">
             <GameIcon :name="ROLE_ICONS[m.role]" :size="15" />
             <span class="grow">{{ m.hero ? `${m.name} (${$t('guilds.you')})` : m.name }}</span>
             <span class="small muted">{{ $t(`guilds.ranks.${RANKS[m.rank].id}`) }}</span>
             <span class="small faint tnum lvl">{{ $t('common.lvlShort', { n: m.level }) }}</span>
           </div>
+          <button v-if="G.guildMembers(mine).length > ROSTER_SHORT + 1" class="roster-more" @click="rosterOpen = !rosterOpen">
+            {{ rosterOpen ? $t('common.showLess') : $t('common.showAll', { n: G.guildMembers(mine).length }) }}
+            <i class="pi" :class="rosterOpen ? 'pi-chevron-up' : 'pi-chevron-down'" />
+          </button>
         </div>
 
         <div class="row" style="margin-top:20px">
@@ -358,5 +371,16 @@ function leave() {
   .guild-head .tag { order: 5; flex-basis: calc(100% - 38px); margin-inline-start: 38px; justify-content: center; }
   .guild-name { white-space: normal; font-size: 15.5px; }
   .guild-body { padding: 4px 12px 14px; }
+}
+.roster-more { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 4px; padding: 8px; border: 0; border-radius: 8px;
+  background: none; color: var(--muted); font: inherit; font-size: 13px; cursor: pointer; }
+.roster-more:hover { color: var(--gold-hi); background: var(--tint-1); }
+/* Phones: the shop's goods in two short columns */
+@media (max-width: 600px) {
+  .grid-wide.shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .shop-item { padding: 12px; }
+  .shop-item .row:last-child { flex-direction: column; align-items: stretch; gap: 6px; }
+  .shop-item .row:last-child .p-button { width: 100%; }
+  .contract { padding: 12px; }
 }
 </style>

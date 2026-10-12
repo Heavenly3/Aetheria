@@ -45,7 +45,7 @@ function claim(i, weekly) {
         <div class="streak-n">{{ streak ? $t('daily.streak', { n: streak }) : $t('daily.noStreak') }}</div>
         <div class="small muted">{{ $t('daily.streakHint', { v: Math.round(Math.min(STREAK_CAP, streak) * STREAK_BONUS * 100), cap: STREAK_CAP }) }}</div>
       </div>
-      <div class="small faint tnum" style="text-align:end">
+      <div class="small faint tnum records">
         <div>{{ $t('daily.best', { n: d.bestStreak || 0 }) }}</div>
         <div>{{ $t('daily.claimedTotal', { n: d.claimed || 0 }) }}</div>
       </div>
@@ -88,5 +88,13 @@ function claim(i, weekly) {
 .task { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); }
 .task.ready { border-color: rgba(98, 193, 126, 0.55); box-shadow: 0 0 20px -10px rgba(98, 193, 126, 0.8); }
 .task.done { opacity: 0.55; }
+.records { text-align: end; }
+/* Phones: the records go under the streak instead of squeezing it */
+@media (max-width: 600px) {
+  .streak-card { flex-wrap: wrap; gap: 12px; }
+  .flame { width: 46px; height: 46px; }
+  .streak-n { font-size: 19px; }
+  .records { flex-basis: 100%; display: flex; gap: 14px; text-align: start; }
+}
 .t-icon { width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; display: grid; place-items: center; color: var(--gold); background: rgba(226, 182, 90, 0.08); border: 1px solid rgba(226, 182, 90, 0.2); }
 </style>

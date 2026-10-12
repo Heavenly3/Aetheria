@@ -2,7 +2,7 @@ export default {
   app: { tagline: 'Reinos Idle' },
 
   common: {
-    gold: 'oro', nothing: 'Nada', lvlShort: 'Nv {n}', raw: '{v}', notNow: 'Ahora no', close: 'Cerrar', buyFor: 'Comprar por {price}',
+    showAll: 'Ver todos ({n})', showLess: 'Ver menos', gold: 'oro', nothing: 'Nada', lvlShort: 'Nv {n}', raw: '{v}', notNow: 'Ahora no', close: 'Cerrar', buyFor: 'Comprar por {price}',
     cancel: 'Cancelar', level: 'Nivel', levelN: 'Nivel {n}', seconds: '{n} s', add: 'Añadir', hp: 'PV', stop: 'Detener',
     moveUp: 'Subir', moveDown: 'Bajar', remove: 'Quitar', always: 'siempre', locked: 'Bloqueado', equip: 'Equipar',
     missingMaterials: 'Faltan materiales', notEnoughGold: 'No tienes oro suficiente', back: 'Atrás', next: 'Siguiente',

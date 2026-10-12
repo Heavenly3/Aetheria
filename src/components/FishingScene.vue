@@ -16,13 +16,13 @@ const { t } = useI18n()
 // Fishing: pick a water, choose a bait and watch the line. Every cast lands a fish at random
 const waters = computed(() => ACTIONS.fishing)
 const fishingAt = computed(() => (state.activity?.type === 'skill' && state.activity.skill === 'fishing' ? state.activity.action : null))
-const picked = ref(fishingAt.value || ACTIONS.fishing.filter(a => G.level('fishing') >= a.lvl && G.hasTool(a)).pop()?.id || ACTIONS.fishing[0].id)
+const locked = a => G.level('fishing') < a.lvl || !G.hasTool(a) || !G.festivalOpen(a)
+const picked = ref(fishingAt.value || ACTIONS.fishing.filter(a => !locked(a)).pop()?.id || ACTIONS.fishing[0].id)
 const water = computed(() => ACTIONS.fishing.find(a => a.id === picked.value))
 const colours = computed(() => WATER_MAP[picked.value].scene)
 const table = computed(() => G.catchTable(water.value))
 const active = computed(() => fishingAt.value === picked.value)
 const progress = computed(() => (active.value ? Math.min(1, Math.max(0, state.activity.progress) / G.actionTime('fishing', water.value)) : 0))
-const locked = a => G.level('fishing') < a.lvl || !G.hasTool(a) || !G.festivalOpen(a)
 const lockText = a => (!G.festivalOpen(a) ? t('festival.onlyDuring', { name: G.festivalById(a.festival).name }) : G.level('fishing') < a.lvl ? t('common.lvlShort', { n: a.lvl }) : t('angling.needsRod', { tool: TOOL_TYPES.rod.name, n: a.tool.tier }))
 const fishOf = a => Object.keys(a.catch)
 const fishLocked = id => G.catchTable(water.value).find(r => r.id === id)?.locked
@@ -203,4 +203,16 @@ function setBait(id) { state.bait = state.bait === id ? null : id }
 .bait.on { border-color: var(--gold); background: rgba(226, 182, 90, 0.08); }
 .bait.empty { opacity: 0.55; }
 .bait-name { display: block; font-weight: 600; font-size: 14px; }
+/* Phones: the waters in two short columns, so the scene and its button are close at hand */
+@media (max-width: 600px) {
+  .grid-wide.waters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .waters .water { padding: 10px; }
+  .waters .water .row { gap: 8px; }
+  .waters .water .tile { zoom: 0.75; }
+  .waters .card-name { font-size: 14px; }
+  .waters .card-sub { font-size: 11.5px; line-height: 1.3; }
+  .waters .water .tag { display: none; }
+  .fish-icons { display: none; }
+  .scene { height: 170px; }
+}
 </style>

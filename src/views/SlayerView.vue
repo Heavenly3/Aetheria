@@ -133,5 +133,11 @@ function block(id) { if (G.blockMonster(id)) G.toast('cross-mark', 'slayer.block
 .tag.kind-standard { color: var(--gold-hi); }
 .tag.kind-hard { color: var(--tag-bad); }
 .tag.blocked { cursor: pointer; font: inherit; font-size: 12px; }
-@media (max-width: 640px) { .offers { grid-template-columns: 1fr; } }
+/* Phones: each offer is a short row, the creature on the side and its details next to it */
+@media (max-width: 640px) {
+  .offers { grid-template-columns: 1fr; gap: 8px; }
+  .offer { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; row-gap: 2px; align-items: center; justify-items: start; text-align: start; padding: 10px 12px; }
+  .offer > .tile { grid-column: 1; grid-row: 1 / span 4; }
+  .offer > :not(.tile) { grid-column: 2; }
+}
 </style>
