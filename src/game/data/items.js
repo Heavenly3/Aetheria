@@ -330,9 +330,9 @@ def('rime_locket',      { icon: 'necklace',        type: 'equip', slot: 'amulet'
 // Mage robes: flax is spun into linen, and each finer cloth is linen worked with runes and more
 export const CLOTHS = [
   { id: 'linen',      tier: 1,   lvl: 5,  req: 1,  xp: 18,  tint: '#d8cfb8', cloth: { lvl: 1,  xp: 8,  in: { flax: 2 } } },
-  { id: 'silk',       tier: 2.5, lvl: 30, req: 20, xp: 50,  tint: '#6f8fe0', cloth: { lvl: 28, xp: 26, in: { linen_cloth: 1, chaos_rune: 2 } } },
-  { id: 'spellweave', tier: 4.5, lvl: 55, req: 40, xp: 105, tint: '#9d5fe0', cloth: { lvl: 52, xp: 55, in: { linen_cloth: 1, nature_rune: 2, ectoplasm: 1 } } },
-  { id: 'starweave',  tier: 7,   lvl: 80, req: 60, xp: 185, tint: '#7ad7ff', cloth: { lvl: 78, xp: 95, in: { linen_cloth: 1, death_rune: 2, stardust: 5 } } },
+  { id: 'silk',       tier: 2.5, lvl: 30, req: 20, xp: 36,  tint: '#6f8fe0', cloth: { lvl: 28, xp: 20, in: { linen_cloth: 1, chaos_rune: 2 } } },
+  { id: 'spellweave', tier: 4.5, lvl: 55, req: 40, xp: 58,  tint: '#9d5fe0', cloth: { lvl: 52, xp: 40, in: { linen_cloth: 1, nature_rune: 2, ectoplasm: 1 } } },
+  { id: 'starweave',  tier: 7,   lvl: 80, req: 60, xp: 92,  tint: '#7ad7ff', cloth: { lvl: 78, xp: 60, in: { linen_cloth: 1, death_rune: 2, stardust: 5 } } },
 ]
 export const ROBES = [
   { id: 'hood',        icon: 'hood',          slot: 'head', cloth: 1, lvlOff: 0, stats: k => ({ mAtk: Math.round(3 * k), def: Math.round(1 * k) }) },
@@ -348,9 +348,9 @@ CLOTHS.forEach(c => {
 })
 // Ranger hides: pelts, skins and scales from monsters, tanned and stitched
 export const HIDES = [
-  { id: 'wolf',   tier: 2,   lvl: 20, req: 15, xp: 34,  tint: '#8a8a9a', drop: 'wolf_pelt',    tan: { lvl: 18, xp: 14 } },
-  { id: 'snake',  tier: 3.3, lvl: 40, req: 30, xp: 68,  tint: '#7aa83a', drop: 'snake_skin',   tan: { lvl: 38, xp: 24 } },
-  { id: 'wyvern', tier: 6.8, lvl: 75, req: 60, xp: 160, tint: '#5a9ec0', drop: 'wyvern_scale', tan: { lvl: 73, xp: 48 } },
+  { id: 'wolf',   tier: 2,   lvl: 20, req: 15, xp: 28,  tint: '#8a8a9a', drop: 'wolf_pelt',    tan: { lvl: 18, xp: 14 } },
+  { id: 'snake',  tier: 3.3, lvl: 40, req: 30, xp: 45,  tint: '#7aa83a', drop: 'snake_skin',   tan: { lvl: 38, xp: 24 } },
+  { id: 'wyvern', tier: 6.8, lvl: 75, req: 60, xp: 82,  tint: '#5a9ec0', drop: 'wyvern_scale', tan: { lvl: 73, xp: 40 } },
 ]
 export const HIDE_PIECES = [
   { id: 'coif',  icon: 'hood',          slot: 'head', leather: 1, lvlOff: 0, stats: k => ({ def: Math.round(3 * k), rAtk: Math.round(2 * k) }) },

@@ -10,7 +10,7 @@ const load = p => import(pathToFileURL(join(root, p)))
 const { G, state } = await load('src/game/engine.js')
 const { XP_TABLE, SKILLS } = await load('src/game/data/skills.js')
 const { ITEMS, CROPS } = await load('src/game/data/items.js')
-const { ACTIONS } = await load('src/game/data/actions.js')
+const { ACTIONS, FISH_INFO } = await load('src/game/data/actions.js')
 const { AREAS, PLAYER_ATTACK_SPEED } = await load('src/game/data/combat.js')
 const { TOOL_TYPES } = await load('src/game/data/character.js')
 const { i18n } = await load('src/i18n/index.js')
@@ -37,10 +37,12 @@ function bestTool(skill) {
 // Expected XP and seconds per attempt, counting burns, thieving failures and their stun
 function actionRate(skill, a) {
   const t = G.actionTime(skill, a)
-  let xp = a.xp * G.xpMult(skill), time = t
+  // Fishing waters land one fish at random from their table (no bait)
+  const table = a.catch ? G.catchTable(a, G.level(skill), null).filter(r => !r.locked) : null
+  let xp = (table ? table.reduce((s, r) => s + r.chance * FISH_INFO[r.id].xp, 0) : a.xp) * G.xpMult(skill), time = t
   if (a.burn) xp *= 1 - G.burnChance(skill, a)
   if (a.fail) { const f = G.failChance(skill, a); xp *= 1 - f; time += f * 2 }
-  const outValue = Object.entries(a.out).reduce((s, [k, q]) => s + ITEMS[k].value * q, 0)
+  const outValue = table ? table.reduce((s, r) => s + r.chance * ITEMS[r.id].value, 0) : Object.entries(a.out).reduce((s, [k, q]) => s + ITEMS[k].value * q, 0)
   const inValue = Object.entries(a.in).reduce((s, [k, q]) => s + ITEMS[k].value * q, 0)
   const gold = (a.gold ? (a.gold[0] + a.gold[1]) / 2 * (1 - (a.fail ? G.failChance(skill, a) : 0)) : 0) + outValue - inValue
   return { xph: xp * 3600 / time, goldh: gold * 3600 / time }
@@ -61,7 +63,7 @@ function skillCurve(skill) {
       }
     } else {
       for (const a of ACTIONS[skill] || []) {
-        if (a.lvl > L || !G.hasTool(a)) continue
+        if (a.lvl > L || a.festival || !G.hasTool(a)) continue
         const r = actionRate(skill, a)
         if (!best || r.xph > best.xph) best = { id: a.id, ...r }
       }
@@ -111,7 +113,7 @@ if (!only) {
     const line = [10, 30, 50, 70, 90].map(L => {
       state.skills[sk].xp = XP_TABLE[L]; bestTool(sk)
       let g = 0
-      for (const a of ACTIONS[sk]) if (a.lvl <= L && G.hasTool(a)) g = Math.max(g, actionRate(sk, a).goldh)
+      for (const a of ACTIONS[sk]) if (a.lvl <= L && !a.festival && G.hasTool(a)) g = Math.max(g, actionRate(sk, a).goldh)
       return lpad(fmt(g), 9)
     })
     console.log(pad(SKILLS[sk].name, 14) + line.join(''))
