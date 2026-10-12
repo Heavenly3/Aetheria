@@ -8,7 +8,10 @@ function complete(t) {
   const add = { xp: () => (state.skills[t.skill].xp += t.target), actions: () => (state.stats.actions += t.target), kills: () => (state.stats.kills += t.target),
     gold: () => (state.stats.goldEarned += t.target), harvest: () => (state.stats.harvests = (state.stats.harvests || 0) + t.target),
     dungeon: () => (state.stats.dungeons = (state.stats.dungeons || 0) + t.target), orders: () => (state.stats.orders = (state.stats.orders || 0) + t.target),
-    slayer: () => (state.slayer.completed += t.target) }
+    slayer: () => (state.slayer.completed += t.target),
+    // Counters of the newer systems
+    ...Object.fromEntries(['fish', 'elites', 'patrons', 'contracts', 'bountiful'].map(k => [k, () => (state.stats[k] = (state.stats[k] || 0) + t.target)])),
+    heists: () => { state.thief.done.merchant_vault = (state.thief.done.merchant_vault || 0) + t.target } }
   add[t.type]()
 }
 
