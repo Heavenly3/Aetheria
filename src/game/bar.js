@@ -39,7 +39,10 @@ export const bar = {
     const menu = this.barMenu()
     if (!menu.length) return null
     const level = this.s.tavern.level
-    const guest = Math.random() < GUEST_CHANCE ? GUESTS[Math.floor(Math.random() * GUESTS.length)] : null
+    // During a festival its own guests drop in, and guests come twice as often
+    const fest = this.activeFestival()?.id
+    const pool = GUESTS.filter(x => !x.festival || x.festival === fest)
+    const guest = Math.random() < GUEST_CHANCE * (fest ? 2 : 1) ? pool[Math.floor(Math.random() * pool.length)] : null
     const item = menu[Math.floor(Math.random() * menu.length)]
     const qty = rand(2, 3 + level) * (guest ? 2 : 1)
     return {
@@ -67,6 +70,7 @@ export const bar = {
     if (reward) {
       this.s.stats.guests = (this.s.stats.guests || 0) + 1
       Object.entries(reward).forEach(([k, n]) => this.addItem(k, n))
+      if (GUEST_MAP[p.guest].festTokens) this.addFestivalTokens(GUEST_MAP[p.guest].festTokens)
       this.log(GUEST_MAP[p.guest].icon, 'log.guest', { guest: '@guest:' + p.guest })
     }
     return { gold, reward }

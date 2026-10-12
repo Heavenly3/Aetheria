@@ -185,7 +185,8 @@ export const guilds = {
       // Finished contracts wait to be claimed; the rest are replaced
       const kept = s.contracts.filter(c => !c.claimed && !TASK_TYPES[c.type].deliver && this.taskMet(c))
       const rng = seeded(g.seed + period * 7919)
-      const asks = asksOf(g)
+      // A big festival brings festival contracts into the mix
+      const asks = this.activeFestival() ? [...asksOf(g), 'fest', 'fest', 'fest'] : asksOf(g)
       const fresh = CONTRACT_SIZES_LIST.slice(0, CONTRACT_SLOTS - kept.length).map(size => this.makeContract(g, asks, size, rng))
       s.contracts = [...kept, ...fresh]
       s.period = period

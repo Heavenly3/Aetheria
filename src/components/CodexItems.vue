@@ -13,7 +13,7 @@ import ItemTile from './ItemTile.vue'
 
 // The item pages of the compendium: one per inventory category, grouped like the inventory
 const { t } = useI18n()
-const groups = CATEGORY_GROUPS.map(g => ({ ...g, cats: g.cats.filter(c => PAGES[c]) })).filter(g => g.cats.length)
+const groups = [...CATEGORY_GROUPS, { id: 'festival', cats: ['festival'] }].map(g => ({ ...g, cats: g.cats.filter(c => PAGES[c]) })).filter(g => g.cats.length)
 const progress = computed(() => G.codexProgress())
 const open = ref(Object.fromEntries(Object.keys(PAGES).map(p => [p, G.pageComplete(p) && !G.pageClaimed(p)])))
 const rewardText = p => [`+${fmt(pageGold(p))} ${t('common.gold')}`, ...Object.entries(PAGE_REWARDS[p]).map(([k, v]) => modText(k, v))].join(' · ')

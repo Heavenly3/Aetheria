@@ -16,7 +16,7 @@ export const CATEGORY_ICON = {
   weapons: 'broadsword', armour: 'breastplate', accessories: 'gem-pendant', ammo: 'quiver', tools: 'war-pick',
   food: 'meat', potions: 'round-potion', runes: 'rune-stone', seeds: 'plant-seed',
   ores: 'ore', wood: 'log', fish: 'fishing', crops: 'potato', herbs: 'herbs-bundle', gems: 'cut-diamond', remains: 'crossed-bones',
-  hides: 'animal-hide', parts: 'arrowhead', special: 'sparkles', chests: 'locked-chest', junk: 'fishbone',
+  hides: 'animal-hide', parts: 'arrowhead', special: 'sparkles', chests: 'locked-chest', junk: 'fishbone', festival: 'laurel-crown',
 }
 
 const SLOT_CAT = { weapon: 'weapons', head: 'armour', body: 'armour', legs: 'armour', shield: 'armour', amulet: 'accessories', cape: 'accessories', ammo: 'ammo' }

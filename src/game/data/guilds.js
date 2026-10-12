@@ -208,6 +208,8 @@ export const TASK_TYPES = {
   slayer: { read: G => G.s.slayer.completed || 0, icon: 'death-skull' },
   deliver: { read: (G, t) => G.qty(t.item), icon: 'knapsack', deliver: true },
   gold: { read: G => G.s.gold, icon: 'two-coins', deliver: true },
+  // During a big festival: festival points earned
+  fest: { read: G => G.s.festival?.points || 0, icon: 'laurel-crown' },
 }
 
 const levelGap = lvl => XP_TABLE[Math.min(99, lvl + 1)] - XP_TABLE[Math.min(98, lvl)]
@@ -253,6 +255,7 @@ export function makeTask(G, ask, size, rng) {
   else if (type === 'slayer') t.target = Math.max(1, Math.round(size / 25))
   else if (type === 'xp') { t.skill = arg; t.target = Math.max(200, Math.round(levelGap(G.level(arg)) * size / 60)) }
   else if (type === 'gold') t.target = Math.max(200, Math.round((300 + G.heroLevel() * 120) * size / 15))
+  else if (type === 'fest') t.target = Math.max(30, Math.round(size * 6))
   else if (type === 'deliver') {
     const d = deliverTarget(G, arg, rng)
     if (!d) return makeTask(G, 'kills', size, rng)

@@ -19,5 +19,10 @@ export const GUESTS = [
   { id: 'bard', icon: 'glass-celebration', reward: { coin_pouch: 4 } },
   { id: 'courier', icon: 'scroll-unfurled', reward: { gem_chest: 1 } },
   { id: 'knight', icon: 'visored-helm', reward: { treasure_map: 1 } },
+  // Seasonal guests: only during their festival, and they pay festival tokens too
+  { id: 'flower_seller', icon: 'butterfly', reward: { seed_pouch: 2 }, festival: 'spring', festTokens: 25 },
+  { id: 'fire_dancer', icon: 'flame', reward: { coin_pouch: 3 }, festival: 'summer', festTokens: 25 },
+  { id: 'lantern_maker', icon: 'candle-light', reward: { gem_chest: 1 }, festival: 'harvest', festTokens: 25 },
+  { id: 'frost_pilgrim', icon: 'ice-spell-cast', reward: { holy_water: 2 }, festival: 'winter', festTokens: 25 },
 ]
 export const GUEST_MAP = Object.fromEntries(GUESTS.map(g => [g.id, g]))

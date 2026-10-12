@@ -52,6 +52,8 @@ export const ACTS = [
   { id: 'act4', icon: 'ice-spell-cast', soon: true },
   { id: 'act5', icon: 'vortex', soon: true },
   { id: 'act6', icon: 'sun', soon: true },
+  // Stories told only during the big festivals, one year after another
+  { id: 'festivals', icon: 'laurel-crown' },
 ]
 
 // `hint` is the key under journal.hints shown while the chapter is still locked
@@ -71,6 +73,22 @@ export const CHAPTERS = [
   { id: 'eternal_servant', act: 'act3', icon: 'skull-staff', hint: 'necromancer', check: beat('necromancer') },
   { id: 'queen_of_bones', act: 'act3', icon: 'crown-of-thorns', hint: 'queen', check: g => beat('necromancer')(g) && areaKills('ruins')(g) >= RUINS_KILLS },
 ]
+// Festival chapters: reached with festival points while that festival runs
+const festPts = (id, n) => g => g.activeFestival()?.id === id && (g.festivalState().points || 0) >= n
+CHAPTERS.push(
+  { id: 'fest_spring_1', act: 'festivals', icon: 'butterfly', hint: 'festSpring1', check: festPts('spring', 120) },
+  { id: 'fest_spring_2', act: 'festivals', icon: 'butterfly', hint: 'festSpring2', check: festPts('spring', 800) },
+  { id: 'fest_spring_3', act: 'festivals', icon: 'butterfly', hint: 'festSpring3', check: festPts('spring', 2000) },
+  { id: 'fest_summer_1', act: 'festivals', icon: 'campfire', hint: 'festSummer1', check: festPts('summer', 120) },
+  { id: 'fest_summer_2', act: 'festivals', icon: 'campfire', hint: 'festSummer2', check: festPts('summer', 800) },
+  { id: 'fest_summer_3', act: 'festivals', icon: 'campfire', hint: 'festSummer3', check: festPts('summer', 2000) },
+  { id: 'fest_harvest_1', act: 'festivals', icon: 'wheat', hint: 'festHarvest1', check: festPts('harvest', 120) },
+  { id: 'fest_harvest_2', act: 'festivals', icon: 'wheat', hint: 'festHarvest2', check: festPts('harvest', 800) },
+  { id: 'fest_harvest_3', act: 'festivals', icon: 'wheat', hint: 'festHarvest3', check: festPts('harvest', 2000) },
+  { id: 'fest_winter_1', act: 'festivals', icon: 'pine-tree', hint: 'festWinter1', check: festPts('winter', 120) },
+  { id: 'fest_winter_2', act: 'festivals', icon: 'pine-tree', hint: 'festWinter2', check: festPts('winter', 800) },
+  { id: 'fest_winter_3', act: 'festivals', icon: 'pine-tree', hint: 'festWinter3', check: festPts('winter', 2000) },
+)
 export const CHAPTER_MAP = Object.fromEntries(CHAPTERS.map(c => [c.id, c]))
 
 // The people of the story; `met` is the chapter that introduces them

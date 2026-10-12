@@ -30,12 +30,15 @@ export const PAGE_REWARDS = {
   tools: { speed: 0.02 },
   chests: { loot: 0.02 },
 }
-export const PAGE_IDS = CATEGORY_GROUPS.flatMap(g => g.cats).filter(c => PAGE_REWARDS[c])
+// Festival keepsakes have a page of their own, so the other pages never wait a whole year
+PAGE_REWARDS.festival = { festPoints: 0.1, loot: 0.02 }
+export const PAGE_IDS = [...CATEGORY_GROUPS.flatMap(g => g.cats), 'festival'].filter(c => PAGE_REWARDS[c])
 
 // The items on each page: plain items only (no finer versions, no relics)
 export const PAGES = Object.fromEntries(PAGE_IDS.map(c => [c, []]))
 for (const it of Object.values(ITEMS)) {
-  if (it.base || it.relic || it.festival) continue
+  if (it.base || it.relic) continue
+  if (it.festival) { PAGES.festival.push(it.id); continue }
   const c = itemCategory(it.id)
   if (PAGES[c]) PAGES[c].push(it.id)
 }

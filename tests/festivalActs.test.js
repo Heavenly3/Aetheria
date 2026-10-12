@@ -100,9 +100,9 @@ describe('winter: the Frost Wraith and gifts', () => {
 })
 
 describe('festival things outside the festival', () => {
-  it('are never asked for and never block a compendium page', () => {
+  it('are never asked for and stay out of the year-round compendium pages', () => {
     for (const sk of ['fishing', 'cooking']) expect(outputsOf(sk).some(o => o.item === SUNFISH.item || o.item === 'sunfish')).toBe(false)
-    const all = Object.values(PAGES).flat()
+    const all = Object.entries(PAGES).filter(([p]) => p !== 'festival').flatMap(([, l]) => l)
     for (const id of [SUNFISH.item, 'sunfish', BLOOM_CROP, BLOOM_CROP + '_seed', GIANT.item, 'festive_hat']) expect(all).not.toContain(id)
   })
 })

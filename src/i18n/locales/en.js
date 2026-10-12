@@ -388,8 +388,8 @@ export default {
   chart: { notEnough: 'Not enough data yet. A sample is saved every 5 minutes of play.', asTable: 'View as table', time: 'Time' },
 
   inventory: {
-    groups: { all: 'All', gear: 'Gear', supplies: 'Supplies', resources: 'Resources', other: 'Other' },
-    cats: {
+    groups: { festival: "Festivals", all: 'All', gear: 'Gear', supplies: 'Supplies', resources: 'Resources', other: 'Other' },
+    cats: { festival: "Festival keepsakes",
       weapons: 'Weapons', armour: 'Armour', accessories: 'Amulets and capes', ammo: 'Ammunition', tools: 'Tools',
       food: 'Food', potions: 'Potions', runes: 'Runes', seeds: 'Seeds',
       ores: 'Ores and bars', wood: 'Wood', fish: 'Raw fish', crops: 'Crops', herbs: 'Herbs', gems: 'Gems', remains: 'Bones and ashes',
@@ -527,6 +527,12 @@ export default {
   achievements: { progress: 'Achievement progress' },
 
   ach: {
+    festTrack: { name: "Reveller {n}", desc: "Complete a festival track {n} times." },
+    festChampion: { name: "Festival Champion", desc: "Top the ranking of a festival." },
+    fairs: { name: "Fairgoer {n}", desc: "Claim every reward of {n} weekend fairs." },
+    blooms: { name: "Bloom Grower {n}", desc: "Grow {n} festival blooms." },
+    wraiths: { name: "Frostbane {n}", desc: "Defeat the Frost Wraith {n} times." },
+    festStories: { name: "Tales of Four Seasons", desc: "Read every festival tale in the journal." },
     guildJoin: { name: "One of Us", desc: "Join a guild." },
     guildVeteran: { name: "Guild Veteran", desc: "Reach the rank of Veteran in a guild." },
     guildMaster: { name: "Guildmaster", desc: "Reach the rank of Master in a guild." },
@@ -716,6 +722,7 @@ export default {
     fromOmen: 'Witness {name} {n}×', fromCreature: 'Defeat {name} {n}×', fromWishes: 'Receive {n} wishes', fromUnknownOmen: 'Hidden in an omen not yet witnessed',
     fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
     titles: {
+      reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", of_four_seasons: "of the Four Seasons",
       guildmaster: "the Guildmaster", master_thief: "the Master Thief", botanist: "the Botanist", deep_angler: "Deep Angler", master_artisan: "Master Artisan", tower_warden: "Tower Warden", innkeeper: "the Innkeeper", dawn_saint: "of the Dawn",
       starborn: 'Starborn', goldcatcher: 'Goldcatcher', blood_moon: 'of the Blood Moon', riftbreaker: 'Riftbreaker', wishbearer: 'Wishbearer', eye_witness: 'Witness of the Eye',
       apprentice: 'the Apprentice', goblin_hunter: 'Goblin Hunter', dragonslayer: 'Dragonslayer', voidwalker: 'Voidwalker', unbound: 'the Unbound',
@@ -1361,7 +1368,7 @@ export default {
       ready: "Trial complete: you can join the guild.",
       hint: "Finish the task and solve the puzzle, in any order.",
     },
-    tasks: {
+    tasks: { fest: "Earn {n} festival points",
       kill: "Defeat {n} × {monster}",
       kills: "Defeat {n} creatures",
       elite: "Defeat {n} elites",
@@ -1517,7 +1524,7 @@ export default {
     unknownPerson: "Someone you have not met yet",
     memoriesIntro: "Each time you ascend, a memory of a past life comes back.",
     memoryLocked: "Comes back after ascension {n}",
-    acts: {
+    acts: { festivals: "Festival tales",
       prologue: "Prologue",
       act1: "Act I · The Dawn Road",
       act2: "Act II · Iron and Sap",
@@ -1526,7 +1533,7 @@ export default {
       act5: "Act V · The Wound in the World",
       act6: "Act VI · Above the Sky",
     },
-    hints: {
+    hints: { festSpring1: "Reach 120 points in Spring Bloom", festSpring2: "Reach 800 points in Spring Bloom", festSpring3: "Reach 2000 points in Spring Bloom", festSummer1: "Reach 120 points in Midsummer Fires", festSummer2: "Reach 800 points in Midsummer Fires", festSummer3: "Reach 2000 points in Midsummer Fires", festHarvest1: "Reach 120 points in the Harvest Festival", festHarvest2: "Reach 800 points in the Harvest Festival", festHarvest3: "Reach 2000 points in the Harvest Festival", festWinter1: "Reach 120 points in Winter's Veil", festWinter2: "Reach 800 points in Winter's Veil", festWinter3: "Reach 2000 points in Winter's Veil",
       ruins: "Defeat a creature in the Cursed Ruins",
       guild: "Join a guild",
       crypt: "Clear the Forgotten Crypt",
@@ -1542,6 +1549,18 @@ export default {
       naga: "Defeat the Great Naga in the Serpent Temple",
     },
     chapters: {
+      fest_spring_1: { title: "Petals at Night", text: "The meadows of Albor smell of honey, and every window has a jar of flowers. {astrologer} kneels beside your plot with a lantern.\n\n\"Flowers turn to the sun,\" she says. \"These ones turn to the sky at night. Come back after dark and watch.\"" },
+      fest_spring_2: { title: "The Night Garden", text: "After dark the festival blooms open, all of them, and every one faces the same point in the sky: the place where the falling stars come down.\n\n{astrologer} writes quickly in her book. \"They remember,\" she whispers. \"Flowers grown from starlit soil remember where the light came from.\"" },
+      fest_spring_3: { title: "A Crown of Flowers", text: "On the last night the village crowns you with flowers, as they do every year for the best grower in Albor.\n\n{astrologer} looks up for a long time. \"The omens have been quiet all spring,\" she says at last. \"For once, I think the Eye was looking at the flowers instead of at us.\"" },
+      fest_summer_1: { title: "The First Flame", text: "{smith} carries a coal from the old forge of the Iron Caverns in a clay pot, the way her teacher did and his before him. With it she lights the great bonfire on the hill.\n\n\"Every flame in Albor starts from that forge,\" she says, wiping her hands. \"Even this one. Especially this one.\"" },
+      fest_summer_2: { title: "The Longest Day", text: "At the regatta the fishermen talk of a light under the Sunlit Bay, bright on the longest day of the year and gone the next morning.\n\n{smith} listens without a word. Later you see her on the shore, staring at the water with the same look she gives a blade that is not quite right." },
+      fest_summer_3: { title: "Fire and Crown", text: "When the bonfire is at its highest the sparks rise together and, for one breath, they hang in the air in the shape of a crown with seven points.\n\nThe crowd cheers; they think it is part of the show. {smith} has gone pale. \"Nobody taught the fire that shape,\" she says. \"Nobody alive.\"" },
+      fest_harvest_1: { title: "The First Sheaf", text: "{keeper} has dragged a table out of the tavern and set himself up as judge of the fair stand, with a ribbon on his chest and a mug in his hand.\n\n\"Fair judging is thirsty work,\" he says, and tastes your stew with great ceremony. \"Hmm. I have had worse. I have also had better. Bring me more.\"" },
+      fest_harvest_2: { title: "Giants in the Field", text: "This year the giant vegetables come up all over the realm, more than anyone remembers. Turnips the size of shields; pumpkins nobody can lift.\n\n\"The old ones say it happens when the Shard of Sap stirs,\" {keeper} mutters, poking a cabbage as big as a barrel. \"I say it happens. Leave it at that, and eat.\"" },
+      fest_harvest_3: { title: "The Lantern Night", text: "On the last night of the fair the people of Albor float paper lanterns on the river, one for everyone they have lost.\n\n{keeper} lights his last of all and writes a name on it before letting it go. The current carries it close to you, and you read it in the candlelight. It is your own name." },
+      fest_winter_1: { title: "The First Snow", text: "Snow falls on the Cursed Ruins, and Brother {priest} asks for help keeping the old chapel warm through the festival nights. \"The dead are restless in winter,\" he says. \"A little fire helps.\"\n\nHe does not say what it helps with." },
+      fest_winter_2: { title: "The Frozen Knight", text: "When the Frost Wraith falls, it leaves behind a piece of rusted armour with the crest of Highdawn on it.\n\nBrother {priest} turns it over in his hands. \"One of the king's guard,\" he says quietly. \"Some of them did not wait at the gates. Some went looking for him, into the cold, and never stopped.\"" },
+      fest_winter_3: { title: "Winter's Veil", text: "On the last night, by the chapel fire, Brother {priest} finally opens the little book he never lets go of. There is only one line written in it, in a hand three hundred years old.\n\n\"The one who remembers will come in winter, and will not know it.\" He closes the book and looks at you for a long time. \"Happy festival,\" he says." },
       tolling_bell: {
         title: "The Bell of Highdawn",
         text: "The bell has not stopped since the Naga fell. You follow it north until the road turns to white stone, and the stone turns to walls.\n\nThis was Highdawn, the capital of the kings. Towers without roofs, a square full of ivy, a throne room open to the sky. And at every gate, knights in rusted armour who are not quite there.\n\nOne of them lowers his blade as you pass. \"The king is late,\" he says, in a voice like wind through a keyhole. \"We keep the gate until he returns.\"\n\nYou ask how long they have waited. The knight thinks about it for a long time. \"Since this morning,\" he says. It has been three hundred years.",
@@ -1856,7 +1875,7 @@ export default {
     servedAll: "{n} patrons served for {gold} gold",
     drinkOwn: "Drink your {item} ({n})",
     needsMap: "needs a treasure map ({n})",
-    guests: { faceless: "The Faceless Merchant", bard: "A wandering bard", courier: "A royal courier", knight: "A weary knight" },
+    guests: { flower_seller: "A flower seller", fire_dancer: "A fire dancer", lantern_maker: "A lantern maker", frost_pilgrim: "A frost pilgrim", faceless: "The Faceless Merchant", bard: "A wandering bard", courier: "A royal courier", knight: "A weary knight" },
     maxLevel: 'Tavern at max level', intro: 'Hire staff who work for you in parallel, even while you are away. You pay their wages while they work.',
     staffCount: 'Staff {n} / {max}', wages: 'Wages {n} gold/h', tokens: '{n} tavern tokens', upgradeTo: 'Upgrade to {name}',
     upgradeHint: '+1 staff slot, more candidates, new specialities and rarities.', upgrade: 'Upgrade tavern', upgraded: 'Your tavern is now <b>{name}</b>!',

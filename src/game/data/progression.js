@@ -188,6 +188,13 @@ export const ACHIEVEMENTS = [
   // Fishing
   ...tiers('fish', [[100, 500], [5000, 20000]], 'fishing', (G, n) => (G.s.stats.fish || 0) >= n),
   ach('deep_catch', 'deepCatch', 1, 'fish-monster', G => G.codexHas('raw_anglerfish'), 25000),
+  // Festivals
+  ...tiers('festTrack', [[1, 5000], [4, 60000]], 'laurel-crown', (G, n) => (G.s.stats.festTracks || 0) >= n),
+  ach('fest_champion', 'festChampion', 1, 'trophy-cup', G => G.s.stats.festBestPlace === 1, 50000),
+  ...tiers('fairs', [[1, 3000], [12, 50000]], 'shop', (G, n) => (G.s.stats.fairsFull || 0) >= n),
+  ...tiers('blooms', [[25, 2000], [250, 25000]], 'butterfly', (G, n) => (G.s.stats.blooms || 0) >= n),
+  ...tiers('wraiths', [[10, 3000], [100, 30000]], 'ice-golem', (G, n) => (G.s.stats.wraiths || 0) >= n),
+  ach('fest_stories', 'festStories', 12, 'quill-ink', G => ['spring', 'summer', 'harvest', 'winter'].every(f => [1, 2, 3].every(i => G.chapterUnlocked(`fest_${f}_${i}`))), 100000),
 ]
 
 /* ---------------- Home ---------------- */

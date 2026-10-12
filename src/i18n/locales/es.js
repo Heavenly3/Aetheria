@@ -155,7 +155,7 @@ export default {
   },
 
   mods: {
-    festPoints: "+{v} % de puntos de festival",
+    festPoints: "+{v}% de puntos de festival",
     atkSpeed: "+{v} % de velocidad de ataque",
     crit: "+{v} % de probabilidad de crítico",
     critDmg: "+{v} % de daño crítico",
@@ -388,8 +388,8 @@ export default {
   chart: { notEnough: 'Aún no hay datos suficientes. Se guarda una muestra cada 5 minutos de juego.', asTable: 'Ver como tabla', time: 'Hora' },
 
   inventory: {
-    groups: { all: 'Todo', gear: 'Equipo', supplies: 'Provisiones', resources: 'Recursos', other: 'Otros' },
-    cats: {
+    groups: { festival: "Festivales", all: 'Todo', gear: 'Equipo', supplies: 'Provisiones', resources: 'Recursos', other: 'Otros' },
+    cats: { festival: "Recuerdos de festival",
       weapons: 'Armas', armour: 'Armaduras', accessories: 'Amuletos y capas', ammo: 'Munición', tools: 'Herramientas',
       food: 'Comida', potions: 'Pociones', runes: 'Runas', seeds: 'Semillas',
       ores: 'Minerales y lingotes', wood: 'Madera', fish: 'Pescado crudo', crops: 'Cultivos', herbs: 'Hierbas', gems: 'Gemas', remains: 'Huesos y cenizas',
@@ -527,6 +527,12 @@ export default {
   achievements: { progress: 'Progreso de logros' },
 
   ach: {
+    festTrack: { name: "Juerguista {n}", desc: "Completa la senda de un festival {n} veces." },
+    festChampion: { name: "Campeón del festival", desc: "Encabeza la clasificación de un festival." },
+    fairs: { name: "Feriante {n}", desc: "Cobra todas las recompensas de {n} ferias de fin de semana." },
+    blooms: { name: "Florista {n}", desc: "Cultiva {n} flores de festival." },
+    wraiths: { name: "Azote de la escarcha {n}", desc: "Derrota {n} veces al Espectro de Hielo." },
+    festStories: { name: "Cuentos de cuatro estaciones", desc: "Lee todos los cuentos de festival del diario." },
     guildJoin: { name: "Uno de los nuestros", desc: "Entra en un gremio." },
     guildVeteran: { name: "Veterano del gremio", desc: "Alcanza el rango de Veterano en un gremio." },
     guildMaster: { name: "Maestre", desc: "Alcanza el rango de Maestre en un gremio." },
@@ -716,6 +722,7 @@ export default {
     fromOmen: 'Presencia {name} {n}×', fromCreature: 'Derrota {n}× a {name}', fromWishes: 'Recibe {n} deseos', fromUnknownOmen: 'Oculto en un prodigio aún no presenciado',
     fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
     titles: {
+      reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", of_four_seasons: "de las Cuatro Estaciones",
       guildmaster: "el Maestre", master_thief: "el Maestro Ladrón", botanist: "el Botánico", deep_angler: "Pescador Abisal", master_artisan: "Maestro Artesano", tower_warden: "Guardián de la Torre", innkeeper: "el Tabernero", dawn_saint: "del Alba",
       starborn: 'Polvo de Estrellas', goldcatcher: 'Atrapaduendes', blood_moon: 'de la Luna de Sangre', riftbreaker: 'Rompegrietas', wishbearer: 'Cumpledeseos', eye_witness: 'Testigo del Ojo',
       apprentice: 'Aprendiz', goblin_hunter: 'Cazagoblins', dragonslayer: 'Matadragones', voidwalker: 'Caminante del Vacío', unbound: 'Sin Cadenas',
@@ -1361,7 +1368,7 @@ export default {
       ready: "Prueba superada: ya puedes entrar en el gremio.",
       hint: "Completa la tarea y resuelve el acertijo, en el orden que quieras.",
     },
-    tasks: {
+    tasks: { fest: "Consigue {n} puntos de festival",
       kill: "Derrota a {n} × {monster}",
       kills: "Derrota a {n} criaturas",
       elite: "Derrota a {n} élites",
@@ -1517,7 +1524,7 @@ export default {
     unknownPerson: "Alguien a quien aún no conoces",
     memoriesIntro: "Cada vez que asciendes, vuelve un recuerdo de una vida pasada.",
     memoryLocked: "Vuelve tras la ascensión {n}",
-    acts: {
+    acts: { festivals: "Cuentos de festival",
       prologue: "Prólogo",
       act1: "Acto I · El camino del alba",
       act2: "Acto II · Hierro y savia",
@@ -1526,7 +1533,7 @@ export default {
       act5: "Acto V · La herida del mundo",
       act6: "Acto VI · Sobre el cielo",
     },
-    hints: {
+    hints: { festSpring1: "Consigue 120 puntos en Floración", festSpring2: "Consigue 800 puntos en Floración", festSpring3: "Consigue 2000 puntos en Floración", festSummer1: "Consigue 120 puntos en Fuegos de Verano", festSummer2: "Consigue 800 puntos en Fuegos de Verano", festSummer3: "Consigue 2000 puntos en Fuegos de Verano", festHarvest1: "Consigue 120 puntos en la Fiesta de la Cosecha", festHarvest2: "Consigue 800 puntos en la Fiesta de la Cosecha", festHarvest3: "Consigue 2000 puntos en la Fiesta de la Cosecha", festWinter1: "Consigue 120 puntos en Velo del Invierno", festWinter2: "Consigue 800 puntos en Velo del Invierno", festWinter3: "Consigue 2000 puntos en Velo del Invierno",
       ruins: "Derrota a una criatura en las Ruinas Malditas",
       guild: "Entra en un gremio",
       crypt: "Supera la Cripta olvidada",
@@ -1542,6 +1549,18 @@ export default {
       naga: "Derrota a la Gran naga en el Templo de la serpiente",
     },
     chapters: {
+      fest_spring_1: { title: "Pétalos de noche", text: "Los prados de Albor huelen a miel y en cada ventana hay un tarro de flores. {astrologer} se arrodilla junto a tu parcela con un farol.\n\n«Las flores se giran hacia el sol», dice. «Estas se giran hacia el cielo de noche. Vuelve cuando oscurezca y mira»." },
+      fest_spring_2: { title: "El jardín nocturno", text: "Al anochecer se abren las flores de festival, todas a la vez, y todas miran al mismo punto del cielo: el lugar por donde caen las estrellas fugaces.\n\n{astrologer} escribe deprisa en su libro. «Recuerdan», susurra. «Las flores que crecen en tierra tocada por las estrellas recuerdan de dónde vino la luz»." },
+      fest_spring_3: { title: "Una corona de flores", text: "La última noche el pueblo te corona con flores, como cada año hace con quien mejor cultiva en Albor.\n\n{astrologer} mira al cielo un buen rato. «Los prodigios han estado callados toda la primavera», dice al fin. «Por una vez, creo que el Ojo miraba a las flores en vez de a nosotros»." },
+      fest_summer_1: { title: "La primera llama", text: "{smith} trae en un cuenco de barro una brasa de la vieja forja de las Cavernas de Hierro, como hacía su maestro y el maestro de su maestro. Con ella enciende la gran hoguera de la colina.\n\n«Todos los fuegos de Albor salen de aquella forja», dice, limpiándose las manos. «Este también. Este sobre todo»." },
+      fest_summer_2: { title: "El día más largo", text: "En la regata los pescadores hablan de una luz bajo la Bahía Soleada, brillante el día más largo del año y desaparecida a la mañana siguiente.\n\n{smith} escucha sin decir nada. Más tarde la ves en la orilla, mirando el agua con la misma cara con que mira una hoja que no ha salido del todo bien." },
+      fest_summer_3: { title: "Fuego y corona", text: "Cuando la hoguera está más alta, las chispas suben juntas y, durante un instante, se quedan suspendidas en el aire con la forma de una corona de siete puntas.\n\nLa gente aplaude; creen que es parte del espectáculo. {smith} se ha quedado pálida. «Nadie le ha enseñado esa forma al fuego», dice. «Nadie que siga vivo»." },
+      fest_harvest_1: { title: "La primera gavilla", text: "{keeper} ha sacado una mesa de la taberna y se ha nombrado juez del puesto de la feria, con una escarapela en el pecho y una jarra en la mano.\n\n«Juzgar una feria da mucha sed», dice, y prueba tu guiso con gran ceremonia. «Mmm. Los he probado peores. También mejores. Tráeme más»." },
+      fest_harvest_2: { title: "Gigantes en el campo", text: "Este año salen verduras gigantes por todo el reino, más que nunca. Nabos del tamaño de un escudo; calabazas que nadie puede levantar.\n\n«Los viejos dicen que pasa cuando se agita el Fragmento de la Savia», masculla {keeper}, dando golpecitos a una col grande como un barril. «Yo digo que pasa y punto. Come»." },
+      fest_harvest_3: { title: "La noche de los farolillos", text: "La última noche de la feria la gente de Albor suelta farolillos de papel en el río, uno por cada persona que ha perdido.\n\n{keeper} enciende el suyo el último y escribe un nombre antes de soltarlo. La corriente lo acerca a ti y lo lees a la luz de la vela. Es tu propio nombre." },
+      fest_winter_1: { title: "La primera nevada", text: "Nieva sobre las Ruinas Malditas y el hermano {priest} te pide ayuda para mantener caliente la vieja capilla durante las noches del festival. «Los muertos están inquietos en invierno», dice. «Un poco de fuego ayuda».\n\nNo dice a qué ayuda." },
+      fest_winter_2: { title: "El caballero helado", text: "Cuando cae el Espectro de Hielo deja atrás un trozo de armadura oxidada con el emblema de Alba Mayor.\n\nEl hermano {priest} le da vueltas entre las manos. «Uno de la guardia del rey», dice en voz baja. «Algunos no esperaron en las puertas. Algunos fueron a buscarlo, hacia el frío, y nunca se detuvieron»." },
+      fest_winter_3: { title: "El velo del invierno", text: "La última noche, junto al fuego de la capilla, el hermano {priest} abre por fin el librito que nunca suelta. Solo tiene una línea escrita, con una letra de hace trescientos años.\n\n«Quien recuerda vendrá en invierno, y no lo sabrá». Cierra el libro y te mira un buen rato. «Feliz festival», dice." },
       tolling_bell: {
         title: "La campana de Alba Mayor",
         text: "La campana no ha dejado de sonar desde que cayó la Naga. La sigues hacia el norte hasta que el camino se vuelve piedra blanca y la piedra se vuelve muralla.\n\nEsto fue Alba Mayor, la capital de los reyes. Torres sin tejado, una plaza cubierta de hiedra, un salón del trono abierto al cielo. Y en cada puerta, caballeros con armaduras oxidadas que no terminan de estar ahí.\n\nUno de ellos baja la espada al verte pasar. «El rey se retrasa», dice, con una voz como el viento en el ojo de una cerradura. «Guardamos la puerta hasta que vuelva».\n\nLe preguntas cuánto tiempo llevan esperando. El caballero se lo piensa mucho. «Desde esta mañana», responde. Han pasado trescientos años.",
@@ -1856,7 +1875,7 @@ export default {
     servedAll: "{n} clientes servidos por {gold} de oro",
     drinkOwn: "Beber tu {item} ({n})",
     needsMap: "requiere un mapa del tesoro ({n})",
-    guests: { faceless: "El Mercader sin Rostro", bard: "Un bardo errante", courier: "Un mensajero real", knight: "Un caballero cansado" },
+    guests: { flower_seller: "Una vendedora de flores", fire_dancer: "Un bailarín de fuego", lantern_maker: "Un farolero", frost_pilgrim: "Una peregrina de la escarcha", faceless: "El Mercader sin Rostro", bard: "Un bardo errante", courier: "Un mensajero real", knight: "Un caballero cansado" },
     maxLevel: 'Taberna al máximo', intro: 'Contrata personal que trabaja para ti en paralelo, incluso cuando no juegas. Pagas su sueldo mientras trabajan.',
     staffCount: 'Personal {n} / {max}', wages: 'Sueldos {n} oro/h', tokens: '{n} fichas de taberna', upgradeTo: 'Mejorar a {name}',
     upgradeHint: '+1 puesto, más candidatos, especialidades y rarezas nuevas.', upgrade: 'Mejorar taberna', upgraded: '¡Tu taberna ahora es <b>{name}</b>!',

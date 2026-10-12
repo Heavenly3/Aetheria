@@ -80,6 +80,7 @@ export const festivals = {
     const st = this.festivalState(), r = TRACK[i].reward
     st.claimed[i] = true
     if (r.tokens) { st.tokens += r.tokens; st.earned += r.tokens }
+    if (TRACK.every((_, j) => st.claimed[j])) this.s.stats.festTracks = (this.s.stats.festTracks || 0) + 1
     Object.entries(r.items || {}).forEach(([k, n]) => this.addItem(k, n))
     return r
   },
@@ -95,7 +96,11 @@ export const festivals = {
       for (const m of guildRoster(g, day, s.founded).slice(0, 2)) list.push({ name: m.name, role: m.role, guild: g.id, points: rivalPoints(m, g.tier, days, g.seed) })
     }
     list.push({ name: this.s.name, role: this.s.role, points: this.festivalState().points || 0, hero: true })
-    return list.sort((a, b) => b.points - a.points || (b.hero ? 1 : 0) - (a.hero ? 1 : 0)).map((r, i) => ({ ...r, place: i + 1 }))
+    const ranked = list.sort((a, b) => b.points - a.points || (b.hero ? 1 : 0) - (a.hero ? 1 : 0)).map((r, i) => ({ ...r, place: i + 1 }))
+    // The best place ever reached, for the champion's achievement
+    const place = ranked.find(r => r.hero).place
+    if (!this.s.stats.festBestPlace || place < this.s.stats.festBestPlace) this.s.stats.festBestPlace = place
+    return ranked
   },
 
   /* ---------- the shop ---------- */
@@ -137,6 +142,7 @@ export const festivals = {
     if (!this.fairReady(i)) return null
     const r = FAIR_REWARDS[i].reward
     this.fairState().claimed[i] = true
+    if (FAIR_REWARDS.every((_, j) => this.fairState().claimed[j])) this.s.stats.fairsFull = (this.s.stats.fairsFull || 0) + 1
     if (r.gold) this.addGold(r.gold)
     Object.entries(r.items || {}).forEach(([k, n]) => this.addItem(k, n))
     return r
@@ -186,6 +192,7 @@ export const festivals = {
     const each = this.bloomScore(p) * (p.event === 'bountiful' ? BLOOM_SCORE.bountiful : 1)
     const a = this.festAct()
     a.blooms = (a.blooms || 0) + n
+    this.s.stats.blooms = (this.s.stats.blooms || 0) + n
     a.bestBloom = Math.max(a.bestBloom || 0, each)
     this.addFestivalPoints(each * n)
     this.addFestivalTokens(n)
@@ -275,6 +282,7 @@ export const festivals = {
   festivalCreatureKilled() {
     if (!this.festOn('winter')) return
     this.festAct().wraiths = (this.festAct().wraiths || 0) + 1
+    this.s.stats.wraiths = (this.s.stats.wraiths || 0) + 1
     this.addFestivalPoints(WRAITH.points)
     this.addFestivalTokens(WRAITH.tokens)
   },
