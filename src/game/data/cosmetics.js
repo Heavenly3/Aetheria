@@ -43,6 +43,7 @@ export const TITLES = [
   title('festival_champion', { ach: 'fest_champion' }),
   title('frostbane', { ach: 'wraiths_100' }),
   title('of_four_seasons', { ach: 'fest_stories' }, true),
+  title('of_frost_and_flame', { ach: 'story_act4' }, true),
   title('starborn', { omen: { seen: 'stars', n: 10 } }),
   title('goldcatcher', { omen: { kill: 'gilded_goblin', n: 1 } }),
   title('blood_moon', { omen: { seen: 'blood_moon', n: 1 } }, true),

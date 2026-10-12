@@ -532,6 +532,7 @@ export default {
     fairs: { name: "Feriante {n}", desc: "Cobra todas las recompensas de {n} ferias de fin de semana." },
     blooms: { name: "Florista {n}", desc: "Cultiva {n} flores de festival." },
     wraiths: { name: "Azote de la escarcha {n}", desc: "Derrota {n} veces al Espectro de Hielo." },
+    storyAct: { name: "Crónica del acto {n}", desc: "Desbloquea todos los capítulos del acto {n} en el diario." },
     festStories: { name: "Cuentos de cuatro estaciones", desc: "Lee todos los cuentos de festival del diario." },
     guildJoin: { name: "Uno de los nuestros", desc: "Entra en un gremio." },
     guildVeteran: { name: "Veterano del gremio", desc: "Alcanza el rango de Veterano en un gremio." },
@@ -722,7 +723,7 @@ export default {
     fromOmen: 'Presencia {name} {n}×', fromCreature: 'Derrota {n}× a {name}', fromWishes: 'Recibe {n} deseos', fromUnknownOmen: 'Oculto en un prodigio aún no presenciado',
     fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
     titles: {
-      reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", of_four_seasons: "de las Cuatro Estaciones",
+      reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", of_frost_and_flame: "de Hielo y Fuego", of_four_seasons: "de las Cuatro Estaciones",
       guildmaster: "el Maestre", master_thief: "el Maestro Ladrón", botanist: "el Botánico", deep_angler: "Pescador Abisal", master_artisan: "Maestro Artesano", tower_warden: "Guardián de la Torre", innkeeper: "el Tabernero", dawn_saint: "del Alba",
       starborn: 'Polvo de Estrellas', goldcatcher: 'Atrapaduendes', blood_moon: 'de la Luna de Sangre', riftbreaker: 'Rompegrietas', wishbearer: 'Cumpledeseos', eye_witness: 'Testigo del Ojo',
       apprentice: 'Aprendiz', goblin_hunter: 'Cazagoblins', dragonslayer: 'Matadragones', voidwalker: 'Caminante del Vacío', unbound: 'Sin Cadenas',
@@ -1494,6 +1495,12 @@ export default {
       ask: "¿Alguna novedad?",
     },
     rumors: {
+      north: "¿Morwen te manda al norte? Pues abrígate. Los comerciantes que suben a los Picos Helados vuelven callados, y nunca dicen por qué.",
+      captain: "La capitana {captain}, de la Guardia del Norte, bajó a por provisiones. Pidió la cerveza caliente. Dice que ya ha pasado frío para tres vidas.",
+      thaw: "Esta mañana se rompió el hielo del río. La primera vez en mi vida. El viejo Hagen se sentó en la orilla y lloró como un crío. Hicieras lo que hicieras allí arriba, gracias.",
+      dragons: "Si vas a la Guarida del Dragón, llévate un escudo. Mejor dos. Y no toques las monedas. Los dragones las cuentan.",
+      wyrm: "¿Un dragón que habla? Mi abuelo juraba que el de bronce sobrevolaba Albor cada cosecha. Todos pensaban que estaba borracho. Lo estaba, pero tenía razón.",
+      abyss: "Los jinetes del rey Edmund han pasado tres veces esta semana, todos camino del Abismo. Ninguno ha vuelto por aquí. Todavía.",
       capital: "La vieja capital, Alba Mayor. Mi abuela decía que sus campanas sonaban en las bodas. Ahora no suenan para nadie.",
       ledger: "¿Los registros del gremio? Libros viejos llenos de nombres viejos. Algunos nombres se repiten más que otros. Bebe.",
       priest: "El hermano {priest} vino a por sopa. Educado, callado, y no soltó ese librito en toda la comida. ¿Qué puede haber en un libro para no soltarlo ni para comer?",
@@ -1539,7 +1546,7 @@ export default {
       act5: "Acto V · La herida del mundo",
       act6: "Acto VI · Sobre el cielo",
     },
-    hints: { festSpring1: "Consigue 120 puntos en Floración", festSpring2: "Consigue 800 puntos en Floración", festSpring3: "Consigue 2000 puntos en Floración", festSummer1: "Consigue 120 puntos en Fuegos de Verano", festSummer2: "Consigue 800 puntos en Fuegos de Verano", festSummer3: "Consigue 2000 puntos en Fuegos de Verano", festHarvest1: "Consigue 120 puntos en la Fiesta de la Cosecha", festHarvest2: "Consigue 800 puntos en la Fiesta de la Cosecha", festHarvest3: "Consigue 2000 puntos en la Fiesta de la Cosecha", festWinter1: "Consigue 120 puntos en Velo del Invierno", festWinter2: "Consigue 800 puntos en Velo del Invierno", festWinter3: "Consigue 2000 puntos en Velo del Invierno",
+    hints: { peaks: "Derrota a una criatura en los Picos Helados", stillVillage: "Derrota a 100 criaturas en los Picos Helados", winterQueen: "Derrota a la Reina del invierno en la Fortaleza helada", coldIron: "Derrota a la Reina del invierno y alcanza el nivel 60 de Herrería", lair: "Derrota a una criatura en la Guarida del Dragón", wyrm: "Derrota a la Sierpe de bronce en la Cámara del dragón", iceFire: "Derrota a la Reina del invierno, a la Sierpe de bronce y a 150 criaturas en la Guarida del Dragón", festSpring1: "Consigue 120 puntos en Floración", festSpring2: "Consigue 800 puntos en Floración", festSpring3: "Consigue 2000 puntos en Floración", festSummer1: "Consigue 120 puntos en Fuegos de Verano", festSummer2: "Consigue 800 puntos en Fuegos de Verano", festSummer3: "Consigue 2000 puntos en Fuegos de Verano", festHarvest1: "Consigue 120 puntos en la Fiesta de la Cosecha", festHarvest2: "Consigue 800 puntos en la Fiesta de la Cosecha", festHarvest3: "Consigue 2000 puntos en la Fiesta de la Cosecha", festWinter1: "Consigue 120 puntos en Velo del Invierno", festWinter2: "Consigue 800 puntos en Velo del Invierno", festWinter3: "Consigue 2000 puntos en Velo del Invierno",
       ruins: "Derrota a una criatura en las Ruinas Malditas",
       guild: "Entra en un gremio",
       crypt: "Supera la Cripta olvidada",
@@ -1555,6 +1562,34 @@ export default {
       naga: "Derrota a la Gran naga en el Templo de la serpiente",
     },
     chapters: {
+      northern_watch: {
+        title: "La Guardia del Norte",
+        text: "Al norte de Alba Mayor el camino sube a los Picos Helados, y empieza la nieve. No para. Los comerciantes dicen que no ha parado en trescientos años.\n\nEl último puesto del rey Edmund es una torre de piedra negra con un fuego que nunca se apaga. Su capitana te recibe en la puerta con escarcha en las cejas y una lanza que no baja. «Capitana {captain}, de la Guardia del Norte. Nadie sube aquí a propósito».\n\nLe dices que te envía Morwen. La lanza baja muy despacio. «Entonces será mejor que entres», dice, «y que bebas algo caliente. Querrás estar caliente para lo que vas a ver».",
+      },
+      still_village: {
+        title: "La aldea quieta",
+        text: "Pasado el puerto está Hondolago, o lo que la nieve ha guardado de él. Las casas están enteras. El humo se queda sobre las chimeneas como si fuera de cristal. Y la gente sigue ahí.\n\nUn panadero con una bandeja de pan a medio camino del horno. Dos viejos inclinados sobre una partida de piedras. Una niña con una bufanda roja, a mitad de una carcajada. No están muertos. Si esperas lo suficiente, ves que su pecho se levanta. Una vez al día.\n\n«La reina los guarda», dice {captain}. No mira a la niña de la bufanda. «A salvo, dice ella. No puede pasarles nada malo mientras no pase nada en absoluto. Su invierno crece un poco cada año. Llegó a Hondolago hace diez inviernos».\n\nSe baja la capucha. «Mi hermana. Tenía siete años. Ahora tendría diecisiete».",
+      },
+      winter_queen: {
+        title: "Lo que cuesta",
+        text: "La Reina del invierno no cae como los demás. Cuando llega tu último golpe, sencillamente se sienta en los escalones de su trono, como se sienta una mujer cansada al final de un día largo.\n\n«Sé quién te envía», dice. «Morwen siempre hace la misma pregunta. Quiere oírmelo decir».\n\n«Fui su reina. {winter} del Norte, esposa de {king} el Alto. La noche en que subió al cielo, la Esquirla del Invierno cayó a mis pies, y pedí un deseo: que nada cambiara hasta que él volviera a casa. Ni el castillo, ni la aldea, ni el pan del horno».\n\n«Eso es lo que cuesta que las cosas sigan como están. Todo lo que podría haber sido». Abre la mano. La Esquirla del Invierno descansa en su palma, azul y tan fría que quema. «Tómala. Creo que ya he esperado bastante».\n\nFuera, por primera vez en trescientos años, empieza a llover.",
+      },
+      cold_iron: {
+        title: "Hierro frío",
+        text: "Con el primer deshielo, {captain} manda una carta al sur. Es corta: «Hondolago ha despertado. El pan se quemó. Terminó de reírse». La lees tres veces.\n\n{smith} gira la Esquirla del Invierno con las tenazas. La escarcha se extiende por el yunque y lo parte en dos. «Tan fría que rompe el hierro», murmura. «Un pedazo de luz no debería comportarse así».\n\nDe un baúl viejo saca un dibujo de la Corona, lleno de notas con una letra más antigua que el Gremio. «El primer rey la forjó en las Cavernas de hierro, pero la templó en fuego de dragón. Cada esquirla recuerda lo uno o lo otro». Da unos golpecitos en la página. «Esta ha olvidado el fuego. Encuentra la Esquirla de la Llama y puede que se recuerden la una a la otra».",
+      },
+      dragon_lair: {
+        title: "La guarida",
+        text: "Más allá de los Picos la nieve se vuelve ceniza, y la ceniza, roca negra que todavía está caliente bajo tus botas. Esta es la Guarida del Dragón, y cada guiverno del cielo gira la cabeza para verte llegar.\n\nLos dragones no duermen sobre oro. Duermen sobre coronas: monedas con la cara de los reyes, copas con el sello real, un trono fundido en un charco de bronce. Todo lo que el viejo reino les pagó alguna vez, lo guardaron.\n\nEn la cueva más profunda, algo muy viejo toma aire, y toda la montaña lo toma con él.",
+      },
+      first_kings_dragon: {
+        title: "El dragón del primer rey",
+        text: "La Sierpe de bronce apoya su enorme cabeza sobre el tesoro y se ríe, con un sonido como el de la puerta de una fragua al abrirse.\n\n«Portaescudos. Me preguntaba cuál de tus vidas vendría a por mí». Su ojo, grande como un escudo, se entorna. «Llevé al primer rey cuando era joven. Su hermana me sujetaba las riendas. Morwen, la dulce Morwen, que me cantaba cuando yo aún cabía en su regazo».\n\n«Dimos nuestro fuego a vuestros reyes para templar su Corona y, a cambio, juraron no subir nunca al cielo. La luz de allí arriba nunca fue suya. {king} rompió la promesa, y aquí estamos todos».\n\nCon una garra empuja una piedra por el tesoro: una esquirla del color de las brasas, demasiado brillante para mirarla. «La Esquirla de la Llama. Tómala. Lleva trescientos años quemándome el sueño».",
+      },
+      ice_and_fire: {
+        title: "Hielo y fuego",
+        text: "Sostienes las dos esquirlas separadas mucho rato antes de atreverte a juntarlas. Fuego en una mano, escarcha en la otra.\n\nCuando se tocan, no luchan. Encajan, borde con borde, como fueron hechas, y por un momento ves lo que ven ellas. No el cielo de arriba, sino el suelo de abajo: una grieta que recorre todo el reino, honda y oscura, y en el fondo una luz que no debería estar ahí.\n\nEl Abismo. Donde fue a parar la luz que caía cuando se rompió la Corona. La herida del mundo.\n\nCuando llegas a la Guardia del Norte, un jinete del rey Edmund te espera en la puerta, todavía montado. «Anoche el Abismo se abrió más», dice. «El rey pregunta por ti. Dice que traigas lo que hayas encontrado».",
+      },
       fest_spring_1: { title: "Pétalos de noche", text: "Los prados de Albor huelen a miel y en cada ventana hay un tarro de flores. {astrologer} se arrodilla junto a tu parcela con un farol.\n\n«Las flores se giran hacia el sol», dice. «Estas se giran hacia el cielo de noche. Vuelve cuando oscurezca y mira»." },
       fest_spring_2: { title: "El jardín nocturno", text: "Al anochecer se abren las flores de festival, todas a la vez, y todas miran al mismo punto del cielo: el lugar por donde caen las estrellas fugaces.\n\n{astrologer} escribe deprisa en su libro. «Recuerdan», susurra. «Las flores que crecen en tierra tocada por las estrellas recuerdan de dónde vino la luz»." },
       fest_spring_3: { title: "Una corona de flores", text: "La última noche el pueblo te corona con flores, como cada año hace con quien mejor cultiva en Albor.\n\n{astrologer} mira al cielo un buen rato. «Los prodigios han estado callados toda la primavera», dice al fin. «Por una vez, creo que el Ojo miraba a las flores en vez de a nosotros»." },
@@ -1625,6 +1660,21 @@ export default {
       },
     },
     people: {
+      captain: {
+        name: "Capitana {captain}",
+        role: "Capitana de la Guardia del Norte",
+        desc: "Mantiene el último puesto del rey Edmund en los Picos Helados. Directa, incansable y más fría que la nieve, hasta que alguien menciona Hondolago.",
+      },
+      winter: {
+        name: "{winter}, la Reina del invierno",
+        role: "Reina del Norte",
+        desc: "Esposa de {king} el Alto. Congeló su reino para que nada cambiara hasta que él volviera, y esperó trescientos años.",
+      },
+      wyrm: {
+        name: "La Sierpe de bronce",
+        role: "El dragón del primer rey",
+        desc: "Llevó al primer rey a lomos y recuerda cada promesa que rompió su familia. Te llama portaescudos.",
+      },
       priest: {
         name: "Hermano {priest}",
         role: "Hermano de la Orden del Alba",

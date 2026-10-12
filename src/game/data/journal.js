@@ -16,7 +16,7 @@ const SYL = {
   she: ['a', 'ia', 'is', 'wyn', 'elle', 'ara', 'ine', 'ys', 'eth', 'ira', 'ene', 'lyn', 'ora', 'issa', 'ae'],
 }
 // Who gets a rolled name, and which name endings suit them in the texts
-export const NAMED = { keeper: 'he', astrologer: 'she', smith: 'she', king: 'he', priest: 'he' }
+export const NAMED = { keeper: 'he', astrologer: 'she', smith: 'she', king: 'he', priest: 'he', captain: 'she', winter: 'she' }
 
 export function rollName(rng, kind) {
   const pick = a => a[Math.floor(rng() * a.length)]
@@ -41,6 +41,8 @@ const areaMonsters = id => AREAS.find(a => a.id === id).monsters.map(m => m.id)
 const beat = id => g => (g.s.bestiary.kills[id] || 0) > 0
 const areaKills = id => { const ms = areaMonsters(id); return g => ms.reduce((n, m) => n + (g.s.bestiary.kills[m] || 0), 0) }
 export const RUINS_KILLS = 150
+export const PEAKS_KILLS = 100
+export const LAIR_KILLS = 150
 const beatArea = id => { const ms = areaMonsters(id); return g => ms.some(m => (g.s.bestiary.kills[m] || 0) > 0) }
 
 // Acts follow the regions of the realm; acts without chapters yet are still being written
@@ -49,7 +51,7 @@ export const ACTS = [
   { id: 'act1', icon: 'pine-tree' },
   { id: 'act2', icon: 'stone-block' },
   { id: 'act3', icon: 'crowned-skull' },
-  { id: 'act4', icon: 'ice-spell-cast', soon: true },
+  { id: 'act4', icon: 'ice-spell-cast' },
   { id: 'act5', icon: 'vortex', soon: true },
   { id: 'act6', icon: 'sun', soon: true },
   // Stories told only during the big festivals, one year after another
@@ -72,6 +74,13 @@ export const CHAPTERS = [
   { id: 'empty_tomb', act: 'act3', icon: 'crowned-skull', hint: 'crypt', check: g => (g.s.dungeonsBy.crypt || 0) > 0 },
   { id: 'eternal_servant', act: 'act3', icon: 'skull-staff', hint: 'necromancer', check: beat('necromancer') },
   { id: 'queen_of_bones', act: 'act3', icon: 'crown-of-thorns', hint: 'queen', check: g => beat('necromancer')(g) && areaKills('ruins')(g) >= RUINS_KILLS },
+  { id: 'northern_watch', act: 'act4', icon: 'stone-tower', hint: 'peaks', check: beatArea('peaks') },
+  { id: 'still_village', act: 'act4', icon: 'hourglass', hint: 'stillVillage', check: g => areaKills('peaks')(g) >= PEAKS_KILLS },
+  { id: 'winter_queen', act: 'act4', icon: 'ice-spell-cast', hint: 'winterQueen', check: beat('winter_queen') },
+  { id: 'cold_iron', act: 'act4', icon: 'anvil-impact', hint: 'coldIron', check: g => beat('winter_queen')(g) && g.level('smithing') >= 60 },
+  { id: 'dragon_lair', act: 'act4', icon: 'dragon-head', hint: 'lair', check: beatArea('lair') },
+  { id: 'first_kings_dragon', act: 'act4', icon: 'dragon-breath', hint: 'wyrm', check: beat('bronze_wyrm') },
+  { id: 'ice_and_fire', act: 'act4', icon: 'earth-crack', hint: 'iceFire', check: g => beat('winter_queen')(g) && beat('bronze_wyrm')(g) && areaKills('lair')(g) >= LAIR_KILLS },
 ]
 // Festival chapters: reached with festival points while that festival runs
 const festPts = (id, n) => g => g.activeFestival()?.id === id && (g.festivalState().points || 0) >= n
@@ -100,6 +109,9 @@ export const CHARACTERS = [
   { id: 'smith', icon: 'anvil-impact', tint: '#ff9a3c', met: 'iron_heart' },
   { id: 'morwen', icon: 'crowned-skull', tint: '#7ad7ff', met: 'serpent_priestess' },
   { id: 'priest', icon: 'holy-symbol', tint: '#cfd8e3', met: 'empty_tomb' },
+  { id: 'captain', icon: 'stone-tower', tint: '#9fb8d0', met: 'northern_watch' },
+  { id: 'winter', icon: 'ice-spell-cast', tint: '#8fd0f2', met: 'winter_queen' },
+  { id: 'wyrm', icon: 'dragon-breath', tint: '#c9853a', met: 'first_kings_dragon' },
 ]
 
 // One memory of a past life comes back with each ascension
@@ -128,6 +140,12 @@ export const RUMORS = [
   { id: 'ledger', when: has('guild_ledger') },
   { id: 'priest', when: has('empty_tomb') },
   { id: 'queen', when: has('queen_of_bones') },
+  { id: 'north', when: all(has('queen_of_bones'), not(has('northern_watch'))) },
+  { id: 'captain', when: has('northern_watch') },
+  { id: 'thaw', when: has('winter_queen') },
+  { id: 'dragons', when: all(has('winter_queen'), not(has('dragon_lair'))) },
+  { id: 'wyrm', when: has('first_kings_dragon') },
+  { id: 'abyss', when: has('ice_and_fire') },
   { id: 'astrologer', when: has('sky_watcher') },
   { id: 'weekly', when: g => g.weeklyUnlocked() },
   { id: 'reborn', when: g => (g.s.ascension?.count || 0) > 0 },

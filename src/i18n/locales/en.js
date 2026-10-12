@@ -532,6 +532,7 @@ export default {
     fairs: { name: "Fairgoer {n}", desc: "Claim every reward of {n} weekend fairs." },
     blooms: { name: "Bloom Grower {n}", desc: "Grow {n} festival blooms." },
     wraiths: { name: "Frostbane {n}", desc: "Defeat the Frost Wraith {n} times." },
+    storyAct: { name: "Chronicle of Act {n}", desc: "Unlock every chapter of Act {n} in the journal." },
     festStories: { name: "Tales of Four Seasons", desc: "Read every festival tale in the journal." },
     guildJoin: { name: "One of Us", desc: "Join a guild." },
     guildVeteran: { name: "Guild Veteran", desc: "Reach the rank of Veteran in a guild." },
@@ -722,7 +723,7 @@ export default {
     fromOmen: 'Witness {name} {n}×', fromCreature: 'Defeat {name} {n}×', fromWishes: 'Receive {n} wishes', fromUnknownOmen: 'Hidden in an omen not yet witnessed',
     fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
     titles: {
-      reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", of_four_seasons: "of the Four Seasons",
+      reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", of_frost_and_flame: "of Frost and Flame", of_four_seasons: "of the Four Seasons",
       guildmaster: "the Guildmaster", master_thief: "the Master Thief", botanist: "the Botanist", deep_angler: "Deep Angler", master_artisan: "Master Artisan", tower_warden: "Tower Warden", innkeeper: "the Innkeeper", dawn_saint: "of the Dawn",
       starborn: 'Starborn', goldcatcher: 'Goldcatcher', blood_moon: 'of the Blood Moon', riftbreaker: 'Riftbreaker', wishbearer: 'Wishbearer', eye_witness: 'Witness of the Eye',
       apprentice: 'the Apprentice', goblin_hunter: 'Goblin Hunter', dragonslayer: 'Dragonslayer', voidwalker: 'Voidwalker', unbound: 'the Unbound',
@@ -1494,6 +1495,12 @@ export default {
       ask: "Any news?",
     },
     rumors: {
+      north: "Morwen sent you north? Then dress warm. Traders who go up to the Frozen Peaks come back quiet, and they never say why.",
+      captain: "Captain {captain} of the Northern Watch came down for supplies. Ordered her ale warm. Said she has had enough cold for three lifetimes.",
+      thaw: "The river ice broke this morning. First time in my life. Old Hagen sat on the bank and cried like a boy. Whatever you did up there, thank you.",
+      dragons: "If you are going to the Dragon's Lair, take a shield. Take two. And do not touch the coins. Dragons count them.",
+      wyrm: "A dragon that talks? My grandfather swore the bronze one flew over Albor every harvest. Everyone thought he was drunk. He was, but he was right.",
+      abyss: "King Edmund's riders have come through three times this week, all of them heading for the Abyss. None has come back this way. Not yet.",
       capital: "The old capital, Highdawn. My grandmother said its bells rang for weddings. Now they ring for nobody.",
       ledger: "The guild ledgers? Old books full of old names. Some names come round more often than others. Drink up.",
       priest: "Brother {priest} came by for soup. Polite, quiet, and he kept one hand on that little book the whole time. What is in a book that you cannot put it down to eat?",
@@ -1539,7 +1546,7 @@ export default {
       act5: "Act V · The Wound in the World",
       act6: "Act VI · Above the Sky",
     },
-    hints: { festSpring1: "Reach 120 points in Spring Bloom", festSpring2: "Reach 800 points in Spring Bloom", festSpring3: "Reach 2000 points in Spring Bloom", festSummer1: "Reach 120 points in Midsummer Fires", festSummer2: "Reach 800 points in Midsummer Fires", festSummer3: "Reach 2000 points in Midsummer Fires", festHarvest1: "Reach 120 points in the Harvest Festival", festHarvest2: "Reach 800 points in the Harvest Festival", festHarvest3: "Reach 2000 points in the Harvest Festival", festWinter1: "Reach 120 points in Winter's Veil", festWinter2: "Reach 800 points in Winter's Veil", festWinter3: "Reach 2000 points in Winter's Veil",
+    hints: { peaks: "Defeat a creature in the Frozen Peaks", stillVillage: "Defeat 100 creatures in the Frozen Peaks", winterQueen: "Defeat the Winter Queen in the Frost Keep", coldIron: "Defeat the Winter Queen and reach Smithing level 60", lair: "Defeat a creature in the Dragon's Lair", wyrm: "Defeat the Bronze Wyrm in the Dragon Vault", iceFire: "Defeat the Winter Queen, the Bronze Wyrm and 150 creatures in the Dragon's Lair", festSpring1: "Reach 120 points in Spring Bloom", festSpring2: "Reach 800 points in Spring Bloom", festSpring3: "Reach 2000 points in Spring Bloom", festSummer1: "Reach 120 points in Midsummer Fires", festSummer2: "Reach 800 points in Midsummer Fires", festSummer3: "Reach 2000 points in Midsummer Fires", festHarvest1: "Reach 120 points in the Harvest Festival", festHarvest2: "Reach 800 points in the Harvest Festival", festHarvest3: "Reach 2000 points in the Harvest Festival", festWinter1: "Reach 120 points in Winter's Veil", festWinter2: "Reach 800 points in Winter's Veil", festWinter3: "Reach 2000 points in Winter's Veil",
       ruins: "Defeat a creature in the Cursed Ruins",
       guild: "Join a guild",
       crypt: "Clear the Forgotten Crypt",
@@ -1555,6 +1562,34 @@ export default {
       naga: "Defeat the Great Naga in the Serpent Temple",
     },
     chapters: {
+      northern_watch: {
+        title: "The Northern Watch",
+        text: "North of Highdawn the road climbs into the Frozen Peaks, and the snow begins. It does not stop. The traders say it has not stopped in three hundred years.\n\nKing Edmund's last outpost is a tower of black stone with a fire that never goes out. Its captain meets you at the gate with frost in her eyebrows and a spear she does not lower. \"Captain {captain}, of the Northern Watch. Nobody comes up here on purpose.\"\n\nYou tell her Morwen sent you. The spear comes down very slowly. \"Then you had better come in,\" she says, \"and drink something hot. You will want to be warm for what you are going to see.\"",
+      },
+      still_village: {
+        title: "The Still Village",
+        text: "Beyond the pass lies Hollowmere, or what the snow has kept of it. The houses are whole. The smoke stands above the chimneys like glass. And the people are still there.\n\nA baker with a tray of bread halfway to the oven. Two old men bent over a game of stones. A girl in a red scarf, caught in the middle of a laugh. They are not dead. If you wait long enough, you see their chests rise. Once a day.\n\n\"The queen keeps them,\" {captain} says. She does not look at the girl in the scarf. \"Safe, she says. Nothing bad can happen to them while nothing happens at all. Her winter grows a little every year. It reached Hollowmere ten winters ago.\"\n\nShe pulls her hood down. \"My sister. She was seven. She would be seventeen now.\"",
+      },
+      winter_queen: {
+        title: "What It Costs",
+        text: "The Winter Queen does not fall like the others. When your last blow lands, she simply sits down on the steps of her throne, the way a tired woman sits at the end of a long day.\n\n\"I know who sent you,\" she says. \"Morwen always asks the same question. She wants to hear me say it.\"\n\n\"I was his queen. {winter} of the North, wife of {king} the Tall. The night he climbed the sky, the Shard of Winter fell at my feet, and I made a wish: that nothing would change until he came home. Not the castle, not the village, not the bread in the oven.\"\n\n\"That is what it costs to keep things as they are. Everything that might have been.\" She opens her hand. The Shard of Winter lies in her palm, blue and burning cold. \"Take it. I think I have waited long enough.\"\n\nOutside, for the first time in three hundred years, it begins to rain.",
+      },
+      cold_iron: {
+        title: "Cold Iron",
+        text: "{captain} sends a letter south with the first thaw. It is short: \"Hollowmere woke. The bread burned. She finished her laugh.\" You read it three times.\n\n{smith} turns the Shard of Winter over with her tongs. Frost spreads across the anvil and splits it in two. \"Cold enough to break iron,\" she mutters. \"That is not how a piece of light should behave.\"\n\nFrom an old chest she takes a drawing of the Crown, covered in notes in a hand older than the Guild. \"The first king forged it in the Iron Caverns, but he tempered it in dragon fire. Every shard remembers one or the other.\" She taps the page. \"This one has forgotten the fire. Find the Shard of Flame, and maybe they will remember each other.\"",
+      },
+      dragon_lair: {
+        title: "The Lair",
+        text: "Beyond the Peaks the snow turns to ash, and the ash to black rock that is still warm under your boots. This is the Dragon's Lair, and every wyvern in the sky turns its head to watch you arrive.\n\nThe dragons do not sleep on gold. They sleep on crowns: coins stamped with the faces of kings, goblets with the royal seal, a throne melted into a puddle of bronze. Everything the old kingdom ever paid them, they kept.\n\nIn the deepest cave, something very old breathes in, and the whole mountain breathes in with it.",
+      },
+      first_kings_dragon: {
+        title: "The First King's Dragon",
+        text: "The Bronze Wyrm lays its great head down on its hoard and laughs, a sound like a forge door swinging open.\n\n\"Shield-bearer. I wondered which of your lives would come for me.\" Its eye, as large as a shield itself, half closes. \"I carried the first king when he was young. His sister held my reins. Morwen, gentle Morwen, who sang to me when I was small enough to sit in her lap.\"\n\n\"We gave your kings our fire to temper their Crown, and in return they swore never to climb the sky. The light up there was never theirs to take. {king} broke the promise, and here we all are.\"\n\nWith one claw it pushes a stone across the hoard: a shard the colour of embers, too bright to look at. \"The Shard of Flame. Take it. It has burned a hole in my sleep for three hundred years.\"",
+      },
+      ice_and_fire: {
+        title: "Ice and Fire",
+        text: "You hold the two shards apart for a long time before you dare to bring them together. Fire in one hand, frost in the other.\n\nWhen they touch, they do not fight. They fit, edge to edge, the way they were made to, and for a moment you see what they see. Not the sky above, but the ground below: a crack running under the whole realm, deep and dark, and at the bottom of it a light that should not be there.\n\nThe Abyss. Where the falling light went when the Crown broke. The wound in the world.\n\nWhen you reach the Northern Watch, a rider from King Edmund is waiting at the gate, still in the saddle. \"The Abyss opened wider last night,\" he says. \"The king asks for you. He says to bring whatever you found.\"",
+      },
       fest_spring_1: { title: "Petals at Night", text: "The meadows of Albor smell of honey, and every window has a jar of flowers. {astrologer} kneels beside your plot with a lantern.\n\n\"Flowers turn to the sun,\" she says. \"These ones turn to the sky at night. Come back after dark and watch.\"" },
       fest_spring_2: { title: "The Night Garden", text: "After dark the festival blooms open, all of them, and every one faces the same point in the sky: the place where the falling stars come down.\n\n{astrologer} writes quickly in her book. \"They remember,\" she whispers. \"Flowers grown from starlit soil remember where the light came from.\"" },
       fest_spring_3: { title: "A Crown of Flowers", text: "On the last night the village crowns you with flowers, as they do every year for the best grower in Albor.\n\n{astrologer} looks up for a long time. \"The omens have been quiet all spring,\" she says at last. \"For once, I think the Eye was looking at the flowers instead of at us.\"" },
@@ -1625,6 +1660,21 @@ export default {
       },
     },
     people: {
+      captain: {
+        name: "Captain {captain}",
+        role: "Captain of the Northern Watch",
+        desc: "Keeps King Edmund's last outpost in the Frozen Peaks. Blunt, tireless and colder than the snow, until someone mentions Hollowmere.",
+      },
+      winter: {
+        name: "{winter}, the Winter Queen",
+        role: "Queen of the North",
+        desc: "Wife of {king} the Tall. She froze her kingdom so that nothing would change until he came home, and waited three hundred years.",
+      },
+      wyrm: {
+        name: "The Bronze Wyrm",
+        role: "The first king's dragon",
+        desc: "Carried the first king and remembers every promise his family ever broke. It calls you shield-bearer.",
+      },
       priest: {
         name: "Brother {priest}",
         role: "Brother of the Order of the Dawn",

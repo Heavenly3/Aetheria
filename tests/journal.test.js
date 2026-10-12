@@ -5,6 +5,8 @@ import { seeded } from '../src/game/systems.js'
 import { i18n } from '../src/i18n/index.js'
 import { OMENS } from '../src/game/data/omens.js'
 import { BESTIARY } from '../src/game/data/bestiary.js'
+import { ACHIEVEMENTS } from '../src/game/data/progression.js'
+import { TITLES } from '../src/game/data/cosmetics.js'
 
 describe('journal', () => {
   it('rolls new names for every save and keeps them', () => {
@@ -106,6 +108,30 @@ describe('tavern keeper', () => {
     G.checkJournal()
     expect(G.chapterUnlocked('queen_of_bones')).toBe(true)
     expect(ACTS.find(a => a.id === 'act3').soon).toBeFalsy()
+  })
+
+  it('tells the fourth act in the ice and the dragon lands', () => {
+    newHero()
+    const ids = ['northern_watch', 'still_village', 'winter_queen', 'cold_iron', 'dragon_lair', 'first_kings_dragon', 'ice_and_fire']
+    ids.forEach(id => expect(G.chapterUnlocked(id)).toBe(false))
+    state.bestiary.kills.bear = 1
+    state.bestiary.kills.winter_queen = 1
+    state.bestiary.kills.green_dragon = 1
+    state.bestiary.kills.bronze_wyrm = 1
+    G.checkJournal()
+    for (const id of ['northern_watch', 'winter_queen', 'dragon_lair', 'first_kings_dragon']) expect(G.chapterUnlocked(id)).toBe(true)
+    for (const id of ['still_village', 'cold_iron', 'ice_and_fire']) expect(G.chapterUnlocked(id)).toBe(false)
+    state.bestiary.kills.ogre = 99
+    setLevel('smithing', 60)
+    state.bestiary.kills.wyvern = 149
+    G.checkJournal()
+    ids.forEach(id => expect(G.chapterUnlocked(id)).toBe(true))
+    expect(ACTS.find(a => a.id === 'act4').soon).toBeFalsy()
+    // Its new people, and an achievement for every act with a title for this one
+    for (const id of ['captain', 'winter', 'wyrm']) expect(CHARACTERS.find(c => c.id === id).met).toBeTruthy()
+    expect(ACHIEVEMENTS.find(a => a.id === 'story_act4').check(G)).toBe(true)
+    expect(ACHIEVEMENTS.find(a => a.id === 'story_act3').check(G)).toBe(false)
+    expect(TITLES.find(x => x.id === 'of_frost_and_flame').ach).toBe('story_act4')
   })
 
   it('names characters added after a save was made', () => {
