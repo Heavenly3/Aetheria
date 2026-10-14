@@ -12,6 +12,8 @@ describe('music and ambience', () => {
     state.activity = { type: 'combat', kind: 'area', target: 'skeleton' }
     expect(moodFor()).toBe('dark')
     state.activity = { type: 'combat', kind: 'weekly' }
+    expect(moodFor()).toBe('boss')
+    state.activity = { type: 'combat', kind: 'omen' }
     expect(moodFor()).toBe('ominous')
     state.activity = null
     for (const id of ['calm', 'adventure', 'dark', 'cold', 'ominous', 'celestial']) expect(MOOD_IDS).toContain(id)

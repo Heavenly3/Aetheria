@@ -14,6 +14,7 @@ import {
 } from './data/tavern.js'
 import { PRAYERS, PRAYER_DRAIN, PRAYER_BONES, GRACE_COSTS, GRACE_SPEED } from './data/extras.js'
 import { AVATARS } from './data/character.js'
+import { AUDIO_DEFAULTS } from './data/audio.js'
 
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
 const pick = arr => arr[Math.floor(Math.random() * arr.length)]
@@ -47,6 +48,8 @@ export const extraState = () => ({
   settings: {
     sound: true, notify: false, autoChain: true, music: true, ambience: true,
     masterVol: 80, musicVol: 45, ambienceVol: 50, sfxVol: 70, muteHidden: true, reduceMotion: false, compactNumbers: true, quietToasts: false, muted: false,
+    // Sound settings added later: alerts, packs, palettes, music mode and accessibility
+    ...AUDIO_DEFAULTS, cues: {},
   },
   dungeonsBy: {},
 })

@@ -716,7 +716,304 @@ export default {
     cats: { supplies: 'Suministros', seeds: 'Semillas', runes: 'Runas', tools: 'Herramientas', gear: 'Equipo' },
   },
 
+  audio: {
+    profilesTitle: "Perfiles de sonido",
+    profilesIntro: "Mezclas listas para cada momento. Elige una y cambia lo que quieras después.",
+    profileApplied: "Perfil activado: {name}",
+    profileSaved: "Tu perfil se ha guardado",
+    profileNow: "Perfil en uso: {name}",
+    profileEdited: "Tu propia mezcla (cambiada a mano)",
+    saveMine: "Guardar como mi perfil",
+    reset: "Restablecer sonido",
+    resetTitle: "¿Restablecer los ajustes de sonido?",
+    resetMessage: "Volúmenes, música, avisos y accesibilidad vuelven a como empieza el juego. Tu perfil propio se conserva.",
+    resetDone: "Ajustes de sonido restablecidos",
+    profiles: {
+      classic: {
+        name: "Clásico",
+        desc: "El juego tal como se hizo: música, ambiente y todos los avisos.",
+      },
+      night: {
+        name: "Noche",
+        desc: "Menos volumen, agudos suaves y clics discretos.",
+      },
+      focus: {
+        name: "Concentración",
+        desc: "Música tranquila y escasa, y solo los avisos que importan.",
+      },
+      alerts: {
+        name: "Solo avisos",
+        desc: "Sin música ni ambiente, solo los avisos.",
+      },
+      cinematic: {
+        name: "Cinemático",
+        desc: "Música más llena con arpa y campanas para los efectos.",
+      },
+      minimal: {
+        name: "Mínimo",
+        desc: "Ambiente ligero y clics suaves para lo importante.",
+      },
+      custom: {
+        name: "Mi perfil",
+        desc: "La mezcla que guardaste tú.",
+      },
+    },
+    mixer: "Mezclador",
+    muteHiddenHint: "La música y el ambiente se callan con la pestaña oculta. Los avisos marcados para segundo plano siguen sonando.",
+    areaAmbience: "Sonidos de cada región",
+    areaAmbienceHint: "Arroyos en los prados, goteo en las cuevas, ranas en el pantano, un dragón respirando en su guarida…",
+    nowPlaying: "Sonando ahora",
+    why: {
+      preview: "Una vista previa: la partida no cambia.",
+      locked: "Fijo: este tema suena vayas donde vayas.",
+      auto: "Siguiendo la partida · {list}",
+      day: "de día",
+      night: "de noche",
+    },
+    mode: {
+      auto: "Automático",
+      locked: "Fijo",
+      autoHint: "Automático: la música sigue dónde estás, contra qué luchas, el clima y la hora del día.",
+      lockedHint: "Fijo: suena un mismo tema vayas donde vayas. Elígelo abajo.",
+    },
+    keepThis: "Fijar este tema",
+    stopPreview: "Parar vista previa",
+    themesTitle: "Temas",
+    themesIntro: "Toca un tema para escucharlo 15 segundos. La partida no cambia.",
+    themesLocked: "Toca un tema para fijarlo y escucharlo.",
+    themes: {
+      calm: "Calma",
+      adventure: "Aventura",
+      dark: "Oscuridad",
+      cold: "Días fríos",
+      ominous: "Presagio",
+      celestial: "Celestial",
+      town: "Pueblo",
+      farm: "Granja",
+      dungeon: "Mazmorra",
+      tower: "Torre",
+      boss: "Jefe",
+      frozen: "Norte helado",
+      dragon: "Tierras del dragón",
+    },
+    styleTitle: "Cómo suena la música",
+    palette: "Instrumentos",
+    palettes: {
+      soft: {
+        name: "Suave",
+        desc: "Colchones cálidos y notas de campana, como sonaba el juego al principio.",
+      },
+      harp: {
+        name: "Arpa",
+        desc: "Cuerdas pulsadas sobre un colchón más ligero.",
+      },
+      retro: {
+        name: "Retro",
+        desc: "Ondas cuadradas sin eco, como una consola antigua.",
+      },
+    },
+    tempo: "Tempo",
+    density: "Melodía",
+    densityHint: "Cuántas notas toca la melodía: poco es escasa y tranquila; mucho, más movida.",
+    packTitle: "Pack de efectos",
+    packs: {
+      classic: {
+        name: "Clásico",
+        desc: "Las campanillas de siempre.",
+      },
+      crystal: {
+        name: "Cristal",
+        desc: "Campanas claras que resuenan.",
+      },
+      minimal: {
+        name: "Mínimo",
+        desc: "Un solo clic suave.",
+      },
+    },
+    cuesIntro: "Cada aviso se puede apagar, subir o bajar, oír con la pestaña oculta o enviar como notificación del navegador. Las ráfagas del mismo aviso suenan como uno solo.",
+    soundOffHint: "Los efectos están apagados o el juego está silenciado: los avisos importantes iluminan los bordes de la pantalla.",
+    cuesTitle: "Avisos",
+    allCues: "Todos",
+    col: {
+      alert: "Aviso",
+      volume: "Volumen",
+      bg: "Segundo plano",
+      notify: "Notificar",
+      bgHint: "Se oye aunque la pestaña esté oculta y \"silencio en segundo plano\" esté activado.",
+      notifyHint: "Envía una notificación del navegador cuando ocurre con la pestaña oculta.",
+    },
+    cats: {
+      progress: "Progreso",
+      loot: "Botín y hallazgos",
+      combat: "Combate",
+      world: "Prodigios",
+      town: "Taberna",
+      system: "Juego",
+    },
+    cues: {
+      levelUp: {
+        name: "Nivel de habilidad",
+        desc: "Una habilidad sube de nivel.",
+      },
+      heroLevel: {
+        name: "Nivel del héroe",
+        desc: "Tu héroe sube de nivel y tiene puntos que gastar.",
+      },
+      achievement: {
+        name: "Logro",
+        desc: "Se desbloquea un logro.",
+      },
+      quest: {
+        name: "Misión y favor",
+        desc: "Terminas una misión o crece el favor de la Orden.",
+      },
+      chapter: {
+        name: "Capítulo nuevo",
+        desc: "Una página nueva de la historia en el diario.",
+      },
+      dailyStreak: {
+        name: "Racha diaria",
+        desc: "Crece tu racha de tareas diarias.",
+      },
+      guildRank: {
+        name: "Rango de gremio",
+        desc: "Subes un rango en tu gremio.",
+      },
+      rareDrop: {
+        name: "Botín raro",
+        desc: "Cae un objeto raro.",
+      },
+      masterwork: {
+        name: "Obra maestra",
+        desc: "Fabricas una obra maestra.",
+      },
+      hybrid: {
+        name: "Híbrido nuevo",
+        desc: "Dos cultivos se cruzan en uno nuevo.",
+      },
+      pet: {
+        name: "Mascota nueva",
+        desc: "Una mascota se une a ti.",
+      },
+      petEgg: {
+        name: "Huevo de mascota",
+        desc: "Encuentras un huevo misterioso.",
+      },
+      petLevel: {
+        name: "Tu mascota crece",
+        desc: "Tu compañero sube de nivel o estrecha el vínculo.",
+      },
+      elite: {
+        name: "Criatura élite",
+        desc: "Aparece una criatura élite o Superior.",
+      },
+      huntStreak: {
+        name: "Racha de caza",
+        desc: "Tu racha de bajas alcanza un nuevo escalón.",
+      },
+      death: {
+        name: "Caída",
+        desc: "Tu héroe cae en combate.",
+      },
+      retreat: {
+        name: "Retirada",
+        desc: "Tu héroe abandona un combate antes de caer.",
+      },
+      dungeon: {
+        name: "Mazmorra superada",
+        desc: "Superas una mazmorra y abres su cofre.",
+      },
+      guardian: {
+        name: "Guardián de la torre",
+        desc: "Cae un guardián con nombre de la torre.",
+      },
+      weeklyKill: {
+        name: "Jefe semanal abatido",
+        desc: "Cae el jefe semanal.",
+      },
+      jailed: {
+        name: "Atrapado",
+        desc: "Te pillan robando y acabas en la cárcel.",
+      },
+      omen: {
+        name: "Prodigio",
+        desc: "Empieza un prodigio.",
+      },
+      boon: {
+        name: "Bendición",
+        desc: "Un prodigio termina y deja una bendición.",
+      },
+      wish: {
+        name: "Deseo",
+        desc: "Un cometa concede un deseo.",
+      },
+      expedition: {
+        name: "Vuelta de expedición",
+        desc: "Un aventurero vuelve de una expedición.",
+      },
+      unpaid: {
+        name: "Personal sin cobrar",
+        desc: "No queda oro para el sueldo de un trabajador.",
+      },
+      queueDone: {
+        name: "Cola terminada",
+        desc: "La cola de acciones se ha acabado.",
+      },
+      weather: {
+        name: "Cambio de clima",
+        desc: "Cambia el clima.",
+      },
+      ui: {
+        name: "Interfaz",
+        desc: "Comprar, reclamar, contratar y otros botones.",
+      },
+    },
+    high: "Importante",
+    highHint: "Baja la música un momento y nunca se descarta cuando suenan muchas cosas a la vez.",
+    preview: "Escuchar",
+    accessIntro: "Opciones para jugar con menos sonido, menos movimiento o más comodidad.",
+    access: {
+      subtitles: {
+        name: "Subtítulos de sonido",
+        desc: "Un mensaje breve cuando algo se oye pero no se ve: un trueno lejano, un búho, un dragón respirando.",
+      },
+      visualCues: {
+        name: "Avisos visuales",
+        desc: "Con el sonido apagado, los avisos importantes iluminan los bordes de la pantalla.",
+      },
+      softTone: {
+        name: "Sonido suave",
+        desc: "Suaviza los agudos, para oídos sensibles.",
+      },
+      mono: {
+        name: "Sonido mono",
+        desc: "El mismo sonido en los dos oídos.",
+      },
+      reduceMotion: {
+        name: "Menos animaciones",
+        desc: "Menos efectos en movimiento en todo el juego.",
+      },
+      quietToasts: {
+        name: "Menos avisos en pantalla",
+        desc: "Sin mensajes por cada nivel de habilidad y maestría.",
+      },
+    },
+    moved: "Los volúmenes, la música, los perfiles y los avisos tienen ahora sus propias pestañas.",
+    captions: {
+      thunder: "Un trueno lejano",
+      owl: "Ulula un búho",
+      whisper: "Susurros en las ruinas",
+      breath: "Algo enorme respira",
+    },
+  },
+
   settings: {
+    tabs: {
+      general: "General",
+      sound: "Sonido",
+      alerts: "Avisos",
+      access: "Accesibilidad",
+    },
     language: 'Idioma', heroName: 'Nombre del héroe', preferences: 'Preferencias', sound: 'Efectos de sonido',
     audio: "Sonido y música",
     masterVol: "Volumen general",

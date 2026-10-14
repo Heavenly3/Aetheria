@@ -716,7 +716,304 @@ export default {
     cats: { supplies: 'Supplies', seeds: 'Seeds', runes: 'Runes', tools: 'Tools', gear: 'Gear' },
   },
 
+  audio: {
+    profilesTitle: "Sound profiles",
+    profilesIntro: "Ready-made mixes for different moments. Pick one and change anything you like afterwards.",
+    profileApplied: "Profile on: {name}",
+    profileSaved: "Your profile was saved",
+    profileNow: "Profile in use: {name}",
+    profileEdited: "Your own mix (changed by hand)",
+    saveMine: "Save as my profile",
+    reset: "Reset sound",
+    resetTitle: "Reset the sound settings?",
+    resetMessage: "Volumes, music, alerts and accessibility go back to how the game starts. Your own profile is kept.",
+    resetDone: "Sound settings reset",
+    profiles: {
+      classic: {
+        name: "Classic",
+        desc: "The game as it was made: music, ambience and every alert.",
+      },
+      night: {
+        name: "Night",
+        desc: "Lower volume, softer treble and quiet clicks.",
+      },
+      focus: {
+        name: "Focus",
+        desc: "Calm, sparse music and only the alerts that matter.",
+      },
+      alerts: {
+        name: "Alerts only",
+        desc: "No music or ambience, just the alerts.",
+      },
+      cinematic: {
+        name: "Cinematic",
+        desc: "Fuller music with the harp, bells for effects.",
+      },
+      minimal: {
+        name: "Minimal",
+        desc: "Light ambience and soft clicks for the important things.",
+      },
+      custom: {
+        name: "My profile",
+        desc: "The mix you saved yourself.",
+      },
+    },
+    mixer: "Mixer",
+    muteHiddenHint: "Music and ambience go quiet when the tab is hidden. Alerts marked for the background still play.",
+    areaAmbience: "Sounds of each region",
+    areaAmbienceHint: "Brooks in the meadows, dripping caves, frogs in the swamp, a dragon breathing in its lair…",
+    nowPlaying: "Now playing",
+    why: {
+      preview: "A preview: the game itself is not changed.",
+      locked: "Locked: this theme stays wherever you go.",
+      auto: "Following the game · {list}",
+      day: "day",
+      night: "night",
+    },
+    mode: {
+      auto: "Automatic",
+      locked: "Locked",
+      autoHint: "Automatic: the music follows where you are, what you fight, the weather and the time of day.",
+      lockedHint: "Locked: one theme plays wherever you go. Pick it below.",
+    },
+    keepThis: "Keep this theme",
+    stopPreview: "Stop preview",
+    themesTitle: "Themes",
+    themesIntro: "Tap a theme to hear it for 15 seconds. The game itself is not touched.",
+    themesLocked: "Tap a theme to lock it and hear it.",
+    themes: {
+      calm: "Calm",
+      adventure: "Adventure",
+      dark: "Darkness",
+      cold: "Cold days",
+      ominous: "Omen",
+      celestial: "Celestial",
+      town: "Town",
+      farm: "Farm",
+      dungeon: "Dungeon",
+      tower: "Tower",
+      boss: "Boss",
+      frozen: "Frozen north",
+      dragon: "Dragon lands",
+    },
+    styleTitle: "How the music sounds",
+    palette: "Instruments",
+    palettes: {
+      soft: {
+        name: "Soft",
+        desc: "Warm pads and bell notes, as the game first sounded.",
+      },
+      harp: {
+        name: "Harp",
+        desc: "Plucked strings over a lighter pad.",
+      },
+      retro: {
+        name: "Retro",
+        desc: "Square waves with no echo, like an old console.",
+      },
+    },
+    tempo: "Tempo",
+    density: "Melody",
+    densityHint: "How many notes the melody plays: low is sparse and calm, high is busy.",
+    packTitle: "Effects pack",
+    packs: {
+      classic: {
+        name: "Classic",
+        desc: "The original chimes.",
+      },
+      crystal: {
+        name: "Crystal",
+        desc: "Bright, ringing bells.",
+      },
+      minimal: {
+        name: "Minimal",
+        desc: "A single soft click.",
+      },
+    },
+    cuesIntro: "Each alert can be turned off, made louder or quieter, heard with the tab hidden or sent as a browser notification. Bursts of the same alert play as one sound.",
+    soundOffHint: "Effects are off or the game is muted: important alerts light up the edges of the screen instead.",
+    cuesTitle: "Alerts",
+    allCues: "All",
+    col: {
+      alert: "Alert",
+      volume: "Volume",
+      bg: "Background",
+      notify: "Notify",
+      bgHint: "Heard even when the tab is hidden and \"silence in the background\" is on.",
+      notifyHint: "Sends a browser notification when it happens with the tab hidden.",
+    },
+    cats: {
+      progress: "Progress",
+      loot: "Loot and finds",
+      combat: "Combat",
+      world: "Omens",
+      town: "Tavern",
+      system: "Game",
+    },
+    cues: {
+      levelUp: {
+        name: "Skill level up",
+        desc: "A skill reaches a new level.",
+      },
+      heroLevel: {
+        name: "Hero level up",
+        desc: "Your hero levels up and has points to spend.",
+      },
+      achievement: {
+        name: "Achievement",
+        desc: "An achievement is unlocked.",
+      },
+      quest: {
+        name: "Quest and favour",
+        desc: "A quest is done or the Order’s favour grows.",
+      },
+      chapter: {
+        name: "New chapter",
+        desc: "A new page of the story in the journal.",
+      },
+      dailyStreak: {
+        name: "Daily streak",
+        desc: "Your streak of daily tasks grows.",
+      },
+      guildRank: {
+        name: "Guild rank",
+        desc: "You climb a rank in your guild.",
+      },
+      rareDrop: {
+        name: "Rare drop",
+        desc: "A rare item drops.",
+      },
+      masterwork: {
+        name: "Masterwork",
+        desc: "You craft a masterwork.",
+      },
+      hybrid: {
+        name: "New hybrid",
+        desc: "Two crops cross into a new one.",
+      },
+      pet: {
+        name: "New pet",
+        desc: "A pet joins you.",
+      },
+      petEgg: {
+        name: "Pet egg",
+        desc: "You find a mysterious egg.",
+      },
+      petLevel: {
+        name: "Pet grows",
+        desc: "Your companion levels up or grows closer.",
+      },
+      elite: {
+        name: "Elite creature",
+        desc: "An elite or Superior creature appears.",
+      },
+      huntStreak: {
+        name: "Hunting streak",
+        desc: "Your streak of kills reaches a new step.",
+      },
+      death: {
+        name: "Falling",
+        desc: "Your hero falls in a fight.",
+      },
+      retreat: {
+        name: "Retreat",
+        desc: "Your hero pulls out of a fight before falling.",
+      },
+      dungeon: {
+        name: "Dungeon cleared",
+        desc: "A dungeon is cleared and its chest opened.",
+      },
+      guardian: {
+        name: "Tower guardian",
+        desc: "A named guardian of the tower falls.",
+      },
+      weeklyKill: {
+        name: "Weekly boss slain",
+        desc: "The weekly boss falls.",
+      },
+      jailed: {
+        name: "Caught",
+        desc: "You are caught thieving and thrown in jail.",
+      },
+      omen: {
+        name: "Omen",
+        desc: "An omen begins.",
+      },
+      boon: {
+        name: "Boon",
+        desc: "An omen ends and leaves a boon.",
+      },
+      wish: {
+        name: "Wish",
+        desc: "A comet grants a wish.",
+      },
+      expedition: {
+        name: "Expedition back",
+        desc: "An adventurer returns from an expedition.",
+      },
+      unpaid: {
+        name: "Unpaid staff",
+        desc: "There is no gold left for a worker’s wage.",
+      },
+      queueDone: {
+        name: "Queue finished",
+        desc: "The action queue has run out.",
+      },
+      weather: {
+        name: "Weather change",
+        desc: "The weather changes.",
+      },
+      ui: {
+        name: "Interface",
+        desc: "Buying, claiming, hiring and other buttons.",
+      },
+    },
+    high: "Important",
+    highHint: "Lowers the music for a moment and is never dropped when many sounds play at once.",
+    preview: "Listen",
+    accessIntro: "Options for playing with less sound, less movement or more comfort.",
+    access: {
+      subtitles: {
+        name: "Sound captions",
+        desc: "A short message when something can be heard but not seen: distant thunder, an owl, a dragon breathing.",
+      },
+      visualCues: {
+        name: "Visual alerts",
+        desc: "With the sound off, important alerts light up the edges of the screen.",
+      },
+      softTone: {
+        name: "Soft sound",
+        desc: "Takes the edge off high notes, for sensitive ears.",
+      },
+      mono: {
+        name: "Mono sound",
+        desc: "The same sound in both ears.",
+      },
+      reduceMotion: {
+        name: "Reduce animations",
+        desc: "Fewer moving effects across the game.",
+      },
+      quietToasts: {
+        name: "Fewer pop-ups",
+        desc: "No messages for every skill level and mastery.",
+      },
+    },
+    moved: "Volumes, music, profiles and alerts now have tabs of their own.",
+    captions: {
+      thunder: "Distant thunder",
+      owl: "An owl calls",
+      whisper: "Whispers in the ruins",
+      breath: "Something huge breathes",
+    },
+  },
+
   settings: {
+    tabs: {
+      general: "General",
+      sound: "Sound",
+      alerts: "Alerts",
+      access: "Accessibility",
+    },
     language: 'Language', heroName: 'Hero name', preferences: 'Preferences', sound: 'Sound effects',
     audio: "Sound and music",
     masterVol: "Master volume",

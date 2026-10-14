@@ -16,8 +16,8 @@ import { SKILLS } from './game/data/skills.js'
 import { ITEMS } from './game/data/items.js'
 import { ROLES, DIFFICULTIES } from './game/data/character.js'
 import { fmt, fmtDec, fmtTime, fmtClock } from './game/format.js'
-import { play, notify } from './game/sound.js'
-import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor } from './game/music.js'
+import { cue, notify } from './game/sound.js'
+import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaFor, setCaptionHandler } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
@@ -67,7 +67,8 @@ const wxTip = computed(() => {
   return tip(t(`weather.${wxLook.value.key}.name`), t(`weather.${wxLook.value.key}.desc`), lines)
 })
 // Music follows what the hero is doing and the weather; settings apply as soon as they change
-watch(() => ({ mood: moodFor(), weather: wx.value.weather.id, night: wx.value.night }), setScene, { immediate: true, deep: true })
+const place = computed(() => (route.name === 'skill' ? route.params.id : String(route.name || '')))
+watch(() => ({ mood: moodFor(state, place.value, wx.value.weather.id), weather: wx.value.weather.id, night: wx.value.night, area: areaFor() }), setScene, { immediate: true, deep: true })
 watch(() => ({ ...state.settings }), st => {
   applyAudioSettings()
   setCompactNumbers(st.compactNumbers)
@@ -81,6 +82,7 @@ watch(() => wx.value.block, (b, old) => {
   if (old === undefined) return
   // Every change is announced, since it changes how the game plays; climate events stand out
   push(w.icon || 'sparkles', t(w.event ? 'weather.started' : 'weather.changed', { name: w.name }), w.event ? 'rare' : 'info', 7000)
+  cue('weather')
 })
 // The "?" next to the screen title explains the screen you are on
 const screenHelp = computed(() => (route.name && te(`help.screens.${String(route.name)}.body`) ? `screens.${String(route.name)}` : null))
@@ -105,6 +107,8 @@ const menuItems = computed(() => [
   { label: t('heroMenu.mainMenu'), icon: 'pi pi-sign-out', command: () => exitToTitle() },
 ])
 
+// Game messages that are alerts of their own
+const NOTIFY_CUE = { 'notify.unpaid': 'unpaid', 'notify.queueDone': 'queueDone' }
 const SEVERITY = { warn: 'warn', success: 'success', error: 'error', rare: 'secondary', info: 'info' }
 const offs = []
 onUnmounted(() => offs.splice(0).forEach(off => off()))
@@ -114,40 +118,47 @@ onMounted(() => {
   // Every subscription is dropped again on unmount, so a reloaded interface never shows a message twice
   const on = (evt, fn) => offs.push(G.on(evt, fn))
   on('toast', e => push(e.icon, tm(e.msg), e.kind))
-  on('levelup', d => { if (state.settings.quietToasts) return; play('level'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
-  on('herolevel', l => { play('quest'); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000); notify(t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')) })
+  on('levelup', d => { if (state.settings.quietToasts) return; cue('levelUp'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
+  on('herolevel', l => { cue('heroLevel', { notify: [t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')] }); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000) })
   on('mastery', d => state.settings.quietToasts || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
-  on('rare', d => { play('rare'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
-  on('achievement', a => { play('quest'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
-  on('elite', e => { play('rare'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
+  on('rare', d => { cue('rareDrop'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
+  on('achievement', a => { cue('achievement'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
+  on('elite', e => { cue('elite'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
   on('bossPhase', e => push(e.monster.icon, t('toast.bossPhase', { name: e.monster.name, phase: t(`fighting.phases.${e.id}.name`).toLowerCase() }), 'warn', 4500))
-  on('huntStreak', e => { play('quest'); push('flame', t('toast.huntStreak', { n: e.n, v: fmtDec(e.bonus * 100) }), 'success', 5000) })
-  on('guildRank', e => { play('level'); push('star-medal', t('guilds.rankUp', { guild: guildName(e.guild), rank: t(`guilds.ranks.${e.rank}`) }), 'success', 5500) })
-  on('masterwork', e => { play('rare'); push('anvil-impact', t('toast.masterwork', { item: ITEMS[e.item].name }), 'rare', 6000) })
-  on('favour', e => { play('level'); push('holy-symbol', t('toast.favour', { n: e.level }), 'success', 5000) })
-  on('guardian', e => { play('rare'); push('stone-tower', t('toast.guardian', { name: t(`tower.guardians.${e.id}`) }), 'rare', 6000) })
-  on('hybrid', e => { play('rare'); push('sprout', t('toast.hybrid', { name: t(`crops.${e.id}`) }), 'rare', 7000) })
-  on('jailed', () => { play('bad'); push('padlock', t('toast.jailed'), 'warn', 6000) })
-  on('chapter', c => { play('quest'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
-  on('quest', q => { play('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
-  on('pet', p => { play('rare'); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000); notify(t('toast.petPlain', { name: p.name }), p.desc) })
-  on('petEgg', () => { play('rare'); push('cosmic-egg', t('toast.petEgg'), 'rare', 8000); notify(t('toast.petEggPlain'), t('toast.petEggHint')) })
-  on('petLevel', d => { play('level'); push(d.pet.icon, t('toast.petLevel', { name: G.petName(d.pet.id), level: d.level }), 'success', 4500) })
-  on('petBond', d => { play('quest'); push(d.pet.icon, t('toast.petBond', { name: G.petName(d.pet.id), tier: t(`pets.bond.${d.tier}`) }), 'success', 5500) })
-  on('weeklyKill', d => { play('quest'); push(d.boss.icon, t(d.trophy ? 'toast.weeklyKill' : 'toast.weeklyKillAgain', { name: d.boss.name }), 'rare', 8000); notify(d.boss.name, t('weekly.slainHint')) })
-  on('streak', d => { play('quest'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
-  on('death', () => play('bad')) // the fight's stop message already tells who won and the gold lost
-  on('expedition', r => { play(r.ok ? 'quest' : 'bad'); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })
+  on('huntStreak', e => { cue('huntStreak'); push('flame', t('toast.huntStreak', { n: e.n, v: fmtDec(e.bonus * 100) }), 'success', 5000) })
+  on('guildRank', e => { cue('guildRank'); push('star-medal', t('guilds.rankUp', { guild: guildName(e.guild), rank: t(`guilds.ranks.${e.rank}`) }), 'success', 5500) })
+  on('masterwork', e => { cue('masterwork'); push('anvil-impact', t('toast.masterwork', { item: ITEMS[e.item].name }), 'rare', 6000) })
+  on('favour', e => { cue('quest'); push('holy-symbol', t('toast.favour', { n: e.level }), 'success', 5000) })
+  on('guardian', e => { cue('guardian'); push('stone-tower', t('toast.guardian', { name: t(`tower.guardians.${e.id}`) }), 'rare', 6000) })
+  on('hybrid', e => { cue('hybrid'); push('sprout', t('toast.hybrid', { name: t(`crops.${e.id}`) }), 'rare', 7000) })
+  on('jailed', () => { cue('jailed'); push('padlock', t('toast.jailed'), 'warn', 6000) })
+  on('chapter', c => { cue('chapter'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
+  on('quest', q => { cue('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
+  on('pet', p => { cue('pet', { notify: [t('toast.petPlain', { name: p.name }), p.desc] }); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000) })
+  on('petEgg', () => { cue('petEgg', { notify: [t('toast.petEggPlain'), t('toast.petEggHint')] }); push('cosmic-egg', t('toast.petEgg'), 'rare', 8000) })
+  on('petLevel', d => { cue('petLevel'); push(d.pet.icon, t('toast.petLevel', { name: G.petName(d.pet.id), level: d.level }), 'success', 4500) })
+  on('petBond', d => { cue('petLevel', { sound: 'quest' }); push(d.pet.icon, t('toast.petBond', { name: G.petName(d.pet.id), tier: t(`pets.bond.${d.tier}`) }), 'success', 5500) })
+  on('weeklyKill', d => { cue('weeklyKill', { notify: [d.boss.name, t('weekly.slainHint')] }); push(d.boss.icon, t(d.trophy ? 'toast.weeklyKill' : 'toast.weeklyKillAgain', { name: d.boss.name }), 'rare', 8000) })
+  on('streak', d => { cue('dailyStreak'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
+  on('death', () => cue('death'))
+  on('retreat', () => cue('retreat')) // the fight's stop message already tells who won and the gold lost
+  on('expedition', r => { cue('expedition', { sound: r.ok ? 'quest' : 'bad' }); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })
   on('dungeon', d => {
-    play('rare')
+    cue('dungeon')
     const loot = Object.entries(d.got).map(([k, n]) => `${n}× ${ITEMS[k].name}`).join(', ') || t('common.nothing')
     push(d.dg.icon, t('toast.dungeon', { name: d.dg.name, loot }), 'success', 5000)
   })
-  on('event', e => { play('rare'); push(e.ev.icon, tm(e.msg), 'rare', 7000) })
+  on('event', e => { cue('omen'); push(e.ev.icon, tm(e.msg), 'rare', 7000) })
   on('omenSign', e => push('crystal-ball', tm(e.msg), 'info', 7000))
-  on('boon', b => { play('quest'); push('sparkles', t('toast.boon', { name: t(`omens.boons.${b.id}.name`) }), 'success', 6000) })
-  on('wish', w => { play('rare'); push('burning-meteor', t('toast.wish', { wish: t(`omens.wishes.${w.id}`) }), 'rare', 7000) })
-  on('notify', n => notify(t('notify.title'), tm(n)))
+  on('boon', b => { cue('boon'); push('sparkles', t('toast.boon', { name: t(`omens.boons.${b.id}.name`) }), 'success', 6000) })
+  on('wish', w => { cue('wish'); push('burning-meteor', t('toast.wish', { wish: t(`omens.wishes.${w.id}`) }), 'rare', 7000) })
+  on('notify', n => {
+    const id = NOTIFY_CUE[n.key]
+    if (id) cue(id, { notify: [t('notify.title'), tm(n)] })
+    else notify(t('notify.title'), tm(n))
+  })
+  // Sound captions for what can be heard but not seen
+  setCaptionHandler(key => push('sparkles', t(`audio.captions.${key}`), 'info', 3500))
 })
 
 const off = computed(() => session.offline)
