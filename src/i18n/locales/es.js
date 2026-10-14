@@ -1059,7 +1059,7 @@ export default {
     fromOmen: 'Presencia {name} {n}×', fromCreature: 'Derrota {n}× a {name}', fromWishes: 'Recibe {n} deseos', fromUnknownOmen: 'Oculto en un prodigio aún no presenciado',
     fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
     titles: {
-      reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", of_frost_and_flame: "de Hielo y Fuego", of_four_seasons: "de las Cuatro Estaciones",
+      reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", shieldbearer: "el Portaescudos", of_frost_and_flame: "de Hielo y Fuego", of_four_seasons: "de las Cuatro Estaciones",
       guildmaster: "el Maestre", master_thief: "el Maestro Ladrón", botanist: "el Botánico", deep_angler: "Pescador Abisal", master_artisan: "Maestro Artesano", tower_warden: "Guardián de la Torre", innkeeper: "el Tabernero", dawn_saint: "del Alba",
       starborn: 'Polvo de Estrellas', goldcatcher: 'Atrapaduendes', blood_moon: 'de la Luna de Sangre', riftbreaker: 'Rompegrietas', wishbearer: 'Cumpledeseos', eye_witness: 'Testigo del Ojo',
       apprentice: 'Aprendiz', goblin_hunter: 'Cazagoblins', dragonslayer: 'Matadragones', voidwalker: 'Caminante del Vacío', unbound: 'Sin Cadenas',
@@ -1833,6 +1833,12 @@ export default {
       ask: "¿Alguna novedad?",
     },
     rumors: {
+      selene: "La archimaga Selene se sentó anoche en ese rincón. No pidió nada, pagó en plata y preguntó por ti. Dos veces.",
+      maze: "Un soldado volvió del Abismo jurando que allí abajo las paredes se mueven. Se bebió cuatro cervezas y aun así no quiso sentarse de espaldas a la puerta.",
+      greyRobes: "El hermano {priest} no ha venido a por sopa en toda la semana. Dicen que pasa las noches en la capilla, leyendo una y otra vez ese librito suyo.",
+      ancient: "¿Un dragón más viejo que la Corona, y hablaste con él? Mi abuelo te habría invitado a una copa. Supongo que me toca a mí.",
+      deep: "Hueles a algún sitio muy hondo. Siéntate. Come algo. Lo que haya allí abajo seguirá ahí mañana.",
+      twoCrowns: "Dos coronas en un mismo salón del trono, y tú en medio. Si luego necesitas esconderte, la puerta de la bodega siempre está abierta.",
       north: "¿Morwen te manda al norte? Pues abrígate. Los comerciantes que suben a los Picos Helados vuelven callados, y nunca dicen por qué.",
       captain: "La capitana {captain}, de la Guardia del Norte, bajó a por provisiones. Pidió la cerveza caliente. Dice que ya ha pasado frío para tres vidas.",
       thaw: "Esta mañana se rompió el hielo del río. La primera vez en mi vida. El viejo Hagen se sentó en la orilla y lloró como un crío. Hicieras lo que hicieras allí arriba, gracias.",
@@ -1884,7 +1890,7 @@ export default {
       act5: "Acto V · La herida del mundo",
       act6: "Acto VI · Sobre el cielo",
     },
-    hints: { peaks: "Derrota a una criatura en los Picos Helados", stillVillage: "Derrota a 100 criaturas en los Picos Helados", winterQueen: "Derrota a la Reina del invierno en la Fortaleza helada", coldIron: "Derrota a la Reina del invierno y alcanza el nivel 60 de Herrería", lair: "Derrota a una criatura en la Guarida del Dragón", wyrm: "Derrota a la Sierpe de bronce en la Cámara del dragón", iceFire: "Derrota a la Reina del invierno, a la Sierpe de bronce y a 150 criaturas en la Guarida del Dragón", festSpring1: "Consigue 120 puntos en Floración", festSpring2: "Consigue 800 puntos en Floración", festSpring3: "Consigue 2000 puntos en Floración", festSummer1: "Consigue 120 puntos en Fuegos de Verano", festSummer2: "Consigue 800 puntos en Fuegos de Verano", festSummer3: "Consigue 2000 puntos en Fuegos de Verano", festHarvest1: "Consigue 120 puntos en la Fiesta de la Cosecha", festHarvest2: "Consigue 800 puntos en la Fiesta de la Cosecha", festHarvest3: "Consigue 2000 puntos en la Fiesta de la Cosecha", festWinter1: "Consigue 120 puntos en Velo del Invierno", festWinter2: "Consigue 800 puntos en Velo del Invierno", festWinter3: "Consigue 2000 puntos en Velo del Invierno",
+    hints: { abyssGates: "Termina la misión «Las Puertas del Abismo»", abyss: "Derrota a una criatura en el Abismo", maze: "Derrota a 50 minotauros", demon: "Derrota a un demonio abisal", ancient: "Derrota al Dragón Ancestral", bottom: "Derrota al Dragón Ancestral y a 200 criaturas en el Abismo", twoCrowns: "Derrota al Dragón Ancestral y a 200 criaturas en el Abismo, y termina «Heraldo del Vacío»", peaks: "Derrota a una criatura en los Picos Helados", stillVillage: "Derrota a 100 criaturas en los Picos Helados", winterQueen: "Derrota a la Reina del invierno en la Fortaleza helada", coldIron: "Derrota a la Reina del invierno y alcanza el nivel 60 de Herrería", lair: "Derrota a una criatura en la Guarida del Dragón", wyrm: "Derrota a la Sierpe de bronce en la Cámara del dragón", iceFire: "Derrota a la Reina del invierno, a la Sierpe de bronce y a 150 criaturas en la Guarida del Dragón", festSpring1: "Consigue 120 puntos en Floración", festSpring2: "Consigue 800 puntos en Floración", festSpring3: "Consigue 2000 puntos en Floración", festSummer1: "Consigue 120 puntos en Fuegos de Verano", festSummer2: "Consigue 800 puntos en Fuegos de Verano", festSummer3: "Consigue 2000 puntos en Fuegos de Verano", festHarvest1: "Consigue 120 puntos en la Fiesta de la Cosecha", festHarvest2: "Consigue 800 puntos en la Fiesta de la Cosecha", festHarvest3: "Consigue 2000 puntos en la Fiesta de la Cosecha", festWinter1: "Consigue 120 puntos en Velo del Invierno", festWinter2: "Consigue 800 puntos en Velo del Invierno", festWinter3: "Consigue 2000 puntos en Velo del Invierno",
       ruins: "Derrota a una criatura en las Ruinas Malditas",
       guild: "Entra en un gremio",
       crypt: "Supera la Cripta olvidada",
@@ -1900,6 +1906,34 @@ export default {
       naga: "Derrota a la Gran naga en el Templo de la serpiente",
     },
     chapters: {
+      uncrowned_king: {
+        title: "El rey sin corona",
+        text: "El rey Edmund te recibe en un salón sin trono. Está sentado en los escalones, tan cansado como dice la gente, y mira largo rato las dos esquirlas que llevas en las manos sin tocarlas.\n\n«Mi padre me dijo que la Corona volvería algún día», dice. «Nunca le creí. Yo solo quería que los caminos fueran seguros y los graneros estuvieran llenos».\n\nA su lado hay una mujer de túnica violeta, con los dedos manchados de tinta y de luz de estrellas: Selene, la archimaga de la corte. «He abierto una puerta al Abismo», dice. «No ha sido difícil. Algo al otro lado ya estaba empujando».\n\nEdmund se levanta. «Ve a ver qué quiere», dice. «Y vuelve. El reino ya ha perdido bastantes héroes en ese prado».",
+      },
+      into_the_wound: {
+        title: "Dentro de la herida",
+        text: "Al otro lado de la puerta de Selene, el mundo olvida cómo se supone que funciona. Las escaleras bajan y suben a la vez. La lluvia cae de lado desde un cielo que también es suelo. Tu propia sombra camina un paso detrás de ti, y luego un paso delante.\n\nY por todas partes hay luz: finos hilos de oro que recorren la piedra negra como venas, todos corriendo en la misma dirección. Hacia abajo.\n\nLas esquirlas de tu mochila se calientan. Lo que haya en el fondo del Abismo está hecho de lo mismo que ellas.",
+      },
+      the_maze: {
+        title: "El laberinto",
+        text: "El laberinto de los minotauros cambia cada vez que parpadeas, pero cuando cae la quincuagésima bestia empiezas a notar algo: algunas paredes no cambian nunca.\n\nEstán cubiertas de arañazos. Flechas, marcas de recuento, pequeños mapas. Y nombres: docenas, grabados a lo largo de siglos, todos con la misma letra.\n\nTu letra. Tu nombre. Una de las marcas está fresca, como si la hubieras hecho ayer. Al lado, alguien ha escrito: «A la izquierda en la columna rota. Siempre se te olvida».\n\nGiras a la izquierda en la columna rota. Es el camino correcto.",
+      },
+      what_they_were: {
+        title: "Lo que fueron",
+        text: "El demonio abisal cae, y lo que queda de él es más pequeño de lo que debería: un bulto de tela gris podrida y un librito con un sol grabado en la tapa.\n\nTúnicas grises. El sol de la Orden del Alba.\n\nDe vuelta en Alba Mayor, el hermano {priest} da vueltas al libro entre las manos y se pone muy pálido. «Los primeros hermanos», dice. «Cuando las estrellas se quedaron quietas, siguieron la luz que caía hasta lo más hondo para traerla de vuelta. La Orden dice que se convirtieron en santos».\n\nAbre su propio librito, el que nunca suelta, y vuelve a leer la única línea que tiene. Luego lo cierra y no dice nada durante mucho rato.",
+      },
+      the_ancient: {
+        title: "El ancestral",
+        text: "El Dragón Ancestral no lucha como una bestia. Lucha como quien comprueba si mereces una conversación. Cuando por fin se tumba, casi sonríe.\n\n«Vi al primer rey robar las estrellas», dice. «Atrapó su luz al caer y la forjó en una corona, y el reino brilló, y el cielo se oscureció un poco más cada año».\n\n«Tu {king} el Alto lo entendió al fin. No subió al cielo para convertirse en estrella, pequeño portaescudos. Subió para devolver la luz. Pero arriba, con la Corona en las manos y el cielo abriendo su ojo para llevársela, no fue capaz de soltarla».\n\n«Tú intentaste obligarle. Esa parte la recuerdas, ¿verdad? Tiraste. Se rompió».",
+      },
+      the_bottom: {
+        title: "El fondo del mundo",
+        text: "En el fondo del Abismo, todos los hilos de oro se juntan en un lago de luz tan quieto que parece cristal. En el centro flota una esquirla de la Corona, la más brillante hasta ahora: la Esquirla de las Profundidades.\n\nCuando la coges, el lago se oscurece, y en la oscuridad algo habla. No desde abajo. Desde más allá: desde la Grieta del Vacío, al otro lado de la piedra.\n\n«Portaescudos». La voz es cansada y muy amable, y suena como un rey. «Has venido. Tráemelas. Todas. Terminaré lo que empecé».\n\nSubes sin recordar el camino. Las manos no te dejan de temblar hasta que ves el sol.",
+      },
+      two_crowns: {
+        title: "Dos coronas",
+        text: "El salón del trono de Alba Mayor no tiene techo, y esta noche tiene dos coronas.\n\nMorwen está junto al trono, coronada de escarcha. El rey Edmund espera en la puerta, coronado de nada. Selene aguarda entre los dos, con la puerta al Vacío ya abierta a su espalda, ardiendo en violeta.\n\n«Dámelas», dice Morwen, «y la Corona de mi familia volverá a estar entera». «No se las des a nadie», dice Edmund, «y deja que el cielo recupere su luz». Y desde la puerta, débil como un suspiro, una tercera voz: «Tráemelas».\n\nLas esquirlas de tu mochila se calientan, y también la que llevas dentro. Miras a la reina, al rey y a la puerta, y por primera vez en muchas vidas, eliges.\n\nEntras en el Vacío.",
+      },
       northern_watch: {
         title: "La Guardia del Norte",
         text: "Al norte de Alba Mayor el camino sube a los Picos Helados, y empieza la nieve. No para. Los comerciantes dicen que no ha parado en trescientos años.\n\nEl último puesto del rey Edmund es una torre de piedra negra con un fuego que nunca se apaga. Su capitana te recibe en la puerta con escarcha en las cejas y una lanza que no baja. «Capitana {captain}, de la Guardia del Norte. Nadie sube aquí a propósito».\n\nLe dices que te envía Morwen. La lanza baja muy despacio. «Entonces será mejor que entres», dice, «y que bebas algo caliente. Querrás estar caliente para lo que vas a ver».",
@@ -1998,6 +2032,16 @@ export default {
       },
     },
     people: {
+      selene: {
+        name: "Archimaga Selene",
+        role: "Archimaga de la corte del rey Edmund",
+        desc: "Abrió la puerta al Abismo y estudia el Vacío que hay detrás. Tinta y luz de estrellas en los dedos, y muy pocas preguntas que no se atreva a hacer.",
+      },
+      ancient: {
+        name: "El Dragón Ancestral",
+        role: "Testigo de la Corona",
+        desc: "Vio forjar la Corona y la vio romperse. Sabe por qué {king} subió al cielo y por qué la Corona se rompió en tus manos.",
+      },
       captain: {
         name: "Capitana {captain}",
         role: "Capitana de la Guardia del Norte",

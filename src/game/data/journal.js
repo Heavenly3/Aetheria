@@ -43,6 +43,8 @@ const areaKills = id => { const ms = areaMonsters(id); return g => ms.reduce((n,
 export const RUINS_KILLS = 150
 export const PEAKS_KILLS = 100
 export const LAIR_KILLS = 150
+export const MAZE_KILLS = 50
+export const ABYSS_KILLS = 200
 const beatArea = id => { const ms = areaMonsters(id); return g => ms.some(m => (g.s.bestiary.kills[m] || 0) > 0) }
 
 // Acts follow the regions of the realm; acts without chapters yet are still being written
@@ -52,7 +54,7 @@ export const ACTS = [
   { id: 'act2', icon: 'stone-block' },
   { id: 'act3', icon: 'crowned-skull' },
   { id: 'act4', icon: 'ice-spell-cast' },
-  { id: 'act5', icon: 'vortex', soon: true },
+  { id: 'act5', icon: 'vortex' },
   { id: 'act6', icon: 'sun', soon: true },
   // Stories told only during the big festivals, one year after another
   { id: 'festivals', icon: 'laurel-crown' },
@@ -81,6 +83,13 @@ export const CHAPTERS = [
   { id: 'dragon_lair', act: 'act4', icon: 'dragon-head', hint: 'lair', check: beatArea('lair') },
   { id: 'first_kings_dragon', act: 'act4', icon: 'dragon-breath', hint: 'wyrm', check: beat('bronze_wyrm') },
   { id: 'ice_and_fire', act: 'act4', icon: 'earth-crack', hint: 'iceFire', check: g => beat('winter_queen')(g) && beat('bronze_wyrm')(g) && areaKills('lair')(g) >= LAIR_KILLS },
+  { id: 'uncrowned_king', act: 'act5', icon: 'crown', hint: 'abyssGates', check: g => g.questDone('abyss_gates') },
+  { id: 'into_the_wound', act: 'act5', icon: 'magic-portal', hint: 'abyss', check: beatArea('abyss') },
+  { id: 'the_maze', act: 'act5', icon: 'minotaur', hint: 'maze', check: g => (g.s.bestiary.kills.minotaur || 0) >= MAZE_KILLS },
+  { id: 'what_they_were', act: 'act5', icon: 'daemon-skull', hint: 'demon', check: beat('demon') },
+  { id: 'the_ancient', act: 'act5', icon: 'dragon-head', hint: 'ancient', check: beat('ancient_dragon') },
+  { id: 'the_bottom', act: 'act5', icon: 'earth-crack', hint: 'bottom', check: g => beat('ancient_dragon')(g) && areaKills('abyss')(g) >= ABYSS_KILLS },
+  { id: 'two_crowns', act: 'act5', icon: 'crowned-skull', hint: 'twoCrowns', check: g => beat('ancient_dragon')(g) && areaKills('abyss')(g) >= ABYSS_KILLS && g.questDone('void_herald') },
 ]
 // Festival chapters: reached with festival points while that festival runs
 const festPts = (id, n) => g => g.activeFestival()?.id === id && (g.festivalState().points || 0) >= n
@@ -112,6 +121,8 @@ export const CHARACTERS = [
   { id: 'captain', icon: 'stone-tower', tint: '#9fb8d0', met: 'northern_watch' },
   { id: 'winter', icon: 'ice-spell-cast', tint: '#8fd0f2', met: 'winter_queen' },
   { id: 'wyrm', icon: 'dragon-breath', tint: '#c9853a', met: 'first_kings_dragon' },
+  { id: 'selene', icon: 'magic-portal', tint: '#b38cff', met: 'uncrowned_king' },
+  { id: 'ancient', icon: 'dragon-head', tint: '#e0602a', met: 'the_ancient' },
 ]
 
 // One memory of a past life comes back with each ascension
@@ -145,7 +156,13 @@ export const RUMORS = [
   { id: 'thaw', when: has('winter_queen') },
   { id: 'dragons', when: all(has('winter_queen'), not(has('dragon_lair'))) },
   { id: 'wyrm', when: has('first_kings_dragon') },
-  { id: 'abyss', when: has('ice_and_fire') },
+  { id: 'abyss', when: all(has('ice_and_fire'), not(has('uncrowned_king'))) },
+  { id: 'selene', when: has('uncrowned_king') },
+  { id: 'maze', when: all(has('into_the_wound'), not(has('the_maze'))) },
+  { id: 'greyRobes', when: has('what_they_were') },
+  { id: 'ancient', when: has('the_ancient') },
+  { id: 'deep', when: has('the_bottom') },
+  { id: 'twoCrowns', when: has('two_crowns') },
   { id: 'astrologer', when: has('sky_watcher') },
   { id: 'weekly', when: g => g.weeklyUnlocked() },
   { id: 'reborn', when: g => (g.s.ascension?.count || 0) > 0 },

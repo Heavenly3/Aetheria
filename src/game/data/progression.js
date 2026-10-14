@@ -196,8 +196,8 @@ export const ACHIEVEMENTS = [
   ...tiers('blooms', [[25, 2000], [250, 25000]], 'butterfly', (G, n) => (G.s.stats.blooms || 0) >= n),
   ...tiers('wraiths', [[10, 3000], [100, 30000]], 'ice-golem', (G, n) => (G.s.stats.wraiths || 0) >= n),
   // The story: every chapter of an act
-  ...['act1', 'act2', 'act3', 'act4'].map((act, i) => ach(`story_${act}`, 'storyAct', ['I', 'II', 'III', 'IV'][i], 'quill-ink',
-    G => CHAPTERS.filter(c => c.act === act).every(c => G.chapterUnlocked(c.id)), [3000, 10000, 30000, 60000][i])),
+  ...['act1', 'act2', 'act3', 'act4', 'act5'].map((act, i) => ach(`story_${act}`, 'storyAct', ['I', 'II', 'III', 'IV', 'V'][i], 'quill-ink',
+    G => CHAPTERS.filter(c => c.act === act).every(c => G.chapterUnlocked(c.id)), [3000, 10000, 30000, 60000, 100000][i])),
   ach('fest_stories', 'festStories', 12, 'quill-ink', G => ['spring', 'summer', 'harvest', 'winter'].every(f => [1, 2, 3].every(i => G.chapterUnlocked(`fest_${f}_${i}`))), 100000),
 ]
 

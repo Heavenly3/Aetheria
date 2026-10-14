@@ -1059,7 +1059,7 @@ export default {
     fromOmen: 'Witness {name} {n}×', fromCreature: 'Defeat {name} {n}×', fromWishes: 'Receive {n} wishes', fromUnknownOmen: 'Hidden in an omen not yet witnessed',
     fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
     titles: {
-      reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", of_frost_and_flame: "of Frost and Flame", of_four_seasons: "of the Four Seasons",
+      reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", shieldbearer: "the Shield-bearer", of_frost_and_flame: "of Frost and Flame", of_four_seasons: "of the Four Seasons",
       guildmaster: "the Guildmaster", master_thief: "the Master Thief", botanist: "the Botanist", deep_angler: "Deep Angler", master_artisan: "Master Artisan", tower_warden: "Tower Warden", innkeeper: "the Innkeeper", dawn_saint: "of the Dawn",
       starborn: 'Starborn', goldcatcher: 'Goldcatcher', blood_moon: 'of the Blood Moon', riftbreaker: 'Riftbreaker', wishbearer: 'Wishbearer', eye_witness: 'Witness of the Eye',
       apprentice: 'the Apprentice', goblin_hunter: 'Goblin Hunter', dragonslayer: 'Dragonslayer', voidwalker: 'Voidwalker', unbound: 'the Unbound',
@@ -1833,6 +1833,12 @@ export default {
       ask: "Any news?",
     },
     rumors: {
+      selene: "Archmage Selene sat in that corner last night. Ordered nothing, paid in silver, and asked about you. Twice.",
+      maze: "A soldier came back from the Abyss swearing the walls down there move. He drank four ales and still would not sit with his back to the door.",
+      greyRobes: "Brother {priest} has not been in for soup all week. They say he spends the nights in the chapel, reading that little book of his over and over.",
+      ancient: "A dragon older than the Crown, and you talked to it? My grandfather would have bought you a drink. I suppose I will have to.",
+      deep: "You smell of somewhere very deep. Sit down. Eat something. Whatever is down there will still be there tomorrow.",
+      twoCrowns: "Two crowns in one throne room, and you in the middle. If you need somewhere to hide afterwards, the cellar door is always open.",
       north: "Morwen sent you north? Then dress warm. Traders who go up to the Frozen Peaks come back quiet, and they never say why.",
       captain: "Captain {captain} of the Northern Watch came down for supplies. Ordered her ale warm. Said she has had enough cold for three lifetimes.",
       thaw: "The river ice broke this morning. First time in my life. Old Hagen sat on the bank and cried like a boy. Whatever you did up there, thank you.",
@@ -1884,7 +1890,7 @@ export default {
       act5: "Act V · The Wound in the World",
       act6: "Act VI · Above the Sky",
     },
-    hints: { peaks: "Defeat a creature in the Frozen Peaks", stillVillage: "Defeat 100 creatures in the Frozen Peaks", winterQueen: "Defeat the Winter Queen in the Frost Keep", coldIron: "Defeat the Winter Queen and reach Smithing level 60", lair: "Defeat a creature in the Dragon's Lair", wyrm: "Defeat the Bronze Wyrm in the Dragon Vault", iceFire: "Defeat the Winter Queen, the Bronze Wyrm and 150 creatures in the Dragon's Lair", festSpring1: "Reach 120 points in Spring Bloom", festSpring2: "Reach 800 points in Spring Bloom", festSpring3: "Reach 2000 points in Spring Bloom", festSummer1: "Reach 120 points in Midsummer Fires", festSummer2: "Reach 800 points in Midsummer Fires", festSummer3: "Reach 2000 points in Midsummer Fires", festHarvest1: "Reach 120 points in the Harvest Festival", festHarvest2: "Reach 800 points in the Harvest Festival", festHarvest3: "Reach 2000 points in the Harvest Festival", festWinter1: "Reach 120 points in Winter's Veil", festWinter2: "Reach 800 points in Winter's Veil", festWinter3: "Reach 2000 points in Winter's Veil",
+    hints: { abyssGates: "Finish the quest “The Gates of the Abyss”", abyss: "Defeat a creature in the Abyss", maze: "Defeat 50 minotaurs", demon: "Defeat an Abyssal Demon", ancient: "Defeat the Ancient Dragon", bottom: "Defeat the Ancient Dragon and 200 creatures in the Abyss", twoCrowns: "Defeat the Ancient Dragon and 200 creatures in the Abyss, and finish “Herald of the Void”", peaks: "Defeat a creature in the Frozen Peaks", stillVillage: "Defeat 100 creatures in the Frozen Peaks", winterQueen: "Defeat the Winter Queen in the Frost Keep", coldIron: "Defeat the Winter Queen and reach Smithing level 60", lair: "Defeat a creature in the Dragon's Lair", wyrm: "Defeat the Bronze Wyrm in the Dragon Vault", iceFire: "Defeat the Winter Queen, the Bronze Wyrm and 150 creatures in the Dragon's Lair", festSpring1: "Reach 120 points in Spring Bloom", festSpring2: "Reach 800 points in Spring Bloom", festSpring3: "Reach 2000 points in Spring Bloom", festSummer1: "Reach 120 points in Midsummer Fires", festSummer2: "Reach 800 points in Midsummer Fires", festSummer3: "Reach 2000 points in Midsummer Fires", festHarvest1: "Reach 120 points in the Harvest Festival", festHarvest2: "Reach 800 points in the Harvest Festival", festHarvest3: "Reach 2000 points in the Harvest Festival", festWinter1: "Reach 120 points in Winter's Veil", festWinter2: "Reach 800 points in Winter's Veil", festWinter3: "Reach 2000 points in Winter's Veil",
       ruins: "Defeat a creature in the Cursed Ruins",
       guild: "Join a guild",
       crypt: "Clear the Forgotten Crypt",
@@ -1900,6 +1906,34 @@ export default {
       naga: "Defeat the Great Naga in the Serpent Temple",
     },
     chapters: {
+      uncrowned_king: {
+        title: "The Uncrowned King",
+        text: "King Edmund receives you in a hall with no throne. He sits on the steps, as tired as people say, and he looks at the two shards in your hands for a long time without touching them.\n\n\"My father told me the Crown would come back one day,\" he says. \"I never believed him. I only wanted to keep the roads safe and the granaries full.\"\n\nBeside him stands a woman in violet robes, her fingers stained with ink and starlight: Selene, the court's archmage. \"I have opened a door into the Abyss,\" she says. \"It was not hard. Something on the other side was already pushing.\"\n\nEdmund stands up. \"Go and see what it wants,\" he says. \"And come back. The realm has lost enough heroes in that meadow.\"",
+      },
+      into_the_wound: {
+        title: "Into the Wound",
+        text: "Beyond Selene's door the world forgets how it is supposed to work. Stairs lead down and up at once. Rain falls sideways from a sky that is also a floor. Your own shadow walks a step behind you, then a step ahead.\n\nAnd everywhere there is light: thin threads of gold running through the black stone like veins, all flowing the same way. Downward.\n\nThe shards in your pack grow warm. Whatever is at the bottom of the Abyss, it is made of the same thing they are.",
+      },
+      the_maze: {
+        title: "The Maze",
+        text: "The minotaurs' maze changes every time you blink, but after the fiftieth beast falls you start to notice something: some walls do not change at all.\n\nThey are covered in scratches. Arrows, tallies, little maps. And names: dozens of them, carved over centuries, all in the same hand.\n\nYour hand. Your name. One of the marks is fresh, as if you made it yesterday. Next to it, someone has written: \"Left at the broken pillar. You always forget.\"\n\nYou go left at the broken pillar. It is the right way.",
+      },
+      what_they_were: {
+        title: "What They Were",
+        text: "The Abyssal Demon falls, and what is left of it is smaller than it should be: a bundle of rotten grey cloth, and a little book with a sun stamped on the cover.\n\nGrey robes. The sun of the Order of the Dawn.\n\nBack in Highdawn, Brother {priest} turns the book over in his hands and goes very pale. \"The first brothers,\" he says. \"When the stars stood still, they followed the falling light into the deep to bring it back. The Order says they became saints.\"\n\nHe opens his own little book, the one he never lets go of, and reads the single line in it again. Then he closes it and does not say anything for a long time.",
+      },
+      the_ancient: {
+        title: "The Ancient",
+        text: "The Ancient Dragon does not fight like a beast. It fights like someone testing whether you are worth a conversation. When it finally lies down, it is almost smiling.\n\n\"I watched the first king steal the stars,\" it says. \"He caught their falling light and forged it into a crown, and the realm shone, and the sky went a little darker every year.\"\n\n\"Your {king} the Tall understood it at last. He did not climb the sky to become a star, little shield-bearer. He climbed to give the light back. But at the top, with the Crown in his hands and the sky opening its eye to take it, he could not let go.\"\n\n\"You tried to make him. You remember that part, don't you? You pulled. It broke.\"",
+      },
+      the_bottom: {
+        title: "The Bottom of the World",
+        text: "At the bottom of the Abyss the gold threads all meet, in a lake of light so still it looks like glass. Floating in the middle is a shard of the Crown, the brightest one yet: the Shard of the Deep.\n\nWhen you pick it up, the lake goes dark, and in the dark something speaks. Not from below. From beyond: from the Void Rift, on the other side of the stone.\n\n\"Shield-bearer.\" The voice is tired and very kind, and it sounds like a king. \"You came. Bring them to me. All of them. I will finish what I started.\"\n\nYou climb back up without remembering the way. Your hands do not stop shaking until you see the sun.",
+      },
+      two_crowns: {
+        title: "Two Crowns",
+        text: "The throne room of Highdawn has no roof, and tonight it has two crowns.\n\nMorwen stands by the throne, crowned with frost. King Edmund stands at the door, crowned with nothing. Selene waits between them with the gate to the Void already open behind her, burning violet.\n\n\"Give them to me,\" says Morwen, \"and my family's Crown will be whole again.\" \"Give them to no one,\" says Edmund, \"and let the sky have its light back.\" And from the gate, faint as a breath, a third voice: \"Bring them to me.\"\n\nThe shards in your pack grow warm, and so does the one inside you. You look at the queen, at the king and at the gate, and for the first time in many lives, you choose.\n\nYou step into the Void.",
+      },
       northern_watch: {
         title: "The Northern Watch",
         text: "North of Highdawn the road climbs into the Frozen Peaks, and the snow begins. It does not stop. The traders say it has not stopped in three hundred years.\n\nKing Edmund's last outpost is a tower of black stone with a fire that never goes out. Its captain meets you at the gate with frost in her eyebrows and a spear she does not lower. \"Captain {captain}, of the Northern Watch. Nobody comes up here on purpose.\"\n\nYou tell her Morwen sent you. The spear comes down very slowly. \"Then you had better come in,\" she says, \"and drink something hot. You will want to be warm for what you are going to see.\"",
@@ -1998,6 +2032,16 @@ export default {
       },
     },
     people: {
+      selene: {
+        name: "Archmage Selene",
+        role: "Archmage of King Edmund's court",
+        desc: "Opened the door to the Abyss and studies the Void beyond it. Ink and starlight on her fingers, and very few questions she will not ask.",
+      },
+      ancient: {
+        name: "The Ancient Dragon",
+        role: "Witness of the Crown",
+        desc: "Saw the Crown forged and saw it break. It knows why {king} climbed the sky, and why the Crown shattered in your hands.",
+      },
       captain: {
         name: "Captain {captain}",
         role: "Captain of the Northern Watch",

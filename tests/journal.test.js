@@ -134,6 +134,32 @@ describe('tavern keeper', () => {
     expect(TITLES.find(x => x.id === 'of_frost_and_flame').ach).toBe('story_act4')
   })
 
+  it('tells the fifth act in the Abyss and ends at the gate of the Void', () => {
+    newHero()
+    const ids = ['uncrowned_king', 'into_the_wound', 'the_maze', 'what_they_were', 'the_ancient', 'the_bottom', 'two_crowns']
+    ids.forEach(id => expect(G.chapterUnlocked(id)).toBe(false))
+    state.quests.abyss_gates = { status: 'done' }
+    state.bestiary.kills.hydra = 1
+    state.bestiary.kills.demon = 1
+    state.bestiary.kills.ancient_dragon = 1
+    G.checkJournal()
+    for (const id of ['uncrowned_king', 'into_the_wound', 'what_they_were', 'the_ancient']) expect(G.chapterUnlocked(id)).toBe(true)
+    for (const id of ['the_maze', 'the_bottom', 'two_crowns']) expect(G.chapterUnlocked(id)).toBe(false)
+    state.bestiary.kills.minotaur = 50
+    state.bestiary.kills.hydra = 149
+    G.checkJournal()
+    expect(G.chapterUnlocked('the_maze')).toBe(true)
+    expect(G.chapterUnlocked('the_bottom')).toBe(true)
+    expect(G.chapterUnlocked('two_crowns')).toBe(false)
+    state.quests.void_herald = { status: 'done' }
+    G.checkJournal()
+    expect(G.chapterUnlocked('two_crowns')).toBe(true)
+    expect(ACTS.find(a => a.id === 'act5').soon).toBeFalsy()
+    for (const id of ['selene', 'ancient']) expect(CHARACTERS.find(c => c.id === id).met).toBeTruthy()
+    expect(ACHIEVEMENTS.find(a => a.id === 'story_act5').check(G)).toBe(true)
+    expect(TITLES.find(x => x.id === 'shieldbearer').ach).toBe('story_act5')
+  })
+
   it('names characters added after a save was made', () => {
     newHero()
     delete state.journal.names.priest
