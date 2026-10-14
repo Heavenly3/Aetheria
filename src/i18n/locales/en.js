@@ -2928,6 +2928,7 @@ export default {
   woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic', elder: "Elder" },
   fish: { sunfish: "Sunfish", tuna: "Tuna", anglerfish: "Anglerfish", shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark', starfin: "Starfin" },
   crops: {
+    aether_lotus: "Aether lotus",
     bloomflower: "Festival bloom",
     moonroot: "Moonroot",
     emberbloom: "Emberbloom",

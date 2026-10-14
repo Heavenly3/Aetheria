@@ -25,6 +25,7 @@ export const HYBRIDS = [
   { id: 'moonroot', parents: ['potato', 'marrentill'] },
   { id: 'emberbloom', parents: ['harralander', 'onion'] },
   { id: 'starpetal', parents: ['ranarr', 'snapdragon'] },
+  { id: 'aether_lotus', parents: ['torstol', 'kwuarm'] },
 ]
 export const HYBRID_CHANCE = 0.12
 export const hybridOf = (a, b) => HYBRIDS.find(h => (h.parents[0] === a && h.parents[1] === b) || (h.parents[0] === b && h.parents[1] === a)) || null
@@ -38,12 +39,12 @@ export const BUILDINGS = {
 }
 export const BUILDING_IDS = Object.keys(BUILDINGS)
 // Flowers that make the bees busier: a hive yields an extra honey while one of them grows
-export const FLOWERS = ['strawberry', 'starpetal', 'sunberry', 'snapdragon']
+export const FLOWERS = ['strawberry', 'starpetal', 'sunberry', 'snapdragon', 'aether_lotus']
 
 // Favourite seasons: the crop yields this much more while it is in season
 export const SEASON_BONUS = 0.25
 export const FAVOURITE_SEASON = {
   potato: 'autumn', flax: 'summer', onion: 'spring', guam: 'spring', tomato: 'summer', marrentill: 'autumn', tarromin: 'winter',
   harralander: 'summer', strawberry: 'summer', ranarr: 'spring', irit: 'autumn', kwuarm: 'winter', snapdragon: 'spring', torstol: 'winter',
-  sunberry: 'summer', moonroot: 'winter', emberbloom: 'autumn', starpetal: 'spring', bloomflower: 'spring',
+  sunberry: 'summer', moonroot: 'winter', emberbloom: 'autumn', starpetal: 'spring', aether_lotus: 'autumn', bloomflower: 'spring',
 }

@@ -2928,6 +2928,7 @@ export default {
   woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia', elder: "saúco" },
   fish: { sunfish: "Pez sol", tuna: "Atún", anglerfish: "Rape", shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón', starfin: "Aleta estelar" },
   crops: {
+    aether_lotus: "Loto etéreo",
     bloomflower: "Flor de festival",
     moonroot: "Raíz lunar",
     emberbloom: "Flor de brasa",

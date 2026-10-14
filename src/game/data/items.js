@@ -163,11 +163,13 @@ export const CROPS = [
   { id: 'emberbloom',  icon: 'fire',         lvl: 30, xp: 210, yield: [2, 4], value: 70,  tint: '#ff7a3a', seedValue: 220, hybrid: true },
   { id: 'sunberry',    icon: 'strawberry',   lvl: 35, xp: 240, yield: [3, 6], value: 60,  tint: '#ffcf3a', seedValue: 200, hybrid: true, food: 18 },
   { id: 'starpetal',   icon: 'clover',       lvl: 60, xp: 520, yield: [1, 3], value: 260, tint: '#c9b0ff', seedValue: 900, hybrid: true },
+  // The rarest hybrid: the finest food the hero can carry
+  { id: 'aether_lotus', icon: 'star-swirl',  lvl: 92, xp: 980, yield: [1, 3], value: 520, tint: '#b8a8ff', seedValue: 2400, hybrid: true, food: 28 },
   // Grown for the spring flower contest; its seeds only come from the festival
   { id: 'bloomflower', icon: 'butterfly',    lvl: 1,  xp: 60,  yield: [1, 3], value: 20,  tint: '#f08fb8', seedValue: 0, festival: true },
 ]
 // Real-time growth per plot (seconds)
-const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700, moonroot: 900, emberbloom: 1000, sunberry: 1200, starpetal: 2400, bloomflower: 480 }
+const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700, moonroot: 900, emberbloom: 1000, sunberry: 1200, starpetal: 2400, aether_lotus: 3600, bloomflower: 480 }
 CROPS.forEach(c => {
   c.grow = GROW[c.id]
   // Higher crops grow slowly, so their harvest pays more per point of base XP

@@ -17,6 +17,7 @@ describe('farm', () => {
     expect(findAction('herblore', 'supercompost').in.moonroot).toBe(1)
     expect(findAction('cooking', 'ember_stew').in.emberbloom).toBe(1)
     expect(findAction('herblore', 'wisdom_elixir').in.starpetal).toBe(2)
+    expect(ITEMS.aether_lotus.heal).toBeGreaterThan(ITEMS.starfin.heal)
   })
 
   it('works compost into a growing plot for a bigger harvest', () => {
