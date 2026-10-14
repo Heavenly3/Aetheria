@@ -24,6 +24,7 @@ import { journal, journalState } from './journal.js'
 import { fighting, fightingState } from './fighting.js'
 import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
+import { crown, crownState } from './crown.js'
 import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
@@ -121,6 +122,7 @@ export function newState(profile = {}) {
     ...fightingState(),
     ...guildsState(),
     ...codexState(),
+    ...crownState(),
     ...churchState(),
     ...thiefState(),
     ...festivalsState(),
@@ -420,11 +422,12 @@ export const G = {
     push('streak', this.streakMods(key))
     push('guild', this.guildMods(key))
     push('codex', this.codexMods(key))
+    push('crown', this.crownMods(key))
     return out
   },
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -1514,6 +1517,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown)
 
 export { SKILLS, ITEMS }

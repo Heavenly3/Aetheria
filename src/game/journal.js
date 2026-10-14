@@ -41,6 +41,7 @@ export const journal = {
   // Called on a timer; unlocks every chapter whose moment has come. `quiet` (on load) skips the fanfare,
   // so a save from before the journal does not announce everything at once
   checkJournal(quiet = false) {
+    this.checkCrown?.(quiet)
     const j = this.ensureJournal()
     for (const c of CHAPTERS) {
       if (j.chapters[c.id]) continue

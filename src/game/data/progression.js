@@ -1,5 +1,6 @@
 import { named } from '../../i18n/bind.js'
 import { CHAPTERS } from './journal.js'
+import { ENDINGS } from './crown.js'
 import { t, intlLocale } from '../../i18n/index.js'
 
 /* ---------------- Quests ---------------- */
@@ -196,8 +197,11 @@ export const ACHIEVEMENTS = [
   ...tiers('blooms', [[25, 2000], [250, 25000]], 'butterfly', (G, n) => (G.s.stats.blooms || 0) >= n),
   ...tiers('wraiths', [[10, 3000], [100, 30000]], 'ice-golem', (G, n) => (G.s.stats.wraiths || 0) >= n),
   // The story: every chapter of an act
-  ...['act1', 'act2', 'act3', 'act4', 'act5'].map((act, i) => ach(`story_${act}`, 'storyAct', ['I', 'II', 'III', 'IV', 'V'][i], 'quill-ink',
-    G => CHAPTERS.filter(c => c.act === act).every(c => G.chapterUnlocked(c.id)), [3000, 10000, 30000, 60000, 100000][i])),
+  ...['act1', 'act2', 'act3', 'act4', 'act5', 'act6'].map((act, i) => ach(`story_${act}`, 'storyAct', ['I', 'II', 'III', 'IV', 'V', 'VI'][i], 'quill-ink',
+    G => CHAPTERS.filter(c => c.act === act && !c.ending).every(c => G.chapterUnlocked(c.id)), [3000, 10000, 30000, 60000, 100000, 150000][i])),
+  // The endings of the story, one per life
+  ...ENDINGS.map(e => ach(`ending_${e.id}`, 'ending' + e.id[0].toUpperCase() + e.id.slice(1), 1, e.icon, G => !!G.s.legacy?.endings?.[e.id], 100000)),
+  ach('all_endings', 'allEndings', ENDINGS.length, 'crown', G => ENDINGS.every(e => G.s.legacy?.endings?.[e.id]), 250000),
   ach('fest_stories', 'festStories', 12, 'quill-ink', G => ['spring', 'summer', 'harvest', 'winter'].every(f => [1, 2, 3].every(i => G.chapterUnlocked(`fest_${f}_${i}`))), 100000),
 ]
 

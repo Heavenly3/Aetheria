@@ -12,6 +12,7 @@ export default {
   time: { dh: '{d}d {h}h', hm: '{h}h {m}m', ms: '{m}m {s}s', s: '{s}s', hours: '{n} h' },
 
   nav: {
+    crown: "Crown",
     guilds: 'Guilds',
     journal: 'Journal', hero: 'Hero', inventory: 'Inventory', combat: 'Combat', slayer: 'Slayer', tower: 'Endless Tower', quests: 'Quests',
     achievements: 'Achievements', stats: 'Statistics', tavern: 'Tavern', home: 'Home', church: 'Church', shop: 'Shop',
@@ -269,6 +270,8 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    shard: "Found a shard of the Crown: {shard}.",
+    ending: "Chose the ending: {ending}.",
     retreat: "Retreated from {monster} before falling.",
     jailed: "You were caught thieving and thrown in jail.",
     heist: "You pulled off {heist} for {gold} gold.",
@@ -572,6 +575,10 @@ export default {
     blooms: { name: "Bloom Grower {n}", desc: "Grow {n} festival blooms." },
     wraiths: { name: "Frostbane {n}", desc: "Defeat the Frost Wraith {n} times." },
     storyAct: { name: "Chronicle of Act {n}", desc: "Unlock every chapter of Act {n} in the journal." },
+    endingQueen: { name: "The Frost Crown", desc: "Give the Crown to Morwen." },
+    endingSky: { name: "The Returned Light", desc: "Give the light back to the sky." },
+    endingKing: { name: "The Last Star", desc: "Give the Crown to the last king." },
+    allEndings: { name: "Every Ending", desc: "Choose all three endings, one in each life." },
     festStories: { name: "Tales of Four Seasons", desc: "Read every festival tale in the journal." },
     guildJoin: { name: "One of Us", desc: "Join a guild." },
     guildVeteran: { name: "Guild Veteran", desc: "Reach the rank of Veteran in a guild." },
@@ -851,6 +858,10 @@ export default {
       system: "Game",
     },
     cues: {
+      shard: {
+        name: "Crown shard",
+        desc: "You find a shard of the Crown.",
+      },
       levelUp: {
         name: "Skill level up",
         desc: "A skill reaches a new level.",
@@ -1059,7 +1070,7 @@ export default {
     fromOmen: 'Witness {name} {n}×', fromCreature: 'Defeat {name} {n}×', fromWishes: 'Receive {n} wishes', fromUnknownOmen: 'Hidden in an omen not yet witnessed',
     fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
     titles: {
-      reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", shieldbearer: "the Shield-bearer", of_frost_and_flame: "of Frost and Flame", of_four_seasons: "of the Four Seasons",
+      reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", frost_crowned: "of the Frost Crown", lightbringer: "the Lightbringer", kings_shield: "the King's Shield", one_who_remembers: "the One Who Remembers", shieldbearer: "the Shield-bearer", of_frost_and_flame: "of Frost and Flame", of_four_seasons: "of the Four Seasons",
       guildmaster: "the Guildmaster", master_thief: "the Master Thief", botanist: "the Botanist", deep_angler: "Deep Angler", master_artisan: "Master Artisan", tower_warden: "Tower Warden", innkeeper: "the Innkeeper", dawn_saint: "of the Dawn",
       starborn: 'Starborn', goldcatcher: 'Goldcatcher', blood_moon: 'of the Blood Moon', riftbreaker: 'Riftbreaker', wishbearer: 'Wishbearer', eye_witness: 'Witness of the Eye',
       apprentice: 'the Apprentice', goblin_hunter: 'Goblin Hunter', dragonslayer: 'Dragonslayer', voidwalker: 'Voidwalker', unbound: 'the Unbound',
@@ -1131,6 +1142,7 @@ export default {
     },
     // One guide per screen, shown by the "?" next to the screen title
     screens: {
+      crown: { title: "The Aether Crown", body: "The seven shards of the Crown. Find them by following the story, set up to three in the circlet for their bonus and powers, and once the Crown is whole, choose whom it goes to. Shards are lost when you ascend; endings are kept." },
       guilds: { title: 'Guilds', body: 'A dozen guilds are founded with every new world, each with its own leader, members, tier and the roles it takes. Apply to one that takes your role and whose requirements you meet, pay its fee and pass the entry trial: a task and a puzzle. As a member you take contracts that renew every four hours for guild marks, gold and reputation. Reputation raises your rank, a higher rank makes the guild perk stronger and opens more of its shop. You can only belong to one guild at a time, and leaving loses the reputation earned there.' },
       journal: { title: 'Journal', body: 'The story of Aetheria, told in short chapters that unlock as you explore, defeat bosses and witness omens. Open a page to read it, and come back to it whenever you like. The journal is kept when you ascend, and each ascension brings back a memory of a past life.' },
       hero: { title: 'Hero', body: 'Your hero at a glance: gear, tools, skills and recent events. Spend attribute and talent points in their tabs as you level up, and click a worn item to take it off.' },
@@ -1812,6 +1824,129 @@ export default {
     table: "Guild ranking",
   },
 
+  crown: {
+    title: "The Aether Crown",
+    intro: "The seven shards of the Crown, as you find them in this life. Up to three sit in the circlet and give their bonus; the Heart always counts once it wakes. Ascending loses the shards, but the endings you choose stay with you in every life.",
+    count: "{n} / {total} shards",
+    circlet: "The circlet",
+    circletHint: "Set up to three shards. Only set shards give their bonus and can use their power.",
+    socketEmpty: "Empty socket",
+    heart: "Heart",
+    heartAsleep: "Still asleep",
+    notFound: "Not found yet",
+    where: "Where: {hint}",
+    passive: "While set",
+    power: "Power",
+    setToUse: "Set it in the circlet to use its power",
+    use: "Call on it",
+    readyIn: "Ready in {time}",
+    activeFor: "Active · {time}",
+    setIn: "Set",
+    takeOut: "Take out",
+    found: "Shard of the Crown found: {shard}!",
+    foundPlain: "A shard of the Crown: {shard}",
+    foundHint: "See it in the Crown screen.",
+    powerUsed: "{power}: called on",
+    choiceTitle: "The choice",
+    choiceIntro: "The Crown is whole. Give it to someone, or to no one. The story of this life ends here, and the ending's bonus stays with you in every later life.",
+    choiceLocked: "Gather all seven shards in one life and defeat the Aether Sovereign to choose.",
+    confirmTitle: "Choose this ending?",
+    confirmMessage: "{ending}: {desc} Its bonus stays with you in every later life. In this life the choice cannot be undone.",
+    confirm: "Choose",
+    chosenNow: "Chosen in this life",
+    chosenBefore: "Chosen in an earlier life",
+    endingToast: "Ending: {ending}",
+    legacyTitle: "Legacy",
+    legacyIntro: "Bonuses of the endings you have chosen, kept in every life.",
+    legacyNone: "No ending chosen yet. Every life you can choose another.",
+    shards: {
+      forge: {
+        name: "Shard of the Forge",
+        desc: "Kept in secret by the Anvil Guild. It remembers the hammer.",
+      },
+      sap: {
+        name: "Shard of Sap",
+        desc: "The heart of life itself, from the Serpent Temple. Everything near it grows.",
+      },
+      sea: {
+        name: "Shard of the Sea",
+        desc: "Taken from the deep with the Kraken. It smells of salt and storms.",
+      },
+      winter: {
+        name: "Shard of Winter",
+        desc: "The Winter Queen's gift. Cold enough to break iron.",
+      },
+      flame: {
+        name: "Shard of Flame",
+        desc: "From the Bronze Wyrm's hoard. Too bright to look at.",
+      },
+      deep: {
+        name: "Shard of the Deep",
+        desc: "Found at the bottom of the world, where the falling light gathered.",
+      },
+      heart: {
+        name: "The Heart",
+        desc: "The shard that fell into you when the Crown broke. It wakes when you face the king.",
+      },
+    },
+    hints: {
+      forge: "Reach Smithing level 40",
+      sap: "Defeat the Great Naga",
+      sea: "Defeat the Kraken",
+      winter: "Defeat the Winter Queen",
+      flame: "Defeat the Bronze Wyrm",
+      deep: "Defeat the Ancient Dragon and 200 creatures in the Abyss in this life",
+      heart: "Defeat the Void Emperor",
+    },
+    powers: {
+      temper: {
+        name: "Tempering",
+        desc: "30 min: much better craft quality and faster artisan work.",
+      },
+      bloom: {
+        name: "Bloom",
+        desc: "Every growing farm plot is ready at once.",
+      },
+      tide: {
+        name: "High Tide",
+        desc: "30 min: faster fishing and finer catches.",
+      },
+      ward: {
+        name: "Ward of Winter",
+        desc: "20 min: dodge more and take less damage.",
+      },
+      wildfire: {
+        name: "Wildfire",
+        desc: "20 min: +25% damage and more critical hits.",
+      },
+      echo: {
+        name: "Echo of Lives",
+        desc: "30 min: +50% XP.",
+      },
+      awaken: {
+        name: "Awakening",
+        desc: "30 min: everything faster and +20% XP.",
+      },
+    },
+    endings: {
+      queen: {
+        name: "The Frost Crown",
+        action: "Give it to Morwen",
+        desc: "Her family's Crown whole again: the dead of Highdawn rest at last.",
+      },
+      sky: {
+        name: "The Returned Light",
+        action: "Give the light back",
+        desc: "Let the Crown go: the stars return to the realm.",
+      },
+      king: {
+        name: "The Last Star",
+        action: "Give it to {king}",
+        desc: "Let the king finish what he started, and become a star.",
+      },
+    },
+  },
+
   journal: {
     noteBy: "{astrologer}'s note",
     omenNotes: {
@@ -1833,6 +1968,10 @@ export default {
       ask: "Any news?",
     },
     rumors: {
+      void: "Selene came back through the gate alone. She asked for a glass of water and drank it standing up, staring at the ceiling as if it might open.",
+      endingQueen: "The bell in Highdawn rang once last night, very softly. My grandmother always said that was how it rang for weddings.",
+      endingSky: "Have you seen the stars? I have lived in Albor all my life and I never knew there were so many. Nobody is drinking tonight. Everyone is outside.",
+      endingKing: "That new star, right above the meadows. The kindest star I have ever seen. Do not laugh. I know what I am saying.",
       selene: "Archmage Selene sat in that corner last night. Ordered nothing, paid in silver, and asked about you. Twice.",
       maze: "A soldier came back from the Abyss swearing the walls down there move. He drank four ales and still would not sit with his back to the door.",
       greyRobes: "Brother {priest} has not been in for soup all week. They say he spends the nights in the chapel, reading that little book of his over and over.",
@@ -1890,7 +2029,7 @@ export default {
       act5: "Act V · The Wound in the World",
       act6: "Act VI · Above the Sky",
     },
-    hints: { abyssGates: "Finish the quest “The Gates of the Abyss”", abyss: "Defeat a creature in the Abyss", maze: "Defeat 50 minotaurs", demon: "Defeat an Abyssal Demon", ancient: "Defeat the Ancient Dragon", bottom: "Defeat the Ancient Dragon and 200 creatures in the Abyss", twoCrowns: "Defeat the Ancient Dragon and 200 creatures in the Abyss, and finish “Herald of the Void”", peaks: "Defeat a creature in the Frozen Peaks", stillVillage: "Defeat 100 creatures in the Frozen Peaks", winterQueen: "Defeat the Winter Queen in the Frost Keep", coldIron: "Defeat the Winter Queen and reach Smithing level 60", lair: "Defeat a creature in the Dragon's Lair", wyrm: "Defeat the Bronze Wyrm in the Dragon Vault", iceFire: "Defeat the Winter Queen, the Bronze Wyrm and 150 creatures in the Dragon's Lair", festSpring1: "Reach 120 points in Spring Bloom", festSpring2: "Reach 800 points in Spring Bloom", festSpring3: "Reach 2000 points in Spring Bloom", festSummer1: "Reach 120 points in Midsummer Fires", festSummer2: "Reach 800 points in Midsummer Fires", festSummer3: "Reach 2000 points in Midsummer Fires", festHarvest1: "Reach 120 points in the Harvest Festival", festHarvest2: "Reach 800 points in the Harvest Festival", festHarvest3: "Reach 2000 points in the Harvest Festival", festWinter1: "Reach 120 points in Winter's Veil", festWinter2: "Reach 800 points in Winter's Veil", festWinter3: "Reach 2000 points in Winter's Veil",
+    hints: { void: "Defeat a creature in the Void Rift", warden: "Defeat the Rift Warden in the Void Sanctum", emperor: "Defeat the Void Emperor", spire: "Defeat a creature in the Celestial Spire", sovereign: "Defeat the Aether Sovereign", crownWhole: "Gather all seven shards of the Crown in one life", endingQueen: "Give the Crown to Morwen", endingSky: "Give the light back to the sky", endingKing: "Give the Crown to the last king", abyssGates: "Finish the quest “The Gates of the Abyss”", abyss: "Defeat a creature in the Abyss", maze: "Defeat 50 minotaurs", demon: "Defeat an Abyssal Demon", ancient: "Defeat the Ancient Dragon", bottom: "Defeat the Ancient Dragon and 200 creatures in the Abyss", twoCrowns: "Defeat the Ancient Dragon and 200 creatures in the Abyss, and finish “Herald of the Void”", peaks: "Defeat a creature in the Frozen Peaks", stillVillage: "Defeat 100 creatures in the Frozen Peaks", winterQueen: "Defeat the Winter Queen in the Frost Keep", coldIron: "Defeat the Winter Queen and reach Smithing level 60", lair: "Defeat a creature in the Dragon's Lair", wyrm: "Defeat the Bronze Wyrm in the Dragon Vault", iceFire: "Defeat the Winter Queen, the Bronze Wyrm and 150 creatures in the Dragon's Lair", festSpring1: "Reach 120 points in Spring Bloom", festSpring2: "Reach 800 points in Spring Bloom", festSpring3: "Reach 2000 points in Spring Bloom", festSummer1: "Reach 120 points in Midsummer Fires", festSummer2: "Reach 800 points in Midsummer Fires", festSummer3: "Reach 2000 points in Midsummer Fires", festHarvest1: "Reach 120 points in the Harvest Festival", festHarvest2: "Reach 800 points in the Harvest Festival", festHarvest3: "Reach 2000 points in the Harvest Festival", festWinter1: "Reach 120 points in Winter's Veil", festWinter2: "Reach 800 points in Winter's Veil", festWinter3: "Reach 2000 points in Winter's Veil",
       ruins: "Defeat a creature in the Cursed Ruins",
       guild: "Join a guild",
       crypt: "Clear the Forgotten Crypt",
@@ -1906,6 +2045,42 @@ export default {
       naga: "Defeat the Great Naga in the Serpent Temple",
     },
     chapters: {
+      beyond_the_gate: {
+        title: "Beyond the Gate",
+        text: "Selene's gate closes behind you with a sound like a held breath let go.\n\nThe Void Rift is not dark. It is full of stars, but they are lying on the ground: cold, cracked, the size of houses and the size of pebbles, every one of them still glowing faintly, like embers someone forgot to put out.\n\nThey whisper as you pass. Not words: names. The names of everyone who ever looked up at the sky and made a wish.\n\nFar above, where the sky should be, there is only one light left. It is not a star. It is watching.",
+      },
+      the_warden: {
+        title: "The Warden",
+        text: "The Rift Warden falls to one knee, and the void that made its body pours away like sand. Underneath there is a man in grey robes, very old, with the sun of the Order stitched over his heart.\n\n\"I was the first brother to follow the light down,\" he says. \"The others forgot themselves. I chose not to. Someone had to keep the gate.\"\n\n\"He is behind me. The king. If he gets the shards he will climb again, and I do not know whether this time he will let go.\" He looks at you for a long moment. \"Then again, you were there last time. You decide. You always were the only one who could.\"\n\nHe steps aside.",
+      },
+      the_emperor: {
+        title: "The Void Emperor",
+        text: "The Void Emperor wears {king}'s face, and when the fight is over he does not hide it anymore.\n\nHe is not a monster. He is a tall, tired man made of night, with stars caught in his beard, and he is crying. \"Three hundred years,\" he says. \"I only wanted to keep the light. Just a little longer. Just enough for the realm.\"\n\nThen something in your chest answers him. Warm and bright, as if it had been waiting all your lives for this moment: the seventh shard, the one that fell into you when the Crown broke. The Heart.\n\n{king} looks at the light shining through your shirt and smiles for the first time. \"You kept it safe,\" he says. \"Of course you did.\"",
+      },
+      the_spire: {
+        title: "The Spire",
+        text: "Above the Void, the Celestial Spire climbs into what used to be the sky. Its stairs are made of light, and every step hums a note.\n\nThe astral golems that carried the Crown up these stairs are still walking them, up and down, up and down, carrying nothing. The seraphs that guarded the top lie across the steps like broken statues.\n\nThis is the staircase from your first memory. You know without counting that there are nine hundred and ninety-nine steps, and that the last one is cracked.",
+      },
+      the_sovereign: {
+        title: "The First King",
+        text: "At the top of the Spire, on a throne of pure light, sits the Aether Sovereign. When it falls, its crown of light flickers out, and the face beneath it is young, and proud, and terribly sad.\n\n\"I am the first king,\" he says. \"Morwen's brother. I caught the falling stars and forged their light into a crown, and when I died the sky took me up to guard what I had stolen.\"\n\n\"Every king after me wore my theft, and every one of them made the sky a little darker. And now you stand here, shield-bearer, with my Crown almost whole.\"\n\n\"Make it whole. Then decide who wears it, or whether anyone should. I never could decide. That was always the trouble.\"",
+      },
+      the_crown_whole: {
+        title: "The Crown Made Whole",
+        text: "Seven shards in one life. Forge and sap, sea and winter, flame and deep, and the heart that beat inside you all along.\n\nWhen the last one clicks into the circlet, the Crown does not glow. It goes quiet, the way a room goes quiet when everyone in it turns to look at you.\n\nMorwen wants it for her family. Edmund wants it for no one, and the sky wants its light back. {king} wants to finish what he started. All of them are waiting.\n\nThe Crown is in your hands. Choose.",
+      },
+      ending_queen: {
+        title: "The Frost Crown",
+        text: "You give the Crown to Morwen. She holds it for a long time before she puts it on, and when she does, the frost on her brow melts away.\n\nIn Highdawn the bell rings once, softly, and the knights at the gates lie down at last. \"Thank you,\" Morwen says. \"They waited so long.\" For the first time in a thousand years she looks her age, and she looks at peace.\n\nThe sky stays dim. The realm keeps its light, and gains a queen. And somewhere in the Dawn Meadows, the grass waits for you again.",
+      },
+      ending_sky: {
+        title: "The Returned Light",
+        text: "You climb to the top of the Spire and lift the Crown to the sky, and this time, you let go.\n\nThe Crown comes apart into light and rises, and the one eye in the sky closes, slowly, the way you close your eyes when something you lost is finally given back. That night the stars come out over the whole realm, more than anyone alive has ever seen.\n\nEdmund plants an apple tree in the square of Highdawn. \"Let it grow without magic,\" he says. \"We will manage.\" And somewhere in the Dawn Meadows, the grass waits for you again.",
+      },
+      ending_king: {
+        title: "The Last Star",
+        text: "You give the Crown to {king} the Tall.\n\nHe holds it the way he must have held it three hundred years ago, at the top of the sky, afraid to let go. Then he looks at you, laughs, and climbs.\n\nHe does not stop this time. At the top he opens his hands, and the Crown and the king rise together, and a new star appears above the realm, bright and steady, right where the eye used to be.\n\n{keeper} says it is the kindest star he has ever seen. And somewhere in the Dawn Meadows, the grass waits for you again. But this time, you will remember.",
+      },
       uncrowned_king: {
         title: "The Uncrowned King",
         text: "King Edmund receives you in a hall with no throne. He sits on the steps, as tired as people say, and he looks at the two shards in your hands for a long time without touching them.\n\n\"My father told me the Crown would come back one day,\" he says. \"I never believed him. I only wanted to keep the roads safe and the granaries full.\"\n\nBeside him stands a woman in violet robes, her fingers stained with ink and starlight: Selene, the court's archmage. \"I have opened a door into the Abyss,\" she says. \"It was not hard. Something on the other side was already pushing.\"\n\nEdmund stands up. \"Go and see what it wants,\" he says. \"And come back. The realm has lost enough heroes in that meadow.\"",
@@ -2032,6 +2207,16 @@ export default {
       },
     },
     people: {
+      warden: {
+        name: "The Rift Warden",
+        role: "The first brother of the Order",
+        desc: "The only one of the first brothers who chose not to forget himself. He kept the gate of the Void for three hundred years.",
+      },
+      firstKing: {
+        name: "The First King",
+        role: "Morwen's brother",
+        desc: "Forged the Aether Crown from stolen starlight. The sky took him up to guard what he had stolen.",
+      },
       selene: {
         name: "Archmage Selene",
         role: "Archmage of King Edmund's court",

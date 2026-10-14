@@ -55,7 +55,7 @@ export const ACTS = [
   { id: 'act3', icon: 'crowned-skull' },
   { id: 'act4', icon: 'ice-spell-cast' },
   { id: 'act5', icon: 'vortex' },
-  { id: 'act6', icon: 'sun', soon: true },
+  { id: 'act6', icon: 'sun' },
   // Stories told only during the big festivals, one year after another
   { id: 'festivals', icon: 'laurel-crown' },
 ]
@@ -90,6 +90,16 @@ export const CHAPTERS = [
   { id: 'the_ancient', act: 'act5', icon: 'dragon-head', hint: 'ancient', check: beat('ancient_dragon') },
   { id: 'the_bottom', act: 'act5', icon: 'earth-crack', hint: 'bottom', check: g => beat('ancient_dragon')(g) && areaKills('abyss')(g) >= ABYSS_KILLS },
   { id: 'two_crowns', act: 'act5', icon: 'crowned-skull', hint: 'twoCrowns', check: g => beat('ancient_dragon')(g) && areaKills('abyss')(g) >= ABYSS_KILLS && g.questDone('void_herald') },
+  { id: 'beyond_the_gate', act: 'act6', icon: 'magic-portal', hint: 'void', check: beatArea('void') },
+  { id: 'the_warden', act: 'act6', icon: 'tentacles-skull', hint: 'warden', check: beat('rift_warden') },
+  { id: 'the_emperor', act: 'act6', icon: 'glass-heart', hint: 'emperor', check: beat('void_emperor') },
+  { id: 'the_spire', act: 'act6', icon: 'stone-tower', hint: 'spire', check: beatArea('celestial') },
+  { id: 'the_sovereign', act: 'act6', icon: 'sun', hint: 'sovereign', check: beat('aether_sovereign') },
+  { id: 'the_crown_whole', act: 'act6', icon: 'crown', hint: 'crownWhole', check: g => g.crownWhole() },
+  // The three endings: one is chosen in each life, and every one chosen stays
+  { id: 'ending_queen', act: 'act6', icon: 'crowned-skull', hint: 'endingQueen', ending: true, check: g => !!g.s.legacy?.endings?.queen },
+  { id: 'ending_sky', act: 'act6', icon: 'sun', hint: 'endingSky', ending: true, check: g => !!g.s.legacy?.endings?.sky },
+  { id: 'ending_king', act: 'act6', icon: 'crown', hint: 'endingKing', ending: true, check: g => !!g.s.legacy?.endings?.king },
 ]
 // Festival chapters: reached with festival points while that festival runs
 const festPts = (id, n) => g => g.activeFestival()?.id === id && (g.festivalState().points || 0) >= n
@@ -123,6 +133,8 @@ export const CHARACTERS = [
   { id: 'wyrm', icon: 'dragon-breath', tint: '#c9853a', met: 'first_kings_dragon' },
   { id: 'selene', icon: 'magic-portal', tint: '#b38cff', met: 'uncrowned_king' },
   { id: 'ancient', icon: 'dragon-head', tint: '#e0602a', met: 'the_ancient' },
+  { id: 'warden', icon: 'tentacles-skull', tint: '#9fb8d0', met: 'the_warden' },
+  { id: 'firstKing', icon: 'sun', tint: '#f6dc9a', met: 'the_sovereign' },
 ]
 
 // One memory of a past life comes back with each ascension
@@ -162,7 +174,11 @@ export const RUMORS = [
   { id: 'greyRobes', when: has('what_they_were') },
   { id: 'ancient', when: has('the_ancient') },
   { id: 'deep', when: has('the_bottom') },
-  { id: 'twoCrowns', when: has('two_crowns') },
+  { id: 'twoCrowns', when: all(has('two_crowns'), not(has('beyond_the_gate'))) },
+  { id: 'void', when: all(has('beyond_the_gate'), not(has('the_crown_whole'))) },
+  { id: 'endingQueen', when: has('ending_queen') },
+  { id: 'endingSky', when: has('ending_sky') },
+  { id: 'endingKing', when: has('ending_king') },
   { id: 'astrologer', when: has('sky_watcher') },
   { id: 'weekly', when: g => g.weeklyUnlocked() },
   { id: 'reborn', when: g => (g.s.ascension?.count || 0) > 0 },

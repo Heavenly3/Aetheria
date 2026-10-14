@@ -19,6 +19,7 @@ export const CUES = [
   cue('chapter', 'progress', 'quest', { prio: 'high', stinger: 'chapter' }),
   cue('dailyStreak', 'progress', 'quest'),
   cue('guildRank', 'progress', 'level'),
+  cue('shard', 'progress', 'rare', { prio: 'high', bg: true, stinger: 'chapter' }),
   cue('rareDrop', 'loot', 'rare', { gap: 400, group: true }),
   cue('masterwork', 'loot', 'rare'),
   cue('hybrid', 'loot', 'rare'),

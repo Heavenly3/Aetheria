@@ -14,6 +14,7 @@ import { BESTIARY } from '../game/data/bestiary.js'
 import { SET_MAP } from '../game/data/sets.js'
 import { WEEKLY_MAP } from '../game/data/weekly.js'
 import { CHAPTER_MAP } from '../game/data/journal.js'
+import { SHARD_MAP, ENDING_MAP } from '../game/data/crown.js'
 import { G } from '../game/engine.js'
 
 const byId = list => id => list.find(x => x.id === id)?.name ?? id
@@ -48,6 +49,8 @@ registerNames('guardian', id => t(`tower.guardians.${id}`))
 registerNames('codexPage', id => t(`inventory.cats.${id}`))
 registerNames('guildRank', id => t(`guilds.ranks.${id}`))
 registerNames('chapter', id => (CHAPTER_MAP[id] ? t(`journal.chapters.${id}.title`) : id))
+registerNames('shard', id => (SHARD_MAP[id] ? t(`crown.shards.${id}.name`) : id))
+registerNames('ending', id => (ENDING_MAP[id] ? t(`crown.endings.${id}.name`) : id))
 registerNames('beasts', byId(BESTIARY))
 registerNames('set', id => SET_MAP[id]?.name ?? id)
 registerNames('slot', id => SLOTS[id]?.name ?? id)

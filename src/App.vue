@@ -17,6 +17,7 @@ import { ITEMS } from './game/data/items.js'
 import { ROLES, DIFFICULTIES } from './game/data/character.js'
 import { fmt, fmtDec, fmtTime, fmtClock } from './game/format.js'
 import { cue, notify } from './game/sound.js'
+import { SHARDS } from './game/data/crown.js'
 import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaFor, setCaptionHandler } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
 import { tm } from './i18n/index.js'
@@ -107,6 +108,7 @@ const menuItems = computed(() => [
   { label: t('heroMenu.mainMenu'), icon: 'pi pi-sign-out', command: () => exitToTitle() },
 ])
 
+const SHARD_ICON = Object.fromEntries(SHARDS.map(s => [s.id, s.icon]))
 // Game messages that are alerts of their own
 const NOTIFY_CUE = { 'notify.unpaid': 'unpaid', 'notify.queueDone': 'queueDone' }
 const SEVERITY = { warn: 'warn', success: 'success', error: 'error', rare: 'secondary', info: 'info' }
@@ -132,6 +134,9 @@ onMounted(() => {
   on('guardian', e => { cue('guardian'); push('stone-tower', t('toast.guardian', { name: t(`tower.guardians.${e.id}`) }), 'rare', 6000) })
   on('hybrid', e => { cue('hybrid'); push('sprout', t('toast.hybrid', { name: t(`crops.${e.id}`) }), 'rare', 7000) })
   on('jailed', () => { cue('jailed'); push('padlock', t('toast.jailed'), 'warn', 6000) })
+  on('shard', s => { cue('shard', { notify: [t('crown.foundPlain', { shard: t(`crown.shards.${s.id}.name`) }), t('crown.foundHint')] }); push(s.icon, t('crown.found', { shard: t(`crown.shards.${s.id}.name`) }), 'rare', 8000) })
+  on('shardPower', e => { cue('quest'); push(SHARD_ICON[e.id] || 'crown', t('crown.powerUsed', { power: t(`crown.powers.${e.power}.name`) }), 'success', 5000) })
+  on('ending', e => { cue('chapter'); push(e.icon, t('crown.endingToast', { ending: t(`crown.endings.${e.id}.name`) }), 'rare', 9000) })
   on('chapter', c => { cue('chapter'); push(c.icon, t('toast.chapter', { name: t(`journal.chapters.${c.id}.title`) }), 'rare', 6500) })
   on('quest', q => { cue('quest'); push(q.icon, t('toast.quest', { name: q.name }), 'success', 5500) })
   on('pet', p => { cue('pet', { notify: [t('toast.petPlain', { name: p.name }), p.desc] }); push(p.icon, t('toast.pet', { name: p.name }), 'rare', 8000) })

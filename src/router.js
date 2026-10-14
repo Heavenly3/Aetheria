@@ -16,6 +16,7 @@ const routes = [
   { path: '/bestiary', name: 'bestiary', component: () => import('./views/BestiaryView.vue'), meta: { titleKey: 'nav.bestiary' } },
   { path: '/weekly', name: 'weekly', component: () => import('./views/WeeklyView.vue'), meta: { titleKey: 'nav.weekly' } },
   { path: '/journal', name: 'journal', component: () => import('./views/JournalView.vue'), meta: { titleKey: 'nav.journal' } },
+  { path: '/crown', name: 'crown', component: () => import('./views/CrownView.vue'), meta: { titleKey: 'nav.crown' } },
   { path: '/omens', name: 'omens', component: () => import('./views/OmensView.vue'), meta: { titleKey: 'nav.omens' } },
   // Festivals are switched off for now (src/game/features.js); the screen sends players back to the hero
   { path: '/festival', name: 'festival', component: () => import('./views/FestivalView.vue'), meta: { titleKey: 'nav.festival' }, beforeEnter: () => (FEATURES.festivals ? true : '/') },

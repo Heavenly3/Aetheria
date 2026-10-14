@@ -31,6 +31,7 @@ const sections = computed(() => [
   ] },
   { id: 'progress', key: 'nav.groups.progress', items: [
     { to: '/journal', icon: 'quill-ink', key: 'nav.journal', badge: G.journalUnread() || null },
+    G.shardsFound() > 0 && { to: '/crown', icon: 'crown', key: 'nav.crown', badge: G.canChooseEnding() ? '!' : null },
     { to: '/quests', icon: 'scroll-unfurled', key: 'nav.quests', badge: QUESTS.filter(q => G.questReady(q)).length + G.tasksReady() || null },
     { to: '/achievements', icon: 'trophy-cup', key: 'nav.achievements' },
     { to: '/ascension', icon: 'ankh', key: 'nav.ascension', badge: G.canAscend() && !state.ascension.count ? '!' : null },

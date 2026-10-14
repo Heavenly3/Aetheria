@@ -12,6 +12,7 @@ export default {
   time: { dh: '{d} d {h} h', hm: '{h} h {m} min', ms: '{m} min {s} s', s: '{s} s', hours: '{n} h' },
 
   nav: {
+    crown: "Corona",
     guilds: 'Gremios',
     journal: 'Diario', hero: 'Héroe', inventory: 'Inventario', combat: 'Combate', slayer: 'Cazador', tower: 'Torre infinita', quests: 'Misiones',
     achievements: 'Logros', stats: 'Estadísticas', tavern: 'Taberna', home: 'Hogar', church: 'Iglesia', shop: 'Tienda',
@@ -269,6 +270,8 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    shard: "Encontraste una esquirla de la Corona: {shard}.",
+    ending: "Elegiste el final: {ending}.",
     retreat: "Te retiraste de {monster} antes de caer.",
     jailed: "Te pillaron robando y acabaste en la cárcel.",
     heist: "Diste el golpe de {heist} y sacaste {gold} de oro.",
@@ -572,6 +575,10 @@ export default {
     blooms: { name: "Florista {n}", desc: "Cultiva {n} flores de festival." },
     wraiths: { name: "Azote de la escarcha {n}", desc: "Derrota {n} veces al Espectro de Hielo." },
     storyAct: { name: "Crónica del acto {n}", desc: "Desbloquea todos los capítulos del acto {n} en el diario." },
+    endingQueen: { name: "La Corona de Escarcha", desc: "Entrega la Corona a Morwen." },
+    endingSky: { name: "La luz devuelta", desc: "Devuelve la luz al cielo." },
+    endingKing: { name: "La última estrella", desc: "Entrega la Corona al último rey." },
+    allEndings: { name: "Todos los finales", desc: "Elige los tres finales, uno en cada vida." },
     festStories: { name: "Cuentos de cuatro estaciones", desc: "Lee todos los cuentos de festival del diario." },
     guildJoin: { name: "Uno de los nuestros", desc: "Entra en un gremio." },
     guildVeteran: { name: "Veterano del gremio", desc: "Alcanza el rango de Veterano en un gremio." },
@@ -851,6 +858,10 @@ export default {
       system: "Juego",
     },
     cues: {
+      shard: {
+        name: "Esquirla de la Corona",
+        desc: "Encuentras una esquirla de la Corona.",
+      },
       levelUp: {
         name: "Nivel de habilidad",
         desc: "Una habilidad sube de nivel.",
@@ -1059,7 +1070,7 @@ export default {
     fromOmen: 'Presencia {name} {n}×', fromCreature: 'Derrota {n}× a {name}', fromWishes: 'Recibe {n} deseos', fromUnknownOmen: 'Oculto en un prodigio aún no presenciado',
     fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
     titles: {
-      reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", shieldbearer: "el Portaescudos", of_frost_and_flame: "de Hielo y Fuego", of_four_seasons: "de las Cuatro Estaciones",
+      reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", frost_crowned: "de la Corona de Escarcha", lightbringer: "el Portador de la Luz", kings_shield: "el Escudo del Rey", one_who_remembers: "el que Recuerda", shieldbearer: "el Portaescudos", of_frost_and_flame: "de Hielo y Fuego", of_four_seasons: "de las Cuatro Estaciones",
       guildmaster: "el Maestre", master_thief: "el Maestro Ladrón", botanist: "el Botánico", deep_angler: "Pescador Abisal", master_artisan: "Maestro Artesano", tower_warden: "Guardián de la Torre", innkeeper: "el Tabernero", dawn_saint: "del Alba",
       starborn: 'Polvo de Estrellas', goldcatcher: 'Atrapaduendes', blood_moon: 'de la Luna de Sangre', riftbreaker: 'Rompegrietas', wishbearer: 'Cumpledeseos', eye_witness: 'Testigo del Ojo',
       apprentice: 'Aprendiz', goblin_hunter: 'Cazagoblins', dragonslayer: 'Matadragones', voidwalker: 'Caminante del Vacío', unbound: 'Sin Cadenas',
@@ -1131,6 +1142,7 @@ export default {
     },
     // Una guía por pantalla, en el "?" junto al título de la pantalla
     screens: {
+      crown: { title: "La Corona de Éter", body: "Las siete esquirlas de la Corona. Encuéntralas siguiendo la historia, engarza hasta tres en el aro por su bonificación y sus poderes, y cuando la Corona esté entera, elige a quién se la das. Al ascender pierdes las esquirlas; los finales se conservan." },
       guilds: { title: 'Gremios', body: 'Con cada mundo nuevo se fundan una docena de gremios, cada uno con su líder, sus miembros, su nivel y los roles que acepta. Solicita la entrada en uno que acepte tu rol y cuyos requisitos cumplas, paga la cuota y supera la prueba de ingreso: una tarea y un acertijo. Como miembro aceptas contratos, que se renuevan cada cuatro horas, a cambio de marcas del gremio, oro y reputación. La reputación sube tu rango, y un rango más alto hace más fuerte la ventaja del gremio y abre más artículos de su tienda. Solo puedes pertenecer a un gremio a la vez, y al dejarlo pierdes la reputación ganada allí.' },
       journal: { title: 'Diario', body: 'La historia de Aetheria, contada en capítulos cortos que se desbloquean al explorar, derrotar jefes y presenciar prodigios. Abre una página para leerla y vuelve a ella cuando quieras. El diario se conserva al ascender, y cada ascensión trae un recuerdo de una vida pasada.' },
       hero: { title: 'Héroe', body: 'Tu héroe de un vistazo: equipo, herramientas, habilidades y lo último que ha pasado. Gasta los puntos de atributo y talento en sus pestañas al subir de nivel, y pulsa un objeto puesto para quitártelo.' },
@@ -1812,6 +1824,129 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  crown: {
+    title: "La Corona de Éter",
+    intro: "Las siete esquirlas de la Corona, según las encuentras en esta vida. Hasta tres se engarzan en el aro y dan su bonificación; el Corazón siempre cuenta en cuanto despierta. Al ascender pierdes las esquirlas, pero los finales que elijas se quedan contigo en todas las vidas.",
+    count: "{n} / {total} esquirlas",
+    circlet: "El aro",
+    circletHint: "Engarza hasta tres esquirlas. Solo las engarzadas dan su bonificación y pueden usar su poder.",
+    socketEmpty: "Engaste vacío",
+    heart: "Corazón",
+    heartAsleep: "Aún dormido",
+    notFound: "Aún sin encontrar",
+    where: "Dónde: {hint}",
+    passive: "Engarzada",
+    power: "Poder",
+    setToUse: "Engárzala en el aro para usar su poder",
+    use: "Invocar",
+    readyIn: "Lista en {time}",
+    activeFor: "Activa · {time}",
+    setIn: "Engarzar",
+    takeOut: "Quitar",
+    found: "¡Esquirla de la Corona encontrada: {shard}!",
+    foundPlain: "Una esquirla de la Corona: {shard}",
+    foundHint: "Mírala en la pantalla de la Corona.",
+    powerUsed: "{power}: invocado",
+    choiceTitle: "La elección",
+    choiceIntro: "La Corona está entera. Dásela a alguien, o a nadie. La historia de esta vida termina aquí, y la bonificación del final se queda contigo en todas las vidas siguientes.",
+    choiceLocked: "Reúne las siete esquirlas en una misma vida y derrota al Soberano del Éter para elegir.",
+    confirmTitle: "¿Elegir este final?",
+    confirmMessage: "{ending}: {desc} Su bonificación se queda contigo en todas las vidas siguientes. En esta vida la elección no se puede deshacer.",
+    confirm: "Elegir",
+    chosenNow: "Elegido en esta vida",
+    chosenBefore: "Elegido en una vida anterior",
+    endingToast: "Final: {ending}",
+    legacyTitle: "Legado",
+    legacyIntro: "Bonificaciones de los finales que has elegido, conservadas en todas las vidas.",
+    legacyNone: "Aún no has elegido ningún final. En cada vida puedes elegir otro.",
+    shards: {
+      forge: {
+        name: "Esquirla de la Forja",
+        desc: "Guardada en secreto por el Gremio del Yunque. Recuerda el martillo.",
+      },
+      sap: {
+        name: "Esquirla de la Savia",
+        desc: "El corazón de la vida misma, del Templo de la Serpiente. Todo lo que tiene cerca crece.",
+      },
+      sea: {
+        name: "Esquirla del Mar",
+        desc: "Arrancada de las profundidades junto al Kraken. Huele a sal y a tormenta.",
+      },
+      winter: {
+        name: "Esquirla del Invierno",
+        desc: "El regalo de la Reina del invierno. Tan fría que rompe el hierro.",
+      },
+      flame: {
+        name: "Esquirla de la Llama",
+        desc: "Del tesoro de la Sierpe de bronce. Demasiado brillante para mirarla.",
+      },
+      deep: {
+        name: "Esquirla de las Profundidades",
+        desc: "Hallada en el fondo del mundo, donde se juntó la luz que caía.",
+      },
+      heart: {
+        name: "El Corazón",
+        desc: "La esquirla que cayó dentro de ti cuando se rompió la Corona. Despierta cuando te enfrentas al rey.",
+      },
+    },
+    hints: {
+      forge: "Alcanza el nivel 40 de Herrería",
+      sap: "Derrota a la Gran naga",
+      sea: "Derrota al Kraken",
+      winter: "Derrota a la Reina del invierno",
+      flame: "Derrota a la Sierpe de bronce",
+      deep: "Derrota al Dragón Ancestral y a 200 criaturas del Abismo en esta vida",
+      heart: "Derrota al Emperador del Vacío",
+    },
+    powers: {
+      temper: {
+        name: "Temple",
+        desc: "30 min: mucha más calidad de fabricación y trabajo de artesano más rápido.",
+      },
+      bloom: {
+        name: "Floración",
+        desc: "Todas las parcelas que están creciendo quedan listas al instante.",
+      },
+      tide: {
+        name: "Marea alta",
+        desc: "30 min: pesca más rápida y mejores capturas.",
+      },
+      ward: {
+        name: "Égida del Invierno",
+        desc: "20 min: esquivas más y recibes menos daño.",
+      },
+      wildfire: {
+        name: "Fuego salvaje",
+        desc: "20 min: +25 % de daño y más golpes críticos.",
+      },
+      echo: {
+        name: "Eco de vidas",
+        desc: "30 min: +50 % de XP.",
+      },
+      awaken: {
+        name: "Despertar",
+        desc: "30 min: todo más rápido y +20 % de XP.",
+      },
+    },
+    endings: {
+      queen: {
+        name: "La Corona de Escarcha",
+        action: "Dársela a Morwen",
+        desc: "La Corona de su familia, entera de nuevo: los muertos de Alba Mayor descansan al fin.",
+      },
+      sky: {
+        name: "La luz devuelta",
+        action: "Devolver la luz",
+        desc: "Suelta la Corona: las estrellas vuelven al reino.",
+      },
+      king: {
+        name: "La última estrella",
+        action: "Dársela a {king}",
+        desc: "Deja que el rey termine lo que empezó y se convierta en estrella.",
+      },
+    },
+  },
+
   journal: {
     noteBy: "Nota de {astrologer}",
     omenNotes: {
@@ -1833,6 +1968,10 @@ export default {
       ask: "¿Alguna novedad?",
     },
     rumors: {
+      void: "Selene volvió sola por la puerta. Pidió un vaso de agua y se lo bebió de pie, mirando al techo como si pudiera abrirse.",
+      endingQueen: "Anoche la campana de Alba Mayor sonó una vez, muy suave. Mi abuela decía que así sonaba en las bodas.",
+      endingSky: "¿Has visto las estrellas? He vivido en Albor toda mi vida y no sabía que hubiera tantas. Esta noche no bebe nadie. Todo el mundo está fuera.",
+      endingKing: "Esa estrella nueva, justo encima de los prados. La estrella más amable que he visto nunca. No te rías. Sé lo que digo.",
       selene: "La archimaga Selene se sentó anoche en ese rincón. No pidió nada, pagó en plata y preguntó por ti. Dos veces.",
       maze: "Un soldado volvió del Abismo jurando que allí abajo las paredes se mueven. Se bebió cuatro cervezas y aun así no quiso sentarse de espaldas a la puerta.",
       greyRobes: "El hermano {priest} no ha venido a por sopa en toda la semana. Dicen que pasa las noches en la capilla, leyendo una y otra vez ese librito suyo.",
@@ -1890,7 +2029,7 @@ export default {
       act5: "Acto V · La herida del mundo",
       act6: "Acto VI · Sobre el cielo",
     },
-    hints: { abyssGates: "Termina la misión «Las Puertas del Abismo»", abyss: "Derrota a una criatura en el Abismo", maze: "Derrota a 50 minotauros", demon: "Derrota a un demonio abisal", ancient: "Derrota al Dragón Ancestral", bottom: "Derrota al Dragón Ancestral y a 200 criaturas en el Abismo", twoCrowns: "Derrota al Dragón Ancestral y a 200 criaturas en el Abismo, y termina «Heraldo del Vacío»", peaks: "Derrota a una criatura en los Picos Helados", stillVillage: "Derrota a 100 criaturas en los Picos Helados", winterQueen: "Derrota a la Reina del invierno en la Fortaleza helada", coldIron: "Derrota a la Reina del invierno y alcanza el nivel 60 de Herrería", lair: "Derrota a una criatura en la Guarida del Dragón", wyrm: "Derrota a la Sierpe de bronce en la Cámara del dragón", iceFire: "Derrota a la Reina del invierno, a la Sierpe de bronce y a 150 criaturas en la Guarida del Dragón", festSpring1: "Consigue 120 puntos en Floración", festSpring2: "Consigue 800 puntos en Floración", festSpring3: "Consigue 2000 puntos en Floración", festSummer1: "Consigue 120 puntos en Fuegos de Verano", festSummer2: "Consigue 800 puntos en Fuegos de Verano", festSummer3: "Consigue 2000 puntos en Fuegos de Verano", festHarvest1: "Consigue 120 puntos en la Fiesta de la Cosecha", festHarvest2: "Consigue 800 puntos en la Fiesta de la Cosecha", festHarvest3: "Consigue 2000 puntos en la Fiesta de la Cosecha", festWinter1: "Consigue 120 puntos en Velo del Invierno", festWinter2: "Consigue 800 puntos en Velo del Invierno", festWinter3: "Consigue 2000 puntos en Velo del Invierno",
+    hints: { void: "Derrota a una criatura en la Grieta del Vacío", warden: "Derrota al Guardián de la grieta en el Santuario del Vacío", emperor: "Derrota al Emperador del Vacío", spire: "Derrota a una criatura en la Aguja Celestial", sovereign: "Derrota al Soberano del Éter", crownWhole: "Reúne las siete esquirlas de la Corona en una misma vida", endingQueen: "Entrega la Corona a Morwen", endingSky: "Devuelve la luz al cielo", endingKing: "Entrega la Corona al último rey", abyssGates: "Termina la misión «Las Puertas del Abismo»", abyss: "Derrota a una criatura en el Abismo", maze: "Derrota a 50 minotauros", demon: "Derrota a un demonio abisal", ancient: "Derrota al Dragón Ancestral", bottom: "Derrota al Dragón Ancestral y a 200 criaturas en el Abismo", twoCrowns: "Derrota al Dragón Ancestral y a 200 criaturas en el Abismo, y termina «Heraldo del Vacío»", peaks: "Derrota a una criatura en los Picos Helados", stillVillage: "Derrota a 100 criaturas en los Picos Helados", winterQueen: "Derrota a la Reina del invierno en la Fortaleza helada", coldIron: "Derrota a la Reina del invierno y alcanza el nivel 60 de Herrería", lair: "Derrota a una criatura en la Guarida del Dragón", wyrm: "Derrota a la Sierpe de bronce en la Cámara del dragón", iceFire: "Derrota a la Reina del invierno, a la Sierpe de bronce y a 150 criaturas en la Guarida del Dragón", festSpring1: "Consigue 120 puntos en Floración", festSpring2: "Consigue 800 puntos en Floración", festSpring3: "Consigue 2000 puntos en Floración", festSummer1: "Consigue 120 puntos en Fuegos de Verano", festSummer2: "Consigue 800 puntos en Fuegos de Verano", festSummer3: "Consigue 2000 puntos en Fuegos de Verano", festHarvest1: "Consigue 120 puntos en la Fiesta de la Cosecha", festHarvest2: "Consigue 800 puntos en la Fiesta de la Cosecha", festHarvest3: "Consigue 2000 puntos en la Fiesta de la Cosecha", festWinter1: "Consigue 120 puntos en Velo del Invierno", festWinter2: "Consigue 800 puntos en Velo del Invierno", festWinter3: "Consigue 2000 puntos en Velo del Invierno",
       ruins: "Derrota a una criatura en las Ruinas Malditas",
       guild: "Entra en un gremio",
       crypt: "Supera la Cripta olvidada",
@@ -1906,6 +2045,42 @@ export default {
       naga: "Derrota a la Gran naga en el Templo de la serpiente",
     },
     chapters: {
+      beyond_the_gate: {
+        title: "Más allá de la puerta",
+        text: "La puerta de Selene se cierra a tu espalda con un sonido como el de un aliento contenido que por fin se suelta.\n\nLa Grieta del Vacío no está a oscuras. Está llena de estrellas, pero están tiradas en el suelo: frías, agrietadas, del tamaño de casas y del tamaño de guijarros, y todas brillan todavía un poco, como brasas que alguien olvidó apagar.\n\nSusurran a tu paso. No son palabras: son nombres. Los nombres de todos los que alguna vez miraron al cielo y pidieron un deseo.\n\nMuy arriba, donde debería estar el cielo, solo queda una luz. No es una estrella. Está mirando.",
+      },
+      the_warden: {
+        title: "El guardián",
+        text: "El Guardián de la grieta cae sobre una rodilla, y el vacío que formaba su cuerpo se escurre como arena. Debajo hay un hombre de túnica gris, muy viejo, con el sol de la Orden cosido sobre el corazón.\n\n«Fui el primer hermano que siguió a la luz hacia abajo», dice. «Los demás se olvidaron de sí mismos. Yo elegí no hacerlo. Alguien tenía que guardar la puerta».\n\n«Está detrás de mí. El rey. Si consigue las esquirlas volverá a subir, y no sé si esta vez las soltará». Te mira largo rato. «Aunque tú estuviste allí la última vez. Decide tú. Siempre fuiste el único que podía».\n\nSe aparta.",
+      },
+      the_emperor: {
+        title: "El Emperador del Vacío",
+        text: "El Emperador del Vacío lleva la cara de {king}, y cuando termina la lucha ya no la esconde.\n\nNo es un monstruo. Es un hombre alto y cansado, hecho de noche, con estrellas enredadas en la barba, y está llorando. «Trescientos años», dice. «Yo solo quería conservar la luz. Un poco más. Lo justo para el reino».\n\nEntonces algo en tu pecho le responde. Cálido y brillante, como si hubiera esperado todas tus vidas a este momento: la séptima esquirla, la que cayó dentro de ti cuando se rompió la Corona. El Corazón.\n\n{king} mira la luz que atraviesa tu camisa y sonríe por primera vez. «La has guardado bien», dice. «Claro que sí».",
+      },
+      the_spire: {
+        title: "La aguja",
+        text: "Por encima del Vacío, la Aguja Celestial sube hacia lo que antes era el cielo. Sus escalones son de luz, y cada uno suena con una nota.\n\nLos gólems astrales que subieron la Corona por esta escalera siguen recorriéndola, arriba y abajo, arriba y abajo, sin llevar nada. Los serafines que guardaban la cima yacen sobre los peldaños como estatuas rotas.\n\nEs la escalera de tu primer recuerdo. Sabes sin contarlos que hay novecientos noventa y nueve escalones, y que el último está agrietado.",
+      },
+      the_sovereign: {
+        title: "El primer rey",
+        text: "En la cima de la Aguja, en un trono de luz pura, se sienta el Soberano del Éter. Cuando cae, su corona de luz se apaga, y la cara que hay debajo es joven, orgullosa y terriblemente triste.\n\n«Soy el primer rey», dice. «El hermano de Morwen. Atrapé las estrellas que caían y forjé su luz en una corona, y cuando morí el cielo me subió aquí a guardar lo que había robado».\n\n«Todos los reyes después de mí llevaron mi robo, y cada uno oscureció un poco más el cielo. Y ahora estás aquí, portaescudos, con mi Corona casi entera».\n\n«Complétala. Luego decide quién la lleva, o si alguien debería llevarla. Yo nunca supe decidirlo. Ese siempre fue el problema».",
+      },
+      the_crown_whole: {
+        title: "La Corona entera",
+        text: "Siete esquirlas en una misma vida. Forja y savia, mar e invierno, llama y profundidades, y el corazón que latía dentro de ti desde siempre.\n\nCuando la última encaja en el aro, la Corona no brilla. Se queda en silencio, como se queda una sala cuando todos se vuelven a mirarte.\n\nMorwen la quiere para su familia. Edmund no la quiere para nadie, y el cielo quiere recuperar su luz. {king} quiere terminar lo que empezó. Todos esperan.\n\nLa Corona está en tus manos. Elige.",
+      },
+      ending_queen: {
+        title: "La Corona de Escarcha",
+        text: "Le das la Corona a Morwen. La sostiene mucho rato antes de ponérsela, y cuando lo hace, la escarcha de su frente se derrite.\n\nEn Alba Mayor la campana suena una vez, suave, y los caballeros de las puertas por fin se tumban a descansar. «Gracias», dice Morwen. «Esperaron tanto tiempo». Por primera vez en mil años aparenta su edad, y parece en paz.\n\nEl cielo sigue apagado. El reino conserva su luz y gana una reina. Y en algún lugar de los Prados del Alba, la hierba vuelve a esperarte.",
+      },
+      ending_sky: {
+        title: "La luz devuelta",
+        text: "Subes a la cima de la Aguja y alzas la Corona hacia el cielo, y esta vez la sueltas.\n\nLa Corona se deshace en luz y sube, y el único ojo del cielo se cierra, despacio, como se cierran los ojos cuando por fin te devuelven algo que habías perdido. Esa noche salen las estrellas sobre todo el reino, más de las que nadie vivo ha visto jamás.\n\nEdmund planta un manzano en la plaza de Alba Mayor. «Que crezca sin magia», dice. «Ya nos apañaremos». Y en algún lugar de los Prados del Alba, la hierba vuelve a esperarte.",
+      },
+      ending_king: {
+        title: "La última estrella",
+        text: "Le das la Corona a {king} el Alto.\n\nLa sostiene como debió de sostenerla hace trescientos años, en lo alto del cielo, con miedo a soltarla. Luego te mira, se ríe y sube.\n\nEsta vez no se detiene. Arriba abre las manos, y la Corona y el rey se elevan juntos, y una estrella nueva aparece sobre el reino, brillante y firme, justo donde antes estaba el ojo.\n\n{keeper} dice que es la estrella más amable que ha visto nunca. Y en algún lugar de los Prados del Alba, la hierba vuelve a esperarte. Pero esta vez, recordarás.",
+      },
       uncrowned_king: {
         title: "El rey sin corona",
         text: "El rey Edmund te recibe en un salón sin trono. Está sentado en los escalones, tan cansado como dice la gente, y mira largo rato las dos esquirlas que llevas en las manos sin tocarlas.\n\n«Mi padre me dijo que la Corona volvería algún día», dice. «Nunca le creí. Yo solo quería que los caminos fueran seguros y los graneros estuvieran llenos».\n\nA su lado hay una mujer de túnica violeta, con los dedos manchados de tinta y de luz de estrellas: Selene, la archimaga de la corte. «He abierto una puerta al Abismo», dice. «No ha sido difícil. Algo al otro lado ya estaba empujando».\n\nEdmund se levanta. «Ve a ver qué quiere», dice. «Y vuelve. El reino ya ha perdido bastantes héroes en ese prado».",
@@ -2032,6 +2207,16 @@ export default {
       },
     },
     people: {
+      warden: {
+        name: "El Guardián de la grieta",
+        role: "El primer hermano de la Orden",
+        desc: "El único de los primeros hermanos que eligió no olvidarse de sí mismo. Guardó la puerta del Vacío durante trescientos años.",
+      },
+      firstKing: {
+        name: "El primer rey",
+        role: "Hermano de Morwen",
+        desc: "Forjó la Corona de Éter con luz de estrellas robada. El cielo se lo llevó arriba para guardar lo que había robado.",
+      },
       selene: {
         name: "Archimaga Selene",
         role: "Archimaga de la corte del rey Edmund",
