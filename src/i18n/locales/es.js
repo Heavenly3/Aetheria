@@ -1839,6 +1839,59 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  techniques: {
+    mining: {
+      name: "Técnica: vetas ricas",
+      desc: "De vez en cuando un golpe da con una veta rica: los golpes siguientes sacan un mineral más cada uno.",
+      on: "Veta rica: quedan {n} golpes, +{extra} mineral cada uno",
+      off: "Buscando veta: {v} de probabilidad por golpe",
+    },
+    woodcutting: {
+      name: "Técnica: derribo",
+      desc: "Sigue talando el mismo tipo de árbol y acabará cayendo: un montón de troncos y mucha XP.",
+      none: "Cada {n} talas del mismo tipo de árbol, el árbol cae.",
+    },
+    smithing: {
+      name: "Técnica: calor de la forja",
+      desc: "Trabajar en el yunque sin parar calienta la forja: cada pieza seguida sale un poco más rápido.",
+      bonus: "+{v} % velocidad",
+    },
+    fletching: {
+      name: "Técnica: ritmo",
+      desc: "Trabajar en la flechería sin parar te da ritmo: cada pieza seguida sale un poco más rápido.",
+      bonus: "+{v} % velocidad",
+    },
+    cooking: {
+      name: "Técnica: buena mano",
+      desc: "Cocinar seguido te da buena mano y quemas menos. Quemar algo rompe la racha.",
+      bonus: "−{v} % quemado",
+    },
+    herblore: {
+      name: "Técnica: concentración",
+      desc: "Preparar pociones sin parar afina la concentración: cada preparación seguida tiene más probabilidad de dar una poción extra.",
+      bonus: "{v} % poción extra",
+    },
+    firemaking: {
+      name: "Técnica: el hogar",
+      desc: "Cada tronco alimenta un hogar que sigue ardiendo cuando te vas, y te calienta en todo lo que haces.",
+      on: "El hogar arde {time}: {mods}",
+      off: "El hogar está frío. Quema troncos para encenderlo.",
+    },
+    runecrafting: {
+      name: "Técnica: resonancia",
+      desc: "Las runas resuenan con el cielo: las elementales con su clima y las oscuras de noche.",
+      now: "Resuenan ahora (+{v} % runas):",
+    },
+    stacks: "Racha {n} / {max}",
+    cools: "Se enfría en {time} sin trabajar",
+    cold: "En frío: trabaja seguido para calentarla",
+    note: {
+      vein: "¡Has dado con una veta rica de {item}!",
+      fell: "¡Árbol va! Ha caído un árbol: {item} extra.",
+      extra: "Concentración: {item} extra.",
+    },
+  },
+
   routines: {
     title: "Rutinas",
     intro: "Reglas que tu héroe sigue por su cuenta: cuando pase algo, haz algo. Se prueban de arriba abajo, y la primera que cambia lo que está haciendo el héroe es la que manda.",

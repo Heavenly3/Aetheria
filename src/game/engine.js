@@ -26,6 +26,7 @@ import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
 import { crown, crownState } from './crown.js'
 import { routines, routinesState } from './routines.js'
+import { techniques, techniquesState } from './techniques.js'
 import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
@@ -125,6 +126,7 @@ export function newState(profile = {}) {
     ...codexState(),
     ...crownState(),
     ...routinesState(),
+    ...techniquesState(),
     ...churchState(),
     ...thiefState(),
     ...festivalsState(),
@@ -425,11 +427,12 @@ export const G = {
     push('guild', this.guildMods(key))
     push('codex', this.codexMods(key))
     push('crown', this.crownMods(key))
+    push('technique', this.techniqueMods(key))
     return out
   },
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key)
     for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
     const tal = this.s.hero.talents
     for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
@@ -715,7 +718,7 @@ export const G = {
   actionTime(skill, a) { return a.time / (this.speedFactor(skill) + this.masteryLevel(skill, a.id) * MASTERY.speedPer) },
   hasTool(a) { return !a.tool || this.toolTier(a.tool.type) >= a.tool.tier },
   canDo(skill, a) { return this.level(skill) >= a.lvl && this.hasItems(a.in) && this.hasTool(a) && this.festivalOpen(a) },
-  burnChance(skill, a) { return Math.max(0, 0.45 - (this.level(skill) - a.lvl) * 0.025) * (1 - this.room('kitchen') * 0.3) },
+  burnChance(skill, a) { return Math.max(0, 0.45 - (this.level(skill) - a.lvl) * 0.025) * (1 - this.room('kitchen') * 0.3) * (1 - this.momentumBonus(skill)) },
   failChance(skill, a) { return Math.min(0.55, Math.max(0.03, 0.55 - (this.level(skill) - a.lvl) * 0.012 - this.mod('thieving') - Math.min(0.12, this.level('agility') * 0.0012) - this.toolTier('lockpick') * 0.015 + (skill === 'thieving' ? this.heatFail() : 0))) },
   runeMult(skill, a) { return 1 + Math.floor((this.level(skill) - a.lvl) / 12) },
 
@@ -793,6 +796,7 @@ export const G = {
       Object.entries(a.in).forEach(([k, q]) => this.removeItem(k, q))
     }
     this.s.stats.actions++
+    this.buildMomentum(skill)
     this.addMastery(skill, a.id, masteryXpPerAction(a.time))
     this.rollSkillPet(skill, a.time)
     this.festivalAction(a.time)
@@ -809,6 +813,7 @@ export const G = {
       return
     }
     if (a.burn && Math.random() < this.burnChance(skill, a)) {
+      this.breakMomentum(skill)
       this.addItem('burnt_food', 1)
       this.s.stats.burnt++
       this.emit('gain', msg('gain.burnt'))
@@ -854,6 +859,7 @@ export const G = {
         if (e.chance < 0.02) { this.log(ITEMS[e.item].icon, 'log.found', { item: '@item:' + e.item }); this.emit('rare', { item: e.item, n }) }
       }
     })
+    xp = this.techniqueAfter(skill, a, xp, double)
     this.addXp(skill, xp)
     gain ||= msg('gain.xp', { n: Math.round(xp * this.xpMult(skill)) })
     if (skill === 'thieving') { const loot = this.thiefSucceeded(a); if (loot) bonus = '@item:' + loot }
@@ -1522,6 +1528,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques)
 
 export { SKILLS, ITEMS }

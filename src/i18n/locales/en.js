@@ -1839,6 +1839,59 @@ export default {
     table: "Guild ranking",
   },
 
+  techniques: {
+    mining: {
+      name: "Technique: rich veins",
+      desc: "Now and then a swing strikes a rich vein: the next swings bring up an extra ore each.",
+      on: "Rich vein: {n} swings left, +{extra} ore each",
+      off: "Looking for a vein: {v} chance per swing",
+    },
+    woodcutting: {
+      name: "Technique: felling",
+      desc: "Keep cutting the same kind of tree and it comes down: a pile of logs and a lot of XP.",
+      none: "Every {n} cuts at the same kind of tree, it falls.",
+    },
+    smithing: {
+      name: "Technique: forge heat",
+      desc: "Working the anvil without a break heats the forge: every piece you make in a row is a little quicker.",
+      bonus: "+{v}% speed",
+    },
+    fletching: {
+      name: "Technique: rhythm",
+      desc: "Fletching without a break finds a rhythm: every piece in a row is a little quicker.",
+      bonus: "+{v}% speed",
+    },
+    cooking: {
+      name: "Technique: a steady hand",
+      desc: "Cooking in a row steadies your hand and burns less. Burning something breaks the streak.",
+      bonus: "−{v}% burning",
+    },
+    herblore: {
+      name: "Technique: focus",
+      desc: "Brewing without a break sharpens your focus: every brew in a row has a better chance of an extra potion.",
+      bonus: "{v}% extra potion",
+    },
+    firemaking: {
+      name: "Technique: the hearth",
+      desc: "Every log feeds a hearth that keeps burning after you walk away, warming everything you do.",
+      on: "The hearth burns for {time}: {mods}",
+      off: "The hearth is cold. Burn logs to light it.",
+    },
+    runecrafting: {
+      name: "Technique: resonance",
+      desc: "Runes resonate with the sky: elemental runes with their weather, dark runes at night.",
+      now: "Resonating now (+{v}% runes):",
+    },
+    stacks: "Streak {n} / {max}",
+    cools: "Cools down in {time} without working at it",
+    cold: "Cold: work in a row to build it up",
+    note: {
+      vein: "You struck a rich vein of {item}!",
+      fell: "Timber! A tree came down: extra {item}.",
+      extra: "Focus: an extra {item}.",
+    },
+  },
+
   routines: {
     title: "Routines",
     intro: "Rules your hero follows on their own: when something happens, do something. They are tried from top to bottom, and the first one that changes what the hero is doing wins.",
