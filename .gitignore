@@ -8,3 +8,5 @@ dist-single/
 
 # itch.io page material (kept locally)
 docs/itch/
+vt.txt
+build.txt
