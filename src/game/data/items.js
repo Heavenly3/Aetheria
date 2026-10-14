@@ -85,6 +85,7 @@ export const WOODS = [
   { id: 'maple_logs',  tree: 'maple',  lvl: 45, xp: 100,  time: 5,   value: 25,  tint: '#c0632f', burnXp: 135,   fm: 45, bow: { lvl: 50, xp: 58, rAtk: 29, req: 30 }, staff: { lvl: 40, xp: 85, mAtk: 22, mDmg: 0.11, req: 30 } },
   { id: 'yew_logs',    tree: 'yew',    lvl: 60, xp: 175,  time: 6.5, value: 60,  tint: '#7a4b35', burnXp: 202.5, fm: 60, bow: { lvl: 65, xp: 75, rAtk: 47, req: 40 }, staff: { lvl: 55, xp: 120, mAtk: 30, mDmg: 0.15, req: 40 } },
   { id: 'magic_logs',  tree: 'magic',  lvl: 75, xp: 250,  time: 8,   value: 150, tint: '#8a6fe0', burnXp: 303.8, fm: 75, bow: { lvl: 80, xp: 91, rAtk: 69, req: 50 }, staff: { lvl: 70, xp: 160, mAtk: 42, mDmg: 0.2, req: 50 } },
+  { id: 'elder_logs',  tree: 'elder',  lvl: 90, xp: 380,  time: 9.5, value: 320, tint: '#c9b37a', burnXp: 420,   fm: 90, bow: { lvl: 92, xp: 115, rAtk: 84, req: 70 }, staff: { lvl: 88, xp: 330, mAtk: 54, mDmg: 0.25, req: 65 } },
 ]
 WOODS.forEach((w, i) => {
   named(w, `woods.${w.tree}`)
@@ -93,7 +94,7 @@ WOODS.forEach((w, i) => {
   def(w.id, { icon: 'log', value: w.value, tint: w.tint, name: plain ? 'items.logs' : woodName('logs') })
   def(w.id.replace('logs', 'rod'), {
     icon: 'fishing-pole', type: 'tool', toolType: 'rod', tier: i + 1, value: w.value * 3 + 8, tint: w.tint,
-    req: { fishing: [1, 10, 20, 30, 40, 50][i] }, name: plain ? 'items.rod' : woodName('rod'),
+    req: { fishing: [1, 10, 20, 30, 40, 50, 60][i] }, name: plain ? 'items.rod' : woodName('rod'),
   })
   def(w.id.replace('logs', 'bow'), {
     icon: 'pocket-bow', type: 'equip', slot: 'weapon', style: 'ranged', twoHanded: true, name: plain ? 'items.bow' : woodName('bow'),
@@ -129,6 +130,7 @@ export const FISH = [
   { id: 'swordfish', icon: 'angler-fish',   lvl: 50, xp: 125, time: 6,   value: 50,  heal: 14, cookLvl: 45, cookXp: 140 },
   { id: 'shark',     icon: 'shark-fin',     lvl: 76, xp: 175, time: 7,   value: 100, heal: 20, cookLvl: 80, cookXp: 210 },
   { id: 'anglerfish', icon: 'fish-monster', lvl: 85, xp: 210, time: 7.5, value: 140, heal: 22, cookLvl: 84, cookXp: 240 },
+  { id: 'starfin',   icon: 'double-fish',   lvl: 92, xp: 255, time: 8,   value: 190, heal: 25, cookLvl: 92, cookXp: 330 },
   // Only in the summer regatta
   { id: 'sunfish',   icon: 'flatfish',      lvl: 1,  xp: 30,  time: 4,   value: 25,  heal: 12, cookLvl: 10, cookXp: 70, festival: true },
 ]
@@ -195,6 +197,9 @@ export const POTIONS = [
 ]
 export const POTION_DURATION = 300
 POTIONS.forEach(p => def(p.id, { icon: 'round-potion', value: Math.round(ITEMS[p.herb].value * 1.8 + 6), tint: p.tint, type: 'potion', buff: p.buff }))
+// The strongest brew: an overload steeped with void essence
+const ALL = (lvls, pct) => Object.fromEntries(['attack', 'strength', 'defense', 'ranged', 'magic'].map(s => [s, [lvls, pct]]))
+def('aether_overload', { icon: 'round-potion', value: 900, tint: '#b38cff', type: 'potion', buff: ALL(7, 0.2) })
 
 /* ---------------- Brews (Cooking) ---------------- */
 // Brewed at home from crops; each one can be drunk at the tavern instead of buying that drink
@@ -217,6 +222,7 @@ export const RUNES = [
   { id: 'nature_rune', lvl: 44, xp: 16,   value: 90,  tint: '#3aa05a', icon: 'sprout' },
   { id: 'death_rune',  lvl: 65, xp: 27,   value: 180, tint: '#d0d0d0', icon: 'death-skull' },
   { id: 'blood_rune',  lvl: 77, xp: 42,   value: 300, tint: '#c0102a', icon: 'blood' },
+  { id: 'soul_rune',   lvl: 90, xp: 60,   value: 420, tint: '#b8c8ff', icon: 'spectre' },
 ]
 RUNES.forEach(r => def(r.id, { icon: r.icon, value: r.value, tint: r.tint, type: 'rune' }))
 
@@ -250,6 +256,7 @@ def('bones',         { icon: 'crossed-bones',   value: 3,   tint: '#d8d0c0' })
 def('big_bones',     { icon: 'crossed-bones',   value: 15,  tint: '#e8dcb8' })
 def('dragon_bones',  { icon: 'dinosaur-bones',  value: 120, tint: '#9fd8b0' })
 def('demon_ashes',   { icon: 'burning-meteor',  value: 160, tint: '#c03a2a' })
+def('astral_bones',  { icon: 'dinosaur-bones',  value: 260, tint: '#b8c8ff', hasDesc: true })
 def('feathers',      { icon: 'feather',         value: 2,   tint: '#e8e8e8' })
 def('wolf_pelt',     { icon: 'wolf-head',       value: 18,  tint: '#7c7c8a' })
 def('troll_tusk',    { icon: 'troll',           value: 45,  tint: '#cfc6a8' })

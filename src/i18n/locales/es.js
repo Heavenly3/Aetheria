@@ -1613,7 +1613,7 @@ export default {
     milestoneClaimed: "Hito alcanzado: {n} obras maestras",
   },
   thief: { heatTitle: "La mirada de la guardia", heat: { calm: "Calles tranquilas", wary: "La guardia sospecha", alert: "En alerta: si te pillan, a la cárcel", alarm: "¡Alarma! Todos los guardias te buscan" }, heatEffect: "+{fail} de probabilidad de fallo · el perista paga un {fence} %", jailed: "En la cárcel", jailLeft: "Libre en {time}", bribe: "Sobornar · {n} de oro", informant: "Pagar a un soplón · {n} de oro", informantTip: "Los rumores falsos mandan a la guardia a otra parte: la alerta baja a la mitad.", inJail: "Estás en la cárcel. Espera a salir o soborna al guardia.", jailedStop: "¡Te han pillado! La guardia te lleva a la cárcel.", bribed: "El guardia mira hacia otro lado. Eres libre.", informed: "Los rumores corren: la alerta baja a la mitad.", fenceTitle: "El perista", fenceText: "Objetos de valor que caen a veces al robar. El perista los paga bien, mejor aún si las calles están tranquilas.", noGoods: "Aún no tienes nada que vender.", sell: "Vender todo", fenced: "El perista te pagó {gold} de oro", findable: "Puede aparecer:", fromLevel: "Desde Robo nivel {n}", heistsTitle: "Golpes", lockpickTier: "Ganzúa nivel {n}", startHeist: "Dar el golpe", cooldown: "Pasar desapercibido · {time}", gearChance: "Puede venir con el golpe", stages: { plan: "Planear", slip: "Colarse", crack: "Abrir", escape: "Escapar" }, stageText: { plan: { ok: "las rondas de la guardia, aprendidas", bad: "el plan tiene un fallo: lo dejas" }, slip: { ok: "dentro sin un ruido", bad: "ladra un perro: te retiras" }, crack: { ok: "la cerradura cede", bad: "la cerradura aguanta: coges lo que hay a mano" }, escape: { ok: "te pierdes en la noche", bad: "la guardia espera en la puerta" } }, heistOkLine: "¡Un golpe limpio! +{gold} de oro", caughtLine: "¡Te han pillado! Pierdes el botín y vas a la cárcel.", failLine: "Ha salido mal. +{gold} de oro", heistOk: "{heist}: golpe limpio, +{gold} de oro", heistCaught: "{heist}: ¡te pillaron al salir!", heistFail: "{heist}: ha salido mal", heists: { merchant_vault: { name: "El almacén del mercader", desc: "Un mercader de especias que confía demasiado en sus cerraduras." }, bishop_reliquary: { name: "El relicario del obispo", desc: "Reliquias, anillos y agua bendita detrás del altar." }, guild_vault: { name: "La cámara del gremio", desc: "Donde un gremio rico guarda lo que nunca enseña." }, royal_treasury: { name: "El tesoro real", desc: "El oro de la corona. Nadie lo ha hecho dos veces." } } },
-  waters: { sunlit_bay: "Bahía Soleada", dawn_river: "Río del Alba", mirror_lake: "Lago Espejo", coral_coast: "Costa de Coral", deep_sea: "Mar Profundo", abyssal_trench: "Fosa Abisal" },
+  waters: { sunlit_bay: "Bahía Soleada", dawn_river: "Río del Alba", mirror_lake: "Lago Espejo", coral_coast: "Costa de Coral", deep_sea: "Mar Profundo", abyssal_trench: "Fosa Abisal", starfall_shoals: "Bajíos Estelares" },
   angling: { waters: "Aguas de pesca", needsRod: "Requiere {tool} de nivel {n}", fishing: "Pescando", biting: "¡Algo está picando!", baitPower: "Peces mejores un {n} % más probables", casting: "Sedal en el agua…", idle: "Elige un cebo y lanza", cast: "Lanzar", reel: "Recoger", catchTitle: "Qué pica aquí", mastery: "Maestría en estas aguas {n}", speed: "{s} s por lance", baitTitle: "Cebo", baitOn: "Se gasta un cebo por lance.", baitOut: "Te quedaste sin este cebo: pescas sin él.", noBait: "Sin cebo: pican sobre todo los peces comunes.", recent: "Últimas capturas" },
   guilds: {
     nameTpl: "{group} {emblem}",
@@ -2894,6 +2894,7 @@ export default {
     aetherium_ore: 'Veta de eterio',
   },
   marks: {
+    treasurer: "Tesorero real",
     bakery_stall: "Puesto de panadería",
     silk_stall: "Puesto de telas",
     gem_stall: "Puesto de gemas",
@@ -2924,8 +2925,8 @@ export default {
     arrowtips: 'Puntas', arrow: 'Flecha',
   },
   mats: {linen: "lino", silk: "seda", spellweave: "tejido arcano", starweave: "tejido estelar", wolf: "lobo", snake: "serpiente", wyvern: "guiverno",  bronze: 'bronce', iron: 'hierro', steel: 'acero', mithril: 'mithril', adamant: 'adamantita', rune: 'runita', gold: 'oro', leather: 'cuero', aether: 'éter' },
-  woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia' },
-  fish: { sunfish: "Pez sol", tuna: "Atún", anglerfish: "Rape", shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón' },
+  woods: { normal: 'común', oak: 'roble', willow: 'sauce', maple: 'arce', yew: 'tejo', magic: 'magia', elder: "saúco" },
+  fish: { sunfish: "Pez sol", tuna: "Atún", anglerfish: "Rape", shrimp: 'Camarón', sardine: 'Sardina', trout: 'Trucha', salmon: 'Salmón', lobster: 'Langosta', swordfish: 'Pez espada', shark: 'Tiburón', starfin: "Aleta estelar" },
   crops: {
     bloomflower: "Flor de festival",
     moonroot: "Raíz lunar",
@@ -2939,6 +2940,9 @@ export default {
   gems: { sapphire: 'Zafiro', emerald: 'Esmeralda', ruby: 'Rubí', diamond: 'Diamante' },
 
   items: {
+    astral_bones: "Huesos astrales",
+    soul_rune: "Runa de alma",
+    aether_overload: "Sobrecarga etérea",
     giant_vegetable: "Verdura gigante",
     festive_hat: "Sombrero festivo",
     festive_cloak: "Capa festiva",
@@ -3003,6 +3007,7 @@ export default {
     colossus_bulwark: 'Baluarte del Coloso', hydra_heart: 'Corazón de la Hidra', lich_shroud: 'Sudario de la Reina Liche', wyrm_crown: 'Corona de Ceniza', abyssal_mantle: 'Manto Abisal', rime_locket: 'Relicario de Escarcha',
   },
   itemDesc: {
+    astral_bones: "Huesos de las criaturas de más allá del Abismo, ligeros como la luz de las estrellas. Son los que más XP de Plegaria dan.",
     giant_vegetable: "Una verdura enorme de una cosecha de festival. A los jueces de la feria de la cosecha les encantan.",
     festive_hat: "De la senda de un festival. Parte del atuendo festivo.",
     festive_cloak: "De la senda de un festival. Parte del atuendo festivo.",

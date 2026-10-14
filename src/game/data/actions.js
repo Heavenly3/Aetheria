@@ -44,7 +44,7 @@ WOODS.forEach((w, i) => add('woodcutting', {
   id: w.id, nameFn: () => (w.tree === 'normal' ? t('nodes.tree') : t('tpl.wood.tree', { wood: t(`woods.${w.tree}`) })),
   icon: w.id === 'magic_logs' ? 'evil-tree' : w.lvl >= 30 && w.lvl < 45 ? 'willow-tree' : 'pine-tree',
   tint: w.tint, lvl: w.lvl, xp: w.xp, time: w.time, out: { [w.id]: 1 },
-  extra: [{ item: 'bird_nest', chance: 1 / 90, qty: [1, 1] }], tool: { type: 'axe', tier: [1, 1, 2, 3, 4, 5][i] },
+  extra: [{ item: 'bird_nest', chance: 1 / 90, qty: [1, 1] }], tool: { type: 'axe', tier: [1, 1, 2, 3, 4, 5, 6][i] },
 }))
 
 /* ---------- Fishing ---------- */
@@ -77,6 +77,7 @@ export const FISH_INFO = Object.fromEntries(FISH.map(f => ['raw_' + f.id, { lvl:
   { id: 'knight',  icon: 'mounted-knight', lvl: 55, xp: 84,   time: 3.5, gold: [50, 100],  dmg: [3, 6], extra: [{ item: 'chaos_rune', chance: 0.1, qty: [2, 6] }] },
   { id: 'paladin', icon: 'holy-symbol',    lvl: 70, xp: 151,  time: 3.8, gold: [80, 160],  dmg: [3, 7], extra: [{ item: 'death_rune', chance: 0.08, qty: [1, 4] }, { item: 'uncut_ruby', chance: 0.01, qty: [1, 1] }] },
   { id: 'hero',    icon: 'laurel-crown',   lvl: 80, xp: 273,  time: 4,   gold: [200, 320], dmg: [4, 9], extra: [{ item: 'blood_rune', chance: 0.06, qty: [1, 3] }, { item: 'uncut_diamond', chance: 0.008, qty: [1, 1] }, { item: 'gem_chest', chance: 0.004, qty: [1, 1] }] },
+  { id: 'treasurer', icon: 'coins-pile',     lvl: 90, xp: 420,  time: 4.4, gold: [300, 460], dmg: [5, 11], extra: [{ item: 'soul_rune', chance: 0.05, qty: [1, 3] }, { item: 'starlight_shard', chance: 0.004, qty: [1, 1] }, { item: 'gem_chest', chance: 0.008, qty: [1, 1] }] },
 ].forEach(v => add('thieving', {
   id: v.id, nameKey: `marks.${v.id}`, icon: v.icon, tint: '#9d79bc', group: 'groups.pickpocket', lvl: v.lvl, xp: v.xp, time: v.time, gold: v.gold, fail: { dmg: v.dmg },
   extra: v.lvl >= 25 ? [...v.extra, { item: 'treasure_map', chance: 0.0015 + v.lvl * 0.00004, qty: [1, 1] }] : v.extra,
@@ -151,7 +152,7 @@ WOODS.forEach(w => add('fletching', {
 }))
 WOODS.forEach((w, i) => add('fletching', {
   id: w.id.replace('logs', 'rod'), icon: 'fishing-pole', tint: w.tint, group: 'groups.rods',
-  lvl: [1, 12, 25, 38, 52, 68][i], xp: Math.round(w.bow.xp * 1.5), time: 3, in: { [w.id]: 2 }, out: { [w.id.replace('logs', 'rod')]: 1 },
+  lvl: [1, 12, 25, 38, 52, 68, 84][i], xp: Math.round(w.bow.xp * 1.5), time: 3, in: { [w.id]: 2 }, out: { [w.id.replace('logs', 'rod')]: 1 },
 }))
 
 /* ---------- Crafting ---------- */
@@ -202,6 +203,7 @@ POTIONS.forEach(p => add('herblore', {
 add('herblore', { id: 'holy_water', icon: 'vial', tint: '#f1e3b0', lvl: 20, xp: 45, time: 2.4, in: { vial_water: 1, guam: 1, ashes: 2 }, out: { holy_water: 1 } })
 add('herblore', { id: 'supercompost', icon: 'fertilizer-bag', tint: '#a8d84a', lvl: 35, xp: 70, time: 2.4, in: { compost: 2, moonroot: 1 }, out: { supercompost: 2 } })
 add('herblore', { id: 'wisdom_elixir', icon: 'bubbling-flask', tint: '#f0c040', lvl: 70, xp: 260, time: 3, in: { starpetal: 2, vial_water: 1 }, out: { wisdom_elixir: 1 } })
+add('herblore', { id: 'aether_overload', icon: 'round-potion', tint: '#b38cff', lvl: 90, xp: 340, time: 3, in: { overload: 1, void_essence: 1 }, out: { aether_overload: 1 } })
 add('herblore', { id: 'compost', icon: 'fertilizer-bag', tint: '#6b8a3a', lvl: 5, xp: 20, time: 2.4, in: { ashes: 2, potato: 1 }, out: { compost: 1 } })
 ACTIONS.herblore.sort((a, b) => a.lvl - b.lvl)
 
@@ -211,14 +213,14 @@ RUNES.forEach(r => add('runecrafting', {
 }))
 
 /* ---------- Prayer ---------- */
-;[['bones', 4.5], ['big_bones', 15], ['dragon_bones', 72], ['demon_ashes', 110]].forEach(([id, xp], i) => add('prayer', {
+;[['bones', 4.5], ['big_bones', 15], ['dragon_bones', 72], ['demon_ashes', 110], ['astral_bones', 125]].forEach(([id, xp], i) => add('prayer', {
   id: 'bury_' + id, nameFn: () => t(id === 'demon_ashes' ? 'tpl.scatter' : 'tpl.bury', { item: ITEMS[id].name }),
-  icon: ITEMS[id].icon, tint: ITEMS[id].tint, group: 'groups.bury', lvl: [1, 1, 1, 30][i], xp, time: 1.5, in: { [id]: 1 },
+  icon: ITEMS[id].icon, tint: ITEMS[id].tint, group: 'groups.bury', lvl: [1, 1, 1, 30, 70][i], xp, time: 1.5, in: { [id]: 1 },
 }))
 // Offered at the church altar instead: slower, but three times the Prayer XP
-;[['bones', 4.5], ['big_bones', 15], ['dragon_bones', 72], ['demon_ashes', 110]].forEach(([id, xp], i) => add('prayer', {
+;[['bones', 4.5], ['big_bones', 15], ['dragon_bones', 72], ['demon_ashes', 110], ['astral_bones', 125]].forEach(([id, xp], i) => add('prayer', {
   id: 'offer_' + id, nameFn: () => t('tpl.offer', { item: ITEMS[id].name }),
-  icon: 'church', tint: ITEMS[id].tint, group: 'groups.altar', lvl: [10, 10, 25, 40][i], xp: xp * 3, time: 2.2, in: { [id]: 1 },
+  icon: 'church', tint: ITEMS[id].tint, group: 'groups.altar', lvl: [10, 10, 25, 40, 75][i], xp: xp * 3, time: 2.2, in: { [id]: 1 },
 }))
 
 /* ---------- Agility ---------- */

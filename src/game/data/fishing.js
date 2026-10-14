@@ -15,6 +15,8 @@ export const WATERS = [
     fish: { raw_lobster: 18, raw_swordfish: 42, raw_shark: 26, raw_anglerfish: 10 } },
   { id: 'abyssal_trench', icon: 'fish-monster',  lvl: 80, time: 7,   rod: 5, tint: '#5a3fbf', scene: ['#2a2a6a', '#07071f'],
     fish: { raw_shark: 46, raw_anglerfish: 40 } },
+  { id: 'starfall_shoals', icon: 'double-fish', lvl: 92, time: 7.5, rod: 6, tint: '#8fa8ff', scene: ['#3a4a9a', '#0c1030'],
+    fish: { raw_anglerfish: 30, raw_starfin: 50 } },
 ]
 // The summer regatta: open only during Midsummer Fires
 WATERS.push({ id: 'sunlit_bay', icon: 'flatfish', lvl: 1, time: 3.6, rod: 1, tint: '#f2b233', scene: ['#ffcf6a', '#d9772b'], festival: 'summer',

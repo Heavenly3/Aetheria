@@ -13,7 +13,7 @@ export const BLOOM_SCORE = { base: 12, soil: [0, 6, 14], bountiful: 2, season: 6
 export const FREE_SEEDS = 3 // festival seeds handed out each day
 
 // Summer: the bonfire and the regatta
-export const LOG_VALUE = { logs: 1, oak_logs: 2, willow_logs: 3, maple_logs: 5, yew_logs: 8, magic_logs: 12 }
+export const LOG_VALUE = { logs: 1, oak_logs: 2, willow_logs: 3, maple_logs: 5, yew_logs: 8, magic_logs: 12, elder_logs: 18 }
 export const BONFIRE_LEVELS = [0, 150, 500, 1200, 2500] // value fed to reach each level
 export const BONFIRE_TOKENS = 0.15 // extra token income per bonfire level
 export const REGATTA_WATER = 'sunlit_bay'

@@ -1613,7 +1613,7 @@ export default {
     milestoneClaimed: "Milestone reached: {n} masterworks",
   },
   thief: { heatTitle: "The guard's eye", heat: { calm: "Calm streets", wary: "The guard is wary", alert: "On alert: getting caught means jail", alarm: "Alarm! Every guard is looking for you" }, heatEffect: "+{fail} failure chance · the fence pays {fence}%", jailed: "In jail", jailLeft: "Free in {time}", bribe: "Bribe · {n} gold", informant: "Pay an informant · {n} gold", informantTip: "False rumours send the guard elsewhere: the heat halves.", inJail: "You are in jail. Wait it out or bribe the guard.", jailedStop: "Caught! The guard drags you off to jail.", bribed: "The guard looks the other way. You are free.", informed: "The rumours spread: the heat halves.", fenceTitle: "The fence", fenceText: "Valuables lifted now and then while thieving. The fence pays well for them, best while the streets are calm.", noGoods: "Nothing to sell yet.", sell: "Sell all", fenced: "The fence paid {gold} gold", findable: "Can turn up:", fromLevel: "From Thieving level {n}", heistsTitle: "Heists", lockpickTier: "Lockpick tier {n}", startHeist: "Pull the heist", cooldown: "Lie low · {time}", gearChance: "May come with the job", stages: { plan: "Plan", slip: "Slip in", crack: "Crack", escape: "Get away" }, stageText: { plan: { ok: "the guard rounds are learned", bad: "the plan has a hole: you call it off" }, slip: { ok: "in without a sound", bad: "a dog barks: you back off" }, crack: { ok: "the lock gives", bad: "the lock holds: you grab what is at hand" }, escape: { ok: "gone into the night", bad: "the guard is waiting at the door" } }, heistOkLine: "A clean job! +{gold} gold", caughtLine: "Caught! The loot is lost and you are in jail.", failLine: "It went wrong. +{gold} gold", heistOk: "{heist}: clean job, +{gold} gold", heistCaught: "{heist}: caught on the way out!", heistFail: "{heist}: it went wrong", heists: { merchant_vault: { name: "The merchant's vault", desc: "A spice merchant who trusts his locks too much." }, bishop_reliquary: { name: "The bishop's reliquary", desc: "Relics, rings and holy water behind the altar." }, guild_vault: { name: "The guild vault", desc: "Where a rich guild keeps what it never shows." }, royal_treasury: { name: "The royal treasury", desc: "The crown's own gold. Nobody has done it twice." } } },
-  waters: { sunlit_bay: "Sunlit Bay", dawn_river: "Dawn River", mirror_lake: "Mirror Lake", coral_coast: "Coral Coast", deep_sea: "Deep Sea", abyssal_trench: "Abyssal Trench" },
+  waters: { sunlit_bay: "Sunlit Bay", dawn_river: "Dawn River", mirror_lake: "Mirror Lake", coral_coast: "Coral Coast", deep_sea: "Deep Sea", abyssal_trench: "Abyssal Trench", starfall_shoals: "Starfall Shoals" },
   angling: { waters: "Fishing waters", needsRod: "Needs a {tool} of tier {n}", fishing: "Fishing", biting: "Something is biting!", baitPower: "Finer fish {n}% likelier", casting: "Line in the water…", idle: "Choose a bait and cast", cast: "Cast", reel: "Reel in", catchTitle: "What bites here", mastery: "Mastery of this water {n}", speed: "{s} s per cast", baitTitle: "Bait", baitOn: "One bait is used per cast.", baitOut: "Out of this bait: casting without it.", noBait: "No bait: the common fish bite most.", recent: "Latest catches" },
   guilds: {
     nameTpl: "{group} of {emblem}",
@@ -2894,6 +2894,7 @@ export default {
     aetherium_ore: 'Aetherium vein',
   },
   marks: {
+    treasurer: "Royal treasurer",
     bakery_stall: "Bakery stall",
     silk_stall: "Cloth stall",
     gem_stall: "Gem stall",
@@ -2924,8 +2925,8 @@ export default {
     arrowtips: 'arrowtips', arrow: 'arrow',
   },
   mats: {linen: "Linen", silk: "Silk", spellweave: "Spellweave", starweave: "Starweave", wolf: "Wolf", snake: "Snakeskin", wyvern: "Wyvern",  bronze: 'Bronze', iron: 'Iron', steel: 'Steel', mithril: 'Mithril', adamant: 'Adamant', rune: 'Rune', gold: 'Gold', leather: 'Leather', aether: 'Aether' },
-  woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic' },
-  fish: { sunfish: "Sunfish", tuna: "Tuna", anglerfish: "Anglerfish", shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark' },
+  woods: { normal: 'Normal', oak: 'Oak', willow: 'Willow', maple: 'Maple', yew: 'Yew', magic: 'Magic', elder: "Elder" },
+  fish: { sunfish: "Sunfish", tuna: "Tuna", anglerfish: "Anglerfish", shrimp: 'Shrimp', sardine: 'Sardine', trout: 'Trout', salmon: 'Salmon', lobster: 'Lobster', swordfish: 'Swordfish', shark: 'Shark', starfin: "Starfin" },
   crops: {
     bloomflower: "Festival bloom",
     moonroot: "Moonroot",
@@ -2939,6 +2940,9 @@ export default {
   gems: { sapphire: 'Sapphire', emerald: 'Emerald', ruby: 'Ruby', diamond: 'Diamond' },
 
   items: {
+    astral_bones: "Astral bones",
+    soul_rune: "Soul rune",
+    aether_overload: "Aether overload",
     giant_vegetable: "Giant vegetable",
     festive_hat: "Festive hat",
     festive_cloak: "Festive cloak",
@@ -3003,6 +3007,7 @@ export default {
     colossus_bulwark: 'Colossus Bulwark', hydra_heart: 'Heart of the Hydra', lich_shroud: 'Shroud of the Lich Queen', wyrm_crown: 'Ashen Crown', abyssal_mantle: 'Abyssal Mantle', rime_locket: 'Rime Locket',
   },
   itemDesc: {
+    astral_bones: "Bones of the creatures beyond the Abyss, light as starlight. They give the most Prayer XP of all.",
     giant_vegetable: "An enormous vegetable from a festival harvest. The judges at the harvest fair love these.",
     festive_hat: "From a festival track. Part of the festive outfit.",
     festive_cloak: "From a festival track. Part of the festive outfit.",

@@ -28,6 +28,6 @@ export const BONFIRE = { perLog: 20e3, cap: 30 * 60e3, mods: { xp: 0.03, 'speed.
 export const RESONANCE = {
   air_rune: { weather: ['wind', 'storm'] }, water_rune: { weather: ['rain', 'storm'] }, earth_rune: { weather: ['clear', 'cloudy'] },
   fire_rune: { weather: ['heatwave'] }, mind_rune: { weather: ['fog'] }, chaos_rune: { night: true }, nature_rune: { weather: ['rain'] },
-  death_rune: { night: true }, blood_rune: { night: true },
+  death_rune: { night: true }, blood_rune: { night: true }, soul_rune: { night: true },
 }
 export const RESONANCE_BONUS = 0.5
