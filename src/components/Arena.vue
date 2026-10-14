@@ -7,6 +7,8 @@ import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, B
 import { abilityText } from '../ui/abilities.js'
 import { pct, fmt, fmtDec } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
+import RegionThreat from './RegionThreat.vue'
+import { REGION_OF } from '../game/data/realm.js'
 import GameIcon from './GameIcon.vue'
 import { help, tip } from '../ui/tips.js'
 
@@ -161,6 +163,7 @@ onUnmounted(() => { off && off(); offAb && offAb() })
       <span v-if="G.dodgeChance()" class="tag" v-tooltip.top="help('combat.dodge')">{{ $t('fighting.dodge', { v: pct(G.dodgeChance()) }) }}</span>
       <span v-if="G.blockChance()" class="tag" v-tooltip.top="help('combat.block')">{{ $t('fighting.block', { v: pct(G.blockChance()) }) }}</span>
       <span v-if="m.weak" class="tag" :class="m.weak === G.styleType() ? 'ok' : ''" v-tooltip.top="help('combat.weakness')">{{ $t('combat.weakTo', { style: $t(`combat.types.${m.weak}`) }) }}</span>
+      <RegionThreat v-if="act.kind === 'area' && REGION_OF[act.target]" :area="REGION_OF[act.target]" />
       <span v-if="G.onTask(m)" class="tag arcane" v-tooltip.top="help('combat.task')">{{ $t('combat.taskLeft', { n: state.slayer.task.left }) }}</span>
       <span v-if="dungeon" class="tag arcane">{{ dungeon.name }} · {{ act.room >= dungeon.rooms.length ? $t('combat.boss') : $t('combat.room', { n: act.room + 1, total: dungeon.rooms.length }) }} · {{ $t('combat.clears', { n: act.clears }) }}</span>
       <span v-if="state.prayer" class="tag ok">{{ $t('combat.prayerActive') }}</span>

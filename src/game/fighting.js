@@ -131,7 +131,7 @@ export const fighting = {
     act.mech = null
     act.elite = null
     if (this.rollSuperior(act)) act.elite = 'superior'
-    else if (act.kind === 'area' && Math.random() < ELITE_CHANCE + this.mod('eliteChance')) act.elite = ELITE_IDS[Math.floor(Math.random() * ELITE_IDS.length)]
+    else if (act.kind === 'area' && Math.random() < ELITE_CHANCE + this.mod('eliteChance') + this.regionEffect(this.getMonster({ ...act, elite: null }), 'elite')) act.elite = ELITE_IDS[Math.floor(Math.random() * ELITE_IDS.length)]
     act.fx = { player: act.fx?.player || {}, monster: {} }
     act.phase = 0
     act.mHp = this.getMonster(act).hp

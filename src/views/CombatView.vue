@@ -14,6 +14,7 @@ import { QUESTS } from '../game/data/progression.js'
 import { fmt } from '../game/format.js'
 import CombatPrep from '../components/CombatPrep.vue'
 import Arena from '../components/Arena.vue'
+import RegionThreat from '../components/RegionThreat.vue'
 import MonsterCard from '../components/MonsterCard.vue'
 import { chanceNote } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
@@ -54,6 +55,7 @@ function fightBoss(b) {
                 <div class="small muted">{{ area.desc }} · {{ $t('combat.recommended', { n: area.recLvl }) }}</div>
               </div>
               <span v-if="!G.areaUnlocked(area)" class="tag bad"><i class="pi pi-lock" /> {{ $t('combat.questReq', { quest: questName(area.reqQuest) }) }}</span>
+              <RegionThreat v-else :area="area.id" />
             </div>
             <div class="grid-cards">
               <MonsterCard v-for="m in area.monsters" :key="m.id" :monster="m" :locked="!G.areaUnlocked(area)" :lockText="$t('combat.areaLocked')"

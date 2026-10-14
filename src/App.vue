@@ -18,6 +18,7 @@ import { ROLES, DIFFICULTIES } from './game/data/character.js'
 import { fmt, fmtDec, fmtTime, fmtClock } from './game/format.js'
 import { cue, notify } from './game/sound.js'
 import { SHARDS } from './game/data/crown.js'
+import { AREAS } from './game/data/combat.js'
 import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaFor, setCaptionHandler } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
 import { tm } from './i18n/index.js'
@@ -146,7 +147,9 @@ onMounted(() => {
   on('weeklyKill', d => { cue('weeklyKill', { notify: [d.boss.name, t('weekly.slainHint')] }); push(d.boss.icon, t(d.trophy ? 'toast.weeklyKill' : 'toast.weeklyKillAgain', { name: d.boss.name }), 'rare', 8000) })
   on('streak', d => { cue('dailyStreak'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
   on('death', () => cue('death'))
-  on('retreat', () => cue('retreat')) // the fight's stop message already tells who won and the gold lost
+  on('retreat', () => cue('retreat'))
+  on('overrun', e => { cue('omen'); push('death-skull', t('realm.overrunToast', { area: AREAS.find(a => a.id === e.area).name }), 'warn', 8000) })
+  on('cleansed', e => { cue('quest'); push('laurel-crown', t('realm.cleansedToast', { area: AREAS.find(a => a.id === e.area).name, gold: fmt(e.gold) }), 'success', 8000) }) // the fight's stop message already tells who won and the gold lost
   on('expedition', r => { cue('expedition', { sound: r.ok ? 'quest' : 'bad' }); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })
   on('dungeon', d => {
     cue('dungeon')

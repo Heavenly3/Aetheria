@@ -27,6 +27,9 @@ import { codex, codexState } from './codex.js'
 import { crown, crownState } from './crown.js'
 import { routines, routinesState } from './routines.js'
 import { techniques, techniquesState } from './techniques.js'
+import { realm, realmState } from './realm.js'
+import { THREAT_EFFECT } from './data/realm.js'
+const REGION_GOLD = THREAT_EFFECT.gold, REGION_LOOT = THREAT_EFFECT.loot
 import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
@@ -127,6 +130,7 @@ export function newState(profile = {}) {
     ...crownState(),
     ...routinesState(),
     ...techniquesState(),
+    ...realmState(),
     ...churchState(),
     ...thiefState(),
     ...festivalsState(),
@@ -1011,7 +1015,7 @@ export const G = {
   areaUnlocked(area) { return !area.reqQuest || this.questDone(area.reqQuest) },
   // Apply the difficulty multiplier to a monster's stats
   scaleMonster(m) {
-    const f = this.monsterMult()
+    const f = this.monsterMult() * (1 + Math.round(this.regionEffect(m, 'monster') * 50) / 50)
     if (f === 1) return m
     const key = m.id + '|' + f + '|' + (m.affix || '')
     let s = scaledCache.get(key)
@@ -1230,9 +1234,12 @@ export const G = {
     if (this.tracker) this.tracker.kills[m.id] = (this.tracker.kills[m.id] || 0) + 1
     // Elites pay far better: more gold, likelier drops and a little stardust
     const elite = !!act.elite
-    const gold = this.addGold(rand(m.gold[0], m.gold[1]) * (elite ? ELITE_LOOT.gold : 1), true)
+    // A troubled region pays more for its trouble, and every hunt there calms it down
+    const region = act.kind === 'area' ? this.regionShare(m) : 0
+    if (act.kind === 'area') this.easeThreat(m.id, elite)
+    const gold = this.addGold(rand(m.gold[0], m.gold[1]) * (elite ? ELITE_LOOT.gold : 1) * (1 + region * REGION_GOLD), true)
     const loot = []
-    const lootMult = (1 + this.mod('loot')) * (elite ? ELITE_LOOT.drops : 1)
+    const lootMult = (1 + this.mod('loot') + region * REGION_LOOT) * (elite ? ELITE_LOOT.drops : 1)
     if (elite) {
       const dust = rand(...ELITE_LOOT.stardust)
       this.addItem('stardust', dust)
@@ -1528,6 +1535,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm)
 
 export { SKILLS, ITEMS }

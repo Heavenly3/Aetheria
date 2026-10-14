@@ -71,6 +71,7 @@ Requires Node.js 18 or newer.
   - **Slayer**: pick one of three hunts (easy, standard or hard) that pay points, gold and Slayer XP. While a creature is your task, a tougher Superior version can step up and drop slayer sigils, used to imbue the slayer helm. Points buy permanent perks (longer hunts, bounties, Superior tracking, insight), blocked creatures and supplies, and long streaks pay gem chests.
   - Every weapon has its own attack speed, crit chance and sometimes a status it leaves: bleeding, burns, poison, stuns, slows or weakness. Agility dodges, shields block and armour soaks part of every blow.
   - **Stances**: thirteen across melee, ranged and magic (Accurate, Aggressive, Defensive, Controlled, Berserk; Steady, Rapid, Longrange, Aimed; Focused, Swift casting, Overcharge, Warding). Each trades accuracy, damage, speed or defence and shares the XP its own way, and the combat screen compares them all against the creature you are fighting.
+  - **A realm that reacts**: every region has a threat level that grows with time (also offline) and falls with every creature hunted there. Restless, dangerous and overrun regions have stronger creatures that carry more gold and loot and bring more elites; an overrun region is announced, and calming it back down pays King Edmund's bounty.
   - **Boss mechanics**: every boss has its own big moves (crushing blows, fire breath, frost novas, venom sprays, mending), charged for a few seconds with a warning in the arena before they land. A guarding stance or a defensive boon takes strikes far better and avoids their statuses, and damage dealt while a boss mends breaks the heal. A tactic can switch to a guarding stance during each charge and back afterwards.
   - **Tactics**: retreat before falling when the food runs out (no gold lost, the hunting streak kept), stop when the slayer task is done, and five saved loadouts that also keep the stance and its ability bar.
   - **Abilities**: six per style (melee, ranged, magic), unlocked by level. Attacks build energy, and up to three abilities on the bar fire on their own in priority order.
@@ -131,6 +132,7 @@ Requires Node.js 18 or newer.
 - `src/game/collection.js`: equipment set bonuses, the bestiary and cosmetics.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.
 - `src/game/fighting.js`: weapon pace, crits, statuses, creature traits, elites, abilities, boss phases, streaks and the combat power numbers (tuning in `src/game/data/fighting.js`).
+- `src/game/realm.js`: the regions' threat and the bounties for calming them (tuning in `src/game/data/realm.js`).
 - `src/game/techniques.js`: each skill's technique (tuning in `src/game/data/techniques.js`).
 - `src/game/routines.js`: routines, their conditions and actions (lists and templates in `src/game/data/routines.js`).
 - `src/game/crown.js`: the Aether Crown's shards, sockets, powers and endings (shards and endings in `src/game/data/crown.js`).

@@ -271,6 +271,8 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    overrun: "{area} has been overrun.",
+    cleansed: "Brought {area} back to calm: {gold} gold bounty.",
     shard: "Found a shard of the Crown: {shard}.",
     ending: "Chose the ending: {ending}.",
     retreat: "Retreated from {monster} before falling.",
@@ -1837,6 +1839,20 @@ export default {
     joined: "{guild} welcomes you!",
     rankUp: "New rank in {guild}: {rank}",
     table: "Guild ranking",
+  },
+
+  realm: {
+    levels: {
+      calm: { name: "Calm", desc: "Few creatures roam here. Nothing changes in its fights." },
+      restless: { name: "Restless", desc: "Creatures are stirring: they grow stronger, but carry more." },
+      dangerous: { name: "Dangerous", desc: "The region is in trouble. Its creatures are much stronger and much richer." },
+      overrun: { name: "Overrun", desc: "The region is overrun. Bring it back to calm for the king's bounty." },
+    },
+    value: "Threat {n} / 100 · it grows with time and falls with every hunt",
+    effects: { monster: "Creatures {v}% stronger", loot: "+{v}% loot and +{g}% gold", elite: "+{v}% elite chance" },
+    bounty: "Bring it down to {n} for King Edmund's bounty",
+    overrunToast: "{area} is overrun! Its creatures are stronger and richer. Calm it down for a bounty.",
+    cleansedToast: "{area} is calm again. King Edmund pays a bounty of {gold} gold.",
   },
 
   techniques: {

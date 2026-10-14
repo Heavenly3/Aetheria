@@ -271,6 +271,8 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    overrun: "{area} se ha desbordado.",
+    cleansed: "Devolviste la calma a {area}: recompensa de {gold} de oro.",
     shard: "Encontraste una esquirla de la Corona: {shard}.",
     ending: "Elegiste el final: {ending}.",
     retreat: "Te retiraste de {monster} antes de caer.",
@@ -1837,6 +1839,20 @@ export default {
     joined: "¡{guild} te da la bienvenida!",
     rankUp: "Nuevo rango en {guild}: {rank}",
     table: "Clasificación de gremios",
+  },
+
+  realm: {
+    levels: {
+      calm: { name: "Tranquila", desc: "Por aquí rondan pocas criaturas. Sus combates no cambian." },
+      restless: { name: "Inquieta", desc: "Las criaturas se agitan: se hacen más fuertes, pero llevan más encima." },
+      dangerous: { name: "Peligrosa", desc: "La región está en apuros. Sus criaturas son mucho más fuertes y mucho más ricas." },
+      overrun: { name: "Desbordada", desc: "La región está desbordada. Devuélvele la calma para cobrar la recompensa del rey." },
+    },
+    value: "Amenaza {n} / 100 · crece con el tiempo y baja con cada caza",
+    effects: { monster: "Criaturas un {v} % más fuertes", loot: "+{v} % de botín y +{g} % de oro", elite: "+{v} % de probabilidad de élite" },
+    bounty: "Bájala a {n} para cobrar la recompensa del rey Edmund",
+    overrunToast: "¡{area} está desbordada! Sus criaturas son más fuertes y más ricas. Cálmala para cobrar una recompensa.",
+    cleansedToast: "{area} vuelve a estar tranquila. El rey Edmund paga una recompensa de {gold} de oro.",
   },
 
   techniques: {
