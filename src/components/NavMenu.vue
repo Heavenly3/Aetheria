@@ -20,6 +20,7 @@ const sections = computed(() => [
     { to: '/', icon: state.avatar || 'wizard-face', key: 'nav.hero', badge: G.attrPoints() + G.talentPoints() || null },
     { to: '/inventory', icon: 'knapsack', key: 'nav.inventory' },
     { to: '/pets', icon: 'paw-print', key: 'nav.pets' },
+    { to: '/routines', icon: 'gears', key: 'nav.routines', pulse: state.routines.on && state.routines.rules.some(r => r.on) },
   ] },
   { id: 'adventure', key: 'nav.groups.adventure', items: [
     { to: '/combat', icon: 'crossed-swords', key: 'nav.combat', pulse: inCombat('area') || inCombat('boss') || inCombat('dungeon') },

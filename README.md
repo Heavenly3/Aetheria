@@ -100,6 +100,7 @@ Requires Node.js 18 or newer.
   - **The bar**: patrons drop in over time, even offline, asking for food and drink from your stores; serving them pays gold and tips and raises the tavern's reputation. Special guests (the Faceless Merchant, a bard, a royal courier, a weary knight) ask for more and pay with rare goods.
   - **Brews**: amber ale, herbal mead, strawberry wine and fire grog, brewed with Cooking and drunk instead of buying the drink.
   - **Treasure maps** found while thieving open an expedition of their own.
+- **Routines**: up to twelve rules of the form "when this happens, do that", tried from top to bottom while the game is open. Conditions cover being idle, item counts, the weather, day and night, omens, waiting patrons, ready plots, slayer tasks and festivals; actions train a skill, fight, hunt an omen, stop, serve, harvest, collect the farmyard, sell or take a slayer task. Rules only change what the hero is doing when they may interrupt, wait a few minutes after a choice made by hand, and keep a short log. Eight ready-made rules to start from.
 - **Action queue** that moves on to the next task by itself, and **chained crafting**: when a recipe runs out, the game makes the missing materials first (mine, smelt, then forge) and goes back to it.
 - **Guided tutorial** for new heroes: thirteen short steps over the first ten minutes (mine, smelt, fight, meet the tavern, open the journal) and a short tour of the guilds, the farm and the compendium, with the next button highlighted. It can be hidden, skipped or restarted from Settings.
 - **Light and dark themes**, or follow the device setting.
@@ -128,6 +129,7 @@ Requires Node.js 18 or newer.
 - `src/game/collection.js`: equipment set bonuses, the bestiary and cosmetics.
 - `src/game/omens.js`: omens, their creatures, relics, wishes and boons.
 - `src/game/fighting.js`: weapon pace, crits, statuses, creature traits, elites, abilities, boss phases, streaks and the combat power numbers (tuning in `src/game/data/fighting.js`).
+- `src/game/routines.js`: routines, their conditions and actions (lists and templates in `src/game/data/routines.js`).
 - `src/game/crown.js`: the Aether Crown's shards, sockets, powers and endings (shards and endings in `src/game/data/crown.js`).
 - `src/game/guilds.js`: founding the guilds, applications, the entry trial and its puzzles, contracts, ranks, perks and the guild shop (tuning in `src/game/data/guilds.js`).
 - `src/game/journal.js`: the story journal, its chapters and memories (texts in the locales, chapters and characters in `src/game/data/journal.js`).

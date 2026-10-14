@@ -25,6 +25,7 @@ import { fighting, fightingState } from './fighting.js'
 import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
 import { crown, crownState } from './crown.js'
+import { routines, routinesState } from './routines.js'
 import { slayer } from './slayer.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
@@ -123,6 +124,7 @@ export function newState(profile = {}) {
     ...guildsState(),
     ...codexState(),
     ...crownState(),
+    ...routinesState(),
     ...churchState(),
     ...thiefState(),
     ...festivalsState(),
@@ -1517,6 +1519,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines)
 
 export { SKILLS, ITEMS }
