@@ -169,3 +169,29 @@ export const COMBAT_SKILLS = ['attack', 'strength', 'defense', 'ranged', 'magic'
 // Gear defence also soaks part of every blow: defence / (defence + ARMOUR_K), up to ARMOUR_CAP
 export const ARMOUR_K = 600
 export const ARMOUR_CAP = 0.4
+
+/*
+  Boss mechanics: big moves a boss charges for a few seconds before they land, shown in the arena.
+  While a boss charges it does not attack normally.
+  - Strikes (hit: a multiple of its max hit, and maybe a status) can be guarded: a stance that adds
+    defence, or the Ward or Evasion boons, takes them at GUARD_TAKEN and avoids their status.
+  - Mending (heal: share of its health) is broken by dealing BREAK_SHARE of its health while it channels.
+  every: seconds between uses (the first comes sooner) · charge: seconds of warning
+*/
+export const MECHS = {
+  slam: { icon: 'warhammer', color: '#e0a64b', every: 16, charge: 3, hit: 2.5 },
+  breath: { icon: 'dragon-breath', color: '#ff6a3c', every: 20, charge: 3.5, hit: 2, status: 'burn' },
+  nova: { icon: 'ice-spell-cast', color: '#7ad7ff', every: 18, charge: 3, hit: 1.5, status: 'slow' },
+  spray: { icon: 'death-juice', color: '#8bc34a', every: 15, charge: 2.5, hit: 1.2, status: 'poison' },
+  mend: { icon: 'healing-shield', color: '#62c17e', every: 30, charge: 4, heal: 0.05 },
+}
+export const GUARD_TAKEN = 0.4
+export const BREAK_SHARE = 0.025
+// The stance each kind of fight braces with when the tactic is on
+export const GUARD_STANCE = { melee: 'defense', ranged: 'longrange', magic: 'warding' }
+export const BOSS_MECHS = {
+  goblin_king: ['slam'], warren_chief: ['slam'], troll_lord: ['slam', 'mend'], skeleton_king: ['mend'],
+  kraken: ['slam', 'spray'], naga: ['spray', 'mend'], necromancer: ['mend', 'nova'], winter_queen: ['nova', 'slam'],
+  bronze_wyrm: ['breath'], ancient_dragon: ['breath', 'slam'], void_emperor: ['slam', 'mend'], rift_warden: ['nova'],
+  aether_sovereign: ['breath', 'mend', 'slam'],
+}

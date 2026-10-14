@@ -3,7 +3,7 @@ import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { MERCENARIES, DUNGEONS } from '../game/data/combat.js'
-import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES } from '../game/data/fighting.js'
+import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES, MECHS, BREAK_SHARE } from '../game/data/fighting.js'
 import { abilityText } from '../ui/abilities.js'
 import { pct, fmt, fmtDec } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
@@ -33,6 +33,15 @@ const bar = computed(() => G.abilityBar().filter(id => ABILITY_MAP[id] && G.abil
 const abilityTip = a => tip(t(`abilities.list.${a.id}`), abilityText(a), [{ text: `${t('abilities.cost', { n: a.cost })} · ${t('abilities.cooldown', { n: a.cd })}`, kind: 'muted' }])
 // Boss phase, hunting streak and the fight's running numbers
 const phase = computed(() => (act.value?.phase ? BOSS_PHASES[act.value.phase - 1] : null))
+// A boss's big move on its way: what it is, how long until it lands, and how to answer it
+const charge = computed(() => {
+  const c = act.value?.mech?.charge
+  if (!c) return null
+  const def = MECHS[c.id], need = m.value.hp * BREAK_SHARE
+  return { ...c, def, left: Math.max(0, c.left), share: 1 - Math.max(0, c.left) / c.total, guarded: !def.heal && G.isGuarded(act.value), breakShare: def.heal ? Math.min(1, c.dealt / need) : 0 }
+})
+const mechs = computed(() => G.bossMechs(m.value))
+const mechTip = id => tip(t(`fighting.mechs.${id}.name`), t(`fighting.mechs.${id}.desc`))
 const streak = computed(() => state.hunt?.streak || 0)
 const live = computed(() => (void act.value?.live?.t, G.liveStats()))
 const NOTE_PARAMS = {
@@ -40,6 +49,11 @@ const NOTE_PARAMS = {
   phase: n => ({ phase: t(`fighting.phases.${n.id}.name`).toLowerCase() }),
   elite: n => ({ kind: t(`fighting.elites.${n.id}`) }),
   bigCrit: n => ({ dmg: fmt(n.dmg) }),
+  mechCharge: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
+  mechHit: n => ({ mech: t(`fighting.mechs.${n.id}.name`), dmg: fmt(n.dmg) }),
+  mechGuarded: n => ({ mech: t(`fighting.mechs.${n.id}.name`), dmg: fmt(n.dmg) }),
+  mechBroken: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
+  mechHealed: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
 }
 const noteText = n => t(`fighting.notes.${n.kind}`, NOTE_PARAMS[n.kind]?.(n) || {})
 const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))
@@ -113,10 +127,23 @@ onUnmounted(() => { off && off(); offAb && offAb() })
       </div>
       <div v-if="phase" class="phase-tag" v-tooltip.top="tip($t(`fighting.phases.${phase.id}.name`), $t(`fighting.phases.${phase.id}.desc`))">{{ $t('fighting.phase', { n: act.phase + 1 }) }} · {{ $t(`fighting.phases.${phase.id}.name`) }}</div>
       <div class="bar thick hp"><i :style="{ width: (alive ? act.mHp / m.hp : 0) * 100 + '%' }" /></div>
+      <div v-if="charge && alive" class="charge" :style="{ '--c': charge.def.color }">
+        <div class="row small" style="gap:6px">
+          <GameIcon :name="charge.def.icon" :size="14" />
+          <b class="grow">{{ $t('fighting.charging', { mech: $t(`fighting.mechs.${charge.id}.name`) }) }}</b>
+          <span class="tnum">{{ charge.left.toFixed(1) }} s</span>
+        </div>
+        <div class="bar thin" style="margin-top:5px"><i :style="{ width: charge.share * 100 + '%' }" /></div>
+        <div class="small" style="margin-top:5px">
+          <template v-if="charge.def.heal">{{ $t('fighting.breakIt', { v: Math.round(charge.breakShare * 100) }) }}</template>
+          <span v-else :class="charge.guarded ? 'ok-text' : 'bad-text'">{{ charge.guarded ? $t('fighting.guarded') : $t('fighting.unguarded') }}</span>
+        </div>
+      </div>
       <div class="small muted tnum" style="margin-top:5px">{{ alive ? `${fmt(act.mHp)} / ${fmt(m.hp)} ${$t('common.hp')}` : $t('combat.respawning') }}</div>
       <div class="bar thin" style="margin-top:8px;--c:#e0554b"><i :style="{ width: (alive ? Math.min(1, act.mTimer / m.speed) : 0) * 100 + '%' }" /></div>
       <div class="fx-row">
         <span v-for="tr in traits" :key="tr" class="trait" v-tooltip.top="traitTip(tr)"><GameIcon :name="TRAITS[tr].icon" :size="12" /> {{ $t(`fighting.traits.${tr}.name`) }}</span>
+        <span v-for="id in mechs" :key="id" class="trait mech" :style="{ '--c': MECHS[id].color }" v-tooltip.top="mechTip(id)"><GameIcon :name="MECHS[id].icon" :size="12" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
         <span v-for="s in statuses('monster')" :key="s.id" class="fx" :style="{ '--c': s.color }" v-tooltip.top="statusTip(s)">
           <GameIcon :name="s.icon" :size="13" />{{ s.left }}<sup v-if="s.n > 1">×{{ s.n }}</sup>
         </span>
@@ -168,6 +195,12 @@ onUnmounted(() => { off && off(); offAb && offAb() })
 .splat.crit { background: linear-gradient(135deg, #f8e3a8, #e2b65a 50%, #a87a2a); color: #1a1206; font-size: 19px; }
 .splat.soft { background: #2a3550; font-size: 13px; }
 .energy { --c: #a98bff; }
+.trait.mech { color: var(--c); border-color: color-mix(in srgb, var(--c) 45%, transparent); }
+.charge { margin-top: 8px; padding: 8px 10px; border-radius: 10px; text-align: start; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 50%, transparent);
+  background: color-mix(in srgb, var(--c) 10%, transparent); animation: chargePulse 1s ease-in-out infinite; }
+.charge .bar > i { background: var(--c); }
+@keyframes chargePulse { 50% { box-shadow: 0 0 18px -6px var(--c); } }
+:root[data-motion='reduce'] .charge { animation: none; }
 .phase-tag { display: inline-block; margin-top: -2px; margin-bottom: 6px; padding: 1px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: #b3202a; }
 .live { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-size: 12.5px; color: var(--muted); padding-top: 10px; border-top: 1px solid var(--line); }
 .live b { color: var(--ink); }

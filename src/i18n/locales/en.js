@@ -370,6 +370,8 @@ export default {
   },
 
   tactics: {
+    brace: "Guard against big attacks",
+    braceHint: "When a boss charges a big blow, your hero switches to a guarding stance until it lands, then goes back.",
     title: "Tactics",
     intro: "Rules your hero follows on their own during a fight.",
     retreat: "Retreat before falling",
@@ -1391,6 +1393,17 @@ export default {
   },
 
   fighting: {
+    mechs: {
+      slam: { name: "Crushing blow", desc: "Charges for a few seconds, then hits for two and a half times its strongest blow. A guarding stance or the Ward and Evasion boons take far less." },
+      breath: { name: "Fire breath", desc: "Breathes fire after a long charge: double damage and burns. Guard against it to take less and avoid the burns." },
+      nova: { name: "Frost nova", desc: "A burst of cold that slows you. Guard against it to take less and keep your pace." },
+      spray: { name: "Venom spray", desc: "Sprays venom that poisons. Guard against it to take less and avoid the poison." },
+      mend: { name: "Mending", desc: "Channels a heal of 5% of its health. Deal 2.5% of its health while it channels to break it." },
+    },
+    charging: "{mech}!",
+    guarded: "Guarded: you will take far less",
+    unguarded: "Unguarded: switch to a guarding stance",
+    breakIt: "Break it with damage: {v}%",
     phase: "Phase {n}",
     streak: "{n} in a row · +{v}%",
     phases: {
@@ -1411,7 +1424,7 @@ export default {
       goldH: "gold/h",
       taken: "taken/s",
     },
-    notes: {
+    notes: { mechCharge: "It charges: {mech}", mechHit: "{mech} lands for {dmg}", mechGuarded: "You guard against {mech}: only {dmg}", mechBroken: "You break its {mech}", mechHealed: "{mech}: it heals",
       ability: "You used {ability}",
       phase: "The boss is now {phase}!",
       elite: "An elite appeared: {kind}",

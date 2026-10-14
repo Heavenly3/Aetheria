@@ -370,6 +370,8 @@ export default {
   },
 
   tactics: {
+    brace: "Ponerse en guardia ante los grandes golpes",
+    braceHint: "Cuando un jefe carga un gran golpe, tu héroe cambia a una postura de guardia hasta que llega y luego vuelve a la suya.",
     title: "Tácticas",
     intro: "Reglas que tu héroe sigue por su cuenta durante el combate.",
     retreat: "Retirarse antes de caer",
@@ -1391,6 +1393,17 @@ export default {
   },
 
   fighting: {
+    mechs: {
+      slam: { name: "Golpe demoledor", desc: "Carga unos segundos y luego golpea con dos veces y media su golpe más fuerte. Una postura de guardia o las mejoras Égida y Evasión lo reciben mucho mejor." },
+      breath: { name: "Aliento de fuego", desc: "Escupe fuego tras una carga larga: doble de daño y quemaduras. Ponte en guardia para recibir menos y evitar las quemaduras." },
+      nova: { name: "Nova de escarcha", desc: "Una ráfaga de frío que te ralentiza. Ponte en guardia para recibir menos y mantener tu ritmo." },
+      spray: { name: "Rociada venenosa", desc: "Rocía veneno que envenena. Ponte en guardia para recibir menos y evitar el veneno." },
+      mend: { name: "Curación", desc: "Canaliza una curación del 5 % de su vida. Hazle un 2,5 % de su vida mientras la canaliza para romperla." },
+    },
+    charging: "¡{mech}!",
+    guarded: "En guardia: recibirás mucho menos",
+    unguarded: "Sin guardia: cambia a una postura de guardia",
+    breakIt: "Rómpela con daño: {v} %",
     phase: "Fase {n}",
     streak: "{n} seguidas · +{v}%",
     phases: {
@@ -1411,7 +1424,7 @@ export default {
       goldH: "oro/h",
       taken: "recibido/s",
     },
-    notes: {
+    notes: { mechCharge: "Está cargando: {mech}", mechHit: "{mech} te alcanza: {dmg}", mechGuarded: "Resistes {mech}: solo {dmg}", mechBroken: "Rompes su {mech}", mechHealed: "{mech}: se cura",
       ability: "Usaste {ability}",
       phase: "¡El jefe está {phase}!",
       elite: "Apareció un élite: {kind}",

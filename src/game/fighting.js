@@ -11,6 +11,7 @@ import {
   weaponProfile, SPELL_FX, AIR_SPEED, STATUSES, TRAITS, traitsOf, ELITES, ELITE_IDS, ELITE_CHANCE,
   ABILITIES, ABILITY_MAP, ABILITY_SKILL, BUFFS, ENERGY, ENERGY_MAX, BAR_SIZE, defaultBar,
   BOSS_PHASES, STREAK_STEP, STREAK_BONUS, STREAK_MAX, COMBAT_SKILLS, ARMOUR_K, ARMOUR_CAP,
+  MECHS, GUARD_TAKEN, BREAK_SHARE, GUARD_STANCE, BOSS_MECHS,
 } from './data/fighting.js'
 
 const eliteCache = new Map()
@@ -23,7 +24,7 @@ const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
 export const fightingState = () => ({
   abilities: { bar: defaultBar(), auto: true }, hunt: { streak: 0, best: 0 },
   stances: { melee: 'attack', ranged: 'ranged', magic: 'magic' },
-  tactics: { retreat: false, retreatPct: 25, stopOnTask: false },
+  tactics: { retreat: false, retreatPct: 25, stopOnTask: false, brace: true },
 })
 // Combat XP per point of damage: melee and ranged, and magic (whose spells also pay a little per cast)
 const XP_PER_DMG = { melee: 4, ranged: 4, magic: 2 }
@@ -126,6 +127,8 @@ export const fighting = {
   },
   // A new creature steps up: only open-field fights can bring an elite
   spawn(act) {
+    this.endBrace(act)
+    act.mech = null
     act.elite = null
     if (this.rollSuperior(act)) act.elite = 'superior'
     else if (act.kind === 'area' && Math.random() < ELITE_CHANCE + this.mod('eliteChance')) act.elite = ELITE_IDS[Math.floor(Math.random() * ELITE_IDS.length)]
@@ -254,6 +257,7 @@ export const fighting = {
     const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
     act.mHp -= dealt
     this.track(act, 'dealt', dealt)
+    if (act.mech?.charge) act.mech.charge.dealt += dealt
     this.styleXp(dealt, first)
     this.emit('hit', { who: 'player', dmg, crit, evaded, ability: ab?.id })
     if (crit && dmg >= ps.maxHit) this.note(act, 'bigCrit', { dmg })
@@ -286,6 +290,64 @@ export const fighting = {
     if (r === 'kill' || r === 'end') return r
     this.gainEnergy(act, ENERGY.attack + (r ? ENERGY.crit : 0))
     return null
+  },
+
+  /* ================= boss mechanics ================= */
+  // A braced stance goes back to the one the hero chose
+  endBrace(act) {
+    if (act?.mech?.braceFrom) { this.s.combatStyle = act.mech.braceFrom; act.mech.braceFrom = null }
+  },
+  bossMechs(m) { return m?.boss ? BOSS_MECHS[m.id] || [] : [] },
+  // A guarding stance or a defensive boon takes big strikes far better
+  isGuarded(act) { return this.stance().def > 0 || this.buffValue(act, 'ward') > 0 || this.buffValue(act, 'dodge') > 0 },
+  // Charges and lands the boss's big moves; returns 'player' if the hero fell to one
+  bossMechTick(act, m, dt) {
+    const list = act.kind === 'weekly' ? [] : this.bossMechs(m)
+    if (!list.length) return null
+    const mc = (act.mech ||= { timers: {}, charge: null })
+    if (mc.charge) {
+      mc.charge.left -= dt
+      return mc.charge.left <= 0 ? this.resolveMech(act, m) : null
+    }
+    for (const id of list) {
+      // The first use of each comes a little sooner than the rest
+      mc.timers[id] = (mc.timers[id] ?? MECHS[id].every * (0.5 + Math.random() * 0.3)) - dt
+      if (mc.timers[id] > 0) continue
+      mc.timers[id] = MECHS[id].every
+      mc.charge = { id, left: MECHS[id].charge, total: MECHS[id].charge, dealt: 0 }
+      // Tactics: brace with a guarding stance until it lands
+      if (MECHS[id].hit && this.s.tactics?.brace && !this.isGuarded(act)) {
+        mc.braceFrom = this.s.combatStyle
+        this.s.combatStyle = GUARD_STANCE[this.styleType()]
+      }
+      this.note(act, 'mechCharge', { id })
+      this.emit('bossCharge', { id, monster: m })
+      break
+    }
+    return null
+  },
+  resolveMech(act, m) {
+    const mc = act.mech, c = mc.charge, def = MECHS[c.id]
+    mc.charge = null
+    let fell = null
+    if (def.heal) {
+      if (c.dealt >= m.hp * BREAK_SHARE) this.note(act, 'mechBroken', { id: c.id })
+      else { act.mHp = Math.min(m.hp, act.mHp + Math.round(m.hp * def.heal)); this.note(act, 'mechHealed', { id: c.id }) }
+    } else {
+      const guarded = this.isGuarded(act)
+      const raw = m.maxHit * def.hit * this.phaseOf(act).maxHit * (guarded ? GUARD_TAKEN : 1)
+      const dmg = Math.max(1, Math.round(raw * (1 - this.damageReduction()) * (1 - this.weakenOf(act, 'monster'))))
+      this.s.hp -= dmg
+      this.track(act, 'taken', dmg)
+      this.emit('hit', { who: 'monster', dmg, mech: c.id })
+      if (def.status && !guarded) this.addStatus(act, 'player', def.status, dmg)
+      this.note(act, guarded ? 'mechGuarded' : 'mechHit', { id: c.id, dmg })
+      this.autoEat()
+      if (this.s.hp <= 0) fell = 'player'
+    }
+    // Back to the stance the hero was using
+    this.endBrace(act)
+    return fell
   },
 
   /* ================= boss phases ================= */
@@ -378,6 +440,7 @@ export const fighting = {
               const dealt = Math.min(dmg, act.mHp)
               act.mHp -= dealt
               this.track(act, 'dealt', dealt)
+              if (act.mech?.charge) act.mech.charge.dealt += dealt
               this.dotXp(dealt)
               this.emit('hit', { who: 'player', dmg: dealt, fx: id })
               if (act.mHp <= 0) return 'monster'

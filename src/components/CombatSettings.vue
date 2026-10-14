@@ -244,6 +244,12 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
         </template>
       </div>
       <div class="tactic">
+        <label class="row" for="tac-brace" style="gap:10px;cursor:pointer">
+          <span class="grow"><b>{{ $t('tactics.brace') }}</b><span class="small muted block">{{ $t('tactics.braceHint') }}</span></span>
+          <ToggleSwitch v-model="state.tactics.brace" inputId="tac-brace" />
+        </label>
+      </div>
+      <div class="tactic">
         <label class="row" for="tac-task" style="gap:10px;cursor:pointer">
           <span class="grow"><b>{{ $t('tactics.stopOnTask') }}</b><span class="small muted block">{{ $t('tactics.stopOnTaskHint') }}</span></span>
           <ToggleSwitch v-model="state.tactics.stopOnTask" inputId="tac-task" />

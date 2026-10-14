@@ -780,6 +780,7 @@ export const G = {
   // `reason` is an optional { key, params } message shown to the player
   stop(reason) {
     if (!this.s.activity) return
+    this.endBrace?.(this.s.activity)
     this.s.activity = null
     if (this.tracker && reason) this.tracker.stopReason = reason
     this.emit('activity')
@@ -1144,6 +1145,8 @@ export const G = {
     if (fell === 'monster') return this.killMonster(m)
     if (fell === 'player') return this.die(m)
     if (this.shouldRetreat(act)) return this.retreat(m)
+    if (this.bossMechTick(act, m, dt) === 'player') return this.die(m)
+    if (this.shouldRetreat(act)) return this.retreat(m)
     const ps = this.playerStats(m)
     const mr = this.monsterRolls(m)
     const regen = this.traitValue(m, 'regen')
@@ -1179,7 +1182,7 @@ export const G = {
       }
     }
 
-    if (!this.hasStatus(act, 'monster', 'stun')) act.mTimer += dt / (1 + this.slowOf(act, 'monster'))
+    if (!this.hasStatus(act, 'monster', 'stun') && !act.mech?.charge) act.mTimer += dt / (1 + this.slowOf(act, 'monster'))
     const mSpeed = m.speed * this.phaseOf(act).speed
     if (act.mTimer >= mSpeed) {
       act.mTimer -= mSpeed

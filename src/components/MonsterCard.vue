@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import Button from 'primevue/button'
 import { G, state } from '../game/engine.js'
 import { monsterLevel } from '../game/data/combat.js'
+import { MECHS } from '../game/data/fighting.js'
+import GameIcon from './GameIcon.vue'
 import { ITEMS } from '../game/data/items.js'
 import { fmt, fmtDec, pct } from '../game/format.js'
 import { chanceNote, tip } from '../ui/tips.js'
@@ -51,6 +53,9 @@ const fightTip = computed(() => tip(t(`power.risk.${risk.value}`), t('power.risk
       <span v-tooltip.top="$t('common.gold')"><i class="pi pi-wallet" /> {{ fmt(m.gold[0]) }}–{{ fmt(m.gold[1]) }}</span>
       <span v-if="m.weak" v-tooltip.top="$t('combat.weakness')"><i class="pi pi-bullseye" /> {{ $t(`combat.types.${m.weak}`) }}</span>
       <span v-if="kills" v-tooltip.top="$t('combat.defeated')"><i class="pi pi-flag" /> {{ fmt(kills) }}</span>
+    </div>
+    <div v-if="G.bossMechs(m).length" class="row wrap" style="gap:5px;margin-top:10px">
+      <span v-for="id in G.bossMechs(m)" :key="id" class="tag" :style="{ color: MECHS[id].color }" v-tooltip.top="tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
     </div>
     <div class="row wrap" style="gap:5px;margin-top:10px">
       <span v-for="d in m.drops" :key="d.item" class="drop" :class="{ rare: d.chance < 0.05 }">
