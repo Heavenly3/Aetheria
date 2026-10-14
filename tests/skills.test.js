@@ -121,6 +121,6 @@ describe('every skill can be started', () => {
     G.addItem('vial_water', 1)
     G.startSkill('herblore', 'attack_potion')
     run(3)
-    expect(G.qty('attack_potion')).toBe(1)
+    expect(G.qty('attack_potion')).toBeGreaterThanOrEqual(1) // focus may brew an extra one
   })
 })

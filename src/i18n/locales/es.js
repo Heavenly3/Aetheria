@@ -1841,6 +1841,19 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  wallet: {
+    title: "Monedero",
+    hint: "Tu oro y todas las demás monedas. Pulsa para verlas.",
+    items: {
+      gold: { name: "Oro", from: "Se gana vendiendo, cazando y con misiones. Sirve para todo." },
+      tavern: { name: "Fichas de taberna", from: "De los pedidos de la taberna. Para bebidas y trabajadores." },
+      marks: { name: "Marcas de gremio", from: "De los contratos del gremio. Para la tienda de tu gremio." },
+      slayer: { name: "Puntos de cazador", from: "De las tareas de cazador. Para ventajas y su tienda." },
+      tower: { name: "Fichas de la torre", from: "Por subir la Torre. Para su tienda." },
+      festival: { name: "Fichas de festival", from: "De las actividades del festival. Gástalas antes de que acabe." },
+      shards: { name: "Fragmentos de Éter", from: "Al ascender. Para mejoras permanentes." },
+    },
+  },
   realm: {
     levels: {
       calm: { name: "Tranquila", desc: "Por aquí rondan pocas criaturas. Sus combates no cambian." },

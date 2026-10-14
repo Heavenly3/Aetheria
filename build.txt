@@ -1,0 +1,106 @@
+npm notice run aetheria@1.0.0-beta.8 build
+npm notice run node scripts/build-icons.mjs && vite build
+331 icons written to src/game/icons.json
+[36mvite v8.3.2 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 514 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                      3.54 kB │ gzip:   1.07 kB
+dist/assets/primeicons-BvM4qbWp.woff2               32.56 kB
+dist/assets/primeicons-vaISzP8W.ttf                 88.31 kB
+dist/assets/primeicons-qgkbr2_s.woff                88.39 kB
+dist/assets/primeicons-BZF8q66I.eot                 88.49 kB
+dist/assets/primeicons-BmvFdQzO.svg                334.03 kB │ gzip:  97.10 kB
+dist/assets/GameIcon-Tykzn-36.css                    0.07 kB │ gzip:   0.09 kB
+dist/assets/AchievementsView-Csroe2b2.css            0.09 kB │ gzip:   0.09 kB
+dist/assets/ChurchView-C0dnvO_t.css                  0.18 kB │ gzip:   0.15 kB
+dist/assets/HelpTip-BOcUvcJ3.css                     0.31 kB │ gzip:   0.19 kB
+dist/assets/HousingView-4OilMRX5.css                 0.42 kB │ gzip:   0.22 kB
+dist/assets/SetBonuses-DtynVxKu.css                  0.54 kB │ gzip:   0.28 kB
+dist/assets/UpdateNotes-Cibo_Z3L.css                 0.63 kB │ gzip:   0.26 kB
+dist/assets/InventoryGrid-CM4vos_a.css               0.74 kB │ gzip:   0.34 kB
+dist/assets/InventoryView-B1EJg6-F.css               0.82 kB │ gzip:   0.41 kB
+dist/assets/ItemCompare-C50dy_3k.css                 0.89 kB │ gzip:   0.35 kB
+dist/assets/WeeklyView-Dmy6v1EL.css                  1.08 kB │ gzip:   0.43 kB
+dist/assets/SlayerView-Caru-Vy0.css                  1.08 kB │ gzip:   0.45 kB
+dist/assets/TowerView-AgG1J9PB.css                   1.14 kB │ gzip:   0.49 kB
+dist/assets/ShopView-DAlvdkZf.css                    1.25 kB │ gzip:   0.53 kB
+dist/assets/JournalView-BMgA0_vZ.css                 1.31 kB │ gzip:   0.54 kB
+dist/assets/AscensionView-ClB9_i-C.css               1.31 kB │ gzip:   0.53 kB
+dist/assets/QuestsView-wfpISQ86.css                  1.41 kB │ gzip:   0.55 kB
+dist/assets/RoutinesView-BqthWoKr.css                1.64 kB │ gzip:   0.58 kB
+dist/assets/OmensView-CZc8hJaI.css                   1.80 kB │ gzip:   0.69 kB
+dist/assets/TavernView-DqHuxnEs.css                  1.93 kB │ gzip:   0.75 kB
+dist/assets/StatsView-CHRgpWQd.css                   2.18 kB │ gzip:   0.77 kB
+dist/assets/CrownView-DC9Ltkeh.css                   2.40 kB │ gzip:   0.87 kB
+dist/assets/CombatView-CAWB9P65.css                  3.07 kB │ gzip:   1.03 kB
+dist/assets/FestivalView-BF4S43y2.css                3.41 kB │ gzip:   1.04 kB
+dist/assets/BestiaryView-CMQAr8QN.css                3.50 kB │ gzip:   1.01 kB
+dist/assets/Arena-C2-1G4Hi.css                       3.64 kB │ gzip:   1.13 kB
+dist/assets/CombatSettings-7W1al8Uh.css              4.01 kB │ gzip:   1.11 kB
+dist/assets/PetsView-v8fcMaTT.css                    4.17 kB │ gzip:   1.25 kB
+dist/assets/SettingsView-B_kOzEec.css                4.95 kB │ gzip:   1.25 kB
+dist/assets/GuildsView-BVRQPTwl.css                  4.95 kB │ gzip:   1.31 kB
+dist/assets/HeroView-BFzqKUsa.css                    6.23 kB │ gzip:   1.72 kB
+dist/assets/ForgeView-C3rN8h3x.css                   6.94 kB │ gzip:   1.87 kB
+dist/assets/SkillView-5cLv3AYm.css                  13.19 kB │ gzip:   3.18 kB
+dist/assets/index-B6_PRDrT.css                      53.32 kB │ gzip:  12.35 kB
+dist/assets/useconfirm-D4ecOEkt.js                   0.15 kB │ gzip:   0.15 kB
+dist/assets/GameIcon-D5GBlnnl.js                     0.56 kB │ gzip:   0.41 kB
+dist/assets/HelpTip-BdDXB2fn.js                      1.14 kB │ gzip:   0.65 kB
+dist/assets/SetBonuses-lZSyqjSc.js                   1.28 kB │ gzip:   0.73 kB
+dist/assets/inputicon-Cde2__wO.js                    2.33 kB │ gzip:   0.76 kB
+dist/assets/HousingView-BCCWkAjF.js                  2.44 kB │ gzip:   1.12 kB
+dist/assets/baseeditableholder-D6CS7Cv2.js           2.63 kB │ gzip:   0.82 kB
+dist/assets/SkillBanner-TJT5ypKo.js                  3.06 kB │ gzip:   1.45 kB
+dist/assets/times-nTJSXcLf.js                        3.29 kB │ gzip:   1.77 kB
+dist/assets/InventoryGrid-CzZuVlbx.js                4.03 kB │ gzip:   1.84 kB
+dist/assets/ItemTile-DksmCvD6.js                     4.17 kB │ gzip:   2.00 kB
+dist/assets/ItemCompare-Bk7qdamw.js                  4.86 kB │ gzip:   1.93 kB
+dist/assets/inputtext-UeZuZMDM.js                    4.93 kB │ gzip:   1.58 kB
+dist/assets/JournalView-BXHKmVtW.js                  5.38 kB │ gzip:   1.89 kB
+dist/assets/AscensionView-DRcqgCMU.js                5.71 kB │ gzip:   2.19 kB
+dist/assets/ChurchView-Cgl6MN69.js                   5.83 kB │ gzip:   2.19 kB
+dist/assets/TowerView-CiL04uBb.js                    6.27 kB │ gzip:   2.47 kB
+dist/assets/AchievementsView-vA3FBRQK.js             6.61 kB │ gzip:   1.98 kB
+dist/assets/toggleswitch-BDw_sJls.js                 7.22 kB │ gzip:   1.77 kB
+dist/assets/SlayerView-CQS1NRUZ.js                   7.83 kB │ gzip:   2.67 kB
+dist/assets/CrownView-Dl4PIuKL.js                    7.93 kB │ gzip:   2.81 kB
+dist/assets/InventoryView-BI205fTv.js                8.30 kB │ gzip:   2.96 kB
+dist/assets/WeeklyView-B_-HbOz_.js                   8.94 kB │ gzip:   3.20 kB
+dist/assets/popover-CRbsdpuT.js                      9.27 kB │ gzip:   2.80 kB
+dist/assets/OmensView-DO6WQMMG.js                    9.51 kB │ gzip:   3.28 kB
+dist/assets/StatsView-Duy2UsG-.js                    9.73 kB │ gzip:   3.82 kB
+dist/assets/RoutinesView-B0d4ZIdU.js                10.14 kB │ gzip:   3.10 kB
+dist/assets/BestiaryView-Beg5tb22.js                11.48 kB │ gzip:   3.82 kB
+dist/assets/ShopView-C1gyGz60.js                    11.96 kB │ gzip:   4.28 kB
+dist/assets/QuestsView-CkbT92Oa.js                  12.30 kB │ gzip:   4.51 kB
+dist/assets/runtime-dom.esm-bundler-Ccky3Sc9.js     12.56 kB │ gzip:   5.47 kB
+dist/assets/PetsView-4YAetu0M.js                    12.88 kB │ gzip:   4.67 kB
+dist/assets/selectbutton-DiKoYI-W.js                13.04 kB │ gzip:   3.72 kB
+dist/assets/slider-CbvUPfOS.js                      13.42 kB │ gzip:   3.60 kB
+dist/assets/Arena-Cgh9nZ8p.js                       14.65 kB │ gzip:   4.60 kB
+dist/assets/CombatView-DiXH9E8u.js                  14.94 kB │ gzip:   4.97 kB
+dist/assets/CombatSettings-DMlpCatj.js              16.54 kB │ gzip:   5.32 kB
+dist/assets/dist-D8JyGXfM.js                        17.33 kB │ gzip:   5.70 kB
+dist/assets/ForgeView-mqFCN8dI.js                   19.39 kB │ gzip:   6.13 kB
+dist/assets/GuildsView-CV6CCnYD.js                  19.62 kB │ gzip:   6.12 kB
+dist/assets/tabpanel-D6inxnb2.js                    20.01 kB │ gzip:   5.58 kB
+dist/assets/FestivalView-l5frU0iU.js                20.02 kB │ gzip:   6.14 kB
+dist/assets/vue-router-CGCw98Ty.js                  23.03 kB │ gzip:   8.94 kB
+dist/assets/dialog-D-TXDFxM.js                      23.77 kB │ gzip:   7.40 kB
+dist/assets/TavernView-CZhA3C4V.js                  24.12 kB │ gzip:   7.29 kB
+dist/assets/HeroView-DFW6E33k.js                    25.13 kB │ gzip:   7.70 kB
+dist/assets/SettingsView-iOUTyq22.js                29.24 kB │ gzip:   8.57 kB
+dist/assets/inputnumber-BpyduOQj.js                 35.84 kB │ gzip:   8.90 kB
+dist/assets/basecomponent-CfFIk0_n.js               43.97 kB │ gzip:  12.55 kB
+dist/assets/SkillView-DoPt7yCT.js                   49.02 kB │ gzip:  14.37 kB
+dist/assets/button-BhhT6-1T.js                      63.30 kB │ gzip:  13.57 kB
+dist/assets/select-qhVmu5zn.js                      74.85 kB │ gzip:  18.75 kB
+dist/assets/UpdateNotes-ryupdvUi.js                117.82 kB │ gzip:  16.07 kB
+dist/assets/index-Dw9PIUX8.js                      162.90 kB │ gzip:  42.38 kB
+dist/assets/es-CTFlZcws.js                         230.55 kB │ gzip:  86.38 kB
+dist/assets/game-DKESBG6g.js                     1,177.15 kB │ gzip: 466.61 kB
+
+[32m✓ built in 2.53s[39m

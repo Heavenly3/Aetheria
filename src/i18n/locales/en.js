@@ -1841,6 +1841,19 @@ export default {
     table: "Guild ranking",
   },
 
+  wallet: {
+    title: "Purse",
+    hint: "Your gold and every other currency. Click to see them all.",
+    items: {
+      gold: { name: "Gold", from: "From selling, hunting and quests. Spent everywhere." },
+      tavern: { name: "Tavern tokens", from: "From tavern orders. Spent on drinks and workers." },
+      marks: { name: "Guild marks", from: "From guild contracts. Spent in your guild's shop." },
+      slayer: { name: "Slayer points", from: "From slayer tasks. Spent on perks and the slayer shop." },
+      tower: { name: "Tower tokens", from: "From climbing the Tower. Spent in its shop." },
+      festival: { name: "Festival tokens", from: "From festival activities. Spent before the festival ends." },
+      shards: { name: "Aether shards", from: "From ascending. Spent on lasting upgrades." },
+    },
+  },
   realm: {
     levels: {
       calm: { name: "Calm", desc: "Few creatures roam here. Nothing changes in its fights." },

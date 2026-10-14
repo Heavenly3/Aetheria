@@ -28,6 +28,7 @@ import { weatherAt, nextWeather, skyMods } from './game/data/weather.js'
 import { modText } from './i18n/mods.js'
 import { guildName } from './i18n/names.js'
 import ActivityDock from './components/ActivityDock.vue'
+import WalletChip from './components/WalletChip.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
 import TitleScreen from './components/TitleScreen.vue'
@@ -245,7 +246,7 @@ function startAdventure() {
               <span v-if="!pal.egg" class="pal-meter" :class="{ low: pal.full < 25 }"><i :style="{ width: pal.full + '%' }" /></span>
               <b v-if="pal.gifts" class="pal-gifts">{{ pal.gifts }}</b>
             </router-link>
-            <span class="chip gold" v-tooltip.bottom="help('top.gold')"><GameIcon name="two-coins" :size="15" />{{ fmt(state.gold) }}</span>
+            <WalletChip />
           </div>
           <button class="hero-chip" :aria-label="$t('heroMenu.label')" @click="menu.toggle($event)">
             <span class="hero-portrait">
