@@ -30,6 +30,7 @@ import { techniques, techniquesState } from './techniques.js'
 import { realm, realmState } from './realm.js'
 import { unlocks, unlocksState } from './unlocks.js'
 import { echoes } from './echoes.js'
+import { records, recordsState } from './records.js'
 import { FRAIL_HP } from './data/trials.js'
 import { ECHOES } from './data/echoes.js'
 import { THREAT_EFFECT } from './data/realm.js'
@@ -136,6 +137,7 @@ export function newState(profile = {}) {
     ...techniquesState(),
     ...realmState(),
     ...unlocksState(),
+    ...recordsState(),
     ...churchState(),
     ...thiefState(),
     ...festivalsState(),
@@ -252,6 +254,7 @@ export const G = {
     this.setupCharacter()
     // A new hero meets the menu screen by screen, unless the player chose to see it all at once
     this.s.unlocks = { open: {}, seen: {} }
+    this.ensureRecords()
     if (profile?.gradual === false) this.openAllScreens()
     this.ensureWeekly()
     this.ensureJournal()
@@ -318,6 +321,7 @@ export const G = {
     if (st.event && !(OMEN_MAP[st.event.id] && st.event.phase)) st.event = null
     if (!ROLES[st.role]) st.role = 'warrior'
     if (!st.unlocks) this.openAllScreens()
+    this.ensureRecords()
     if (!DIFFICULTIES[st.difficulty]) st.difficulty = 'normal'
     if ((st.version || 2) < 3) {
       ;['bronze_pickaxe', 'bronze_axe', 'rod'].forEach(id => { if (!st.tools[ITEMS[id].toolType]) { this.addItem(id, 1); this.equip(id) } })
@@ -1336,6 +1340,7 @@ export const G = {
       if (this.tracker) this.tracker.tokens = (this.tracker.tokens || 0) + rushed
       if (m.floor > st.tower.best && m.floor % 10 === 0) this.log('stone-tower', 'log.towerFloor', { floor: m.floor })
       st.tower.best = Math.max(st.tower.best, m.floor)
+      this.recordFloor(m.floor)
       act.floor++
       act.respawn = 1
     } else if (act.kind === 'dungeon') {
@@ -1616,6 +1621,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records)
 
 export { SKILLS, ITEMS }

@@ -152,6 +152,7 @@ onMounted(() => {
   on('retreat', () => cue('retreat'))
   on('overrun', e => { cue('omen'); push('death-skull', t('realm.overrunToast', { area: AREAS.find(a => a.id === e.area).name }), 'warn', 8000) })
   on('ascend', e => { if (e.completed) push('laurels-trophy', t('trials.completedToast', { name: t(`trials.list.${e.completed}.name`) }), 'success', 8000) })
+  on('record', e => { cue('achievement'); push(e.icon, t('records.toast', { name: t(`records.names.${e.id}`), n: fmt(e.value), before: fmt(e.before) }), 'success', 7000) })
   on('echo', e => { cue('achievement'); push('trophy', t('echoes.toast', { name: tm({ key: 'echoes.who', params: { monster: '@monster:' + e.id } }), n: e.beaten, total: e.total }), 'success', 7000) })
   on('unlock', ({ list }) => {
     cue('quest')

@@ -38,7 +38,7 @@ function startLoop() {
     if (dt > CATCHUP) catchUp(dt).finally(() => { last = performance.now() })
     else G.update(dt)
   }, 100))
-  timers.push(setInterval(() => { if (catching) return; G.checkAchievements(); G.checkJournal(); G.ensureContracts(); G.ensurePatrons(); G.tickRealm(); G.runRoutines(); G.checkUnlocks() }, 2000))
+  timers.push(setInterval(() => { if (catching) return; G.checkAchievements(); G.checkJournal(); G.ensureContracts(); G.ensurePatrons(); G.tickRealm(); G.runRoutines(); G.checkUnlocks(); G.tickRecords() }, 2000))
   timers.push(setInterval(() => { if (!document.hidden) G.maybeEvent() }, 60_000))
   timers.push(setInterval(() => G.snapshot(), 300_000))
   G.snapshot()

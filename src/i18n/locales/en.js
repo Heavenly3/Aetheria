@@ -1194,6 +1194,7 @@ export default {
     },
     // Help for the main sections inside screens
     sections: {
+      records: { title: "This week", body: "What you have done since Monday, next to last week and your best week ever. Beating your best week in anything is announced once a week. Records stay through ascension." },
       trials: { title: "Trials", body: "When you ascend you can choose a rule for the next life. Reach the point where you can ascend again under it to complete the trial: that ascension pays more shards, and the trial's bonus stays with you in every life. You can give up a trial at any time." },
       echoes: { title: "Echoes", body: "After you choose an ending in the Crown, every world boss comes back stronger. Beating each one for the first time gives a lasting bonus to XP and gold that stays through ascension." },
       abilities: { title: "Abilities", body: "Each combat style has six abilities that unlock with its skill. Choose up to three for the bar: they fire on their own in place of a normal attack when there is enough energy and their cooldown is over. Healing waits until you are hurt, and boons are not recast while active." },
@@ -1868,6 +1869,14 @@ export default {
     table: "Guild ranking",
   },
 
+  records: {
+    title: "This week",
+    newBest: "Best week!",
+    lastWeek: "Last week",
+    best: "Best",
+    toast: "New best week for {name}: {n} (it was {before}).",
+    names: { kills: "Creatures defeated", gold: "Gold earned", actions: "Actions done", slayer: "Slayer tasks", floor: "Highest tower floor", damage: "Damage to the weekly boss" },
+  },
   trials: {
     title: "Trials",
     intro: "Choose a rule for your next life. Live it through until you can ascend again and the trial is complete: ×{x} shards that time and a lasting bonus of its own.",

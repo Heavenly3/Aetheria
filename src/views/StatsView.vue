@@ -1,4 +1,6 @@
 <script setup>
+import HelpTip from '../components/HelpTip.vue'
+import { RECORDS } from '../game/records.js'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
@@ -82,6 +84,12 @@ const blocks = computed(() => {
     ] },
   ]
 })
+// This week against last week and the best week (refreshed with the game clock)
+const weekRows = computed(() => {
+  void state.lastTick
+  const r = G.ensureRecords(), cur = G.recordsThisWeek()
+  return RECORDS.map(x => ({ id: x.id, icon: x.icon, cur: cur[x.id], best: Math.max(r.best[x.id] || 0, cur[x.id]), last: r.last ? r.last[x.id] : null }))
+})
 </script>
 
 <template>
@@ -124,6 +132,20 @@ const blocks = computed(() => {
     </div>
 
     <!-- Records of every part of the game -->
+    <div class="section-title" style="margin-top:24px">{{ $t('records.title') }} <HelpTip k="sections.records" /></div>
+    <div class="week-grid">
+      <div v-for="r in weekRows" :key="r.id" class="card week-card">
+        <div class="row"><GameIcon :name="r.icon" :size="16" class="gold-text" /><span class="grow small muted">{{ $t(`records.names.${r.id}`) }}</span>
+          <span v-if="r.cur > 0 && r.cur >= r.best && r.last" class="tag gold">{{ $t('records.newBest') }}</span></div>
+        <div class="week-now tnum">{{ fmt(r.cur) }}</div>
+        <span class="bar thin"><i :style="{ width: (r.best ? Math.min(1, r.cur / r.best) : 0) * 100 + '%' }" /></span>
+        <div class="row small muted tnum" style="margin-top:6px;gap:10px">
+          <span class="grow">{{ $t('records.lastWeek') }}: {{ r.last == null ? '—' : fmt(r.last) }}</span>
+          <span>{{ $t('records.best') }}: {{ fmt(r.best) }}</span>
+        </div>
+      </div>
+    </div>
+
     <div class="section-title" style="margin-top:24px">{{ $t('statsView.records') }}</div>
     <div class="grid-wide records">
       <div v-for="b in blocks" :key="b.id" class="panel pad">
@@ -135,6 +157,15 @@ const blocks = computed(() => {
 </template>
 
 <style scoped>
+.week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.week-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+@media (max-width: 600px) {
+  .week-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .week-card { padding: 12px; }
+  .week-card .week-now { font-size: 21px; }
+  .week-card .row.tnum { flex-direction: column; align-items: flex-start; gap: 2px !important; }
+}
+.week-now { font-size: 26px; font-weight: 800; font-family: var(--font-display); }
 .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .tile-stat { display: flex; flex-direction: column; gap: 2px; }
 .tile-stat b { font-family: var(--font); font-weight: 800; font-size: 30px; color: var(--ink); font-variant-numeric: tabular-nums; }

@@ -1194,6 +1194,7 @@ export default {
     },
     // Ayuda de las secciones principales de cada pantalla
     sections: {
+      records: { title: "Esta semana", body: "Lo que has hecho desde el lunes, junto a la semana pasada y tu mejor semana. Superar tu mejor semana en algo se anuncia una vez por semana. Los récords se conservan al renacer." },
       trials: { title: "Pruebas", body: "Al renacer puedes elegir una regla para la próxima vida. Llega al punto de poder renacer otra vez bajo ella para superar la prueba: ese renacimiento da más fragmentos y la bonificación de la prueba se queda contigo en todas tus vidas. Puedes abandonar una prueba cuando quieras." },
       echoes: { title: "Ecos", body: "Cuando eliges un final en la Corona, cada jefe de mundo vuelve más fuerte. Vencer a cada uno por primera vez da una bonificación permanente de XP y oro que se mantiene al renacer." },
       abilities: { title: "Habilidades", body: "Cada estilo de combate tiene seis habilidades que se desbloquean con su habilidad. Elige hasta tres para la barra: se lanzan solas en lugar de un ataque normal cuando hay energía suficiente y ha terminado su recarga. Las curaciones esperan a que estés herido y las mejoras no se repiten mientras duran." },
@@ -1868,6 +1869,14 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  records: {
+    title: "Esta semana",
+    newBest: "¡Mejor semana!",
+    lastWeek: "Semana pasada",
+    best: "Mejor",
+    toast: "Nueva mejor semana en {name}: {n} (antes {before}).",
+    names: { kills: "Criaturas derrotadas", gold: "Oro ganado", actions: "Acciones hechas", slayer: "Tareas de cazador", floor: "Piso más alto de la torre", damage: "Daño al jefe semanal" },
+  },
   trials: {
     title: "Pruebas",
     intro: "Elige una regla para tu próxima vida. Vívela hasta que puedas renacer de nuevo y la prueba quedará superada: ×{x} fragmentos esa vez y una bonificación permanente propia.",
