@@ -34,6 +34,7 @@ import ItemTile from './components/ItemTile.vue'
 import TitleScreen from './components/TitleScreen.vue'
 import BottomNav from './components/BottomNav.vue'
 import TutorialCoach from './components/TutorialCoach.vue'
+import GoalBar from './components/GoalBar.vue'
 import UpdateNotes from './components/UpdateNotes.vue'
 import { newsUnseen, markNewsSeen, unseenUpdates } from './ui/news.js'
 import { titled, cosmeticsForAch } from './game/data/cosmetics.js'
@@ -271,6 +272,7 @@ function startAdventure() {
 
         <section class="view">
           <TutorialCoach />
+          <GoalBar />
           <router-view v-slot="{ Component }">
             <transition name="page" mode="out-in">
               <component :is="Component" :key="route.fullPath" />

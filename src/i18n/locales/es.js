@@ -1848,6 +1848,12 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  goal: {
+    label: "Siguiente paso",
+    quest: "Entrega la misión «{name}»: ya está lista",
+    ending: "Elige cómo termina la historia, en la Corona",
+    hide: "Ocultar hasta el siguiente objetivo",
+  },
   unlocks: {
     new: "Nuevo",
     more: "{n} más por descubrir",

@@ -1848,6 +1848,12 @@ export default {
     table: "Guild ranking",
   },
 
+  goal: {
+    label: "Next step",
+    quest: "Hand in the quest “{name}”: it is ready",
+    ending: "Choose how the story ends, in the Crown",
+    hide: "Hide until the next goal",
+  },
   unlocks: {
     new: "New",
     more: "{n} more to discover",

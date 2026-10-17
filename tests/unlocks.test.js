@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { G, state, newHero, setLevel } from './helpers.js'
 import { UNLOCKS } from '../src/game/data/unlocks.js'
 import { i18n } from '../src/i18n/index.js'
@@ -45,5 +45,22 @@ describe('screens found one by one', () => {
     expect(state.ascension.count).toBe(1)
     expect(G.combatLevel()).toBeLessThan(10)
     expect(G.screenOpen('/slayer')).toBe(true)
+  })
+})
+
+describe('the next step', () => {
+  it('points to a quest ready to hand in first, and to the next page of the story otherwise', async () => {
+    const { QUESTS } = await import('../src/game/data/progression.js')
+    newHero()
+    G.checkJournal(true)
+    const story = G.nextGoal()
+    expect(story.kind).toBe('story')
+    expect(story.hint).not.toBe('firstOmen')
+    expect(i18n.global.te(`journal.hints.${story.hint}`, 'en')).toBe(true)
+    const q = QUESTS[0]
+    state.quests[q.id] = { status: 'active', start: {} }
+    const spy = vi.spyOn(G, 'questReady').mockImplementation(x => x.id === q.id)
+    expect(G.nextGoal()).toMatchObject({ kind: 'quest', to: '/quests' })
+    spy.mockRestore()
   })
 })
