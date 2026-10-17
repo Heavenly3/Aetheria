@@ -8,6 +8,7 @@ import TabPanel from 'primevue/tabpanel'
 import ToggleButton from 'primevue/togglebutton'
 import { G, state } from '../game/engine.js'
 import { AREAS, BOSSES, MERCENARIES, DUNGEONS, MONSTERS, monsterLevel } from '../game/data/combat.js'
+import { ECHOES, ECHO_BONUS } from '../game/data/echoes.js'
 import { ITEMS } from '../game/data/items.js'
 import Button from 'primevue/button'
 import { QUESTS } from '../game/data/progression.js'
@@ -119,6 +120,22 @@ function fightBoss(b) {
               <div class="small muted" style="margin-top:8px">{{ $t('combat.recommended', { n: b.recLvl }) }} · {{ $t('combat.respawnIn', { n: b.respawn }) }}</div>
             </MonsterCard>
           </div>
+
+          <!-- After the story ends, every boss comes back as an echo -->
+          <template v-if="G.echoesOpen()">
+            <div class="section-title" style="margin-top:28px">{{ $t('echoes.title') }} <HelpTip k="sections.echoes" /></div>
+            <p class="small muted" style="margin-top:0">{{ $t('echoes.intro', { xp: ECHO_BONUS.xp * 100, gold: ECHO_BONUS.gold * 100 }) }}
+              <b class="gold-text">{{ $t('echoes.count', { n: G.echoesBeaten(), total: ECHOES.length, v: G.echoesBeaten() * ECHO_BONUS.xp * 100 }) }}</b></p>
+            <div class="grid-cards">
+              <MonsterCard v-for="e in ECHOES" :key="e.id" :monster="e" kind="boss" :locked="!!e.reqQuest && !G.questDone(e.reqQuest)" :lockText="$t('combat.questReq', { quest: questName(e.reqQuest) })" @fight="fightBoss(e)">
+                <div class="row wrap small muted" style="margin-top:8px;gap:6px">
+                  <span>{{ $t('combat.recommended', { n: e.recLvl }) }} · {{ $t('combat.respawnIn', { n: e.respawn }) }}</span>
+                  <span v-if="G.echoBeaten(e.echoOf)" class="tag ok"><i class="pi pi-check" /> {{ $t('echoes.beaten') }}</span>
+                </div>
+              </MonsterCard>
+            </div>
+          </template>
+          <p v-else class="small faint" style="margin-top:22px"><i class="pi pi-lock" /> {{ $t('echoes.teaser') }}</p>
         </TabPanel>
       </TabPanels>
     </Tabs>

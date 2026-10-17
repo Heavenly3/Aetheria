@@ -277,6 +277,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    echoFirst: "You beat {monster} for good.",
     overrun: "{area} has been overrun.",
     cleansed: "Brought {area} back to calm: {gold} gold bounty.",
     shard: "Found a shard of the Crown: {shard}.",
@@ -580,6 +581,7 @@ export default {
   achievements: { progress: 'Achievement progress' },
 
   ach: {
+    allEchoes: { name: "Echo Hunter", desc: "Beat all seven echoes." },
     festTrack: { name: "Reveller {n}", desc: "Complete a festival track {n} times." },
     festChampion: { name: "Festival Champion", desc: "Top the ranking of a festival." },
     fairs: { name: "Fairgoer {n}", desc: "Claim every reward of {n} weekend fairs." },
@@ -1088,6 +1090,7 @@ export default {
     fromOmen: 'Witness {name} {n}×', fromCreature: 'Defeat {name} {n}×', fromWishes: 'Receive {n} wishes', fromUnknownOmen: 'Hidden in an omen not yet witnessed',
     fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
     titles: {
+      echo_hunter: "the Echo Hunter",
       reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", frost_crowned: "of the Frost Crown", lightbringer: "the Lightbringer", kings_shield: "the King's Shield", one_who_remembers: "the One Who Remembers", shieldbearer: "the Shield-bearer", of_frost_and_flame: "of Frost and Flame", of_four_seasons: "of the Four Seasons",
       guildmaster: "the Guildmaster", master_thief: "the Master Thief", botanist: "the Botanist", deep_angler: "Deep Angler", master_artisan: "Master Artisan", tower_warden: "Tower Warden", innkeeper: "the Innkeeper", dawn_saint: "of the Dawn",
       starborn: 'Starborn', goldcatcher: 'Goldcatcher', blood_moon: 'of the Blood Moon', riftbreaker: 'Riftbreaker', wishbearer: 'Wishbearer', eye_witness: 'Witness of the Eye',
@@ -1188,6 +1191,7 @@ export default {
     },
     // Help for the main sections inside screens
     sections: {
+      echoes: { title: "Echoes", body: "After you choose an ending in the Crown, every world boss comes back stronger. Beating each one for the first time gives a lasting bonus to XP and gold that stays through ascension." },
       abilities: { title: "Abilities", body: "Each combat style has six abilities that unlock with its skill. Choose up to three for the bar: they fire on their own in place of a normal attack when there is enough energy and their cooldown is over. Healing waits until you are hurt, and boons are not recast while active." },
       power: { title: "Combat power", body: "A single score for how strong you are in a fight: it grows with your damage per second and with how long you last. Every number below is worked out live from your gear, levels, style and bonuses." },
       equipment: { title: 'Equipment', body: 'What you wear. Click a slot to take the item off; equip new gear from the inventory. Hover an item to see its stats.' },
@@ -1860,6 +1864,17 @@ export default {
     table: "Guild ranking",
   },
 
+  echoes: {
+    name: "Echo of the {boss}",
+    who: "{monster}",
+    title: "Echoes",
+    intro: "With the story told, every boss comes back as an echo: stronger, quicker with its big moves and richer. The first time you beat each one, it stays beaten in every life and adds {xp}% XP and {gold}% gold for good.",
+    count: "{n} of {total} beaten: +{v}% XP and gold.",
+    beaten: "Beaten for good",
+    locked: "Echoes answer only once the story has an ending.",
+    teaser: "Something stirs behind every boss you have beaten. Finish the story to face it.",
+    toast: "{name} beaten for good! {n} of {total} echoes: a lasting bonus to XP and gold.",
+  },
   goal: {
     label: "Next step",
     quest: "Hand in the quest “{name}”: it is ready",

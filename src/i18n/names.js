@@ -1,4 +1,5 @@
 // Resolvers for "@kind:id" message parameters (see resolveParams in ./index.js)
+import { ECHO_MAP } from '../game/data/echoes.js'
 import { registerNames, t } from './index.js'
 import { SKILLS } from '../game/data/skills.js'
 import { ITEMS, CROPS, SLOTS } from '../game/data/items.js'
@@ -18,7 +19,7 @@ import { SHARD_MAP, ENDING_MAP } from '../game/data/crown.js'
 import { G } from '../game/engine.js'
 
 const byId = list => id => list.find(x => x.id === id)?.name ?? id
-const allMonsters = id => MONSTERS[id]?.name ?? BOSSES.find(b => b.id === id)?.name ?? DUNGEONS.find(d => d.boss.id === id)?.boss.name ?? id
+const allMonsters = id => MONSTERS[id]?.name ?? BOSSES.find(b => b.id === id)?.name ?? DUNGEONS.find(d => d.boss.id === id)?.boss.name ?? ECHO_MAP[id]?.name ?? id
 
 registerNames('item', id => ITEMS[id]?.name ?? id)
 registerNames('skill', id => SKILLS[id]?.name ?? id)

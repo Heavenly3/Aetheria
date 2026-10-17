@@ -277,6 +277,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    echoFirst: "Venciste para siempre a {monster}.",
     overrun: "{area} se ha desbordado.",
     cleansed: "Devolviste la calma a {area}: recompensa de {gold} de oro.",
     shard: "Encontraste una esquirla de la Corona: {shard}.",
@@ -580,6 +581,7 @@ export default {
   achievements: { progress: 'Progreso de logros' },
 
   ach: {
+    allEchoes: { name: "Cazador de ecos", desc: "Vence a los siete ecos." },
     festTrack: { name: "Juerguista {n}", desc: "Completa la senda de un festival {n} veces." },
     festChampion: { name: "Campeón del festival", desc: "Encabeza la clasificación de un festival." },
     fairs: { name: "Feriante {n}", desc: "Cobra todas las recompensas de {n} ferias de fin de semana." },
@@ -1088,6 +1090,7 @@ export default {
     fromOmen: 'Presencia {name} {n}×', fromCreature: 'Derrota {n}× a {name}', fromWishes: 'Recibe {n} deseos', fromUnknownOmen: 'Oculto en un prodigio aún no presenciado',
     fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
     titles: {
+      echo_hunter: "Cazador de Ecos",
       reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", frost_crowned: "de la Corona de Escarcha", lightbringer: "el Portador de la Luz", kings_shield: "el Escudo del Rey", one_who_remembers: "el que Recuerda", shieldbearer: "el Portaescudos", of_frost_and_flame: "de Hielo y Fuego", of_four_seasons: "de las Cuatro Estaciones",
       guildmaster: "el Maestre", master_thief: "el Maestro Ladrón", botanist: "el Botánico", deep_angler: "Pescador Abisal", master_artisan: "Maestro Artesano", tower_warden: "Guardián de la Torre", innkeeper: "el Tabernero", dawn_saint: "del Alba",
       starborn: 'Polvo de Estrellas', goldcatcher: 'Atrapaduendes', blood_moon: 'de la Luna de Sangre', riftbreaker: 'Rompegrietas', wishbearer: 'Cumpledeseos', eye_witness: 'Testigo del Ojo',
@@ -1188,6 +1191,7 @@ export default {
     },
     // Ayuda de las secciones principales de cada pantalla
     sections: {
+      echoes: { title: "Ecos", body: "Cuando eliges un final en la Corona, cada jefe de mundo vuelve más fuerte. Vencer a cada uno por primera vez da una bonificación permanente de XP y oro que se mantiene al ascender." },
       abilities: { title: "Habilidades", body: "Cada estilo de combate tiene seis habilidades que se desbloquean con su habilidad. Elige hasta tres para la barra: se lanzan solas en lugar de un ataque normal cuando hay energía suficiente y ha terminado su recarga. Las curaciones esperan a que estés herido y las mejoras no se repiten mientras duran." },
       power: { title: "Poder de combate", body: "Una sola cifra que resume lo fuerte que eres en combate: sube con tu daño por segundo y con lo que aguantas. Todas las cifras de abajo se calculan al momento con tu equipo, niveles, estilo y bonificaciones." },
       equipment: { title: 'Equipo', body: 'Lo que llevas puesto. Pulsa una ranura para quitarte el objeto; equipa lo nuevo desde el inventario. Pasa el ratón por un objeto para ver sus estadísticas.' },
@@ -1860,6 +1864,17 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  echoes: {
+    name: "Eco del {boss}",
+    who: "{monster}",
+    title: "Ecos",
+    intro: "Con la historia contada, cada jefe vuelve como un eco: más fuerte, más rápido con sus grandes golpes y más rico. La primera vez que vences a cada uno queda vencido en todas tus vidas y te da un {xp} % de XP y un {gold} % de oro para siempre.",
+    count: "{n} de {total} vencidos: +{v} % de XP y oro.",
+    beaten: "Vencido para siempre",
+    locked: "Los ecos solo responden cuando la historia tiene un final.",
+    teaser: "Algo se agita detrás de cada jefe que has vencido. Termina la historia para enfrentarte a ello.",
+    toast: "¡{name} vencido para siempre! {n} de {total} ecos: una bonificación permanente de XP y oro.",
+  },
   goal: {
     label: "Siguiente paso",
     quest: "Entrega la misión «{name}»: ya está lista",

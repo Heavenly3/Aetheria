@@ -49,6 +49,7 @@ export const TITLES = [
   title('lightbringer', { ach: 'ending_sky' }),
   title('kings_shield', { ach: 'ending_king' }),
   title('one_who_remembers', { ach: 'all_endings' }),
+  title('echo_hunter', { ach: 'all_echoes' }),
   title('starborn', { omen: { seen: 'stars', n: 10 } }),
   title('goldcatcher', { omen: { kill: 'gilded_goblin', n: 1 } }),
   title('blood_moon', { omen: { seen: 'blood_moon', n: 1 } }, true),

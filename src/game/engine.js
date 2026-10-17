@@ -29,6 +29,8 @@ import { routines, routinesState } from './routines.js'
 import { techniques, techniquesState } from './techniques.js'
 import { realm, realmState } from './realm.js'
 import { unlocks, unlocksState } from './unlocks.js'
+import { echoes } from './echoes.js'
+import { ECHOES } from './data/echoes.js'
 import { THREAT_EFFECT } from './data/realm.js'
 const REGION_GOLD = THREAT_EFFECT.gold, REGION_LOOT = THREAT_EFFECT.loot
 import { slayer } from './slayer.js'
@@ -63,7 +65,7 @@ const ARTISAN = ['smithing', 'cooking', 'firemaking', 'fletching', 'crafting', '
 const skillCat = s => (GATHERING.includes(s) ? 'gathering' : ARTISAN.includes(s) ? 'artisan' : 'other')
 const SEED_POUCH_CHANCE = 0.04
 const TOOL_FOR = Object.fromEntries(Object.entries(TOOL_TYPES).map(([type, d]) => [d.skill, type]))
-const BOSS_MAP = Object.fromEntries(BOSSES.map(b => [b.id, b]))
+const BOSS_MAP = Object.fromEntries([...BOSSES, ...ECHOES].map(b => [b.id, b]))
 const CROP_MAP = Object.fromEntries(CROPS.map(c => [c.id, c]))
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
 const msg = (key, params = {}) => ({ key, params })
@@ -461,7 +463,7 @@ export const G = {
     return v
   },
   modNow(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key) + this.echoMods(key)
     for (const [a, per] of ATTR_BY_MOD[key] || []) v += per * this.attr(a)
     const tal = this.s.hero.talents
     for (const tt of TALENTS_BY_MOD[key] || []) if (tal[tt.id]) v += tt.per * tal[tt.id]
@@ -1144,6 +1146,7 @@ export const G = {
     if (kind === 'boss') {
       const b = BOSS_MAP[target]
       if (b.reqQuest && !this.questDone(b.reqQuest)) return this.toast('padlock', 'msg.bossLocked', {}, 'warn')
+      if (b.echo && !this.echoesOpen()) return this.toast('padlock', 'echoes.locked', {}, 'warn')
       mercs = (opts.mercs || []).filter(id => MERCENARIES.some(x => x.id === id))
       const cost = mercs.reduce((s, id) => s + MERCENARIES.find(x => x.id === id).cost, 0)
       if (this.s.gold < cost) return this.toast('two-coins', 'msg.mercGold', {}, 'warn')
@@ -1343,6 +1346,7 @@ export const G = {
     } else act.respawn = m.boss ? m.respawn : RESPAWN_TIME
     if (m.boss && !m.dungeon && st.killsBy[m.id] === 1) this.log('trophy', 'log.bossFirst', { monster: '@monster:' + m.id })
     if (m.boss) this.rollMonsterPet(m.id)
+    if (m.echo) this.echoDefeated(m)
     this.omenKill(m)
     if (act.kind === 'festival') this.festivalCreatureKilled()
     this.emit('kill', { monster: m, gold, loot })
@@ -1602,6 +1606,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes)
 
 export { SKILLS, ITEMS }

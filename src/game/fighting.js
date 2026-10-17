@@ -3,6 +3,7 @@
    creature traits and elites. The combat loop in engine.js calls into these.
    Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
+import { ECHO } from './data/echoes.js'
 import { toRaw } from 'vue'
 import { cloneNamed } from '../i18n/bind.js'
 import { ITEMS } from './data/items.js'
@@ -297,7 +298,8 @@ export const fighting = {
   endBrace(act) {
     if (act?.mech?.braceFrom) { this.s.combatStyle = act.mech.braceFrom; act.mech.braceFrom = null }
   },
-  bossMechs(m) { return m?.boss ? BOSS_MECHS[m.id] || [] : [] },
+  // An echo uses its boss's big moves
+  bossMechs(m) { return m?.boss ? BOSS_MECHS[m.echoOf || m.id] || [] : [] },
   // A guarding stance or a defensive boon takes big strikes far better
   isGuarded(act) { return this.stance().def > 0 || this.buffValue(act, 'ward') > 0 || this.buffValue(act, 'dodge') > 0 },
   // Charges and lands the boss's big moves; returns 'player' if the hero fell to one
@@ -311,9 +313,11 @@ export const fighting = {
     }
     for (const id of list) {
       // The first use of each comes a little sooner than the rest
-      mc.timers[id] = (mc.timers[id] ?? MECHS[id].every * (0.5 + Math.random() * 0.3)) - dt
+      // An echo winds them up more often
+      const every = MECHS[id].every * (m.echo ? ECHO.mechEvery : 1)
+      mc.timers[id] = (mc.timers[id] ?? every * (0.5 + Math.random() * 0.3)) - dt
       if (mc.timers[id] > 0) continue
-      mc.timers[id] = MECHS[id].every
+      mc.timers[id] = every
       mc.charge = { id, left: MECHS[id].charge, total: MECHS[id].charge, dealt: 0 }
       // Tactics: brace with a guarding stance until it lands
       if (MECHS[id].hit && this.s.tactics?.brace && !this.isGuarded(act)) {

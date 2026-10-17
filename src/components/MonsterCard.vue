@@ -36,7 +36,7 @@ const fightTip = computed(() => tip(t(`power.risk.${risk.value}`), t('power.risk
 <template>
   <div class="card" :data-tut="'monster:' + m.id" :class="{ active: fighting, locked: locked || slayerLocked }" style="--c:#e0554b">
     <div class="row">
-      <ItemTile :icon="m.icon" :tint="m.boss ? '#c0392b' : '#7a2a32'" size="lg" :tip="false" />
+      <ItemTile :icon="m.icon" :tint="m.echo ? '#7b5cff' : m.boss ? '#c0392b' : '#7a2a32'" size="lg" :tip="false" />
       <div class="grow">
         <div class="card-name">{{ m.name }}</div>
         <div class="row wrap" style="gap:6px;margin-top:4px">
