@@ -29,7 +29,8 @@ export const collection = {
     for (const id of Object.values(this.s.equipment)) { const b = ITEMS[id]?.base || id; if (b && SET_OF[b]) seen.add(SET_OF[b]) }
     return SETS.filter(s => seen.has(s)).map(s => ({ set: s, worn: this.setPieces(s) }))
   },
-  setMods(key) {
+  setMods(key) { return this.memo('sets', this.setTotals)[key] || 0 },
+  setTotals() {
     const eq = this.s.equipment
     const k = eq.head + eq.cape + eq.amulet + eq.weapon + eq.body + eq.shield + eq.legs
     if (setCache.key !== k) {
@@ -38,7 +39,7 @@ export const collection = {
         for (const b of set.bonuses) if (worn >= b.n) for (const m in b.mods) mods[m] = (mods[m] || 0) + b.mods[m]
       setCache = { key: k, mods }
     }
-    return setCache.mods[key] || 0
+    return setCache.mods
   },
 
   /* ================= bestiary ================= */

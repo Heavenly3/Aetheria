@@ -94,4 +94,17 @@ describe('offline progress', () => {
     expect(summary.capped).toBe(true)
     expect(summary.seconds).toBe(cap)
   }, 30000) // simulates eight hours of play, which can be slow on a busy machine
+
+  it('works out long absences in slices, with the same result and its progress', async () => {
+    G.startSkill('mining', 'copper_ore')
+    const sync = G.simulate(3 * 3600).xp.mining
+    newHero()
+    G.startSkill('mining', 'copper_ore')
+    const seen = []
+    const summary = await G.simulateAsync(3 * 3600, p => seen.push(p))
+    expect(summary.xp.mining).toBeCloseTo(sync)
+    expect(seen.length).toBeGreaterThan(0)
+    expect(seen.every((p, i) => p > 0 && p < 1 && (i === 0 || p >= seen[i - 1]))).toBe(true)
+    expect(G.tracker).toBe(null)
+  }, 30000)
 })

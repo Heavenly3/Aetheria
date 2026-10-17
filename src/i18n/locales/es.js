@@ -98,6 +98,7 @@ export default {
   event: { bought: 'Comprado al mercader ambulante', offer: 'La oferta termina en {time}', gone: 'El mercader se ha marchado' },
 
   offline: {
+    catching: "Calculando lo que pasó mientras no estabas…",
     idle: 'descansando', training: 'entrenando {skill} ({action})', tower: 'subiendo la Torre', fighting: 'luchando contra {monster}',
     title: 'Bienvenido de nuevo', away: 'Has estado fuera <b>{time}</b>.', capped: 'El progreso offline tiene un límite de {h} h.',
     kept: 'Mientras tanto, {name} siguió {what}.', kills: 'Monstruos derrotados', towerTokens: 'Fichas de la Torre', eaten: 'Comida consumida',

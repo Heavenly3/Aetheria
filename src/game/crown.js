@@ -70,19 +70,21 @@ export const crown = {
     return true
   },
   /* ---------------- bonuses ---------------- */
-  crownMods(key) {
-    const c = this.s.crown
-    let v = 0
+  crownMods(key) { return this.memo('crown', this.crownTotals)[key] || 0 },
+  // Every bonus of the crown at once: set shards, powers at work and the endings chosen
+  crownTotals() {
+    const c = this.s.crown, out = {}
+    const add = mods => { for (const k in mods) out[k] = (out[k] || 0) + mods[k] }
     if (c) {
       const now = Date.now()
       for (const s of SHARDS) {
         if (!this.shardActive(s.id)) continue
-        v += s.mods[key] || 0
-        if ((c.active?.[s.id] || 0) > now) v += s.power.mods?.[key] || 0
+        add(s.mods)
+        if ((c.active?.[s.id] || 0) > now) add(s.power.mods)
       }
     }
-    for (const id in this.s.legacy?.endings || {}) v += ENDING_MAP[id]?.mods[key] || 0
-    return v
+    for (const id in this.s.legacy?.endings || {}) add(ENDING_MAP[id]?.mods)
+    return out
   },
   /* ---------------- the choice ---------------- */
   canChooseEnding() { return this.crownWhole() && (this.s.killsBy?.[CHOICE_BOSS] || 0) > 0 && !this.s.crown.chosen },

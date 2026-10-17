@@ -98,6 +98,7 @@ export default {
   event: { bought: 'Bought from the travelling merchant', offer: 'Offer ends in {time}', gone: 'The merchant has left' },
 
   offline: {
+    catching: "Catching up on your time away…",
     idle: 'resting', training: 'training {skill} ({action})', tower: 'climbing the Tower', fighting: 'fighting {monster}',
     title: 'Welcome back', away: 'You were away for <b>{time}</b>.', capped: 'Offline progress is capped at {h} h.',
     kept: 'Meanwhile {name} kept {what}.', kills: 'Monsters defeated', towerTokens: 'Tower tokens', eaten: 'Food eaten',

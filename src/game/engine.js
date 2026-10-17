@@ -169,6 +169,16 @@ let towerCache = { key: '', m: null }
 let skyCache = { minute: -1, mods: {}, monster: 1 }
 const scaledCache = new Map()
 
+// Which attributes and talents feed each modifier key, so summing a key skips the rest
+const ATTR_BY_MOD = {}, TALENTS_BY_MOD = {}
+for (const [a, def] of Object.entries(ATTRIBUTES)) for (const [k, per] of Object.entries(def.mods)) (ATTR_BY_MOD[k] ||= []).push([a, per])
+for (const tt of TALENTS) if (tt.mod) (TALENTS_BY_MOD[tt.mod] ||= []).push(tt)
+// Values remembered for the length of one update (see G.memo)
+const TICK_CACHE = new Map()
+// Offline progress is worked out in slices this long, with a breath for the page in between
+const SIM_SLICE_MS = 30
+const MOD_PREFIX = 'mod|'
+
 export const G = {
   s: state,
   slot: null,
@@ -436,10 +446,28 @@ export const G = {
   },
   // Sum of role, attribute, talent and temporary bonuses for a modifier key
   mod(key) {
+    // Within one update the sources cannot change, so each key is summed once (see update)
+    const c = this.tickCache
+    const hit = c?.get(MOD_PREFIX + key)
+    if (hit !== undefined) return hit
+    const v = this.modNow(key)
+    c?.set(MOD_PREFIX + key, v)
+    return v
+  },
+  modNow(key) {
     let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key)
-    for (const a in ATTRIBUTES) { const per = ATTRIBUTES[a].mods[key]; if (per) v += per * this.attr(a) }
+    for (const [a, per] of ATTR_BY_MOD[key] || []) v += per * this.attr(a)
     const tal = this.s.hero.talents
-    for (const tt of TALENTS) if (tt.mod === key && tal[tt.id]) v += tt.per * tal[tt.id]
+    for (const tt of TALENTS_BY_MOD[key] || []) if (tal[tt.id]) v += tt.per * tal[tt.id]
+    return v
+  },
+  // Remembers a value for the rest of the current update, when what it depends on cannot change
+  // (see update); outside an update it is simply worked out
+  memo(key, fn, arg) {
+    const c = this.tickCache
+    if (!c) return fn.call(this, arg)
+    let v = c.get(key)
+    if (v === undefined) c.set(key, (v = fn.call(this, arg)))
     return v
   },
   sky() {
@@ -1026,7 +1054,9 @@ export const G = {
     return s
   },
 
-  playerStats(m) {
+  // A kill can change the hunting streak and a shot the ammo, so both are part of the key
+  playerStats(m) { return this.memo(`ps|${m.id}|${this.s.hunt?.streak}|${this.s.equipment.ammo}`, this.playerStatsNow, m) },
+  playerStatsNow(m) {
     const st = this.stance(), type = st.type, b = this.bonuses()
     let acc, maxHit
     if (type === 'melee') {
@@ -1081,11 +1111,11 @@ export const G = {
 
   getMonster(act) {
     if (!act) return null
-    if (act.kind === 'boss') return BOSS_MAP[act.target] && this.scaleMonster(BOSS_MAP[act.target])
+    if (act.kind === 'boss') return BOSS_MAP[act.target] && this.memo('boss|' + act.target, this.scaleMonster, BOSS_MAP[act.target])
     if (act.kind === 'dungeon') {
       const dg = DUNGEONS.find(d => d.id === act.target)
       if (!dg) return null
-      return this.scaleMonster(act.room < dg.rooms.length ? MONSTERS[dg.rooms[act.room]] : dg.boss)
+      return this.memo(`dg|${act.target}|${act.room}`, this.scaleMonster, act.room < dg.rooms.length ? MONSTERS[dg.rooms[act.room]] : dg.boss)
     }
     if (act.kind === 'tower') {
       const key = act.floor + '|' + this.monsterMult() + '|' + affixOf(act.floor)
@@ -1095,7 +1125,7 @@ export const G = {
     if (act.kind === 'omen') return this.omenCreature(act.target)
     if (act.kind === 'weekly') return this.weeklyMonster(act)
     if (act.kind === 'festival') return this.festivalCreature()
-    const m = MONSTERS[act.target] && this.scaleMonster(MONSTERS[act.target])
+    const m = MONSTERS[act.target] && this.memo('mon|' + act.target, this.scaleMonster, MONSTERS[act.target])
     return m && act.elite ? this.eliteMonster(m, act.elite) : m
   },
 
@@ -1476,6 +1506,11 @@ export const G = {
 
   /* ================= main loop ================= */
   update(dt) {
+    TICK_CACHE.clear()
+    this.tickCache = TICK_CACHE
+    try { this.tickOnce(dt) } finally { this.tickCache = null }
+  },
+  tickOnce(dt) {
     const st = this.s
     st.stats.playTime += dt
     for (const k in st.blessings) { if (st.blessings[k] > 0) st.blessings[k] = Math.max(0, st.blessings[k] - dt) }
@@ -1491,7 +1526,8 @@ export const G = {
     else if (act && act.type === 'combat') {
       this.autoDrink()
       let rem = dt
-      while (rem > 0 && st.activity && st.activity.type === 'combat') {
+      // A rounding leftover (0.5 − 5 × 0.1) is not worth a combat step of its own
+      while (rem > 1e-9 && st.activity && st.activity.type === 'combat') {
         const step = Math.min(rem, 0.1)
         this.updateCombat(step)
         rem -= step
@@ -1509,26 +1545,51 @@ export const G = {
 
   // Fast-forward elapsed time on the raw (non-reactive) state and return a summary
   simulate(seconds) {
+    const run = this.simStart(seconds)
+    this.simStep(run, Infinity)
+    return this.simFinish(run)
+  },
+  // The same in slices of a few milliseconds, so the page can show how far it got (`onProgress`, 0 to 1)
+  async simulateAsync(seconds, onProgress) {
+    const run = this.simStart(seconds)
+    try {
+      while (!this.simStep(run, performance.now() + SIM_SLICE_MS)) {
+        onProgress?.(run.time / run.total)
+        await new Promise(r => setTimeout(r, 0))
+      }
+    } catch (e) { this.tracker = null; throw e }
+    return this.simFinish(run)
+  },
+  simStart(seconds) {
     const cap = this.offlineCapHours() * 3600
     const total = Math.min(seconds, cap)
     const raw = toRaw(state)
     const activity = raw.activity ? JSON.parse(JSON.stringify(raw.activity)) : null
     this.tracker = { seconds: total, capped: seconds > cap, xp: {}, items: {}, levels: {}, kills: {}, gold: 0, eaten: 0, tokens: 0, heroLevel: 0, stopReason: null, activity }
+    return { raw, total, time: 0 }
+  },
+  // Runs the simulation until it ends or the clock passes `deadline`; true once it is over
+  simStep(run, deadline) {
+    const { raw } = run, step = 0.5
     this.s = raw
     try {
-      const step = 0.5
-      for (let time = 0; time < total; time += step) {
-        this.update(Math.min(step, total - time))
+      for (let n = 0; run.time < run.total; n++) {
+        this.update(Math.min(step, run.total - run.time))
+        run.time += step
         const idle = !raw.activity && raw.hp >= this.maxHp() && !this.farmBusy() && !raw.buffs.potion && raw.buffs.elixir <= 0
           && Object.values(raw.blessings).every(v => v <= 0) && !this.systemsBusy()
-        if (idle) break
+        if (idle) run.time = run.total
+        else if ((n & 63) === 63 && performance.now() > deadline) break
       }
     } finally {
       this.s = state
     }
+    return run.time >= run.total
+  },
+  simFinish(run) {
     const summary = this.tracker
     this.tracker = null
-    const snap = JSON.parse(JSON.stringify(raw))
+    const snap = JSON.parse(JSON.stringify(run.raw))
     for (const k of Object.keys(snap)) state[k] = snap[k]
     this.emit('activity')
     return summary

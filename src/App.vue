@@ -359,9 +359,23 @@ function startAdventure() {
     <p v-if="!state.tutorial.done" class="welcome-guide"><GameIcon name="treasure-map" :size="20" /><span v-html="$t('welcome.tutorial')" /></p>
     <template #footer><Button :label="$t('welcome.start')" icon="pi pi-arrow-right" iconPos="right" @click="startAdventure" /></template>
   </Dialog>
+
+  <!-- Offline progress that takes a while to work out -->
+  <div v-if="session.catching !== null" class="catching" role="status" aria-live="polite">
+    <div class="catching-box">
+      <GameIcon name="hourglass" :size="30" />
+      <b>{{ $t('offline.catching') }}</b>
+      <span class="bar"><i :style="{ width: Math.round(session.catching * 100) + '%' }" /></span>
+      <small class="muted tnum">{{ Math.round(session.catching * 100) }}%</small>
+    </div>
+  </div>
 </template>
 
 <style>
+.catching { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(3px); }
+.catching-box { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(320px, calc(100vw - 48px)); padding: 24px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line-hi); text-align: center; }
+.catching-box .gi { color: var(--gold); }
+.catching-box .bar { width: 100%; }
 .nav-drawer { width: min(300px, 86vw) !important; }
 .nav-drawer .p-drawer-footer { padding: 0 12px 12px; }
 .welcome-guide { display: flex; align-items: center; gap: 10px; margin: 16px 0 0; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--gold) 10%, transparent); border: 1px solid var(--line-hi); }
