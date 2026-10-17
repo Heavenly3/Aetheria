@@ -236,7 +236,7 @@ function startAdventure() {
             <span class="chip wx-chip" :style="{ '--c': wxLook.tint }" v-tooltip.bottom="wxTip" :aria-label="$t(`weather.${wxLook.key}.name`)">
               <GameIcon v-if="wxLook.icon" :name="wxLook.icon" :size="15" /><i v-else :class="wxLook.pi" />
             </span>
-            <span class="chip" v-tooltip.bottom="help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
+            <span class="chip hp-chip" v-tooltip.bottom="help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
               <GameIcon name="glass-heart" :size="15" />
               <span class="mini-hp"><i :style="{ width: hpPct + '%' }" /></span>
               {{ Math.max(0, state.hp) }}/{{ G.maxHp() }}
