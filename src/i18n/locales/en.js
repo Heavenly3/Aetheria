@@ -277,6 +277,7 @@ export default {
   gain: { caught: 'Caught! You take {dmg} damage', burnt: 'Burnt!', item: '+{n} {item}', gold: '+{n} gold', xp: '+{n} XP', double: 'Double!' },
 
   log: {
+    trialDone: "You completed the trial of {trial}.",
     echoFirst: "You beat {monster} for good.",
     overrun: "{area} has been overrun.",
     cleansed: "Brought {area} back to calm: {gold} gold bounty.",
@@ -581,6 +582,7 @@ export default {
   achievements: { progress: 'Achievement progress' },
 
   ach: {
+    allTrials: { name: "Unbroken", desc: "Complete all four trials." },
     allEchoes: { name: "Echo Hunter", desc: "Beat all seven echoes." },
     festTrack: { name: "Reveller {n}", desc: "Complete a festival track {n} times." },
     festChampion: { name: "Festival Champion", desc: "Top the ranking of a festival." },
@@ -1090,6 +1092,7 @@ export default {
     fromOmen: 'Witness {name} {n}×', fromCreature: 'Defeat {name} {n}×', fromWishes: 'Receive {n} wishes', fromUnknownOmen: 'Hidden in an omen not yet witnessed',
     fromAch: 'Achievement: {name}', fromFestival: 'Festival shop: {name}', unlockedToast: 'new appearance unlocked',
     titles: {
+      unbroken: "the Unbroken",
       echo_hunter: "the Echo Hunter",
       reveller: "the Reveller", festival_champion: "Festival Champion", frostbane: "Frostbane", frost_crowned: "of the Frost Crown", lightbringer: "the Lightbringer", kings_shield: "the King's Shield", one_who_remembers: "the One Who Remembers", shieldbearer: "the Shield-bearer", of_frost_and_flame: "of Frost and Flame", of_four_seasons: "of the Four Seasons",
       guildmaster: "the Guildmaster", master_thief: "the Master Thief", botanist: "the Botanist", deep_angler: "Deep Angler", master_artisan: "Master Artisan", tower_warden: "Tower Warden", innkeeper: "the Innkeeper", dawn_saint: "of the Dawn",
@@ -1191,6 +1194,7 @@ export default {
     },
     // Help for the main sections inside screens
     sections: {
+      trials: { title: "Trials", body: "When you ascend you can choose a rule for the next life. Reach the point where you can ascend again under it to complete the trial: that ascension pays more shards, and the trial's bonus stays with you in every life. You can give up a trial at any time." },
       echoes: { title: "Echoes", body: "After you choose an ending in the Crown, every world boss comes back stronger. Beating each one for the first time gives a lasting bonus to XP and gold that stays through ascension." },
       abilities: { title: "Abilities", body: "Each combat style has six abilities that unlock with its skill. Choose up to three for the bar: they fire on their own in place of a normal attack when there is enough energy and their cooldown is over. Healing waits until you are hurt, and boons are not recast while active." },
       power: { title: "Combat power", body: "A single score for how strong you are in a fight: it grows with your damage per second and with how long you last. Every number below is worked out live from your gear, levels, style and bonuses." },
@@ -1864,6 +1868,30 @@ export default {
     table: "Guild ranking",
   },
 
+  trials: {
+    title: "Trials",
+    intro: "Choose a rule for your next life. Live it through until you can ascend again and the trial is complete: ×{x} shards that time and a lasting bonus of its own.",
+    current: "Trial of this life",
+    abandon: "Give up",
+    abandonTitle: "Give up the trial?",
+    abandonMessage: "This life goes on without the rule of {name}, and without its reward.",
+    whenDone: "Ascend under it to complete it: ×{x} shards and, for good, {reward}.",
+    none: "No trial",
+    noneDesc: "A life like any other.",
+    done: "Completed",
+    reward: "Lasting reward: {reward}",
+    pickHint: "The trial starts with the next life, after you ascend.",
+    confirmNext: "Your next life will be lived under the trial of {name}.",
+    completedToast: "Trial of {name} completed! Its bonus is yours for good.",
+    shopClosed: "A self-made life buys nothing from the shop.",
+    onlyMagic: "A life of magic only: switch to magic to fight.",
+    list: {
+      fasting: { name: "Fasting", rule: "You cannot eat: only regeneration, potions, prayers and abilities keep you standing." },
+      arcane: { name: "Arcane", rule: "You can only fight with magic." },
+      selfmade: { name: "Self-made", rule: "The shop sells you nothing: everything you use, you gather or make." },
+      frail: { name: "Frail", rule: "You have half your usual health." },
+    },
+  },
   echoes: {
     name: "Echo of the {boss}",
     who: "{monster}",

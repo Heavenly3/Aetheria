@@ -277,6 +277,7 @@ export default {
   gain: { caught: '¡Te pillan! Recibes {dmg} de daño', burnt: '¡Quemado!', item: '+{n} {item}', gold: '+{n} de oro', xp: '+{n} XP', double: '¡Doble!' },
 
   log: {
+    trialDone: "Superaste la prueba de {trial}.",
     echoFirst: "Venciste para siempre a {monster}.",
     overrun: "{area} se ha desbordado.",
     cleansed: "Devolviste la calma a {area}: recompensa de {gold} de oro.",
@@ -581,6 +582,7 @@ export default {
   achievements: { progress: 'Progreso de logros' },
 
   ach: {
+    allTrials: { name: "Inquebrantable", desc: "Supera las cuatro pruebas." },
     allEchoes: { name: "Cazador de ecos", desc: "Vence a los siete ecos." },
     festTrack: { name: "Juerguista {n}", desc: "Completa la senda de un festival {n} veces." },
     festChampion: { name: "Campeón del festival", desc: "Encabeza la clasificación de un festival." },
@@ -1090,6 +1092,7 @@ export default {
     fromOmen: 'Presencia {name} {n}×', fromCreature: 'Derrota {n}× a {name}', fromWishes: 'Recibe {n} deseos', fromUnknownOmen: 'Oculto en un prodigio aún no presenciado',
     fromAch: 'Logro: {name}', fromFestival: 'Tienda del festival: {name}', unlockedToast: 'nueva apariencia desbloqueada',
     titles: {
+      unbroken: "el Inquebrantable",
       echo_hunter: "Cazador de Ecos",
       reveller: "el Juerguista", festival_champion: "Campeón del Festival", frostbane: "Azote de la Escarcha", frost_crowned: "de la Corona de Escarcha", lightbringer: "el Portador de la Luz", kings_shield: "el Escudo del Rey", one_who_remembers: "el que Recuerda", shieldbearer: "el Portaescudos", of_frost_and_flame: "de Hielo y Fuego", of_four_seasons: "de las Cuatro Estaciones",
       guildmaster: "el Maestre", master_thief: "el Maestro Ladrón", botanist: "el Botánico", deep_angler: "Pescador Abisal", master_artisan: "Maestro Artesano", tower_warden: "Guardián de la Torre", innkeeper: "el Tabernero", dawn_saint: "del Alba",
@@ -1164,9 +1167,9 @@ export default {
     // Una guía por pantalla, en el "?" junto al título de la pantalla
     screens: {
       routines: { title: "Rutinas", body: "Reglas del tipo «cuando pase esto, haz aquello»: cocinar cuando se acaba la comida, pescar cuando llueve, cazar cada prodigio, servir a los clientes de la taberna… Funcionan mientras el juego está abierto, de arriba abajo." },
-      crown: { title: "La Corona de Éter", body: "Las siete esquirlas de la Corona. Encuéntralas siguiendo la historia, engarza hasta tres en el aro por su bonificación y sus poderes, y cuando la Corona esté entera, elige a quién se la das. Al ascender pierdes las esquirlas; los finales se conservan." },
+      crown: { title: "La Corona de Éter", body: "Las siete esquirlas de la Corona. Encuéntralas siguiendo la historia, engarza hasta tres en el aro por su bonificación y sus poderes, y cuando la Corona esté entera, elige a quién se la das. Al renacer pierdes las esquirlas; los finales se conservan." },
       guilds: { title: 'Gremios', body: 'Con cada mundo nuevo se fundan una docena de gremios, cada uno con su líder, sus miembros, su nivel y los roles que acepta. Solicita la entrada en uno que acepte tu rol y cuyos requisitos cumplas, paga la cuota y supera la prueba de ingreso: una tarea y un acertijo. Como miembro aceptas contratos, que se renuevan cada cuatro horas, a cambio de marcas del gremio, oro y reputación. La reputación sube tu rango, y un rango más alto hace más fuerte la ventaja del gremio y abre más artículos de su tienda. Solo puedes pertenecer a un gremio a la vez, y al dejarlo pierdes la reputación ganada allí.' },
-      journal: { title: 'Diario', body: 'La historia de Aetheria, contada en capítulos cortos que se desbloquean al explorar, derrotar jefes y presenciar prodigios. Abre una página para leerla y vuelve a ella cuando quieras. El diario se conserva al ascender, y cada ascensión trae un recuerdo de una vida pasada.' },
+      journal: { title: 'Diario', body: 'La historia de Aetheria, contada en capítulos cortos que se desbloquean al explorar, derrotar jefes y presenciar prodigios. Abre una página para leerla y vuelve a ella cuando quieras. El diario se conserva al renacer, y cada renacimiento trae un recuerdo de una vida pasada.' },
       hero: { title: 'Héroe', body: 'Tu héroe de un vistazo: equipo, herramientas, habilidades y lo último que ha pasado. Gasta los puntos de atributo y talento en sus pestañas al subir de nivel, y pulsa un objeto puesto para quitártelo.' },
       inventory: { title: 'Inventario', body: 'Todo lo que llevas, ordenado por grupos y categorías. Elige un objeto para ver qué hace, equiparlo o usarlo, compararlo con tu equipo y ver qué recetas lo necesitan. Bloquea lo que no quieras vender por error.' },
       skill: { title: '{skill}', body: 'Elige una acción para empezar a entrenar; se repite sola, incluso mientras no juegas. Cada acción sube su propia maestría, que la hace más rápida. Usa la cola para encadenar varias acciones seguidas.' },
@@ -1191,7 +1194,8 @@ export default {
     },
     // Ayuda de las secciones principales de cada pantalla
     sections: {
-      echoes: { title: "Ecos", body: "Cuando eliges un final en la Corona, cada jefe de mundo vuelve más fuerte. Vencer a cada uno por primera vez da una bonificación permanente de XP y oro que se mantiene al ascender." },
+      trials: { title: "Pruebas", body: "Al renacer puedes elegir una regla para la próxima vida. Llega al punto de poder renacer otra vez bajo ella para superar la prueba: ese renacimiento da más fragmentos y la bonificación de la prueba se queda contigo en todas tus vidas. Puedes abandonar una prueba cuando quieras." },
+      echoes: { title: "Ecos", body: "Cuando eliges un final en la Corona, cada jefe de mundo vuelve más fuerte. Vencer a cada uno por primera vez da una bonificación permanente de XP y oro que se mantiene al renacer." },
       abilities: { title: "Habilidades", body: "Cada estilo de combate tiene seis habilidades que se desbloquean con su habilidad. Elige hasta tres para la barra: se lanzan solas en lugar de un ataque normal cuando hay energía suficiente y ha terminado su recarga. Las curaciones esperan a que estés herido y las mejoras no se repiten mientras duran." },
       power: { title: "Poder de combate", body: "Una sola cifra que resume lo fuerte que eres en combate: sube con tu daño por segundo y con lo que aguantas. Todas las cifras de abajo se calculan al momento con tu equipo, niveles, estilo y bonificaciones." },
       equipment: { title: 'Equipo', body: 'Lo que llevas puesto. Pulsa una ranura para quitarte el objeto; equipa lo nuevo desde el inventario. Pasa el ratón por un objeto para ver sus estadísticas.' },
@@ -1864,6 +1868,30 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  trials: {
+    title: "Pruebas",
+    intro: "Elige una regla para tu próxima vida. Vívela hasta que puedas renacer de nuevo y la prueba quedará superada: ×{x} fragmentos esa vez y una bonificación permanente propia.",
+    current: "Prueba de esta vida",
+    abandon: "Abandonar",
+    abandonTitle: "¿Abandonar la prueba?",
+    abandonMessage: "Esta vida sigue sin la regla de {name}, y sin su recompensa.",
+    whenDone: "Renace bajo ella para superarla: ×{x} fragmentos y, para siempre, {reward}.",
+    none: "Sin prueba",
+    noneDesc: "Una vida como cualquier otra.",
+    done: "Superada",
+    reward: "Recompensa permanente: {reward}",
+    pickHint: "La prueba empieza con la próxima vida, después de renacer.",
+    confirmNext: "Tu próxima vida será bajo la prueba de {name}.",
+    completedToast: "¡Prueba de {name} superada! Su bonificación es tuya para siempre.",
+    shopClosed: "En una vida hecha a mano no compras nada en la tienda.",
+    onlyMagic: "Una vida solo de magia: cambia a magia para luchar.",
+    list: {
+      fasting: { name: "Ayuno", rule: "No puedes comer: solo la regeneración, las pociones, las plegarias y las habilidades te mantienen en pie." },
+      arcane: { name: "Arcano", rule: "Solo puedes luchar con magia." },
+      selfmade: { name: "Hecho a mano", rule: "La tienda no te vende nada: todo lo que usas lo recolectas o lo fabricas." },
+      frail: { name: "Frágil", rule: "Tienes la mitad de tu vida habitual." },
+    },
+  },
   echoes: {
     name: "Eco del {boss}",
     who: "{monster}",
@@ -1929,7 +1957,7 @@ export default {
       slayer: { name: "Puntos de cazador", from: "De las tareas de cazador. Para ventajas y su tienda." },
       tower: { name: "Fichas de la torre", from: "Por subir la Torre. Para su tienda." },
       festival: { name: "Fichas de festival", from: "De las actividades del festival. Gástalas antes de que acabe." },
-      shards: { name: "Fragmentos de Éter", from: "Al ascender. Para mejoras permanentes." },
+      shards: { name: "Fragmentos de Éter", from: "Al renacer. Para mejoras permanentes." },
     },
   },
   realm: {
@@ -2098,7 +2126,7 @@ export default {
 
   crown: {
     title: "La Corona de Éter",
-    intro: "Las siete esquirlas de la Corona, según las encuentras en esta vida. Hasta tres se engarzan en el aro y dan su bonificación; el Corazón siempre cuenta en cuanto despierta. Al ascender pierdes las esquirlas, pero los finales que elijas se quedan contigo en todas las vidas.",
+    intro: "Las siete esquirlas de la Corona, según las encuentras en esta vida. Hasta tres se engarzan en el aro y dan su bonificación; el Corazón siempre cuenta en cuanto despierta. Al renacer pierdes las esquirlas, pero los finales que elijas se quedan contigo en todas las vidas.",
     count: "{n} / {total} esquirlas",
     circlet: "El aro",
     circletHint: "Engarza hasta tres esquirlas. Solo las engarzadas dan su bonificación y pueden usar su poder.",
@@ -2291,7 +2319,7 @@ export default {
     soon: "Aún se está escribiendo…",
     unknownPerson: "Alguien a quien aún no conoces",
     memoriesIntro: "Cada vez que asciendes, vuelve un recuerdo de una vida pasada.",
-    memoryLocked: "Vuelve tras la ascensión {n}",
+    memoryLocked: "Vuelve tras el renacimiento {n}",
     acts: { festivals: "Cuentos de festival",
       prologue: "Prólogo",
       act1: "Acto I · El camino del alba",

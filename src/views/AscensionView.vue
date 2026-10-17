@@ -1,12 +1,13 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import { useConfirm } from 'primevue/useconfirm'
 import { G, state } from '../game/engine.js'
 import { BRANCHES, UPGRADES, UPGRADE_MAP, ASCEND_MIN_TOTAL } from '../game/data/ascension.js'
-import { fmt } from '../game/format.js'
+import { TRIALS, TRIAL_MAP, TRIAL_SHARDS } from '../game/data/trials.js'
+import { fmt, fmtDec } from '../game/format.js'
 import { modText } from '../i18n/mods.js'
 import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
@@ -19,6 +20,17 @@ const confirm = useConfirm()
 const asc = computed(() => state.ascension)
 const preview = computed(() => G.shardsForAscension())
 const branches = computed(() => Object.entries(BRANCHES).map(([id, b]) => ({ id, ...b, name: b.name, list: UPGRADES.filter(u => u.branch === id) })))
+// The trial chosen for the next life (none by default)
+const nextTrial = ref(null)
+const rewardText = tr => Object.entries(tr.reward).map(([k, v]) => modText(k, v)).join(' · ')
+const current = computed(() => (asc.value.trial ? TRIAL_MAP[asc.value.trial] : null))
+function abandon() {
+  confirm.require({
+    header: t('trials.abandonTitle'), message: t('trials.abandonMessage', { name: t(`trials.list.${current.value.id}.name`) }), icon: 'pi pi-exclamation-triangle',
+    acceptLabel: t('trials.abandon'), rejectLabel: t('common.cancel'), acceptProps: { severity: 'danger' }, rejectProps: { severity: 'secondary', outlined: true },
+    accept: () => G.giveUpTrial(),
+  })
+}
 const effect = (u, ranks) => Object.entries(u.mods).map(([k, v]) => modText(k, v * ranks)).join(' · ')
 
 function buy(u) { if (G.buyUpgrade(u.id)) { play('level'); G.toast(u.icon, 'ascension.bought', { name: u.name, rank: G.upgradeRank(u.id) }, 'success') } }
@@ -31,10 +43,12 @@ function resetTree() {
 }
 function ascend() {
   confirm.require({
-    header: t('ascension.confirmTitle'), message: t('ascension.confirmMessage', { n: preview.value }), icon: 'pi pi-exclamation-triangle',
+    header: t('ascension.confirmTitle'),
+    message: t('ascension.confirmMessage', { n: preview.value }) + (nextTrial.value ? ' ' + t('trials.confirmNext', { name: t(`trials.list.${nextTrial.value}.name`) }) : ''),
+    icon: 'pi pi-exclamation-triangle',
     acceptLabel: t('ascension.ascendNow'), rejectLabel: t('common.cancel'),
     acceptProps: { severity: 'danger' }, rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => { const n = G.ascend(); play('rare'); G.toast('ankh', 'ascension.done', { n, count: state.ascension.count }, 'rare'); router.push('/') },
+    accept: () => { const n = G.ascend(nextTrial.value); nextTrial.value = null; play('rare'); G.toast('ankh', 'ascension.done', { n, count: state.ascension.count }, 'rare'); router.push('/') },
   })
 }
 </script>
@@ -76,6 +90,38 @@ function ascend() {
       </div>
     </div>
 
+    <!-- Trials: a rule for the next life, and a lasting bonus for living it through -->
+    <div class="section-title" style="margin-top:26px">{{ $t('trials.title') }} <HelpTip k="sections.trials" /></div>
+    <p class="small muted" style="margin-top:0">{{ $t('trials.intro', { x: fmtDec(TRIAL_SHARDS) }) }}</p>
+    <div v-if="current" class="panel pad trial-now" :style="{ '--c': current.color }">
+      <div class="row">
+        <ItemTile :icon="current.icon" :tint="current.color" size="md" :tip="false" />
+        <div class="grow">
+          <div class="small muted">{{ $t('trials.current') }}</div>
+          <b>{{ $t(`trials.list.${current.id}.name`) }}</b>
+          <div class="small muted">{{ $t(`trials.list.${current.id}.rule`) }}</div>
+        </div>
+        <Button :label="$t('trials.abandon')" icon="pi pi-times" size="small" severity="secondary" outlined @click="abandon" />
+      </div>
+      <p class="small" style="margin:10px 0 0">{{ $t('trials.whenDone', { x: fmtDec(TRIAL_SHARDS), reward: rewardText(current) }) }}</p>
+    </div>
+    <div class="grid-cards">
+      <button class="card trial" :class="{ on: !nextTrial }" @click="nextTrial = null">
+        <b>{{ $t('trials.none') }}</b>
+        <div class="small muted">{{ $t('trials.noneDesc') }}</div>
+      </button>
+      <button v-for="tr in TRIALS" :key="tr.id" class="card trial" :class="{ on: nextTrial === tr.id }" :style="{ '--c': tr.color }" @click="nextTrial = tr.id">
+        <div class="row">
+          <ItemTile :icon="tr.icon" :tint="tr.color" size="sm" :tip="false" />
+          <b class="grow">{{ $t(`trials.list.${tr.id}.name`) }}</b>
+          <span v-if="G.trialDone(tr.id)" class="tag ok"><i class="pi pi-check" /> {{ $t('trials.done') }}</span>
+        </div>
+        <div class="small muted" style="margin-top:6px">{{ $t(`trials.list.${tr.id}.rule`) }}</div>
+        <div class="small ok-text" style="margin-top:6px">{{ $t('trials.reward', { reward: rewardText(tr) }) }}</div>
+      </button>
+    </div>
+    <p class="small faint">{{ $t('trials.pickHint') }}</p>
+
     <div class="row" style="margin:26px 0 12px">
       <div class="section-title grow" style="margin:0">{{ $t('ascension.treeTitle') }}</div>
       <Button :label="$t('ascension.resetTree')" icon="pi pi-refresh" size="small" severity="secondary" outlined :disabled="!Object.keys(asc.upgrades).length" @click="resetTree" />
@@ -104,6 +150,9 @@ function ascend() {
 </template>
 
 <style scoped>
+.trial { text-align: start; font: inherit; color: inherit; cursor: pointer; }
+.trial.on { border-color: var(--c, var(--gold)); box-shadow: inset 0 0 0 1px var(--c, var(--gold)); }
+.trial-now { margin-bottom: 14px; border-color: color-mix(in srgb, var(--c) 50%, var(--line)); }
 .gain { font-family: var(--font-display); font-size: 40px; color: var(--sky); line-height: 1.1; }
 .tree { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .branch { display: flex; flex-direction: column; gap: 10px; }

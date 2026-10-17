@@ -30,6 +30,7 @@ import { techniques, techniquesState } from './techniques.js'
 import { realm, realmState } from './realm.js'
 import { unlocks, unlocksState } from './unlocks.js'
 import { echoes } from './echoes.js'
+import { FRAIL_HP } from './data/trials.js'
 import { ECHOES } from './data/echoes.js'
 import { THREAT_EFFECT } from './data/realm.js'
 const REGION_GOLD = THREAT_EFFECT.gold, REGION_LOOT = THREAT_EFFECT.loot
@@ -463,7 +464,7 @@ export const G = {
     return v
   },
   modNow(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key) + this.echoMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key) + this.echoMods(key) + this.trialMods(key)
     for (const [a, per] of ATTR_BY_MOD[key] || []) v += per * this.attr(a)
     const tal = this.s.hero.talents
     for (const tt of TALENTS_BY_MOD[key] || []) if (tal[tt.id]) v += tt.per * tal[tt.id]
@@ -609,6 +610,8 @@ export const G = {
   },
   buy(id, n, price) {
     const cost = n * price
+    // A self-made life buys nothing from the shop
+    if (this.underTrial('selfmade')) { this.toast('anvil-impact', 'trials.shopClosed', {}, 'warn'); return false }
     if (n <= 0 || this.s.gold < cost) return false
     this.s.gold -= cost
     this.addItem(id, n)
@@ -703,12 +706,18 @@ export const G = {
   },
 
   /* ================= health, food and potions ================= */
-  maxHp() { return this.level('hitpoints') + Math.floor(this.mod('maxHp')) },
+  maxHp() {
+    const hp = this.level('hitpoints') + Math.floor(this.mod('maxHp'))
+    // A frail life has half the health
+    return this.underTrial('frail') ? Math.max(1, Math.floor(hp * FRAIL_HP)) : hp
+  },
   heal(n) { this.s.hp = Math.min(this.maxHp(), this.s.hp + n) },
   foodHeal(id) { return Math.floor(ITEMS[id].heal * this.healMult()) },
   eat(id) {
     const it = ITEMS[id]
     if (!it || it.type !== 'food' || this.qty(id) <= 0 || this.s.hp >= this.maxHp()) return false
+    // A fasting life eats nothing
+    if (this.underTrial('fasting')) return false
     this.removeItem(id, 1)
     this.heal(this.foodHeal(id))
     if (this.tracker) this.tracker.eaten++
@@ -1103,6 +1112,7 @@ export const G = {
   // Returns a { key, params } message if the current style cannot attack, or null
   attackBlocker() {
     const type = this.styleType()
+    if (this.underTrial('arcane') && type !== 'magic') return msg('trials.onlyMagic')
     if (type === 'ranged') {
       const w = this.s.equipment.weapon
       if (!w || ITEMS[w].style !== 'ranged') return msg('msg.needBow')

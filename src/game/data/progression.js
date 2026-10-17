@@ -203,6 +203,7 @@ export const ACHIEVEMENTS = [
   ...ENDINGS.map(e => ach(`ending_${e.id}`, 'ending' + e.id[0].toUpperCase() + e.id.slice(1), 1, e.icon, G => !!G.s.legacy?.endings?.[e.id], 100000)),
   ach('all_endings', 'allEndings', ENDINGS.length, 'crown', G => ENDINGS.every(e => G.s.legacy?.endings?.[e.id]), 250000),
   ach('all_echoes', 'allEchoes', 7, 'trophy', G => G.echoesBeaten() >= 7, 300000),
+  ach('all_trials', 'allTrials', 4, 'laurels-trophy', G => G.trialsDone() >= 4, 300000),
   ach('fest_stories', 'festStories', 12, 'quill-ink', G => ['spring', 'summer', 'harvest', 'winter'].every(f => [1, 2, 3].every(i => G.chapterUnlocked(`fest_${f}_${i}`))), 100000),
 ]
 

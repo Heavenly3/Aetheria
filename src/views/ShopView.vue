@@ -127,6 +127,7 @@ function sellJunk() {
 
 <template>
   <div>
+    <p v-if="G.underTrial('selfmade')" class="panel pad small" style="margin:0 0 16px"><i class="pi pi-lock" /> {{ $t('trials.shopClosed') }}</p>
     <div class="row wrap shop-head">
       <p class="intro grow" style="margin:0">{{ $t(tab === 'buy' ? 'shop.intro' : 'shop.sellIntro') }}</p>
       <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false">
