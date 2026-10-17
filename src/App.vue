@@ -150,6 +150,12 @@ onMounted(() => {
   on('death', () => cue('death'))
   on('retreat', () => cue('retreat'))
   on('overrun', e => { cue('omen'); push('death-skull', t('realm.overrunToast', { area: AREAS.find(a => a.id === e.area).name }), 'warn', 8000) })
+  on('unlock', ({ list }) => {
+    cue('quest')
+    const [u] = list
+    if (list.length === 1) push(u.icon, t('unlocks.toast', { name: t('nav.' + u.key), intro: t('unlocks.intro.' + u.key) }), 'success', 8000)
+    else push(u.icon, t('unlocks.toastMany', { names: list.map(x => t('nav.' + x.key)).join(', ') }), 'success', 8000)
+  })
   on('cleansed', e => { cue('quest'); push('laurel-crown', t('realm.cleansedToast', { area: AREAS.find(a => a.id === e.area).name, gold: fmt(e.gold) }), 'success', 8000) }) // the fight's stop message already tells who won and the gold lost
   on('expedition', r => { cue('expedition', { sound: r.ok ? 'quest' : 'bad' }); push(r.icon, tm({ key: r.ok ? 'toast.expeditionOk' : 'toast.expeditionFail', params: { name: r.name, exp: '@exp:' + r.exp, gold: fmt(r.gold) } }), r.ok ? 'success' : 'warn', 6000) })
   on('dungeon', d => {

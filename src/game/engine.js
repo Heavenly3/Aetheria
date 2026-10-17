@@ -28,6 +28,7 @@ import { crown, crownState } from './crown.js'
 import { routines, routinesState } from './routines.js'
 import { techniques, techniquesState } from './techniques.js'
 import { realm, realmState } from './realm.js'
+import { unlocks, unlocksState } from './unlocks.js'
 import { THREAT_EFFECT } from './data/realm.js'
 const REGION_GOLD = THREAT_EFFECT.gold, REGION_LOOT = THREAT_EFFECT.loot
 import { slayer } from './slayer.js'
@@ -131,6 +132,7 @@ export function newState(profile = {}) {
     ...routinesState(),
     ...techniquesState(),
     ...realmState(),
+    ...unlocksState(),
     ...churchState(),
     ...thiefState(),
     ...festivalsState(),
@@ -245,6 +247,8 @@ export const G = {
     replaceState(newState(profile))
     this.slot = i
     this.setupCharacter()
+    // A new hero meets the menu screen by screen
+    this.s.unlocks = { open: {}, seen: {} }
     this.ensureWeekly()
     this.ensureJournal()
     this.checkJournal()
@@ -309,6 +313,7 @@ export const G = {
     // Events from before omens existed are dropped
     if (st.event && !(OMEN_MAP[st.event.id] && st.event.phase)) st.event = null
     if (!ROLES[st.role]) st.role = 'warrior'
+    if (!st.unlocks) this.openAllScreens()
     if (!DIFFICULTIES[st.difficulty]) st.difficulty = 'normal'
     if ((st.version || 2) < 3) {
       ;['bronze_pickaxe', 'bronze_axe', 'rod'].forEach(id => { if (!st.tools[ITEMS[id].toolType]) { this.addItem(id, 1); this.equip(id) } })
@@ -1596,6 +1601,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks)
 
 export { SKILLS, ITEMS }

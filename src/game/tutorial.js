@@ -31,6 +31,8 @@ export const STEPS = [
   { id: 'openCompendium', icon: 'open-book', route: '/bestiary', targets: ['nav:/bestiary', 'nav:menu'] },
 ]
 
+// The menu opens the screens the tutorial shows once it reaches them (see unlocks.js)
+G.tutorialAt = id => { const i = STEPS.findIndex(s => s.id === id); return i >= 0 && state.tutorial.step >= i }
 export const tutorialActive = () => !state.tutorial.done && STEPS[state.tutorial.step]
 export const currentStep = () => (state.tutorial.done ? null : STEPS[state.tutorial.step] || null)
 

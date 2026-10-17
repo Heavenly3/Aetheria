@@ -6,8 +6,11 @@ import { SKILLS, SKILL_CATS } from '../game/data/skills.js'
 import { QUESTS } from '../game/data/progression.js'
 import GameIcon from './GameIcon.vue'
 import { FEATURES } from '../game/features.js'
+import { tip } from '../ui/tips.js'
+import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits(['navigate'])
+const { t } = useI18n()
 const route = useRoute()
 
 const act = computed(() => state.activity)
@@ -54,7 +57,13 @@ const sections = computed(() => [
       to: '/skill/' + id, id, icon: s.icon, color: s.color, name: s.name, pulse: act.value?.type === 'skill' && act.value.skill === id,
     })),
   })),
-].map(s => ({ ...s, items: s.items.filter(Boolean) }))) // switched-off features leave a gap in their section
+].map(s => {
+  // Switched-off features leave a gap in their section, and screens the hero has not found yet are kept back
+  const items = s.items.filter(Boolean)
+  return { ...s, items: s.skills ? items : items.filter(i => G.screenOpen(i.to)), closed: s.skills ? [] : items.filter(i => !G.screenOpen(i.to)) }
+}))
+// What the hidden screens of a section need, in one tooltip
+const closedTip = s => tip(t('unlocks.moreTitle', { n: s.closed.length }), t('unlocks.moreBody'), s.closed.map(i => ({ text: `${t(i.key)}: ${t('unlocks.hints.' + i.key.split('.')[1])}`, kind: 'muted' })))
 
 const isActive = to => (to === '/' ? route.path === '/' : route.path === to || route.path.startsWith(to + '/'))
 
@@ -63,13 +72,14 @@ const STORE = 'aetheria-nav'
 const folded = reactive((() => { try { return JSON.parse(localStorage.getItem(STORE)) || {} } catch { return {} } })())
 const save = () => { try { localStorage.setItem(STORE, JSON.stringify(folded)) } catch { /* storage unavailable */ } }
 function toggle(id) { folded[id] = !folded[id]; save() }
+watch(() => route.path, p => G.markScreenSeen(p), { immediate: true })
 watch(() => route.path, () => { for (const s of sections.value) if (folded[s.id] && s.items.some(i => isActive(i.to))) { folded[s.id] = false; save() } }, { immediate: true })
 
 // What a folded section still shows: a sum of its counters, or a dot when something is running
 function summary(s) {
   const nums = s.items.map(i => i.badge).filter(b => typeof b === 'number')
   const total = nums.reduce((a, b) => a + b, 0)
-  return { badge: total || (s.items.some(i => i.badge === '!') ? '!' : null), pulse: s.items.some(i => i.pulse) }
+  return { badge: total || (s.items.some(i => i.badge === '!' || (!s.skills && G.screenNew(i.to))) ? '!' : null), pulse: s.items.some(i => i.pulse) }
 }
 </script>
 
@@ -101,9 +111,13 @@ function summary(s) {
             :data-tut="'nav:' + i.to" @click="emit('navigate')">
             <span class="nav-icon"><GameIcon :name="i.icon" :size="16" /></span>
             <span class="nav-name grow">{{ $t(i.key) }}</span>
-            <span v-if="i.badge" class="nav-badge">{{ i.badge }}</span>
+            <span v-if="G.screenNew(i.to)" class="nav-new">{{ $t('unlocks.new') }}</span>
+            <span v-else-if="i.badge" class="nav-badge">{{ i.badge }}</span>
             <span v-if="i.pulse" class="pulse" />
           </router-link>
+          <span v-if="s.closed.length" class="nav-closed" tabindex="0" v-tooltip.right="closedTip(s)">
+            <i class="pi pi-lock" /> {{ $t('unlocks.more', { n: s.closed.length }) }}
+          </span>
         </template>
       </div>
     </section>
@@ -129,6 +143,9 @@ function summary(s) {
 .nav-name { font-weight: 500; font-size: 14px; }
 .nav-lvl { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .nav-badge { font-size: 11px; font-weight: 800; min-width: 19px; height: 19px; padding: 0 6px; border-radius: 10px; display: grid; place-items: center; background: var(--gold); color: var(--on-gold); }
+.nav-new { font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; color: var(--on-gold); background: var(--gold-grad); }
+.nav-closed { display: flex; align-items: center; gap: 8px; padding: 6px 10px 2px 14px; font-size: 12.5px; color: var(--faint); cursor: help; width: fit-content; }
+.nav-closed .pi { font-size: 11px; }
 .nav-badge.sm { min-width: 17px; height: 17px; font-size: 10.5px; letter-spacing: 0; }
 .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; animation: pulse 1.6s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(226, 182, 90, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(226, 182, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(226, 182, 90, 0); } }
