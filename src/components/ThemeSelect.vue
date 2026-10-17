@@ -11,7 +11,7 @@ const current = computed({ get: () => themePref.value, set: v => v && setTheme(v
 </script>
 
 <template>
-  <SelectButton v-model="current" :options="options" optionValue="value" dataKey="value" :allowEmpty="false" size="small" :aria-label="$t('settings.theme')">
+  <SelectButton v-model="current" :options="options" optionLabel="label" optionValue="value" dataKey="value" :allowEmpty="false" size="small" :aria-label="$t('settings.theme')">
     <template #option="{ option }">
       <i :class="option.icon" v-tooltip.top="option.label" /><span class="sr-only">{{ option.label }}</span>
     </template>

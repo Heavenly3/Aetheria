@@ -126,7 +126,7 @@ function leave() {
       </div>
     </div>
 
-    <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" style="margin-bottom:18px" />
+    <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" class="page-tabs" />
 
     <!-- ============ My guild ============ -->
     <template v-if="tab === 'hall'">

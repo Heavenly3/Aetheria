@@ -108,7 +108,7 @@ function reset() {
 
 <template>
  <div>
-  <SelectButton v-model="tab" :options="tabs" optionValue="value" :allowEmpty="false" class="set-tabs">
+  <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" class="page-tabs">
     <template #option="{ option }"><i :class="option.icon" /> <span>{{ option.label }}</span></template>
   </SelectButton>
   <AudioSettings v-if="tab === 'sound'" />
@@ -199,8 +199,6 @@ function reset() {
 </template>
 
 <style scoped>
-.set-tabs { margin-bottom: 16px; flex-wrap: wrap; }
-.set-tabs i { font-size: 13px; margin-inline-end: 4px; }
 .pref { display: flex; align-items: center; gap: 12px; padding: 8px 0; cursor: pointer; }
 .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .backup-grid .span-2 { grid-column: 1 / -1; }

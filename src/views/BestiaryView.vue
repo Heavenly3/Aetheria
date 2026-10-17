@@ -45,7 +45,7 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
 
 <template>
   <div>
-    <SelectButton :modelValue="tab" @update:modelValue="setTab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" style="margin-bottom:18px" />
+    <SelectButton :modelValue="tab" @update:modelValue="setTab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" class="page-tabs" />
     <CodexItems v-if="tab === 'items'" />
     <CodexMasterworks v-else-if="tab === 'masterworks'" />
     <template v-else>

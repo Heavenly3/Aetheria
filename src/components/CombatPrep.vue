@@ -19,7 +19,7 @@ const tabs = computed(() => [
 
 <template>
   <section class="prep">
-    <SelectButton v-model="tab" :options="tabs" optionValue="value" :allowEmpty="false" class="prep-tabs">
+    <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" class="page-tabs">
       <template #option="{ option }"><i :class="option.icon" /> <span>{{ option.label }}</span></template>
     </SelectButton>
     <div v-if="tab === 'style'" class="prep-style">
@@ -32,8 +32,6 @@ const tabs = computed(() => [
 
 <style scoped>
 .prep { margin-bottom: 18px; }
-.prep-tabs { margin-bottom: 14px; flex-wrap: wrap; }
-.prep-tabs i { font-size: 13px; margin-inline-end: 4px; }
 .prep-style { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 @media (max-width: 1100px) { .prep-style { grid-template-columns: 1fr; } }
 </style>

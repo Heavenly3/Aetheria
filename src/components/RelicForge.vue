@@ -123,7 +123,7 @@ const fromRank = computed(() => (reveal.value?.from ? qualityRank(ITEMS[reveal.v
       </div>
     </div>
 
-    <SelectButton v-model="mode" :options="modes" optionLabel="label" optionValue="value" :allowEmpty="false" class="rf-modes">
+    <SelectButton v-model="mode" :options="modes" optionLabel="label" optionValue="value" :allowEmpty="false" class="rf-modes page-tabs">
       <template #option="{ option }"><i :class="option.icon" style="margin-inline-end:6px" />{{ option.label }}</template>
     </SelectButton>
 

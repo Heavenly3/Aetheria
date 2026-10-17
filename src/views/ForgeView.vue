@@ -38,7 +38,7 @@ function enchant(slot) {
 
 <template>
   <div>
-    <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" style="margin-bottom:18px">
+    <SelectButton v-model="tab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" class="page-tabs">
       <template #option="{ option }"><i :class="option.icon" style="margin-inline-end:6px" />{{ option.label }}</template>
     </SelectButton>
     <RelicForge v-if="tab === 'relics'" />

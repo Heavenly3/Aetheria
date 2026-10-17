@@ -301,6 +301,15 @@ button.card:hover:not(.locked) { transform: translateY(-2px); border-color: colo
 .p-dialog .p-dialog-title { font-family: var(--font-display); font-weight: 400; letter-spacing: 0.04em; font-size: 1.35rem; }
 .p-tablist-tab-list, .p-tablist-content, .p-tabpanels { background: transparent !important; }
 .p-tab { font-family: var(--font); font-weight: 700; }
+/* Tabs at the top of a screen (a SelectButton): equal columns on one row; on phones the icon sits above a centred label */
+.page-tabs { display: grid !important; grid-auto-flow: column; grid-auto-columns: 1fr; width: fit-content; max-width: 100%; margin-bottom: 16px; }
+.page-tabs i { font-size: 13px; margin-inline-end: 4px; }
+@media (max-width: 600px) {
+  .page-tabs { width: 100%; grid-auto-columns: minmax(0, 1fr); }
+  .page-tabs .p-togglebutton { padding-inline: 4px; }
+  .page-tabs .p-togglebutton-content { flex-direction: column; gap: 4px; text-align: center; line-height: 1.2; font-size: 12.5px; }
+  .page-tabs i { margin: 0; }
+}
 .p-toast { width: min(380px, calc(100vw - 32px)); }
 .p-toast-message { backdrop-filter: blur(16px); }
 

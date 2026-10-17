@@ -11,8 +11,8 @@ import { AetheriaPreset, applyTheme } from './theme.js'
 import { i18n, setLocale, detectLocale } from './i18n/index.js'
 import { G } from './game/engine.js'
 
-// Expose the engine for debugging from the console in development builds
-if (import.meta.env.DEV) window.__G = G
+// Expose the engine and the router for debugging from the console in development builds
+if (import.meta.env.DEV) Object.assign(window, { __G: G, __router: router })
 
 applyTheme()
 

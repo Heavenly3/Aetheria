@@ -141,7 +141,7 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
           </IconField>
           <SelectButton v-model="f.status" :options="statusOpts" optionLabel="label" optionValue="value" :allowEmpty="false" size="small" />
           <Select v-model="f.sort" :options="sortOpts" optionLabel="label" optionValue="value" size="small" class="sort" :inputId="'sort-' + skill" />
-          <SelectButton v-model="f.view" :options="viewOpts" optionValue="value" dataKey="value" :allowEmpty="false" size="small" :aria-label="$t('filters.view')">
+          <SelectButton v-model="f.view" :options="viewOpts" optionLabel="label" optionValue="value" dataKey="value" :allowEmpty="false" size="small" :aria-label="$t('filters.view')">
             <template #option="{ option }"><i :class="option.icon" v-tooltip.top="option.label" /></template>
           </SelectButton>
         </div>
