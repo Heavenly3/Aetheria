@@ -40,6 +40,11 @@ export default {
   },
 
   creation: {
+    tutorial: "Guided tutorial",
+    tutorialHint: "About ten minutes of first steps, shown at the top of the screen.",
+    gradual: "Discover the menu little by little",
+    gradualHint: "Screens show up as they become useful. Turn it off to see them all from the start.",
+    startLater: "You can change both later in Settings.",
     title: 'New hero', slot: 'Slot {n}',
     steps: { identity: 'Identity', role: 'Role', difficulty: 'Difficulty', confirm: 'Confirm' },
     name: 'Name', namePlaceholder: 'What will the legends call you?', randomName: 'Random name', portrait: 'Portrait', colour: 'Colour',
@@ -1025,6 +1030,13 @@ export default {
   },
 
   settings: {
+    tutorialSkip: "Skip",
+    tutorialSkipped: "Tutorial skipped",
+    allScreens: "Every screen in the menu",
+    allScreensHint: "{n} screens still hidden until you reach them.",
+    allScreensDone: "Every screen is already in the menu.",
+    allScreensOpen: "Show them all",
+    allScreensOpened: "Every screen is now in the menu",
     tabs: {
       general: "General",
       sound: "Sound",
@@ -1858,7 +1870,7 @@ export default {
     new: "New",
     more: "{n} more to discover",
     moreTitle: "{n} screens still to discover",
-    moreBody: "They show up in the menu as you play.",
+    moreBody: "They show up in the menu as you play. To see them all now, use Settings.",
     toast: "New in the menu: {name}. {intro}",
     toastMany: "New in the menu: {names}. Each one is marked until you open it.",
     hints: {

@@ -18,7 +18,7 @@ import UpdateLog from '../components/UpdateLog.vue'
 import AudioSettings from '../components/AudioSettings.vue'
 import CueSettings from '../components/CueSettings.vue'
 import { encodeCode, decodeAny, makeLink, downloadFile, pickFile } from '../game/transfer.js'
-import { startTutorial } from '../game/tutorial.js'
+import { startTutorial, skipTutorial } from '../game/tutorial.js'
 
 const { t } = useI18n()
 const confirm = useConfirm()
@@ -90,6 +90,8 @@ async function loadFile() {
   catch { G.toast('cross-mark', 'settings.invalidSave', {}, 'warn') }
 }
 function restartTutorial() { startTutorial(); G.toast('treasure-map', 'settings.tutorialRestarted', {}, 'success') }
+function skipIt() { skipTutorial(); G.toast('treasure-map', 'settings.tutorialSkipped', {}, 'success') }
+function openAll() { G.openAllScreens(); G.toast('open-book', 'settings.allScreensOpened', {}, 'success') }
 function reset() {
   confirm.require({
     header: t('settings.deleteTitle'),
@@ -138,7 +140,10 @@ function reset() {
         <label class="pref" for="pref-notify"><span class="grow">{{ $t('settings.notify') }}</span><ToggleSwitch inputId="pref-notify" :modelValue="state.settings.notify" @update:modelValue="toggleNotify" /></label>
         <label class="pref" for="pref-numbers"><span class="grow">{{ $t('settings.compactNumbers') }}<span class="small faint" style="display:block">{{ $t('settings.compactNumbersHint') }}</span></span><ToggleSwitch v-model="state.settings.compactNumbers" inputId="pref-numbers" /></label>
         <div class="pref"><span class="grow">{{ $t('settings.tutorial') }}<span class="small faint" style="display:block">{{ $t('settings.tutorialHint') }}</span></span>
-          <Button :label="$t('settings.tutorialRestart')" icon="pi pi-replay" size="small" severity="secondary" outlined :disabled="!state.tutorial.done" @click="restartTutorial" /></div>
+          <Button v-if="state.tutorial.done" :label="$t('settings.tutorialRestart')" icon="pi pi-replay" size="small" severity="secondary" outlined @click="restartTutorial" />
+          <Button v-else :label="$t('settings.tutorialSkip')" icon="pi pi-forward" size="small" severity="secondary" outlined @click="skipIt" /></div>
+        <div class="pref"><span class="grow">{{ $t('settings.allScreens') }}<span class="small faint" style="display:block">{{ G.closedScreens().length ? $t('settings.allScreensHint', { n: G.closedScreens().length }) : $t('settings.allScreensDone') }}</span></span>
+          <Button :label="$t('settings.allScreensOpen')" icon="pi pi-lock-open" size="small" severity="secondary" outlined :disabled="!G.closedScreens().length" @click="openAll" /></div>
       </div>
       <div class="panel pad">
         <h3 class="panel-title"><i class="pi pi-volume-up" style="color:var(--gold)" /> {{ $t('settings.audio') }}</h3>

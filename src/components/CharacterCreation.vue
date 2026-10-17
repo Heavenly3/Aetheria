@@ -7,6 +7,7 @@ import StepPanels from 'primevue/steppanels'
 import StepPanel from 'primevue/steppanel'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
+import ToggleSwitch from 'primevue/toggleswitch'
 import { ROLES, DIFFICULTIES, AVATARS, TINTS, ATTRIBUTES } from '../game/data/character.js'
 import { SKILLS } from '../game/data/skills.js'
 import { ITEMS } from '../game/data/items.js'
@@ -23,6 +24,9 @@ const avatar = ref(AVATARS[0])
 const tint = ref(TINTS[0])
 const role = ref('warrior')
 const difficulty = ref('normal')
+// How the game starts: with the guided tutorial, and with the menu found screen by screen
+const tutorial = ref(true)
+const gradual = ref(true)
 const step = ref('1')
 
 const r = computed(() => ROLES[role.value])
@@ -39,7 +43,7 @@ function pickRole(k) {
   tint.value = ROLES[k].color
 }
 function create() {
-  emit('create', { name: name.value.trim().slice(0, 20), avatar: avatar.value, tint: tint.value, role: role.value, difficulty: difficulty.value })
+  emit('create', { name: name.value.trim().slice(0, 20), avatar: avatar.value, tint: tint.value, role: role.value, difficulty: difficulty.value, tutorial: tutorial.value, gradual: gradual.value })
 }
 </script>
 
@@ -123,6 +127,17 @@ function create() {
 
           <StepPanel v-slot="{ activateCallback }" value="4">
             <p style="margin-top:0" v-html="$t('creation.summary', { name: escape(name.trim()), role: r.name, difficulty: d.name, color: d.color })" />
+            <div class="start-opts">
+              <label class="start-opt" for="cc-tutorial">
+                <span class="grow"><b>{{ $t('creation.tutorial') }}</b><span class="small muted">{{ $t('creation.tutorialHint') }}</span></span>
+                <ToggleSwitch v-model="tutorial" inputId="cc-tutorial" />
+              </label>
+              <label class="start-opt" for="cc-gradual">
+                <span class="grow"><b>{{ $t('creation.gradual') }}</b><span class="small muted">{{ $t('creation.gradualHint') }}</span></span>
+                <ToggleSwitch v-model="gradual" inputId="cc-gradual" />
+              </label>
+              <p class="small faint" style="margin:0">{{ $t('creation.startLater') }}</p>
+            </div>
             <p class="small muted">{{ $t('creation.note', { n: slot + 1 }) }}</p>
             <div class="cc-nav">
               <Button :label="$t('common.back')" icon="pi pi-arrow-left" severity="secondary" text @click="activateCallback('3')" />
@@ -162,6 +177,9 @@ function create() {
 </template>
 
 <style scoped>
+.start-opts { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 14px; }
+.start-opt { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--tint-2); cursor: pointer; }
+.start-opt b, .start-opt .small { display: block; }
 .creator { position: relative; z-index: 1; width: 100%; max-width: 1080px; min-width: 0; }
 .cc-title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 34px; background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .cc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 18px; align-items: start; }

@@ -64,3 +64,24 @@ describe('the next step', () => {
     spy.mockRestore()
   })
 })
+
+describe('the player chooses how to start', () => {
+  it('starts with the tutorial and a short menu by default', () => {
+    newHero()
+    expect(state.tutorial.done).toBe(false)
+    expect(G.closedScreens().length).toBeGreaterThan(0)
+  })
+
+  it('can skip the tutorial and open every screen from the start', () => {
+    newHero({ tutorial: false, gradual: false })
+    expect(state.tutorial.done).toBe(true)
+    expect(G.closedScreens()).toEqual([])
+    expect(G.screenNew('/tower')).toBe(false)
+  })
+
+  it('can open every screen at any time', () => {
+    newHero()
+    G.openAllScreens()
+    expect(G.closedScreens()).toEqual([])
+  })
+})

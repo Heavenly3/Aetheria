@@ -247,14 +247,15 @@ export const G = {
     replaceState(newState(profile))
     this.slot = i
     this.setupCharacter()
-    // A new hero meets the menu screen by screen
+    // A new hero meets the menu screen by screen, unless the player chose to see it all at once
     this.s.unlocks = { open: {}, seen: {} }
+    if (profile?.gradual === false) this.openAllScreens()
     this.ensureWeekly()
     this.ensureJournal()
     this.checkJournal()
     this.ensureGuilds()
     this.ensureCodex()
-    this.s.tutorial = { step: 0, done: false, base: null }
+    this.s.tutorial = { step: 0, done: profile?.tutorial === false, base: null }
     this.log(ROLES[this.s.role].icon, 'log.start', { name: this.s.name, role: '@role:' + this.s.role })
     this.save()
   },

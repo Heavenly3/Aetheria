@@ -40,6 +40,11 @@ export default {
   },
 
   creation: {
+    tutorial: "Tutorial guiado",
+    tutorialHint: "Unos diez minutos de primeros pasos, en lo alto de la pantalla.",
+    gradual: "Descubrir el menú poco a poco",
+    gradualHint: "Las pantallas aparecen cuando te resultan útiles. Desactívalo para verlas todas desde el principio.",
+    startLater: "Puedes cambiar las dos cosas más adelante en Ajustes.",
     title: 'Nuevo héroe', slot: 'Ranura {n}',
     steps: { identity: 'Identidad', role: 'Rol', difficulty: 'Dificultad', confirm: 'Confirmar' },
     name: 'Nombre', namePlaceholder: '¿Cómo te llamarán las leyendas?', randomName: 'Nombre al azar', portrait: 'Retrato', colour: 'Color',
@@ -1025,6 +1030,13 @@ export default {
   },
 
   settings: {
+    tutorialSkip: "Saltar",
+    tutorialSkipped: "Tutorial saltado",
+    allScreens: "Todas las pantallas en el menú",
+    allScreensHint: "Quedan {n} pantallas ocultas hasta que llegues a ellas.",
+    allScreensDone: "Todas las pantallas están ya en el menú.",
+    allScreensOpen: "Mostrar todas",
+    allScreensOpened: "Todas las pantallas están ya en el menú",
     tabs: {
       general: "General",
       sound: "Sonido",
@@ -1858,7 +1870,7 @@ export default {
     new: "Nuevo",
     more: "{n} más por descubrir",
     moreTitle: "Quedan {n} pantallas por descubrir",
-    moreBody: "Irán apareciendo en el menú a medida que juegues.",
+    moreBody: "Irán apareciendo en el menú a medida que juegues. Para verlas todas ya, ve a Ajustes.",
     toast: "Nuevo en el menú: {name}. {intro}",
     toastMany: "Nuevo en el menú: {names}. Cada uno queda marcado hasta que lo abras.",
     hints: {
