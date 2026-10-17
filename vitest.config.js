@@ -7,5 +7,7 @@ export default defineConfig({
     include: ['tests/**/*.test.js'],
     // Some suites simulate hours of play; with every suite running at once they need more than the default 5 s
     testTimeout: 30000,
+    // Spies and mocks are undone before every test
+    restoreMocks: true,
   },
 })

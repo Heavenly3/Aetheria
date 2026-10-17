@@ -108,3 +108,8 @@ describe('offline progress', () => {
     expect(G.tracker).toBe(null)
   }, 30000)
 })
+
+describe('test isolation', () => {
+  it('writes something to storage', () => { localStorage.setItem('leak-check', '1'); expect(localStorage.getItem('leak-check')).toBe('1') })
+  it('starts the next test with storage empty', () => expect(localStorage.getItem('leak-check')).toBe(null))
+})
