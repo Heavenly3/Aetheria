@@ -143,7 +143,9 @@ if (!only) {
       // Player hits roll 1..max, monster hits 0..max; combat regen is 1 HP every 6 s
       const pDps = pHit * (ps.maxHit + 1) / 2 / PLAYER_ATTACK_SPEED, mDps = mHit * m.maxHit / 2 / m.speed
       const netLoss = mDps - 1 / 6
-      const killS = m.hp / pDps + 1.5
+      // Regenerating creatures heal back part of the damage
+      const net = pDps - G.regenPerSec(m, {})
+      const killS = net > 0 ? m.hp / net + 1.5 : Infinity
       const kph = 3600 / killS
       const xph = kph * m.hp * (4 + 1.33)
       const hpH = Math.max(0, netLoss * 3600)

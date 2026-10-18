@@ -1230,8 +1230,8 @@ export const G = {
     if (this.shouldRetreat(act)) return this.retreat(m)
     const ps = this.playerStats(m)
     const mr = this.monsterRolls(m)
-    const regen = this.traitValue(m, 'regen')
-    if (regen && act.kind !== 'weekly') act.mHp = Math.min(m.hp, act.mHp + m.hp * regen * dt)
+    const regen = this.regenPerSec(m, act)
+    if (regen) act.mHp = Math.min(m.hp, act.mHp + regen * dt)
 
     // The hero swings at the weapon's pace; a stun stops the clock and a slow stretches it
     if (!this.hasStatus(act, 'player', 'stun')) act.pTimer += (act.kind === 'weekly' ? dt * this.weeklyPace(act) : dt) / (1 + this.slowOf(act, 'player'))

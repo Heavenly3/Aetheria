@@ -12,7 +12,7 @@ import {
   weaponProfile, SPELL_FX, AIR_SPEED, STATUSES, TRAITS, traitsOf, ELITES, ELITE_IDS, ELITE_CHANCE,
   ABILITIES, ABILITY_MAP, ABILITY_SKILL, BUFFS, ENERGY, ENERGY_MAX, BAR_SIZE, defaultBar,
   BOSS_PHASES, STREAK_STEP, STREAK_BONUS, STREAK_MAX, COMBAT_SKILLS, ARMOUR_K, ARMOUR_CAP,
-  MECHS, GUARD_TAKEN, BREAK_SHARE, GUARD_STANCE, BOSS_MECHS,
+  MECHS, GUARD_TAKEN, BREAK_SHARE, GUARD_STANCE, BOSS_MECHS, REGEN_CAP,
 } from './data/fighting.js'
 
 const eliteCache = new Map()
@@ -112,6 +112,8 @@ export const fighting = {
   },
   // The value of one trait property summed over the creature's traits (armour, regen, drain…)
   traitValue(m, key, act) { return this.monsterTraits(m, act).reduce((v, id) => v + (TRAITS[id][key] || 0), 0) },
+  // Health a creature regrows each second (none in the weekly fight)
+  regenPerSec(m, act) { return act?.kind === 'weekly' ? 0 : this.traitValue(m, 'regen', act) * Math.min(m.hp, REGEN_CAP) },
   // An elite version of a creature, cached per creature and kind of elite
   eliteMonster(m, kind) {
     const e = ELITES[kind]
@@ -168,7 +170,9 @@ export const fighting = {
     const avgTaken = (ref.maxHit / 2) * (1 - this.blockChance() / 2) * (1 - reduction)
     const takenPerSec = (hitTaken * avgTaken) / ref.speed
     const maxHp = this.maxHp()
-    const killTime = dps > 0 ? ref.hp / dps : Infinity
+    // Regeneration eats into the damage dealt
+    const net = dps - this.regenPerSec(ref, {})
+    const killTime = net > 0 ? ref.hp / net : Infinity
     // How long the hero lasts against the reference opponent, and how fast it falls
     const lasts = takenPerSec > 0 ? maxHp / takenPerSec : 600
     const power = Math.round(Math.sqrt(dps * Math.min(lasts, 600)) * 10)

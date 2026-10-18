@@ -54,7 +54,7 @@ export const STATUS_IDS = Object.keys(STATUSES)
 
 /* ================= creature traits ================= */
 // on: status put on the hero by a landed hit, with its chance · armour: share of damage ignored
-// regen: share of max HP healed every second · drain: share of damage dealt that heals it
+// regen: share of max HP healed every second (counting at most REGEN_CAP of it) · drain: share of damage dealt that heals it
 // enrage: extra damage below 30% HP · evade: chance to dodge the hero's attack
 export const TRAITS = {
   venom:   { icon: 'death-juice', on: { id: 'poison', chance: 0.3 } },
@@ -64,7 +64,7 @@ export const TRAITS = {
   stuns:   { icon: 'star-swirl',    on: { id: 'stun', chance: 0.12 } },
   curses:  { icon: 'broken-shield', on: { id: 'weaken', chance: 0.25 } },
   armour:  { icon: 'shield',        armour: 0.2 },
-  regen:   { icon: 'glass-heart',    regen: 0.015 },
+  regen:   { icon: 'glass-heart',    regen: 0.006 },
   drain:   { icon: 'vampire-dracula', drain: 0.5 },
   enrage:  { icon: 'biceps',        enrage: 0.4 },
   evasive: { icon: 'sprint',        evade: 0.2 },
@@ -84,6 +84,9 @@ export const MONSTER_TRAITS = {
   goblin_king: ['evasive', 'stuns'], troll_lord: ['regen', 'stuns'], kraken: ['chills', 'stuns'], necromancer: ['drain', 'curses'],
   ancient_dragon: ['burns', 'armour', 'enrage'], void_emperor: ['drain', 'curses', 'evasive'], aether_sovereign: ['burns', 'regen', 'armour'],
 }
+// Regeneration counts at most this much of a creature's health, so a boss with thousands of HP
+// heals like a big creature instead of faster than any hero can hurt it
+export const REGEN_CAP = 400
 export const traitsOf = id => MONSTER_TRAITS[id] || []
 
 /* ================= elites ================= */

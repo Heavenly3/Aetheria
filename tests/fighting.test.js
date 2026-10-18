@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { G, state, newHero, run, fixRandom } from './helpers.js'
 import { MONSTERS, BOSSES } from '../src/game/data/combat.js'
-import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT, ABILITY_MAP, ENERGY, STREAK_STEP, STREAK_BONUS, ARMOUR_CAP } from '../src/game/data/fighting.js'
+import { weaponProfile, MONSTER_TRAITS, TRAITS, STATUSES, ELITES, ELITE_LOOT, ABILITY_MAP, ENERGY, STREAK_STEP, STREAK_BONUS, ARMOUR_CAP, REGEN_CAP } from '../src/game/data/fighting.js'
 import { BESTIARY } from '../src/game/data/bestiary.js'
 import { i18n } from '../src/i18n/index.js'
 import { itemTip } from '../src/ui/tips.js'
@@ -89,6 +89,18 @@ describe('creatures', () => {
     vi.spyOn(G, 'attackSpeed').mockReturnValue(999)
     G.update(1)
     expect(act.mHp).toBeGreaterThan(1)
+  })
+
+  it('caps regeneration so a boss with thousands of HP heals no faster than a big creature', () => {
+    const sovereign = BOSSES.find(b => b.id === 'aether_sovereign')
+    const troll = MONSTERS.troll
+    const rate = TRAITS.regen.regen
+    expect(G.regenPerSec(troll, {})).toBeCloseTo(troll.hp * rate)
+    expect(G.regenPerSec(sovereign, {})).toBeCloseTo(REGEN_CAP * rate)
+    expect(G.regenPerSec(sovereign, { kind: 'weekly' })).toBe(0)
+    // The time per kill shown to the player counts what the creature heals back
+    const plain = G.combatProfile({ ...troll, id: 'troll_plain' })
+    expect(G.combatProfile(troll).killTime).toBeGreaterThan(plain.killTime)
   })
 })
 
