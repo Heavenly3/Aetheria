@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import Button from 'primevue/button'
 import { useConfirm } from 'primevue/useconfirm'
 import { G, state } from '../game/engine.js'
@@ -21,11 +21,14 @@ import GameIcon from '../components/GameIcon.vue'
 const { t } = useI18n()
 const router = useRouter()
 const confirm = useConfirm()
-const selected = ref(null)
+// The search box can open an item here, even one the hero does not have, to see where it comes from
+const route = useRoute()
+const selected = ref(ITEMS[route.query.item] ? route.query.item : null)
+watch(() => route.query.item, id => { if (ITEMS[id]) selected.value = id })
 
 const it = computed(() => (selected.value && ITEMS[selected.value]) || null)
 const have = computed(() => (selected.value ? G.qty(selected.value) : 0))
-watch(have, q => { if (selected.value && q <= 0) selected.value = null })
+watch(have, (q, before) => { if (selected.value && q <= 0 && before > 0) selected.value = null })
 const totalValue = computed(() => Object.entries(state.inventory).reduce((s, [id, q]) => s + (ITEMS[id] ? G.sellPrice(id) * q : 0), 0))
 const uses = computed(() => (selected.value ? usesOf(selected.value) : []))
 const comparable = computed(() => it.value && ((it.value.type === 'equip' && !it.value.stackEquip) || it.value.type === 'tool'))
@@ -105,6 +108,8 @@ const sellAtShop = () => router.push({ path: '/shop', query: { sell: selected.va
           <div v-if="uses.length > 8" class="small faint">{{ $t('inventory.moreUses', { n: uses.length - 8 }) }}</div>
         </div>
 
+        <!-- What can be done with it, once the hero has one (an item looked up from the search has none) -->
+        <template v-if="have > 0">
         <div class="row wrap" style="margin-top:14px">
           <Button v-if="it.type === 'equip'" :label="it.stackEquip ? (state.equipment.ammo === selected ? $t('inventory.equipped') : $t('inventory.equipAmmo')) : $t('common.equip')" icon="pi pi-shield"
             :disabled="!G.canEquip(selected) || state.equipment.ammo === selected" @click="equip" />
@@ -127,6 +132,7 @@ const sellAtShop = () => router.push({ path: '/shop', query: { sell: selected.va
           <i class="pi pi-lock" /> {{ $t('inventory.cannotEquip', { req: missingReq.map(([sk, l]) => `${SKILLS[sk].name} ${l}`).join(', ') }) }}
         </p>
         <Button :label="$t('inventory.sellAtShop')" icon="pi pi-shop" severity="secondary" text fluid style="margin-top:12px" :disabled="G.isLocked(selected)" @click="sellAtShop" />
+        </template>
       </template>
       <div v-else class="empty-state" style="padding:30px 10px">
         <GameIcon name="crystal-ball" :size="46" />

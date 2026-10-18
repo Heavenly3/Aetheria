@@ -32,6 +32,7 @@ import { modText } from './i18n/mods.js'
 import { guildName } from './i18n/names.js'
 import ActivityDock from './components/ActivityDock.vue'
 import WalletChip from './components/WalletChip.vue'
+import GlobalSearch from './components/GlobalSearch.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
 import TitleScreen from './components/TitleScreen.vue'
@@ -126,6 +127,19 @@ const offs = []
 // Takes the game back from the other tab, with whatever it played meanwhile
 const playHere = () => continueGame(G.slot)
 onUnmounted(() => offs.splice(0).forEach(off => off()))
+
+// The search box opens with Ctrl+K (⌘K on a Mac) or "/" when not typing somewhere
+const searching = ref(false)
+const typing = el => el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))
+function onSearchKey(e) {
+  if (!session.inGame) return
+  if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') || (e.key === '/' && !typing(e.target) && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+    e.preventDefault()
+    searching.value = true
+  }
+}
+onMounted(() => window.addEventListener('keydown', onSearchKey))
+onUnmounted(() => window.removeEventListener('keydown', onSearchKey))
 // Pop-ups follow the player's choice: all, the important ones (no plain notes), or warnings only
 const push = (icon, detail, kind = 'info', life = 3500) => {
   const level = state.settings.toasts
@@ -255,6 +269,7 @@ function startAdventure() {
         <header class="topbar">
           <div class="topbar-title">{{ title }}<HelpTip v-if="screenHelp" :k="screenHelp" :params="{ skill: title }" class="screen-help" /></div>
           <div class="chips">
+            <button class="chip search-chip" :aria-label="$t('search.label')" v-tooltip.bottom="$t('search.tip')" @click="searching = true"><i class="pi pi-search" /></button>
             <button class="chip mute-chip" :aria-label="$t(state.settings.muted ? 'settings.unmute' : 'settings.mute')" v-tooltip.bottom="$t(state.settings.muted ? 'settings.unmute' : 'settings.mute')" @click="toggleMute">
               <i class="pi" :class="state.settings.muted ? 'pi-volume-off' : 'pi-volume-up'" />
             </button>
@@ -293,6 +308,7 @@ function startAdventure() {
             <i class="pi pi-angle-down muted" />
           </button>
           <Menu ref="menu" :model="menuItems" popup />
+          <GlobalSearch v-model="searching" />
         </header>
 
         <section class="view">
