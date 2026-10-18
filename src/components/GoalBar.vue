@@ -7,7 +7,7 @@ import GameIcon from './GameIcon.vue'
 // Hiding it lasts until the goal changes; that choice is kept per device
 const STORE = 'aetheria-goal-hidden'
 const hidden = ref((() => { try { return localStorage.getItem(STORE) || '' } catch { return '' } })())
-const goal = computed(() => (state.tutorial.done ? G.nextGoal() : null))
+const goal = computed(() => (state.tutorial.done && state.settings.goalBar !== false ? G.nextGoal() : null))
 const key = computed(() => goal.value && `${goal.value.kind}:${goal.value.quest?.id || goal.value.hint || ''}`)
 const show = computed(() => goal.value && key.value !== hidden.value)
 function hide() {

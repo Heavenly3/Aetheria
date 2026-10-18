@@ -14,6 +14,7 @@ import CharacterCreation from './CharacterCreation.vue'
 import LanguageSelect from './LanguageSelect.vue'
 import ThemeSelect from './ThemeSelect.vue'
 import { decodeAny, pickFile, takeLinkCode } from '../game/transfer.js'
+import { listBackups, readBackup } from '../game/backup.js'
 
 const { t } = useI18n()
 const confirm = useConfirm()
@@ -44,7 +45,23 @@ async function readLink() {
   if (!code) return
   try { offerImport(await decodeAny(code)) } catch { G.toast('cross-mark', 'settings.invalidSave', {}, 'warn') }
 }
-onMounted(() => { readLink(); window.addEventListener('hashchange', readLink) })
+onMounted(() => { readLink(); window.addEventListener('hashchange', readLink); findBackups() })
+
+// A slot that is empty (or whose save broke) but still has a backup can be brought back from it
+const backups = ref({})
+async function findBackups() {
+  const found = {}
+  for (let i = 0; i < slots.value.length; i++) if (!slots.value[i]) { const [b] = await listBackups(i); if (b) found[i] = b }
+  backups.value = found
+}
+async function recover(i) {
+  const b = backups.value[i]
+  const save = b && await readBackup(i, b.tier)
+  if (!save || !G.writeSlot(i, save)) { G.toast('cross-mark', 'backup.failed', {}, 'warn'); return }
+  G.toast('locked-chest', 'backup.recovered', { name: b.info?.name || '', n: i + 1 }, 'success')
+  refresh()
+  findBackups()
+}
 onUnmounted(() => window.removeEventListener('hashchange', readLink))
 function offerImport(save) { pending.value = { save, info: G.summarize(save) }; mode.value = 'import' }
 async function importFile() {
@@ -98,7 +115,8 @@ function removeSlot(i) {
 }
 function newGame() {
   const empty = slots.value.findIndex(s => !s)
-  if (empty >= 0 && !hasAny.value) { createSlot.value = empty; mode.value = 'create' }
+  // With no game at all, straight to a new hero, unless a backup could bring one back first
+  if (empty >= 0 && !hasAny.value && !Object.keys(backups.value).length) { createSlot.value = empty; mode.value = 'create' }
   else mode.value = 'new'
 }
 function created(profile) { startNewGame(createSlot.value, profile) }
@@ -123,6 +141,14 @@ function created(profile) { startNewGame(createSlot.value, profile) }
 
       <transition name="fade" mode="out-in">
         <div v-if="mode === 'menu'" key="menu" class="menu">
+          <!-- Games that vanished from their slot but still have a backup -->
+          <div v-if="Object.keys(backups).length" class="recover-box">
+            <b><i class="pi pi-history" /> {{ $t('backup.foundTitle') }}</b>
+            <span class="small muted">{{ $t('backup.foundText') }}</span>
+            <button v-for="(b, i) in backups" :key="i" class="slot-recover" @click="recover(+i)">
+              <i class="pi pi-replay" /><span class="grow">{{ $t('backup.recoverSlot', { name: b.info?.name || '?', when: ago(b.at) }) }} · {{ $t('creation.slot', { n: +i + 1 }) }}</span>
+            </button>
+          </div>
           <button v-if="lastInfo" class="ts-btn primary" @click="continueGame(last)">
             <span class="menu-label"><GameIcon name="play-button" :size="20" /> {{ $t('title.continue') }}</span>
             <span class="menu-meta">{{ lastInfo.name }} · {{ ROLES[lastInfo.role]?.name }} · {{ $t('common.lvlShort', { n: lastInfo.heroLevel }) }} · {{ ago(lastInfo.lastTick) }}</span>
@@ -177,11 +203,17 @@ function created(profile) { startNewGame(createSlot.value, profile) }
                   <Button icon="pi pi-trash" severity="danger" text :aria-label="$t('title.deleteTitle')" v-tooltip.top="$t('common.delete')" @click="removeSlot(i)" />
                 </div>
               </template>
-              <button v-else class="slot-empty" :disabled="mode === 'load'" @click="pickSlot(i)">
-                <span class="slot-num">{{ i + 1 }}</span>
-                <GameIcon name="quill-ink" :size="30" />
-                <b>{{ mode === 'load' ? $t('title.emptySlot') : mode === 'import' ? $t('title.placeHere') : $t('title.createCharacter') }}</b>
-              </button>
+              <template v-else>
+                <button class="slot-empty" :disabled="mode === 'load'" @click="pickSlot(i)">
+                  <span class="slot-num">{{ i + 1 }}</span>
+                  <GameIcon name="quill-ink" :size="30" />
+                  <b>{{ mode === 'load' ? $t('title.emptySlot') : mode === 'import' ? $t('title.placeHere') : $t('title.createCharacter') }}</b>
+                </button>
+                <button v-if="backups[i] && mode !== 'import'" class="slot-recover" @click="recover(i)">
+                  <i class="pi pi-history" />
+                  <span class="grow">{{ $t('backup.recoverSlot', { name: backups[i].info?.name || '?', when: ago(backups[i].at) }) }}</span>
+                </button>
+              </template>
             </div>
           </div>
         </div>
@@ -192,6 +224,10 @@ function created(profile) { startNewGame(createSlot.value, profile) }
 </template>
 
 <style scoped>
+.recover-box { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 16px; border: 1px solid rgba(226, 182, 90, 0.45); background: color-mix(in srgb, var(--gold) 8%, var(--panel)); }
+.recover-box b { color: var(--gold-hi); }
+.slot-recover { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 8px; padding: 8px 12px; border-radius: 10px; border: 1px dashed var(--line-hi); background: none; color: var(--gold); font: inherit; font-size: 13px; cursor: pointer; text-align: start; }
+.slot-recover:hover { background: var(--tint-2); }
 .title-screen { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 16px 60px; overflow: hidden; }
 /* Centred while it fits, scrollable from the top when it does not */
 .title-screen > .ts-content, .title-screen > .creator { margin-block: auto; }

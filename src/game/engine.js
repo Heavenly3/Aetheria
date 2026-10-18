@@ -31,6 +31,7 @@ import { realm, realmState } from './realm.js'
 import { unlocks, unlocksState } from './unlocks.js'
 import { echoes } from './echoes.js'
 import { records, recordsState } from './records.js'
+import { writeBackup } from './backup.js'
 import { FRAIL_HP } from './data/trials.js'
 import { ECHOES } from './data/echoes.js'
 import { THREAT_EFFECT } from './data/realm.js'
@@ -276,6 +277,21 @@ export const G = {
     store.set(SLOT_KEY(this.slot), JSON.stringify(toRaw(state)))
     store.set(META_KEY, JSON.stringify({ last: this.slot }))
   },
+  // A copy of this slot in the backup store (see backup.js); resolves when written
+  backupNow() {
+    if (this.slot === null) return Promise.resolve(null)
+    const raw = toRaw(state)
+    return writeBackup(this.slot, JSON.stringify(raw), this.summarize(raw))
+  },
+  // Downloading or sharing the save counts as a backup the player keeps
+  markExported() { this.s.settings.lastExport = Date.now() },
+  // A gentle reminder to keep a copy outside the browser: after two hours of play, a week without one,
+  // and at most every three days
+  backupReminderDue(now = Date.now()) {
+    const st = this.s.settings
+    if (!st.backupReminder || (this.s.stats.playTime || 0) < 2 * 3600) return false
+    return now - (st.lastExport || 0) > 7 * 86400e3 && now - (st.remindedAt || 0) > 3 * 86400e3
+  },
   exportSave() { return btoa(unescape(encodeURIComponent(JSON.stringify(toRaw(state))))) },
   importSave(str) {
     const s = JSON.parse(decodeURIComponent(escape(atob(str.trim()))))
@@ -321,6 +337,8 @@ export const G = {
     if (st.event && !(OMEN_MAP[st.event.id] && st.event.phase)) st.event = null
     if (!ROLES[st.role]) st.role = 'warrior'
     if (!st.unlocks) this.openAllScreens()
+    // Quiet pop-ups became a choice of three
+    if (st.settings.quietToasts) { st.settings.toasts = 'important'; st.settings.quietToasts = false }
     this.ensureRecords()
     if (!DIFFICULTIES[st.difficulty]) st.difficulty = 'normal'
     if ((st.version || 2) < 3) {

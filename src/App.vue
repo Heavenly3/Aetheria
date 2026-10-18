@@ -21,6 +21,7 @@ import { SHARDS } from './game/data/crown.js'
 import { AREAS } from './game/data/combat.js'
 import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaFor, setCaptionHandler } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
+import { zoomFor } from './game/data/settings.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
 import HelpTip from './components/HelpTip.vue'
@@ -77,8 +78,11 @@ watch(() => ({ ...state.settings }), st => {
   applyAudioSettings()
   setCompactNumbers(st.compactNumbers)
   document.documentElement.dataset.motion = st.reduceMotion ? 'reduce' : ''
+  // Text size scales the whole game, not the title screen (it belongs to the save)
+  document.documentElement.style.zoom = session.inGame ? zoomFor(st.textSize) : ''
 }, { immediate: true, deep: true })
 watch(() => session.inGame, on => (on ? startAmbient() : stopAmbient()), { immediate: true })
+watch(() => session.inGame, on => { document.documentElement.style.zoom = on ? zoomFor(state.settings.textSize) : '' })
 const toggleMute = () => { state.settings.muted = !state.settings.muted }
 // Climate events are announced when they begin
 watch(() => wx.value.block, (b, old) => {
@@ -117,15 +121,21 @@ const NOTIFY_CUE = { 'notify.unpaid': 'unpaid', 'notify.queueDone': 'queueDone' 
 const SEVERITY = { warn: 'warn', success: 'success', error: 'error', rare: 'secondary', info: 'info' }
 const offs = []
 onUnmounted(() => offs.splice(0).forEach(off => off()))
-const push = (icon, detail, kind = 'info', life = 3500) => toast.add({ severity: SEVERITY[kind] || 'info', summary: '', detail, life, icon })
+// Pop-ups follow the player's choice: all, the important ones (no plain notes), or warnings only
+const push = (icon, detail, kind = 'info', life = 3500) => {
+  const level = state.settings.toasts
+  if ((level === 'none' && kind !== 'warn') || (level === 'important' && kind === 'info')) return
+  toast.add({ severity: SEVERITY[kind] || 'info', summary: '', detail, life, icon })
+}
+const quiet = () => state.settings.toasts !== 'all'
 
 onMounted(() => {
   // Every subscription is dropped again on unmount, so a reloaded interface never shows a message twice
   const on = (evt, fn) => offs.push(G.on(evt, fn))
   on('toast', e => push(e.icon, tm(e.msg), e.kind))
-  on('levelup', d => { if (state.settings.quietToasts) return; cue('levelUp'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
+  on('levelup', d => { if (quiet()) return; cue('levelUp'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
   on('herolevel', l => { cue('heroLevel', { notify: [t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')] }); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000) })
-  on('mastery', d => state.settings.quietToasts || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
+  on('mastery', d => quiet() || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
   on('rare', d => { cue('rareDrop'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
   on('achievement', a => { cue('achievement'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
   on('elite', e => { cue('elite'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
@@ -152,6 +162,7 @@ onMounted(() => {
   on('retreat', () => cue('retreat'))
   on('overrun', e => { cue('omen'); push('death-skull', t('realm.overrunToast', { area: AREAS.find(a => a.id === e.area).name }), 'warn', 8000) })
   on('ascend', e => { if (e.completed) push('laurels-trophy', t('trials.completedToast', { name: t(`trials.list.${e.completed}.name`) }), 'success', 8000) })
+  on('backupReminder', () => push('locked-chest', t('backup.reminderToast'), 'warn', 12000))
   on('record', e => { cue('achievement'); push(e.icon, t('records.toast', { name: t(`records.names.${e.id}`), n: fmt(e.value), before: fmt(e.before) }), 'success', 7000) })
   on('echo', e => { cue('achievement'); push('trophy', t('echoes.toast', { name: tm({ key: 'echoes.who', params: { monster: '@monster:' + e.id } }), n: e.beaten, total: e.total }), 'success', 7000) })
   on('unlock', ({ list }) => {

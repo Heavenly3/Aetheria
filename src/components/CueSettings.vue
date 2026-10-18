@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
@@ -25,6 +25,13 @@ async function setNotify(id, v) {
 }
 const allOn = computed(() => CUES.every(c => conf(c.id).on))
 function setAll(v) { for (const c of CUES) setCue(c.id, { on: v }) }
+// Each category folds away, showing how many of its alerts are on; which are open is remembered on this device
+const OPEN = 'aetheria-cue-groups'
+const open = reactive((() => { try { return JSON.parse(localStorage.getItem(OPEN)) || {} } catch { return {} } })())
+function toggleGroup(cat) { open[cat] = !open[cat]; try { localStorage.setItem(OPEN, JSON.stringify(open)) } catch { /* storage unavailable */ } }
+const onCount = g => g.list.filter(c => conf(c.id).on).length
+const groupOn = g => onCount(g) > 0
+function setGroup(g, v) { for (const c of g.list) setCue(c.id, { on: v }) }
 </script>
 
 <template>
@@ -47,14 +54,24 @@ function setAll(v) { for (const c of CUES) setCue(c.id, { on: v }) }
         <h3 class="panel-title grow" style="margin:0"><GameIcon name="scroll-unfurled" /> {{ $t('audio.cuesTitle') }}</h3>
         <label class="row small muted" for="cue-all" style="gap:8px;cursor:pointer">{{ $t('audio.allCues') }} <ToggleSwitch :modelValue="allOn" inputId="cue-all" @update:modelValue="setAll" /></label>
       </div>
-      <div class="cue-head small faint">
-        <span class="grow">{{ $t('audio.col.alert') }}</span>
-        <span class="c-vol">{{ $t('audio.col.volume') }}</span>
-        <span class="c-flag" v-tooltip.top="$t('audio.col.bgHint')">{{ $t('audio.col.bg') }}</span>
-        <span class="c-flag" v-tooltip.top="$t('audio.col.notifyHint')">{{ $t('audio.col.notify') }}</span>
-      </div>
+      <p class="small faint" style="margin:0 0 6px">{{ $t('audio.groupsHint') }}</p>
       <div v-for="g in groups" :key="g.cat" class="cue-group">
-        <div class="section-title sm"><GameIcon :name="CAT_ICONS[g.cat]" :size="13" /> {{ $t(`audio.cats.${g.cat}`) }}</div>
+        <div class="group-head">
+          <button class="group-btn" :aria-expanded="!!open[g.cat]" @click="toggleGroup(g.cat)">
+            <GameIcon :name="CAT_ICONS[g.cat]" :size="15" />
+            <b class="grow">{{ $t(`audio.cats.${g.cat}`) }}</b>
+            <span class="small muted tnum">{{ $t('audio.groupCount', { on: onCount(g), n: g.list.length }) }}</span>
+            <i class="pi" :class="open[g.cat] ? 'pi-angle-up' : 'pi-angle-down'" />
+          </button>
+          <ToggleSwitch :modelValue="groupOn(g)" :aria-label="$t(`audio.cats.${g.cat}`)" @update:modelValue="v => setGroup(g, v)" />
+        </div>
+        <template v-if="open[g.cat]">
+        <div class="cue-head small faint">
+          <span class="grow">{{ $t('audio.col.alert') }}</span>
+          <span class="c-vol">{{ $t('audio.col.volume') }}</span>
+          <span class="c-flag" v-tooltip.top="$t('audio.col.bgHint')">{{ $t('audio.col.bg') }}</span>
+          <span class="c-flag" v-tooltip.top="$t('audio.col.notifyHint')">{{ $t('audio.col.notify') }}</span>
+        </div>
         <div v-for="c in g.list" :key="c.id" class="cue" :class="{ off: !conf(c.id).on }">
           <ToggleSwitch :modelValue="conf(c.id).on" :inputId="'cue-' + c.id" @update:modelValue="v => setCue(c.id, { on: v })" />
           <label class="grow cue-name" :for="'cue-' + c.id">
@@ -67,12 +84,18 @@ function setAll(v) { for (const c of CUES) setCue(c.id, { on: v }) }
           <span class="c-flag"><span class="m-label small muted">{{ $t('audio.col.bg') }}</span><ToggleSwitch :modelValue="conf(c.id).bg" :disabled="!conf(c.id).on" :aria-label="$t('audio.col.bg')" @update:modelValue="v => setCue(c.id, { bg: v })" /></span>
           <span class="c-flag"><span class="m-label small muted">{{ $t('audio.col.notify') }}</span><ToggleSwitch :modelValue="conf(c.id).notify && st.notify" :aria-label="$t('audio.col.notify')" @update:modelValue="v => setNotify(c.id, v)" /></span>
         </div>
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.group-head { display: flex; align-items: center; gap: 10px; padding: 4px 0; border-top: 1px solid var(--line); }
+.cue-group:first-of-type .group-head { border-top: 0; }
+.group-btn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 10px 4px; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.group-btn .gi { color: var(--gold); }
+.group-btn:hover b { color: var(--gold-hi); }
 .packs { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
 .pack { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 10px 12px; border-radius: 12px; cursor: pointer; text-align: start;
   border: 1px solid var(--line); background: var(--tint-1); color: inherit; font: inherit; }

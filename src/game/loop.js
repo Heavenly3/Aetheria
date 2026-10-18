@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import { G, state } from './engine.js'
+import { BACKUP_EVERY } from './backup.js'
 
 const CATCHUP = 5        // a gap longer than this (seconds) is simulated in one go, e.g. after a sleeping tab
 const SUMMARY_MIN = 60   // show the "welcome back" summary after this many seconds away
@@ -11,6 +12,8 @@ export const session = reactive({ inGame: false, offline: null, welcome: false, 
 let timers = []
 let listenersBound = false
 const saveNow = () => { if (session.inGame) G.save() }
+// A copy in the backup store too, when leaving or hiding the game
+const backupNow = () => { if (session.inGame) G.backupNow() }
 
 let catching = false
 async function catchUp(seconds) {
@@ -18,7 +21,7 @@ async function catchUp(seconds) {
   catching = true
   try {
     const sum = await G.simulateAsync(seconds, p => { session.catching = p })
-    if (hadActivity && seconds >= SUMMARY_MIN) session.offline = sum
+    if (hadActivity && seconds >= SUMMARY_MIN && state.settings.offlineSummary !== false) session.offline = sum
     G.save()
   } finally {
     catching = false
@@ -43,8 +46,12 @@ function startLoop() {
   timers.push(setInterval(() => G.snapshot(), 300_000))
   G.snapshot()
   timers.push(setInterval(saveNow, 10_000))
+  timers.push(setInterval(backupNow, BACKUP_EVERY))
+  backupNow()
+  // After twenty minutes of play, maybe remind the player to keep a copy outside the browser
+  timers.push(setTimeout(() => { if (G.backupReminderDue()) { state.settings.remindedAt = Date.now(); G.emit('backupReminder') } }, 20 * 60e3))
   if (!listenersBound) {
-    document.addEventListener('visibilitychange', () => { if (document.hidden) saveNow() })
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { saveNow(); backupNow() } })
     window.addEventListener('beforeunload', saveNow)
     listenersBound = true
   }
@@ -70,6 +77,7 @@ export function startNewGame(slot, profile) {
 
 export function exitToTitle() {
   G.save()
+  G.backupNow()
   stopLoop()
   session.inGame = false
   session.offline = null

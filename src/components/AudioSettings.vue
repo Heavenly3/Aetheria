@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
@@ -22,6 +22,11 @@ const PROFILE_ICONS = { classic: 'laurel-crown', night: 'night-sleep', focus: 'a
 const active = computed(() => (void JSON.stringify(st), matchingProfile()))
 function useProfile(id) { if (applyProfile(id)) G.toast(PROFILE_ICONS[id] || 'sparkles', 'audio.profileApplied', { name: t(`audio.profiles.${id}.name`) }, 'success') }
 function saveMine() { saveCustomProfile(); G.toast('quill-ink', 'audio.profileSaved', {}, 'success') }
+
+// The music details are folded away; whether they are open is remembered on this device
+const MORE = 'aetheria-audio-more'
+const more = ref((() => { try { return localStorage.getItem(MORE) === '1' } catch { return false } })())
+function toggleMore() { more.value = !more.value; try { localStorage.setItem(MORE, more.value ? '1' : '') } catch { /* storage unavailable */ } }
 
 /* ---------- mixer ---------- */
 const channels = [
@@ -60,6 +65,25 @@ function reset() {
 
 <template>
   <div class="stack">
+    <!-- Mixer -->
+    <div class="panel pad">
+      <h3 class="panel-title"><i class="pi pi-sliders-h" style="color:var(--gold)" /> {{ $t('audio.mixer') }}</h3>
+      <div class="vol">
+        <span class="grow">{{ $t('settings.masterVol') }}</span>
+        <Slider v-model="st.masterVol" :min="0" :max="100" :disabled="st.muted" class="vol-slider" :aria-label="$t('settings.masterVol')" />
+        <span class="tnum small muted vol-n">{{ st.masterVol }}</span>
+      </div>
+      <div v-for="c in channels" :key="c.on" class="vol">
+        <ToggleSwitch :inputId="'pref-' + c.on" :modelValue="st[c.on]" @update:modelValue="v => setChannel(c, v)" />
+        <label class="grow" :for="'pref-' + c.on">{{ $t(c.label) }}<span class="small faint block">{{ $t(c.hint) }}</span></label>
+        <Slider v-model="st[c.vol]" :min="0" :max="100" :disabled="!st[c.on] || st.muted" class="vol-slider" :aria-label="$t(c.label)" />
+        <span class="tnum small muted vol-n">{{ st[c.vol] }}</span>
+      </div>
+      <label class="pref" for="pref-hidden"><span class="grow">{{ $t('settings.muteHidden') }}<span class="small faint block">{{ $t('audio.muteHiddenHint') }}</span></span><ToggleSwitch v-model="st.muteHidden" inputId="pref-hidden" /></label>
+      <label class="pref" for="pref-muted"><span class="grow">{{ $t('settings.muteAll') }}</span><ToggleSwitch v-model="st.muted" inputId="pref-muted" /></label>
+      <label class="pref" for="pref-area"><span class="grow">{{ $t('audio.areaAmbience') }}<span class="small faint block">{{ $t('audio.areaAmbienceHint') }}</span></span><ToggleSwitch v-model="st.areaAmbience" inputId="pref-area" /></label>
+    </div>
+
     <!-- Profiles -->
     <div class="panel pad">
       <h3 class="panel-title"><GameIcon name="sparkles" /> {{ $t('audio.profilesTitle') }}</h3>
@@ -78,38 +102,24 @@ function reset() {
       </div>
     </div>
 
-    <div class="two-col">
-      <!-- Mixer -->
-      <div class="panel pad">
-        <h3 class="panel-title"><i class="pi pi-sliders-h" style="color:var(--gold)" /> {{ $t('audio.mixer') }}</h3>
-        <div class="vol">
-          <span class="grow">{{ $t('settings.masterVol') }}</span>
-          <Slider v-model="st.masterVol" :min="0" :max="100" :disabled="st.muted" class="vol-slider" :aria-label="$t('settings.masterVol')" />
-          <span class="tnum small muted vol-n">{{ st.masterVol }}</span>
-        </div>
-        <div v-for="c in channels" :key="c.on" class="vol">
-          <ToggleSwitch :inputId="'pref-' + c.on" :modelValue="st[c.on]" @update:modelValue="v => setChannel(c, v)" />
-          <label class="grow" :for="'pref-' + c.on">{{ $t(c.label) }}<span class="small faint block">{{ $t(c.hint) }}</span></label>
-          <Slider v-model="st[c.vol]" :min="0" :max="100" :disabled="!st[c.on] || st.muted" class="vol-slider" :aria-label="$t(c.label)" />
-          <span class="tnum small muted vol-n">{{ st[c.vol] }}</span>
-        </div>
-        <label class="pref" for="pref-hidden"><span class="grow">{{ $t('settings.muteHidden') }}<span class="small faint block">{{ $t('audio.muteHiddenHint') }}</span></span><ToggleSwitch v-model="st.muteHidden" inputId="pref-hidden" /></label>
-        <label class="pref" for="pref-muted"><span class="grow">{{ $t('settings.muteAll') }}</span><ToggleSwitch v-model="st.muted" inputId="pref-muted" /></label>
-        <label class="pref" for="pref-area"><span class="grow">{{ $t('audio.areaAmbience') }}<span class="small faint block">{{ $t('audio.areaAmbienceHint') }}</span></span><ToggleSwitch v-model="st.areaAmbience" inputId="pref-area" /></label>
+    <!-- The rest of the music settings stay folded until asked for -->
+    <button class="fold" :aria-expanded="more" @click="toggleMore">
+      <GameIcon name="magic-swirl" :size="16" />
+      <span class="grow"><b>{{ $t('audio.moreTitle') }}</b><span class="small muted block">{{ $t('audio.moreHint') }}</span></span>
+      <i class="pi" :class="more ? 'pi-angle-up' : 'pi-angle-down'" />
+    </button>
+    <div v-show="more" class="stack">
+    <!-- Now playing -->
+    <div class="panel pad now">
+      <h3 class="panel-title"><GameIcon :name="THEME_ICONS[nowPlaying.theme] || 'candle-light'" /> {{ $t('audio.nowPlaying') }}</h3>
+      <div class="now-theme">{{ $t(`audio.themes.${nowPlaying.theme}`) }}</div>
+      <div class="small muted">{{ why }}</div>
+      <div class="row wrap" style="gap:8px;margin-top:12px">
+        <SelectButton v-model="st.musicMode" :options="modes" optionLabel="label" optionValue="value" :allowEmpty="false" size="small" />
+        <Button v-if="st.musicMode === 'auto'" :label="$t('audio.keepThis')" icon="pi pi-lock" size="small" severity="secondary" outlined @click="lockCurrent" />
+        <Button v-if="nowPlaying.preview" :label="$t('audio.stopPreview')" icon="pi pi-stop" size="small" severity="secondary" @click="stopPreview" />
       </div>
-
-      <!-- Now playing -->
-      <div class="panel pad now">
-        <h3 class="panel-title"><GameIcon :name="THEME_ICONS[nowPlaying.theme] || 'candle-light'" /> {{ $t('audio.nowPlaying') }}</h3>
-        <div class="now-theme">{{ $t(`audio.themes.${nowPlaying.theme}`) }}</div>
-        <div class="small muted">{{ why }}</div>
-        <div class="row wrap" style="gap:8px;margin-top:12px">
-          <SelectButton v-model="st.musicMode" :options="modes" optionLabel="label" optionValue="value" :allowEmpty="false" size="small" />
-          <Button v-if="st.musicMode === 'auto'" :label="$t('audio.keepThis')" icon="pi pi-lock" size="small" severity="secondary" outlined @click="lockCurrent" />
-          <Button v-if="nowPlaying.preview" :label="$t('audio.stopPreview')" icon="pi pi-stop" size="small" severity="secondary" @click="stopPreview" />
-        </div>
-        <p class="small faint" style="margin:10px 0 0">{{ $t(st.musicMode === 'locked' ? 'audio.mode.lockedHint' : 'audio.mode.autoHint') }}</p>
-      </div>
+      <p class="small faint" style="margin:10px 0 0">{{ $t(st.musicMode === 'locked' ? 'audio.mode.lockedHint' : 'audio.mode.autoHint') }}</p>
     </div>
 
     <!-- Themes -->
@@ -145,10 +155,14 @@ function reset() {
         </div>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.fold { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.fold:hover { border-color: var(--line-hi); }
+.fold .gi { color: var(--gold); }
 .profiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
 .profile { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 10px 12px; border-radius: 12px; cursor: pointer; text-align: start;
   border: 1px solid var(--line); background: var(--tint-1); color: inherit; font: inherit; }
