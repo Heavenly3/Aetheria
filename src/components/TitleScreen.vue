@@ -24,6 +24,12 @@ const slots = ref(G.listSlots())
 const last = ref(G.lastSlot())
 const createSlot = ref(null)
 const refresh = () => { slots.value = G.listSlots(); last.value = G.lastSlot() }
+// A save that cannot be opened says so instead of leaving the title screen stuck
+async function open(i) {
+  if (await continueGame(i)) return
+  G.toast('cross-mark', 'backup.openFailed', {}, 'warn')
+  refresh()
+}
 const lastInfo = computed(() => (last.value !== null ? slots.value[last.value] : null))
 const hasAny = computed(() => slots.value.some(Boolean))
 
@@ -91,7 +97,7 @@ function placeImport(i) {
 function pickSlot(i) {
   if (mode.value === 'import') return placeImport(i)
   const s = slots.value[i]
-  if (mode.value === 'load') { if (s) continueGame(i); return }
+  if (mode.value === 'load') { if (s) open(i); return }
   if (!s) { createSlot.value = i; mode.value = 'create'; return }
   confirm.require({
     header: t('title.overwriteTitle'),
@@ -149,7 +155,7 @@ function created(profile) { startNewGame(createSlot.value, profile) }
               <i class="pi pi-replay" /><span class="grow">{{ $t('backup.recoverSlot', { name: b.info?.name || '?', when: ago(b.at) }) }} · {{ $t('creation.slot', { n: +i + 1 }) }}</span>
             </button>
           </div>
-          <button v-if="lastInfo" class="ts-btn primary" @click="continueGame(last)">
+          <button v-if="lastInfo" class="ts-btn primary" @click="open(last)">
             <span class="menu-label"><GameIcon name="play-button" :size="20" /> {{ $t('title.continue') }}</span>
             <span class="menu-meta">{{ lastInfo.name }} · {{ ROLES[lastInfo.role]?.name }} · {{ $t('common.lvlShort', { n: lastInfo.heroLevel }) }} · {{ ago(lastInfo.lastTick) }}</span>
           </button>

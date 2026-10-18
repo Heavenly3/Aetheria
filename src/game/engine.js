@@ -54,6 +54,9 @@ import '../i18n/names.js'
 
 const SLOT_KEY = i => `aetheria-slot-${i}`
 const META_KEY = 'aetheria-meta'
+// How often a failing save is reported to the player
+const SAVE_WARN_EVERY = 5 * 60e3
+let saveWarnedAt = 0
 const LEGACY_KEY = 'aetheria-save-v2'
 const RESPAWN_TIME = 1.5
 export const HP_REGEN = 3          // seconds per HP outside combat
@@ -240,12 +243,19 @@ export const G = {
   lastSlot() {
     try { const m = JSON.parse(store.get(META_KEY) || '{}'); return Number.isInteger(m.last) && store.get(SLOT_KEY(m.last)) ? m.last : null } catch { return null }
   },
+  // False when the slot is empty or its save cannot be read (the backups can still bring it back)
   loadSlot(i) {
     const raw = store.get(SLOT_KEY(i))
     if (!raw) return false
-    replaceState(JSON.parse(raw))
-    this.slot = i
-    this.migrateState()
+    try {
+      replaceState(JSON.parse(raw))
+      this.slot = i
+      this.migrateState()
+    } catch (err) {
+      console.error(err)
+      this.slot = null
+      return false
+    }
     store.set(META_KEY, JSON.stringify({ last: i }))
     return true
   },
@@ -271,11 +281,14 @@ export const G = {
     if (this.lastSlot() === i) store.del(META_KEY)
     if (this.slot === i) this.slot = null
   },
+  // True when written. A browser that refuses (storage full or blocked) is reported at most every few minutes
   save() {
-    if (this.slot === null) return
+    if (this.slot === null) return false
     state.lastTick = Date.now()
-    store.set(SLOT_KEY(this.slot), JSON.stringify(toRaw(state)))
-    store.set(META_KEY, JSON.stringify({ last: this.slot }))
+    const ok = store.set(SLOT_KEY(this.slot), JSON.stringify(toRaw(state)))
+    if (ok) store.set(META_KEY, JSON.stringify({ last: this.slot }))
+    else if (Date.now() - saveWarnedAt > SAVE_WARN_EVERY) { saveWarnedAt = Date.now(); this.emit('saveFailed') }
+    return ok
   },
   // A copy of this slot in the backup store (see backup.js); resolves when written
   backupNow() {

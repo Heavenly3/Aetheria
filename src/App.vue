@@ -167,6 +167,7 @@ onMounted(() => {
   // The first error of a session says where to report it; later ones are only kept for the report
   let errorShown = false
   offs.push(onError(() => { if (errorShown || !session.inGame) return; errorShown = true; push('cross-mark', t('feedback.errorToast'), 'warn', 10000) }))
+  on('saveFailed', () => push('cross-mark', t('backup.saveFailed'), 'warn', 15000))
   on('backupReminder', () => push('locked-chest', t('backup.reminderToast'), 'warn', 12000))
   on('record', e => { cue('achievement'); push(e.icon, t('records.toast', { name: t(`records.names.${e.id}`), n: fmt(e.value), before: fmt(e.before) }), 'success', 7000) })
   on('echo', e => { cue('achievement'); push('trophy', t('echoes.toast', { name: tm({ key: 'echoes.who', params: { monster: '@monster:' + e.id } }), n: e.beaten, total: e.total }), 'success', 7000) })

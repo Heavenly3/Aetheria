@@ -1944,6 +1944,8 @@ export default {
     errorToast: "Algo ha fallado. Si notas algo raro, puedes informar en Ajustes → Opiniones.",
   },
   backup: {
+    saveFailed: "No se pudo guardar la partida: el almacenamiento del navegador está lleno o bloqueado. Descarga una copia en Ajustes → Partida para no perder nada.",
+    openFailed: "No se pudo abrir esa partida. Si tiene copias automáticas, puedes recuperar una desde su ranura.",
     foundTitle: "Hemos encontrado copias de tus partidas",
     foundText: "Una ranura está vacía, pero este navegador aún guarda una copia de su partida.",
     title: "Copias automáticas",

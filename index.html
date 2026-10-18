@@ -38,6 +38,18 @@
   </head>
   <body>
     <div id="app"><div class="boot" role="status" aria-label="Loading Aetheria"><div class="boot-inner"><div class="boot-mark" aria-hidden="true">&#9813;</div><div class="boot-name">Aetheria</div><div class="boot-bar"><i></i></div></div></div></div>
+    <script>
+      // If the game has not started after a long while (a file that failed to download), offer a reload
+      setTimeout(function () {
+        var inner = document.querySelector('.boot[role=status] .boot-inner')
+        if (!inner) return
+        var es = /^es/.test(navigator.language)
+        var p = document.createElement('p')
+        p.style.cssText = 'margin:0;font:14px system-ui,sans-serif;color:#cfc8b8;text-align:center'
+        p.innerHTML = (es ? 'Está tardando más de lo normal. ' : 'This is taking longer than usual. ') + '<a href="" style="color:#e2b65a">' + (es ? 'Recargar' : 'Reload') + '</a>'
+        inner.appendChild(p)
+      }, 20000)
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

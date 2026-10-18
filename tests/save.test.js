@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { G, state, newHero, setLevel, run } from './helpers.js'
+import { decodeAny } from '../src/game/transfer.js'
 
 describe('save slots', () => {
   beforeEach(() => newHero({ name: 'Saver' }))
@@ -112,4 +113,35 @@ describe('offline progress', () => {
 describe('test isolation', () => {
   it('writes something to storage', () => { localStorage.setItem('leak-check', '1'); expect(localStorage.getItem('leak-check')).toBe('1') })
   it('starts the next test with storage empty', () => expect(localStorage.getItem('leak-check')).toBe(null))
+})
+
+describe('save failures', () => {
+  beforeEach(() => newHero({ name: 'Fragile' }))
+
+  it('reports a browser that refuses to save, at most every few minutes', () => {
+    const seen = []
+    const off = G.on('saveFailed', () => seen.push(1))
+    const spy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => { throw new Error('QuotaExceededError') })
+    expect(G.save()).toBe(false)
+    expect(G.save()).toBe(false)
+    spy.mockRestore()
+    off()
+    expect(seen.length).toBeLessThanOrEqual(1)
+    expect(G.save()).toBe(true)
+  })
+
+  it('refuses a broken save instead of crashing', () => {
+    localStorage.setItem('aetheria-slot-1', '{"name":"Half", "skills": ')
+    expect(G.loadSlot(1)).toBe(false)
+    expect(G.slot).toBe(null)
+    expect(G.listSlots()[1]).toBe(null)
+  })
+
+  it('reads the rescue file of a game that could not start, taking the slot played last', async () => {
+    G.save()
+    const older = JSON.stringify({ ...JSON.parse(localStorage.getItem('aetheria-slot-0')), name: 'Older', lastTick: 1 })
+    const file = JSON.stringify({ 'aetheria-slot-0': localStorage.getItem('aetheria-slot-0'), 'aetheria-slot-2': older, 'aetheria-meta': '{}' })
+    const save = await decodeAny(file)
+    expect(save.name).toBe('Fragile')
+  })
 })

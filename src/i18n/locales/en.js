@@ -1944,6 +1944,8 @@ export default {
     errorToast: "Something went wrong. If you notice anything odd, you can report it in Settings → Feedback.",
   },
   backup: {
+    saveFailed: "Could not save your game: this browser's storage is full or blocked. Download a copy in Settings → Save so nothing is lost.",
+    openFailed: "That save could not be opened. If it has automatic backups, you can bring one back from its slot.",
     foundTitle: "Backups of your games were found",
     foundText: "A slot is empty but this browser still keeps a copy of its game.",
     title: "Automatic backups",

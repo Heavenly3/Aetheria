@@ -40,6 +40,12 @@ export async function decodeAny(text) {
   }
   if (str.startsWith('{')) {
     const data = JSON.parse(str)
+    // The rescue file from a game that could not start holds every slot: take the one played last
+    const slots = Object.keys(data).filter(k => /^aetheria-slot-\d+$/.test(k))
+    if (slots.length) {
+      const saves = slots.map(k => { try { return JSON.parse(data[k]) } catch { return null } }).filter(Boolean)
+      return validate(saves.sort((a, b) => (b.lastTick || 0) - (a.lastTick || 0))[0])
+    }
     return validate(data.game === 'aetheria' ? data.save : data)
   }
   return validate(JSON.parse(decodeURIComponent(escape(atob(str)))))
