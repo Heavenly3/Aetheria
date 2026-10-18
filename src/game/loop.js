@@ -7,13 +7,33 @@ const SUMMARY_MIN = 60   // show the "welcome back" summary after this many seco
 
 // Session state: title screen or a game in progress
 // catching: how far the offline progress being worked out has got (0 to 1), or null
-export const session = reactive({ inGame: false, offline: null, welcome: false, catching: null })
+// elsewhere: this game was opened in another tab, so this one stopped without saving over it
+export const session = reactive({ inGame: false, offline: null, welcome: false, catching: null, elsewhere: false })
+
+/* One save, one tab: opening a slot tells the other tabs, and a tab playing that slot saves, stops and
+   steps aside, so two copies never write over each other's progress */
+const TAB = Math.random().toString(36).slice(2)
+const channel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('aetheria') : null
+const HANDOVER_MS = 300
+channel?.addEventListener('message', e => {
+  const m = e.data
+  if (m?.type !== 'claim' || m.tab === TAB || !session.inGame || session.elsewhere || G.slot !== m.slot) return
+  G.save()
+  stopLoop()
+  session.elsewhere = true
+})
+// Asks any other tab playing this slot to step aside, and gives it a moment to save first
+async function claim(slot) {
+  if (!channel) return
+  channel.postMessage({ type: 'claim', slot, tab: TAB })
+  await new Promise(r => setTimeout(r, HANDOVER_MS))
+}
 
 let timers = []
 let listenersBound = false
-const saveNow = () => { if (session.inGame) G.save() }
+const saveNow = () => { if (session.inGame && !session.elsewhere) G.save() }
 // A copy in the backup store too, when leaving or hiding the game
-const backupNow = () => { if (session.inGame) G.backupNow() }
+const backupNow = () => { if (session.inGame && !session.elsewhere) G.backupNow() }
 
 let catching = false
 async function catchUp(seconds) {
@@ -60,7 +80,10 @@ function stopLoop() { timers.forEach(clearInterval); timers = [] }
 
 // Load an existing slot, apply offline progress and start the loop
 export async function continueGame(slot) {
-  if (catching || !G.loadSlot(slot)) return false
+  if (catching) return false
+  await claim(slot)
+  if (!G.loadSlot(slot)) return false
+  session.elsewhere = false
   const away = (Date.now() - state.lastTick) / 1000
   if (away > CATCHUP) await catchUp(away)
   session.inGame = true
@@ -69,6 +92,7 @@ export async function continueGame(slot) {
 }
 
 export function startNewGame(slot, profile) {
+  channel?.postMessage({ type: 'claim', slot, tab: TAB })
   G.newGame(slot, profile)
   session.inGame = true
   session.welcome = true
@@ -76,10 +100,10 @@ export function startNewGame(slot, profile) {
 }
 
 export function exitToTitle() {
-  G.save()
-  G.backupNow()
+  if (!session.elsewhere) { G.save(); G.backupNow() }
   stopLoop()
   session.inGame = false
+  session.elsewhere = false
   session.offline = null
   G.slot = null
 }

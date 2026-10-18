@@ -1943,6 +1943,7 @@ export default {
     reportHint: "The details that go with your message. Nothing personal: no name or email.",
     errorToast: "Something went wrong. If you notice anything odd, you can report it in Settings → Feedback.",
   },
+  elsewhere: { title: "This game is open in another tab", text: "To keep your progress safe, it only runs in one tab at a time. This tab has stopped and saved.", here: "Play here", menu: "Main menu" },
   backup: {
     saveFailed: "Could not save your game: this browser's storage is full or blocked. Download a copy in Settings → Save so nothing is lost.",
     openFailed: "That save could not be opened. If it has automatic backups, you can bring one back from its slot.",

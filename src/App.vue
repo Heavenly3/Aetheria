@@ -11,7 +11,7 @@ import Menu from 'primevue/menu'
 import { useToast } from 'primevue/usetoast'
 import { G, state, HP_REGEN, HP_REGEN_COMBAT } from './game/engine.js'
 import { help, tip } from './ui/tips.js'
-import { session, exitToTitle } from './game/loop.js'
+import { session, exitToTitle, continueGame } from './game/loop.js'
 import { SKILLS } from './game/data/skills.js'
 import { ITEMS } from './game/data/items.js'
 import { ROLES, DIFFICULTIES } from './game/data/character.js'
@@ -122,6 +122,8 @@ const SHARD_ICON = Object.fromEntries(SHARDS.map(s => [s.id, s.icon]))
 const NOTIFY_CUE = { 'notify.unpaid': 'unpaid', 'notify.queueDone': 'queueDone' }
 const SEVERITY = { warn: 'warn', success: 'success', error: 'error', rare: 'secondary', info: 'info' }
 const offs = []
+// Takes the game back from the other tab, with whatever it played meanwhile
+const playHere = () => continueGame(G.slot)
 onUnmounted(() => offs.splice(0).forEach(off => off()))
 // Pop-ups follow the player's choice: all, the important ones (no plain notes), or warnings only
 const push = (icon, detail, kind = 'info', life = 3500) => {
@@ -387,6 +389,19 @@ function startAdventure() {
     <p v-if="!state.tutorial.done" class="welcome-guide"><GameIcon name="treasure-map" :size="20" /><span v-html="$t('welcome.tutorial')" /></p>
     <template #footer><Button :label="$t('welcome.start')" icon="pi pi-arrow-right" iconPos="right" @click="startAdventure" /></template>
   </Dialog>
+
+  <!-- The same game opened in another tab: this one stopped without saving over it -->
+  <div v-if="session.elsewhere" class="catching" role="alertdialog" aria-labelledby="elsewhere-title">
+    <div class="catching-box">
+      <GameIcon name="crystal-ball" :size="30" />
+      <b id="elsewhere-title">{{ $t('elsewhere.title') }}</b>
+      <p class="small muted" style="margin:0">{{ $t('elsewhere.text') }}</p>
+      <div class="row wrap" style="justify-content:center;gap:8px">
+        <Button :label="$t('elsewhere.here')" icon="pi pi-play" size="small" @click="playHere" />
+        <Button :label="$t('elsewhere.menu')" icon="pi pi-sign-out" size="small" severity="secondary" outlined @click="exitToTitle" />
+      </div>
+    </div>
+  </div>
 
   <!-- Offline progress that takes a while to work out -->
   <div v-if="session.catching !== null" class="catching" role="status" aria-live="polite">
