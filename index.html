@@ -19,10 +19,25 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <!-- The fonts load in the background, so a slow connection does not keep the screen blank -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya+Sans:wght@400;500;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" /></noscript>
+    <style>
+      /* Shown at once while the game downloads; Vue replaces it when it starts */
+      html { background: #0c0b14; }
+      @media (prefers-color-scheme: light) { html:not(.app-dark) { background: #f3ede1; } }
+      .boot { position: fixed; inset: 0; display: grid; place-items: center; font-family: Georgia, 'Times New Roman', serif; color: #e2b65a; background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(226, 182, 90, 0.12), transparent 70%), #0c0b14; }
+      .boot-inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+      .boot-mark { width: 64px; height: 64px; border-radius: 22%; background: linear-gradient(135deg, #f8e3a8, #e2b65a 45%, #a87a2a); box-shadow: 0 0 50px -6px rgba(226, 182, 90, 0.7); display: grid; place-items: center; color: #1a1206; font-size: 34px; }
+      .boot-name { font-size: 40px; letter-spacing: 0.18em; text-transform: uppercase; }
+      .boot-bar { width: 160px; height: 3px; border-radius: 3px; background: rgba(226, 182, 90, 0.18); overflow: hidden; }
+      .boot-bar i { display: block; width: 40%; height: 100%; background: #e2b65a; border-radius: 3px; animation: boot 1.2s ease-in-out infinite; }
+      @keyframes boot { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+      @media (prefers-reduced-motion: reduce) { .boot-bar i { animation: none; width: 100%; opacity: 0.5; } }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app"><div class="boot" role="status" aria-label="Loading Aetheria"><div class="boot-inner"><div class="boot-mark" aria-hidden="true">&#9813;</div><div class="boot-name">Aetheria</div><div class="boot-bar"><i></i></div></div></div></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
