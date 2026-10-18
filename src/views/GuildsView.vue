@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
+import { wantedFocus } from '../ui/focus.js'
 import { useI18n } from 'vue-i18n'
 import { useConfirm } from 'primevue/useconfirm'
 import Button from 'primevue/button'
@@ -31,6 +32,8 @@ onMounted(() => { timer = setInterval(() => { now.value = Date.now() }, 1000) })
 onUnmounted(() => clearInterval(timer))
 
 const tab = ref(mine.value || trial.value ? 'hall' : 'board')
+// Contracts live in the hall
+watch(wantedFocus, key => { if (key === 'contracts' && mine.value) tab.value = 'hall' })
 const tabs = computed(() => ['hall', 'board'].map(v => ({ value: v, label: t(`guilds.tabs.${v}`) })))
 
 /* ---------- names and labels ---------- */
@@ -201,7 +204,7 @@ function leave() {
           <div class="section-title grow" style="margin:0">{{ $t('guilds.contracts.title') }}</div>
           <span class="small muted"><i class="pi pi-clock" /> {{ $t('guilds.contracts.refresh', { time: refreshIn }) }}</span>
         </div>
-        <div class="grid-wide">
+        <div class="grid-wide" data-focus="contracts">
           <div v-for="(c, i) in contracts" :key="i + c.type + c.target" class="card contract" :class="{ done: c.claimed }">
             <div class="row" style="align-items:flex-start">
               <ItemTile :icon="taskIcon(c)" size="sm" :tip="false" />

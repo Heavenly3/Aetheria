@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
@@ -27,7 +28,11 @@ import KeeperTalk from '../components/KeeperTalk.vue'
 
 const { t: $tr } = useI18n()
 const confirm = useConfirm()
-const tab = ref('staff')
+// The tracker can ask for a tab in the address (?tab=orders)
+const route = useRoute()
+const TABS = ['staff', 'expeditions', 'orders', 'bar']
+const tab = ref(TABS.includes(route.query.tab) ? route.query.tab : 'staff')
+watch(() => route.query.tab, v => { if (TABS.includes(v)) tab.value = v })
 const now = ref(Date.now())
 let timer
 onMounted(() => {
@@ -296,7 +301,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
         <!-- ORDERS -->
         <TabPanel value="orders">
           <p class="intro">{{ $t('tavern.ordersIntro', { n: t.orders.length, time: fmtTime(nextDay) }) }}</p>
-          <div class="grid-wide">
+          <div class="grid-wide" data-focus="orders">
             <div v-for="(o, i) in t.orders" :key="i + o.item" class="card" :class="{ done: o.done }">
               <div class="row">
                 <ItemTile :item="o.item" size="lg" />

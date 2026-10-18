@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { wantedFocus } from '../ui/focus.js'
 import Button from 'primevue/button'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
@@ -18,6 +19,8 @@ const waters = computed(() => ACTIONS.fishing)
 const fishingAt = computed(() => (state.activity?.type === 'skill' && state.activity.skill === 'fishing' ? state.activity.action : null))
 const locked = a => G.level('fishing') < a.lvl || !G.hasTool(a) || !G.festivalOpen(a)
 const picked = ref(fishingAt.value || ACTIONS.fishing.filter(a => !locked(a)).pop()?.id || ACTIONS.fishing[0].id)
+// The tracker points at a water: pick it too, so its catches show
+watch(wantedFocus, key => { const id = key?.startsWith('action:') && key.slice(7); if (id && ACTIONS.fishing.some(a => a.id === id)) picked.value = id })
 const water = computed(() => ACTIONS.fishing.find(a => a.id === picked.value))
 const colours = computed(() => WATER_MAP[picked.value].scene)
 const table = computed(() => G.catchTable(water.value))
@@ -55,7 +58,7 @@ function setBait(id) { state.bait = state.bait === id ? null : id }
     <!-- The waters, as cards like every other skill -->
     <div class="section-title" style="margin-top:0">{{ $t('angling.waters') }} <HelpTip k="sections.fishOdds" /></div>
     <div class="grid-wide waters">
-      <button v-for="a in waters" :key="a.id" class="card water" :class="{ picked: picked === a.id, locked: locked(a), active: fishingAt === a.id }"
+      <button v-for="a in waters" :key="a.id" :data-tut="'action:' + a.id" class="card water" :class="{ picked: picked === a.id, locked: locked(a), active: fishingAt === a.id }"
         :style="{ '--c': a.tint }" @click="picked = a.id">
         <div class="row">
           <ItemTile :icon="a.icon" :tint="a.tint" size="md" :tip="false" />

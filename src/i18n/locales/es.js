@@ -1981,6 +1981,7 @@ export default {
       dragons: "Cualquier dragón",
     },
   },
+  tracker: { title: "Seguimiento", label: "Objetivo", readyLabel: "Listo", intro: "Todo lo que tienes en marcha: misiones de la historia, el encargo del cazador, contratos del gremio, pedidos de la taberna y tareas diarias. Elige uno y vas directo a donde se hace.", handIn: "Hecho: entrégala", ready: "Listo", go: "Ir allí", missing: "Falta:", more: "y {n} más", all: "Todos los objetivos", empty: "No tienes nada en marcha. Empieza una misión o acepta una tarea y aparecerá aquí.", sources: { story: "Historia", slayer: "Encargo del cazador", guild: "Contrato del gremio", order: "Pedido de la taberna", daily: "Tarea diaria", weekly: "Tarea semanal" } },
   backup: {
     saveFailed: "No se pudo guardar la partida: el almacenamiento del navegador está lleno o bloqueado. Descarga una copia en Ajustes → Partida para no perder nada.",
     openFailed: "No se pudo abrir esa partida. Si tiene copias automáticas, puedes recuperar una desde su ranura.",

@@ -351,6 +351,11 @@ body.cue-flash::after { content: ''; position: fixed; inset: 0; pointer-events: 
 
 /* Tutorial highlight */
 .tut-target { position: relative; z-index: 2; outline: 2px solid var(--gold) !important; outline-offset: 2px; animation: tutGlow 1.6s ease-in-out infinite; }
+/* Something the tracker pointed at (ui/focus.js): it glows for a moment */
+.focus-glow { position: relative; z-index: 2; outline: 2px solid var(--gold) !important; outline-offset: 3px; animation: focusGlow 0.85s ease-in-out 3; }
+@keyframes focusGlow { 50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--gold) 28%, transparent), 0 0 30px -4px var(--gold); } }
+@media (prefers-reduced-motion: reduce) { .focus-glow { animation: none; } }
+[data-motion="reduce"] .focus-glow { animation: none; }
 @keyframes tutGlow { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--gold) 25%, transparent), 0 0 26px -4px var(--gold); } }
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

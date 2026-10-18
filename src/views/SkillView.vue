@@ -1,6 +1,7 @@
 <script setup>
 import { computed, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { wantedFocus } from '../ui/focus.js'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
@@ -79,6 +80,11 @@ const filtered = computed(() => {
   return list
 })
 // Sorting by level keeps the sections; any other order shows one flat list
+// When the tracker points at an action a filter hides, the filters step aside
+watch(wantedFocus, key => {
+  const id = key?.startsWith('action:') && key.slice(7)
+  if (id && all.value.some(a => a.id === id) && !filtered.value.some(a => a.id === id)) Object.assign(f, { q: '', group: 'all', mat: 'all', status: 'all' })
+})
 const sections = computed(() => {
   if (f.sort !== 'lvl') return [{ name: null, actions: filtered.value }]
   const out = []

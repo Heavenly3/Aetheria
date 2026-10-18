@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
 import Tab from 'primevue/tab'
@@ -21,7 +22,11 @@ import { chanceNote } from '../ui/tips.js'
 import ItemTile from '../components/ItemTile.vue'
 import HelpTip from '../components/HelpTip.vue'
 
-const tab = ref(state.activity?.kind === 'boss' ? 'bosses' : state.activity?.kind === 'dungeon' ? 'dungeons' : 'areas')
+// The tracker can ask for a tab in the address (?tab=bosses)
+const route = useRoute()
+const TABS = ['areas', 'bosses', 'dungeons']
+const tab = ref(TABS.includes(route.query.tab) ? route.query.tab : state.activity?.kind === 'boss' ? 'bosses' : state.activity?.kind === 'dungeon' ? 'dungeons' : 'areas')
+watch(() => route.query.tab, v => { if (TABS.includes(v)) tab.value = v })
 const inDungeon = id => state.activity?.type === 'combat' && state.activity.kind === 'dungeon' && state.activity.target === id
 const pct = v => Math.round(v * 100) + '%'
 const showArena = computed(() => state.activity?.type === 'combat' && state.activity.kind !== 'tower')
@@ -68,7 +73,7 @@ function fightBoss(b) {
         <TabPanel value="dungeons">
           <p class="intro">{{ $t('combat.dungeonIntro') }}</p>
           <div class="grid-wide">
-            <div v-for="dg in DUNGEONS" :key="dg.id" class="card dungeon" :class="{ active: inDungeon(dg.id), locked: dg.reqQuest && !G.questDone(dg.reqQuest) }" style="--c:#e0554b">
+            <div v-for="dg in DUNGEONS" :key="dg.id" :data-focus="'dungeon:' + dg.id" class="card dungeon" :class="{ active: inDungeon(dg.id), locked: dg.reqQuest && !G.questDone(dg.reqQuest) }" style="--c:#e0554b">
               <div class="row">
                 <ItemTile :icon="dg.icon" tint="#7a2a32" size="lg" :tip="false" />
                 <div class="grow">

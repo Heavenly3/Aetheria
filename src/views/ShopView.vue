@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { wantedFocus } from '../ui/focus.js'
 import { useI18n } from 'vue-i18n'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
@@ -38,6 +39,8 @@ const buyCat = ref('all')
 const buySearch = ref('')
 const onlyAfford = ref(false)
 const onlyUsable = ref(false)
+// The tracker points at a shelf: show the whole shop so nothing hides it
+watch(wantedFocus, key => { if (key?.startsWith('shop:')) { tab.value = 'buy'; buyCat.value = 'all'; buySearch.value = ''; onlyAfford.value = false; onlyUsable.value = false } })
 const buySort = ref('shop')
 const sorts = computed(() => ['shop', 'cheap', 'dear', 'name'].map(value => ({ value, label: t(`shop.sort.${value}`) })))
 const CROP_LVL = Object.fromEntries(CROPS.map(c => [c.id + '_seed', c.lvl]))
@@ -164,7 +167,7 @@ function sellJunk() {
       <template v-for="s in buySections" :key="s.cat || 'all'">
         <div v-if="s.cat" class="section-title">{{ $t('shop.cats.' + s.cat) }}</div>
         <div class="grid-cards" :style="s.cat ? '' : 'margin-top:18px'">
-          <div v-for="o in s.items" :key="o.id" class="card shop-item" :class="{ poor: state.gold < o.price }">
+          <div v-for="o in s.items" :key="o.id" :data-focus="'shop:' + o.id" class="card shop-item" :class="{ poor: state.gold < o.price }">
             <div class="row">
               <ItemTile :item="o.id" size="md" />
               <div class="grow" style="min-width:0">

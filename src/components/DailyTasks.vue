@@ -38,7 +38,7 @@ function claim(i, weekly) {
 </script>
 
 <template>
-  <div class="daily">
+  <div class="daily" data-focus="tasks">
     <div class="panel pad streak-card">
       <div class="flame" :class="{ lit: streak > 0 }"><GameIcon name="flame" :size="34" /></div>
       <div class="grow">

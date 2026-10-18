@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { wantedFocus } from '../ui/focus.js'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
@@ -42,6 +43,8 @@ const pests = computed(() => state.farm.plots.filter(p => p?.event === 'pests').
 // Hybrid seeds only show once discovered
 const seeds = computed(() => CROPS.filter(c => !c.hybrid || G.hybridKnown(c.id) || G.qty(c.id + '_seed') > 0)
   .map(c => ({ c, have: G.qty(c.id + '_seed'), locked: G.level('farming') < c.lvl })))
+// When the tracker points at a seed the filter hides, the filter steps aside
+watch(wantedFocus, key => { if (key?.startsWith('crop:')) { seedQ.value = ''; seedFilter.value = 'all' } })
 const shownSeeds = computed(() => seeds.value.filter(s => {
   if (seedFilter.value === 'have' && !s.have) return false
   if (seedFilter.value === 'unlocked' && s.locked) return false
@@ -98,7 +101,7 @@ const buildingEffect = id => {
 
 <template>
   <div>
-    <div class="panel pad farm-bar">
+    <div class="panel pad farm-bar" data-focus="plots">
       <div class="row wrap">
         <div class="grow">
           <h3 class="panel-title" style="margin:0"><GameIcon name="plant-watering" /> {{ $t('farm.title') }} <HelpTip k="sections.farm" /></h3>
@@ -219,7 +222,7 @@ const buildingEffect = id => {
       <SelectButton v-model="seedFilter" :options="seedOpts" optionLabel="label" optionValue="value" :allowEmpty="false" size="small" />
     </div>
     <div class="grid-cards">
-      <div v-for="{ c, have, locked } in shownSeeds" :key="c.id" class="card seed" :class="{ locked }" :style="{ '--c': c.tint }">
+      <div v-for="{ c, have, locked } in shownSeeds" :key="c.id" :data-focus="'crop:' + c.id" class="card seed" :class="{ locked }" :style="{ '--c': c.tint }">
         <div class="row">
           <ItemTile :item="c.id + '_seed'" size="md" :tip="false" :qty="have" />
           <div class="grow">
