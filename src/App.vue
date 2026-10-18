@@ -128,18 +128,33 @@ const offs = []
 const playHere = () => continueGame(G.slot)
 onUnmounted(() => offs.splice(0).forEach(off => off()))
 
-// The search box opens with Ctrl+K (⌘K on a Mac) or "/" when not typing somewhere
+/* Keyboard: the search box opens with Ctrl+K (⌘K on a Mac) or "/", single letters jump to the main
+   screens and "?" lists them all. Nothing fires while typing in a field or with a window open */
 const searching = ref(false)
+const showKeys = ref(false)
 const typing = el => el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))
-function onSearchKey(e) {
-  if (!session.inGame) return
-  if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') || (e.key === '/' && !typing(e.target) && !e.ctrlKey && !e.metaKey && !e.altKey)) {
-    e.preventDefault()
-    searching.value = true
-  }
+// Where the current activity is played
+const activityRoute = () => {
+  const a = state.activity
+  if (!a) return null
+  if (a.type === 'skill') return '/skill/' + a.skill
+  return { tower: '/tower', omen: '/omens', weekly: '/weekly', festival: '/festival' }[a.kind] || '/combat'
 }
-onMounted(() => window.addEventListener('keydown', onSearchKey))
-onUnmounted(() => window.removeEventListener('keydown', onSearchKey))
+const JUMPS = { h: '/', i: '/inventory', c: '/combat', q: '/quests', t: '/tavern', p: '/pets', ',': '/settings' }
+const SHORTCUTS = [['Ctrl K', 'search'], ['/', 'search'], ['A', 'activity'], ...Object.entries(JUMPS).map(([k, to]) => [k.toUpperCase(), to]), ['?', 'keys'], ['Esc', 'close']]
+function onKey(e) {
+  if (!session.inGame || session.elsewhere || session.catching !== null) return
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); searching.value = true; return }
+  if (e.ctrlKey || e.metaKey || e.altKey || typing(e.target) || document.querySelector('.p-dialog-mask')) return
+  const key = e.key.toLowerCase()
+  if (key === '/') { e.preventDefault(); searching.value = true }
+  else if (key === '?') showKeys.value = true
+  else if (key === 'a' && activityRoute()) router.push(activityRoute())
+  else if (JUMPS[key] && G.screenOpen(JUMPS[key])) router.push(JUMPS[key])
+}
+onMounted(() => window.addEventListener('keydown', onKey))
+onUnmounted(() => window.removeEventListener('keydown', onKey))
+const keyLabel = what => (what.startsWith('/') ? t(what === '/' ? 'nav.hero' : `nav.${what.slice(1)}`) : t(`keys.${what}`))
 // Pop-ups follow the player's choice: all, the important ones (no plain notes), or warnings only
 const push = (icon, detail, kind = 'info', life = 3500) => {
   const level = state.settings.toasts
@@ -309,6 +324,9 @@ function startAdventure() {
           </button>
           <Menu ref="menu" :model="menuItems" popup />
           <GlobalSearch v-model="searching" />
+          <Dialog v-model:visible="showKeys" modal dismissableMask :header="$t('keys.title')" :style="{ width: 'min(380px, calc(100vw - 24px))' }">
+            <div v-for="[k, what] in SHORTCUTS" :key="k" class="kv"><span>{{ keyLabel(what) }}</span><kbd class="key">{{ k }}</kbd></div>
+          </Dialog>
         </header>
 
         <section class="view">
@@ -475,4 +493,5 @@ function startAdventure() {
 .hero-meta { display: flex; flex-direction: column; gap: 2px; text-align: start; min-width: 110px; line-height: 1.15; }
 .hero-meta b { font-size: 14px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 900px) { .hero-meta { display: none; } }
+.key { font: 12px ui-monospace, monospace; padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line-hi); background: var(--tint-2); color: var(--ink); }
 </style>

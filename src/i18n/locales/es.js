@@ -1945,7 +1945,8 @@ export default {
   },
   elsewhere: { title: "Esta partida está abierta en otra pestaña", text: "Para no perder progreso, solo se juega en una pestaña a la vez. Esta pestaña se ha detenido y guardado.", here: "Jugar aquí", menu: "Menú principal" },
   updates: { ready: "Hay una versión nueva de Aetheria. Recarga la página para jugarla: tu partida está guardada." },
-  search: { label: "Buscar", tip: "Buscar (Ctrl+K)", placeholder: "Busca una pantalla, habilidad, objeto, criatura o misión…", hint: "Escribe unas letras. Las flechas se mueven y Enter te lleva allí.", none: "Nada se llama «{q}».", kinds: { screen: "Pantalla", skill: "Habilidad", item: "Objeto", monster: "Criatura", quest: "Misión" } },
+  search: { label: "Buscar", tip: "Buscar (Ctrl+K)", placeholder: "Busca una pantalla, habilidad, objeto, criatura o misión…", hint: "Escribe unas letras. Las flechas se mueven y Enter te lleva allí. Pulsa ? fuera de esta caja para ver todos los atajos.", none: "Nada se llama «{q}».", kinds: { screen: "Pantalla", skill: "Habilidad", item: "Objeto", monster: "Criatura", quest: "Misión" } },
+  keys: { title: "Atajos de teclado", search: "Buscar", activity: "Ir a lo que estás haciendo", keys: "Estos atajos", close: "Cerrar una ventana" },
   backup: {
     saveFailed: "No se pudo guardar la partida: el almacenamiento del navegador está lleno o bloqueado. Descarga una copia en Ajustes → Partida para no perder nada.",
     openFailed: "No se pudo abrir esa partida. Si tiene copias automáticas, puedes recuperar una desde su ranura.",

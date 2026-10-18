@@ -1945,7 +1945,8 @@ export default {
   },
   elsewhere: { title: "This game is open in another tab", text: "To keep your progress safe, it only runs in one tab at a time. This tab has stopped and saved.", here: "Play here", menu: "Main menu" },
   updates: { ready: "A new version of Aetheria is out. Reload the page to play it: your game is saved." },
-  search: { label: "Search", tip: "Search (Ctrl+K)", placeholder: "Find a screen, skill, item, creature or quest…", hint: "Type a few letters. Arrows move, Enter goes there.", none: "Nothing called \"{q}\".", kinds: { screen: "Screen", skill: "Skill", item: "Item", monster: "Creature", quest: "Quest" } },
+  search: { label: "Search", tip: "Search (Ctrl+K)", placeholder: "Find a screen, skill, item, creature or quest…", hint: "Type a few letters. Arrows move, Enter goes there. Press ? outside this box for every shortcut.", none: "Nothing called \"{q}\".", kinds: { screen: "Screen", skill: "Skill", item: "Item", monster: "Creature", quest: "Quest" } },
+  keys: { title: "Keyboard shortcuts", search: "Search", activity: "Go to what you are doing", keys: "These shortcuts", close: "Close a window" },
   backup: {
     saveFailed: "Could not save your game: this browser's storage is full or blocked. Download a copy in Settings → Save so nothing is lost.",
     openFailed: "That save could not be opened. If it has automatic backups, you can bring one back from its slot.",
