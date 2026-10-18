@@ -18,15 +18,23 @@ const collapsed = ref(false)
 
 // Highlight the visible targets of the current step; the DOM changes as views load, so this re-runs on a timer
 let marked = []
+// Where the highlighted element is when it is out of sight (on phones it is often far down the screen)
+const away = ref(null)
 function highlight() {
   marked.forEach(el => el.classList.remove('tut-target'))
   marked = []
+  away.value = null
   if (!step.value || collapsed.value) return
   for (const key of step.value.targets || []) {
     const found = [...document.querySelectorAll(`[data-tut="${key}"]`)].filter(el => el.offsetParent !== null || el.getClientRects().length)
     if (found.length) { marked = found.slice(0, 1); break }
   }
   marked.forEach(el => el.classList.add('tut-target'))
+  const r = marked[0]?.getBoundingClientRect()
+  if (r) away.value = r.top > innerHeight - 90 ? 'down' : r.bottom < 0 ? 'up' : null
+}
+function showTarget() {
+  marked[0]?.scrollIntoView({ block: 'center', behavior: state.settings.reduceMotion ? 'auto' : 'smooth' })
 }
 
 function check() {
@@ -66,6 +74,7 @@ function skip() {
             <span class="bar grow"><i :style="{ width: (progress / step.goal) * 100 + '%' }" /></span>
             <span class="small tnum muted">{{ progress }}/{{ step.goal }}</span>
           </div>
+          <Button v-if="away" :label="$t('tutorial.showMe')" :icon="away === 'down' ? 'pi pi-arrow-down' : 'pi pi-arrow-up'" size="small" class="coach-show" @click="showTarget" />
         </template>
         <div class="coach-dots" aria-hidden="true"><i v-for="(s, i) in STEPS" :key="s.id" :class="{ on: i < state.tutorial.step, now: i === state.tutorial.step }" /></div>
       </div>
@@ -91,6 +100,7 @@ function skip() {
 .coach-dots i.on { background: var(--gold-lo); }
 .coach-dots i.now { background: var(--gold); }
 .coach.collapsed .coach-dots { margin-top: 6px; }
+.coach-show { margin-top: 2px; }
 .coach-actions { display: flex; flex-direction: column; margin-top: -4px; }
 .coach-enter-active, .coach-leave-active { transition: opacity 0.3s, transform 0.3s; }
 .coach-enter-from, .coach-leave-to { opacity: 0; transform: translateY(-8px); }

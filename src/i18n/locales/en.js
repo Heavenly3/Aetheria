@@ -2868,6 +2868,7 @@ export default {
   },
 
   tutorial: {
+    showMe: 'Show me where',
     step: 'Step {n} of {total}', skip: 'Skip tutorial', keep: 'Keep going', expand: 'Show details', collapse: 'Hide details',
     skipTitle: 'Skip the tutorial?', skipMessage: 'You can start it again from Settings whenever you like.',
     finished: 'Tutorial complete! Here are <b>{gold} gold</b> for the road.',
