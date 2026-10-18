@@ -76,7 +76,7 @@ const sections = computed(() => {
       <section v-for="s in sections" :key="s.cat" class="cat-sec">
         <div class="cat-title"><GameIcon :name="CATEGORY_ICON[s.cat]" :size="14" /> {{ $t(`inventory.cats.${s.cat}`) }} <small class="tnum">{{ s.ids.length }}</small></div>
         <div class="inv-grid">
-          <button v-for="id in s.ids" :key="id" class="inv-slot" :class="{ selected: selected === id }" @click="selected = id">
+          <button v-for="id in s.ids" :key="id" class="inv-slot" :class="{ selected: selected === id }" :data-item="id" @click="selected = id">
             <i v-if="state.food === id || state.potion === id || state.equipment.ammo === id" class="pi pi-check-circle mark" />
             <i v-if="G.isLocked(id)" class="pi pi-lock lock-mark" />
             <i v-if="G.marketMult(id) > 1" class="pi pi-arrow-up market-mark" />

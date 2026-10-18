@@ -455,7 +455,7 @@ export default {
       wearing: 'You are wearing this one.', noTool: 'No tool of this kind equipped', emptySlot: 'Nothing in the {slot} slot',
       twoHandedNote: 'A two-handed weapon and a shield cannot be worn together, so both are compared.',
     },
-    usedIn: 'Used in', moreUses: 'and {n} more', displaceTitle: 'Swap equipment', displaceMessage: 'Equipping {item} will take off {other}.',
+    from: { tip: "From: {list}", anyAction: "Any {skill} action", title: "Where to get it", always: "Always", boss: "Boss", echo: "Echo", weekly: "Weekly boss", expedition: "Expedition", shop: "General store", slayerShop: "Slayer shop", towerShop: "Tower shop", grace: "Grace rewards", gold: "{n} gold", points: "{n} slayer points", tokens: "{n} tokens", marks: "{n} marks of grace", stolen: "Lifted now and then while thieving", harvest: "Any harvest, now and then", burnt: "Burning food while cooking", harvestOf: "Harvest {crop}", cross: "Grow {a} next to {b}", chest: "Inside {item}", dungeonChest: "{name}: final chest", less: "Show fewer" }, usedIn: 'Used in', moreUses: 'and {n} more', displaceTitle: 'Swap equipment', displaceMessage: 'Equipping {item} will take off {other}.',
     equippedToast: 'Equipped {item}', cannotEquip: 'Requires {req} to equip.', sellAtShop: 'Sell at the shop',
     sold: 'Sold for <b>{gold}</b> gold', goldAmount: '{n} gold', opened: 'You get: <b>{items}</b>', sellShownTitle: 'Sell what you see',
     sellShownMessage: '{n} item types will be sold for {gold} gold. Locked items are kept.', sell: 'Sell', junkSold: 'Junk sold for <b>{gold}</b> gold',

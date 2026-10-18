@@ -12,6 +12,7 @@ import { TOOL_TYPES } from '../game/data/character.js'
 import { itemCategory, usesOf } from '../game/data/categories.js'
 import { fmt, fmtClock } from '../game/format.js'
 import SetBonuses from '../components/SetBonuses.vue'
+import ItemSources from '../components/ItemSources.vue'
 import ItemCompare from '../components/ItemCompare.vue'
 import InventoryGrid from '../components/InventoryGrid.vue'
 import ItemTile from '../components/ItemTile.vue'
@@ -93,6 +94,7 @@ const sellAtShop = () => router.push({ path: '/shop', query: { sell: selected.va
         <ItemCompare v-if="comparable" :id="selected" />
         <SetBonuses v-if="SET_OF[selected]" :set="SET_OF[selected]" pieces style="margin-top:10px" />
 
+        <ItemSources :id="it.base || selected" />
         <div v-if="uses.length" class="uses">
           <div class="uses-title">{{ $t('inventory.usedIn') }}</div>
           <router-link v-for="u in uses.slice(0, 8)" :key="u.skill + u.action.id" :to="'/skill/' + u.skill" class="use-row">

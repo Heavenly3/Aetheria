@@ -16,6 +16,7 @@ import { itemCategory } from '../game/data/categories.js'
 import { fmt } from '../game/format.js'
 import { weaponProfile } from '../game/data/fighting.js'
 import { QUALITIES } from '../game/data/actions.js'
+import { sourceRows } from './itemSources.js'
 
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c])
@@ -68,6 +69,9 @@ export function itemTip(id, note) {
     lines.push({ text: `${t('inventory.requires')} ${SKILLS[sk].name} ${l}`, kind: G.level(sk) >= l ? 'muted' : 'bad' })
   }
   if (note) lines.push({ text: note, kind: 'gold' })
+  // Where to find it, in short; the inventory lists every source
+  const from = sourceRows(it.base || id)
+  if (from.length) lines.push({ text: t('inventory.from.tip', { list: from.slice(0, 2).map(r => r.name).join(', ') + (from.length > 2 ? '…' : '') }), kind: 'muted' })
   const setOf = SET_OF[it.base || id]
   if (setOf) lines.push({ text: t('help.item.set', { set: setOf.name }), kind: 'gold' })
   // Gear: what wearing it would change in a fight, worked out from the hero's own numbers

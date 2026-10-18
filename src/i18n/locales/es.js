@@ -455,7 +455,7 @@ export default {
       wearing: 'Es lo que llevas puesto.', noTool: 'No llevas ninguna herramienta de este tipo', emptySlot: 'No llevas nada en {slot}',
       twoHandedNote: 'Un arma a dos manos y un escudo no se pueden llevar juntos, así que se comparan ambos.',
     },
-    usedIn: 'Se usa en', moreUses: 'y {n} más', displaceTitle: 'Cambiar equipo', displaceMessage: 'Al equipar {item} te quitarás {other}.',
+    from: { tip: "Se consigue en: {list}", anyAction: "Cualquier acción de {skill}", title: "Dónde conseguirlo", always: "Siempre", boss: "Jefe", echo: "Eco", weekly: "Jefe semanal", expedition: "Expedición", shop: "Tienda", slayerShop: "Tienda del cazador", towerShop: "Tienda de la torre", grace: "Recompensas de gracia", gold: "{n} de oro", points: "{n} puntos de cazador", tokens: "{n} fichas", marks: "{n} marcas de gracia", stolen: "Se roba de vez en cuando al robar", harvest: "Cualquier cosecha, de vez en cuando", burnt: "Quemar comida al cocinar", harvestOf: "Cosechar {crop}", cross: "Cultivar {a} junto a {b}", chest: "Dentro de {item}", dungeonChest: "{name}: cofre final", less: "Mostrar menos" }, usedIn: 'Se usa en', moreUses: 'y {n} más', displaceTitle: 'Cambiar equipo', displaceMessage: 'Al equipar {item} te quitarás {other}.',
     equippedToast: 'Equipado: {item}', cannotEquip: 'Necesitas {req} para equiparlo.', sellAtShop: 'Vender en la tienda',
     sold: 'Vendido por <b>{gold}</b> de oro', goldAmount: '{n} de oro', opened: 'Obtienes: <b>{items}</b>', sellShownTitle: 'Vender lo que ves',
     sellShownMessage: 'Se venderán {n} tipos de objeto por {gold} de oro. Los objetos protegidos no se venden.', sell: 'Vender', junkSold: 'Basura vendida por <b>{gold}</b> de oro',
