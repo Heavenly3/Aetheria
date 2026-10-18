@@ -1944,6 +1944,7 @@ export default {
     errorToast: "Algo ha fallado. Si notas algo raro, puedes informar en Ajustes → Opiniones.",
   },
   elsewhere: { title: "Esta partida está abierta en otra pestaña", text: "Para no perder progreso, solo se juega en una pestaña a la vez. Esta pestaña se ha detenido y guardado.", here: "Jugar aquí", menu: "Menú principal" },
+  updates: { ready: "Hay una versión nueva de Aetheria. Recarga la página para jugarla: tu partida está guardada." },
   backup: {
     saveFailed: "No se pudo guardar la partida: el almacenamiento del navegador está lleno o bloqueado. Descarga una copia en Ajustes → Partida para no perder nada.",
     openFailed: "No se pudo abrir esa partida. Si tiene copias automáticas, puedes recuperar una desde su ranura.",

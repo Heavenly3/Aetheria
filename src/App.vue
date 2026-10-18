@@ -23,6 +23,7 @@ import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaF
 import { setCompactNumbers } from './game/format.js'
 import { zoomFor } from './game/data/settings.js'
 import { onError } from './game/feedback.js'
+import { watchForUpdates } from './game/updates.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
 import HelpTip from './components/HelpTip.vue'
@@ -169,6 +170,8 @@ onMounted(() => {
   // The first error of a session says where to report it; later ones are only kept for the report
   let errorShown = false
   offs.push(onError(() => { if (errorShown || !session.inGame) return; errorShown = true; push('cross-mark', t('feedback.errorToast'), 'warn', 10000) }))
+  // A new release went live while the game was open: it stays up until closed
+  if (import.meta.env.PROD) offs.push(watchForUpdates(() => push('quill-ink', t('updates.ready'), 'warn', 0)))
   on('saveFailed', () => push('cross-mark', t('backup.saveFailed'), 'warn', 15000))
   on('backupReminder', () => push('locked-chest', t('backup.reminderToast'), 'warn', 12000))
   on('record', e => { cue('achievement'); push(e.icon, t('records.toast', { name: t(`records.names.${e.id}`), n: fmt(e.value), before: fmt(e.before) }), 'success', 7000) })

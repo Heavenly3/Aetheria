@@ -23,7 +23,8 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url)
   if (url.origin !== self.location.origin && !isFont(url)) return
 
-  if (request.mode === 'navigate') {
+  // The page, and the game asking whether a new release is out (see updates.js), always try the network first
+  if (request.mode === 'navigate' || url.pathname.endsWith('/index.html')) {
     event.respondWith(
       fetch(request)
         .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); return res })

@@ -1944,6 +1944,7 @@ export default {
     errorToast: "Something went wrong. If you notice anything odd, you can report it in Settings → Feedback.",
   },
   elsewhere: { title: "This game is open in another tab", text: "To keep your progress safe, it only runs in one tab at a time. This tab has stopped and saved.", here: "Play here", menu: "Main menu" },
+  updates: { ready: "A new version of Aetheria is out. Reload the page to play it: your game is saved." },
   backup: {
     saveFailed: "Could not save your game: this browser's storage is full or blocked. Download a copy in Settings → Save so nothing is lost.",
     openFailed: "That save could not be opened. If it has automatic backups, you can bring one back from its slot.",
