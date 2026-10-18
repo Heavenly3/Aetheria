@@ -34,7 +34,7 @@ describe('backups', () => {
 
 describe('settings', () => {
   it('has texts for every section, size and message level', () => {
-    for (const id of ['game', 'display', 'sound', 'alerts', 'access', 'save', 'about']) expect(i18n.global.te(`settings.sections.${id}.name`, 'en')).toBe(true)
+    for (const id of ['game', 'display', 'sound', 'alerts', 'access', 'save', 'feedback', 'about']) expect(i18n.global.te(`settings.sections.${id}.name`, 'en')).toBe(true)
     for (const s of TEXT_SIZES) expect(i18n.global.te(`settings.textSizes.${s.id}`, 'en')).toBe(true)
     for (const l of TOAST_LEVELS) expect(i18n.global.te(`settings.toastLevels.${l}.desc`, 'en')).toBe(true)
     expect(zoomFor('normal')).toBe(1)

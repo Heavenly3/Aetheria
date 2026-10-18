@@ -10,6 +10,7 @@ import router, { initialRoute } from './router.js'
 import { AetheriaPreset, applyTheme } from './theme.js'
 import { i18n, setLocale, detectLocale } from './i18n/index.js'
 import { G } from './game/engine.js'
+import { installErrorLog } from './game/feedback.js'
 
 // Expose the engine and the router for debugging from the console in development builds
 if (import.meta.env.DEV) Object.assign(window, { __G: G, __router: router })
@@ -27,6 +28,9 @@ const app = createApp(App)
   .use(i18n)
   .use(router)
   .directive('tooltip', Tooltip)
+
+// Errors are kept for this session so a bug report can include them
+installErrorLog(app)
 
 // Restore the last visited screen (memory history always starts at "/")
 router.replace(initialRoute()).catch(() => router.replace('/'))

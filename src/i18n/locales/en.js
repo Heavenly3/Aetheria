@@ -24,7 +24,7 @@ export default {
     skills: 'Skills', more: 'Menu', main: 'Main navigation',
   },
 
-  heroMenu: { viewHero: 'View hero', saveNow: 'Save now', saved: 'Game saved', mainMenu: 'Main menu', label: 'Hero menu' },
+  heroMenu: { feedback: "Report a bug or idea", viewHero: 'View hero', saveNow: 'Save now', saved: 'Game saved', mainMenu: 'Main menu', label: 'Hero menu' },
 
   title: {
     continue: 'Continue', newGame: 'New game', newGameHint: 'Create a hero in a free slot', load: 'Load game',
@@ -1054,6 +1054,7 @@ export default {
       sound: { name: "Sound", desc: "Volume, profiles and music" },
       alerts: { name: "Alerts", desc: "Notifications and sound alerts" },
       access: { name: "Accessibility", desc: "Text size, motion and sound aids" },
+      feedback: { name: "Feedback", desc: "Report a bug or share an idea" },
       save: { name: "Save", desc: "Backups, copies and your slot" },
       about: { name: "About", desc: "What's new and credits" },
     },
@@ -1916,6 +1917,32 @@ export default {
     table: "Guild ranking",
   },
 
+  feedback: {
+    title: "Feedback and bugs",
+    intro: "Found something broken, or have an idea? Write it here. The game adds the details that help find the problem (version, device and your hero), and you send it yourself: nothing leaves the game on its own.",
+    kinds: {
+      bug: "A bug",
+      idea: "An idea",
+    },
+    ask: {
+      bug: "What happened, and what did you expect?",
+      idea: "What would you like to see?",
+    },
+    placeholder: {
+      bug: "For example: I sold an item and my gold did not go up. It happened in the Market, after loading my save.",
+      idea: "For example: a way to sort the bank by value.",
+    },
+    itch: "Copy and open itch.io",
+    github: "Open an issue on GitHub",
+    copy: "Copy only",
+    copied: "Copied: paste it in a comment",
+    itchHint: "On itch.io, paste the text in a comment at the bottom of the game page. GitHub opens a new issue with everything filled in (it needs an account).",
+    errorsOne: "The game caught an error this session. It goes in the report.",
+    errorsMany: "The game caught {n} errors this session. They go in the report.",
+    reportTitle: "What gets added",
+    reportHint: "The details that go with your message. Nothing personal: no name or email.",
+    errorToast: "Something went wrong. If you notice anything odd, you can report it in Settings → Feedback.",
+  },
   backup: {
     foundTitle: "Backups of your games were found",
     foundText: "A slot is empty but this browser still keeps a copy of its game.",

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
@@ -15,12 +16,13 @@ import UpdateLog from '../components/UpdateLog.vue'
 import AudioSettings from '../components/AudioSettings.vue'
 import CueSettings from '../components/CueSettings.vue'
 import SaveSettings from '../components/SaveSettings.vue'
+import FeedbackSettings from '../components/FeedbackSettings.vue'
 import { startTutorial, skipTutorial } from '../game/tutorial.js'
 
 const { t } = useI18n()
 const st = state.settings
 
-// Settings in seven sections, listed at the side (or across the top on phones); the last one opened
+// Settings in eight sections, listed at the side (or across the top on phones); the last one opened
 // is remembered on this device
 const STORE = 'aetheria-settings-tab'
 const SECTIONS = [
@@ -30,10 +32,14 @@ const SECTIONS = [
   { id: 'alerts', icon: 'pi pi-bell' },
   { id: 'access', icon: 'pi pi-eye' },
   { id: 'save', icon: 'pi pi-save' },
+  { id: 'feedback', icon: 'pi pi-comments' },
   { id: 'about', icon: 'pi pi-info-circle' },
 ]
 const stored = (() => { try { return localStorage.getItem(STORE) } catch { return null } })()
-const tab = ref(SECTIONS.some(s => s.id === stored) ? stored : 'game')
+// A link can open a section directly (the hero menu opens Feedback this way)
+const asked = useRoute().query.tab
+const valid = id => SECTIONS.some(s => s.id === id)
+const tab = ref(valid(asked) ? asked : valid(stored) ? stored : 'game')
 watch(tab, v => { try { localStorage.setItem(STORE, v) } catch { /* storage unavailable */ } })
 
 const sizes = computed(() => TEXT_SIZES.map(s => ({ value: s.id, label: t(`settings.textSizes.${s.id}`) })))
@@ -124,6 +130,9 @@ function openAll() { G.openAllScreens(); G.toast('open-book', 'settings.allScree
 
       <!-- Save: name, backups and the slot -->
       <SaveSettings v-else-if="tab === 'save'" />
+
+      <!-- Feedback: report a bug or share an idea -->
+      <FeedbackSettings v-else-if="tab === 'feedback'" />
 
       <!-- About -->
       <div v-else class="stack">

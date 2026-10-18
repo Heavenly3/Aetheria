@@ -24,7 +24,7 @@ export default {
     skills: 'Habilidades', more: 'Menú', main: 'Navegación principal',
   },
 
-  heroMenu: { viewHero: 'Ver héroe', saveNow: 'Guardar ahora', saved: 'Partida guardada', mainMenu: 'Menú principal', label: 'Menú del héroe' },
+  heroMenu: { feedback: "Informar de un error o idea", viewHero: 'Ver héroe', saveNow: 'Guardar ahora', saved: 'Partida guardada', mainMenu: 'Menú principal', label: 'Menú del héroe' },
 
   title: {
     continue: 'Continuar', newGame: 'Nueva partida', newGameHint: 'Crea un héroe en una ranura libre', load: 'Cargar partida',
@@ -1054,6 +1054,7 @@ export default {
       sound: { name: "Sonido", desc: "Volumen, perfiles y música" },
       alerts: { name: "Avisos", desc: "Notificaciones y avisos de sonido" },
       access: { name: "Accesibilidad", desc: "Tamaño del texto, movimiento y ayudas de sonido" },
+      feedback: { name: "Opiniones", desc: "Informa de un error o comparte una idea" },
       save: { name: "Partida", desc: "Copias de seguridad y tu ranura" },
       about: { name: "Acerca de", desc: "Novedades y créditos" },
     },
@@ -1916,6 +1917,32 @@ export default {
     table: "Clasificación de gremios",
   },
 
+  feedback: {
+    title: "Opiniones y errores",
+    intro: "¿Algo no funciona o tienes una idea? Escríbelo aquí. El juego añade los datos que ayudan a encontrar el problema (versión, dispositivo y tu héroe) y lo envías tú: nada sale del juego por su cuenta.",
+    kinds: {
+      bug: "Un error",
+      idea: "Una idea",
+    },
+    ask: {
+      bug: "¿Qué ha pasado y qué esperabas?",
+      idea: "¿Qué te gustaría ver?",
+    },
+    placeholder: {
+      bug: "Por ejemplo: vendí un objeto y mi oro no subió. Pasó en el Mercado, después de cargar mi partida.",
+      idea: "Por ejemplo: una forma de ordenar el banco por valor.",
+    },
+    itch: "Copiar y abrir itch.io",
+    github: "Abrir una incidencia en GitHub",
+    copy: "Solo copiar",
+    copied: "Copiado: pégalo en un comentario",
+    itchHint: "En itch.io, pega el texto en un comentario al final de la página del juego. GitHub abre una incidencia nueva con todo rellenado (necesita una cuenta).",
+    errorsOne: "El juego ha detectado un error en esta sesión. Va incluido en el informe.",
+    errorsMany: "El juego ha detectado {n} errores en esta sesión. Van incluidos en el informe.",
+    reportTitle: "Lo que se añade",
+    reportHint: "Los datos que acompañan a tu mensaje. Nada personal: ni nombre ni correo.",
+    errorToast: "Algo ha fallado. Si notas algo raro, puedes informar en Ajustes → Opiniones.",
+  },
   backup: {
     foundTitle: "Hemos encontrado copias de tus partidas",
     foundText: "Una ranura está vacía, pero este navegador aún guarda una copia de su partida.",

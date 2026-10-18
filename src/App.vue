@@ -22,6 +22,7 @@ import { AREAS } from './game/data/combat.js'
 import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaFor, setCaptionHandler } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
 import { zoomFor } from './game/data/settings.js'
+import { onError } from './game/feedback.js'
 import { tm } from './i18n/index.js'
 import NavMenu from './components/NavMenu.vue'
 import HelpTip from './components/HelpTip.vue'
@@ -110,6 +111,7 @@ const unspent = computed(() => G.attrPoints() + G.talentPoints())
 const menuItems = computed(() => [
   { label: t('heroMenu.viewHero'), icon: 'pi pi-user', command: () => router.push('/') },
   { label: t('nav.settings'), icon: 'pi pi-cog', command: () => router.push('/settings') },
+  { label: t('heroMenu.feedback'), icon: 'pi pi-comments', command: () => router.push({ path: '/settings', query: { tab: 'feedback' } }) },
   { label: t('heroMenu.saveNow'), icon: 'pi pi-save', command: () => { G.save(); G.toast('locked-chest', 'heroMenu.saved', {}, 'success') } },
   { separator: true },
   { label: t('heroMenu.mainMenu'), icon: 'pi pi-sign-out', command: () => exitToTitle() },
@@ -162,6 +164,9 @@ onMounted(() => {
   on('retreat', () => cue('retreat'))
   on('overrun', e => { cue('omen'); push('death-skull', t('realm.overrunToast', { area: AREAS.find(a => a.id === e.area).name }), 'warn', 8000) })
   on('ascend', e => { if (e.completed) push('laurels-trophy', t('trials.completedToast', { name: t(`trials.list.${e.completed}.name`) }), 'success', 8000) })
+  // The first error of a session says where to report it; later ones are only kept for the report
+  let errorShown = false
+  offs.push(onError(() => { if (errorShown || !session.inGame) return; errorShown = true; push('cross-mark', t('feedback.errorToast'), 'warn', 10000) }))
   on('backupReminder', () => push('locked-chest', t('backup.reminderToast'), 'warn', 12000))
   on('record', e => { cue('achievement'); push(e.icon, t('records.toast', { name: t(`records.names.${e.id}`), n: fmt(e.value), before: fmt(e.before) }), 'success', 7000) })
   on('echo', e => { cue('achievement'); push('trophy', t('echoes.toast', { name: tm({ key: 'echoes.who', params: { monster: '@monster:' + e.id } }), n: e.beaten, total: e.total }), 'success', 7000) })
