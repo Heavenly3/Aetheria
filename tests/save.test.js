@@ -97,6 +97,8 @@ describe('offline progress', () => {
   }, 30000) // simulates eight hours of play, which can be slow on a busy machine
 
   it('works out long absences in slices, with the same result and its progress', async () => {
+    // An ultra rare find would change the result between the two runs
+    vi.spyOn(G, 'mythicAction').mockReturnValue([])
     G.startSkill('mining', 'copper_ore')
     const sync = G.simulate(3 * 3600).xp.mining
     newHero()

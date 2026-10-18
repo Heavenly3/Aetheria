@@ -17,6 +17,8 @@ import { fmt } from '../game/format.js'
 import { weaponProfile } from '../game/data/fighting.js'
 import { QUALITIES } from '../game/data/actions.js'
 import { sourceRows } from './itemSources.js'
+import { MYTHIC_TIERS } from '../game/data/mythics.js'
+import { modText } from '../i18n/mods.js'
 
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c])
@@ -53,6 +55,7 @@ export function itemTip(id, note) {
     ? { text: `${t('omens.rarity.' + it.quality)} · ${kind.join(' · ')}`, color: RARITY_TINT[it.quality] }
     : { text: (it.rare ? t('inventory.rare') + ' · ' : '') + kind.join(' · '), color: it.rare ? 'var(--gold)' : null }
   if (it.grade) sub.color = QUALITIES[it.grade].color
+  if (it.myth) Object.assign(sub, { text: `${t('mythic.tiers.' + it.myth)} · ${kind.join(' · ')}`, color: MYTHIC_TIERS[it.myth].color })
   const lines = []
   if (it.grade) { const q = QUALITIES[it.grade]; lines.push({ text: t('quality.tip', { quality: t(`quality.labels.${q.id}`), n: Math.round((q.mult - 1) * 100) }), kind: 'gold' }) }
   for (const [k, v] of Object.entries(it.stats || {})) lines.push({ text: statText(k, v), kind: 'ok' })
@@ -62,6 +65,9 @@ export function itemTip(id, note) {
     lines.push({ text: t('fighting.weaponLine', { speed: w.speed, crit: Math.round(w.crit * 100) + '%' }), kind: 'gold' })
     if (w.fx) lines.push({ text: t('fighting.weaponFx', { chance: Math.round(w.fx.chance * 100) + '%', status: t(`fighting.statuses.${w.fx.id}.name`).toLowerCase() }), kind: 'gold' })
   }
+  // What an ultra rare find adds (charms: just by being in the bag)
+  for (const [k, v] of Object.entries(it.myth ? it.mods || {} : {})) lines.push({ text: modText(k, v), kind: 'gold' })
+  if (it.type === 'charm') lines.push({ text: t('mythic.charmTip'), kind: 'muted' })
   if (it.type === 'tool') lines.push({ text: t('hero.toolTier', { tool: TOOL_TYPES[it.toolType].name, n: it.tier }), kind: 'ok' })
   if (it.heal) lines.push({ text: `${t('inventory.heals')} ${t('inventory.hp', { n: G.foodHeal(id) })}`, kind: 'ok' })
   for (const [sk, v] of Object.entries(it.buff || {})) lines.push({ text: `${SKILLS[sk].name} ${t('inventory.boost', { flat: v[0], pct: Math.round(v[1] * 100) })}`, kind: 'ok' })

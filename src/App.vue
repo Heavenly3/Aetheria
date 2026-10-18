@@ -33,6 +33,7 @@ import { guildName } from './i18n/names.js'
 import ActivityDock from './components/ActivityDock.vue'
 import WalletChip from './components/WalletChip.vue'
 import GlobalSearch from './components/GlobalSearch.vue'
+import MythicFound from './components/MythicFound.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
 import TitleScreen from './components/TitleScreen.vue'
@@ -170,6 +171,8 @@ onMounted(() => {
   on('levelup', d => { if (quiet()) return; cue('levelUp'); push(SKILLS[d.skill].icon, t('toast.levelUp', { level: d.level, skill: SKILLS[d.skill].name }), 'success', 4500) })
   on('herolevel', l => { cue('heroLevel', { notify: [t('toast.heroLevelPlain', { level: l }), t('toast.pointsToSpend')] }); push('laurel-crown', t('toast.heroLevel', { level: l }), 'success', 6000) })
   on('mastery', d => quiet() || push('laurels-trophy', t('toast.mastery', { level: d.level, name: tm({ key: 'common.raw', params: { v: d.name } }) }), 'success', 4500))
+  // Ultra rare finds get their own window (MythicFound); this only rings and notifies
+  on('mythic', d => cue('rareDrop', { notify: [t('mythic.notify', { tier: t('mythic.tiers.' + d.tier) }), ITEMS[d.item].name] }))
   on('rare', d => { cue('rareDrop'); push(ITEMS[d.item].icon, t('toast.rare', { item: ITEMS[d.item].name }), 'rare', 5500) })
   on('achievement', a => { cue('achievement'); push(a.icon, t('toast.achievement', { name: a.name }) + (a.gold ? ` · +${fmt(a.gold)} ${t('common.gold')}` : '') + (cosmeticsForAch(a.id) ? ` · ${t('cosmetics.unlockedToast')}` : ''), 'success', 5500) })
   on('elite', e => { cue('elite'); push(e.monster.icon, t('toast.elite', { name: t('fighting.eliteName', { kind: t(`fighting.elites.${e.kind}`), name: e.monster.name }) }), 'rare', 5000) })
@@ -324,6 +327,7 @@ function startAdventure() {
           </button>
           <Menu ref="menu" :model="menuItems" popup />
           <GlobalSearch v-model="searching" />
+          <MythicFound />
           <Dialog v-model:visible="showKeys" modal dismissableMask :header="$t('keys.title')" :style="{ width: 'min(380px, calc(100vw - 24px))' }">
             <div v-for="[k, what] in SHORTCUTS" :key="k" class="kv"><span>{{ keyLabel(what) }}</span><kbd class="key">{{ k }}</kbd></div>
           </Dialog>

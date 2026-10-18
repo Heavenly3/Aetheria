@@ -8,6 +8,7 @@ import { GRACEFUL } from './extras.js'
 import { WEEKLY_BOSSES } from './weekly.js'
 import { EXPEDITIONS } from './tavern.js'
 import { HEISTS, STOLEN } from './thieving.js'
+import { MYTHIC_DROPS } from './mythics.js'
 
 /*
   Where an item comes from: the skill actions that make or find it, the creatures, bosses and
@@ -64,6 +65,7 @@ function build() {
   for (const s of SLAYER_SHOP) for (const id of s.item ? [s.item] : Object.keys(s.items || {})) add(id, { kind: 'slayerShop', price: s.cost })
   for (const s of TOWER_SHOP) for (const id of s.item ? [s.item] : Object.keys(s.items || {})) add(id, { kind: 'towerShop', price: s.cost })
   for (const e of EXPEDITIONS) for (const l of e.loot) add(l.item, { kind: 'expedition', expedition: e, chance: l.chance })
+  for (const d of MYTHIC_DROPS) add(d.item, { kind: 'mythic', drop: d, chance: d.chance })
   for (const [chest, ids] of Object.entries(CHEST_HOLDS)) for (const id of new Set(ids)) add(id, { kind: 'chest', chest })
 
   // The same find on many actions of one skill (a gem from any rock) becomes a single row
@@ -82,7 +84,7 @@ function build() {
   for (const list of map.values()) list.sort((a, b) => KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind) || (b.chance ?? 1) - (a.chance ?? 1))
   return map
 }
-const KIND_ORDER = ['action', 'anyAction', 'burnt', 'crop', 'cross', 'harvest', 'building', 'stolen', 'heist', 'grace', 'shop', 'slayerShop', 'towerShop', 'monster', 'dungeon', 'boss', 'echo', 'weekly', 'expedition', 'chest']
+const KIND_ORDER = ['action', 'anyAction', 'burnt', 'crop', 'cross', 'harvest', 'building', 'stolen', 'heist', 'grace', 'shop', 'slayerShop', 'towerShop', 'monster', 'dungeon', 'boss', 'echo', 'weekly', 'expedition', 'chest', 'mythic']
 
 export function sourcesOf(id) {
   index ||= build()

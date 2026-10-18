@@ -13,6 +13,8 @@ import { itemCategory, usesOf } from '../game/data/categories.js'
 import { fmt, fmtClock } from '../game/format.js'
 import SetBonuses from '../components/SetBonuses.vue'
 import ItemSources from '../components/ItemSources.vue'
+import { MYTHIC_TIERS } from '../game/data/mythics.js'
+import { modText } from '../i18n/mods.js'
 import ItemCompare from '../components/ItemCompare.vue'
 import InventoryGrid from '../components/InventoryGrid.vue'
 import ItemTile from '../components/ItemTile.vue'
@@ -76,7 +78,8 @@ const sellAtShop = () => router.push({ path: '/shop', query: { sell: selected.va
               <span v-if="it.slot" class="tag">{{ SLOTS[it.slot].name }}</span>
               <span v-if="it.type === 'tool'" class="tag">{{ $t('hero.toolTier', { tool: TOOL_TYPES[it.toolType].name, n: it.tier }) }}</span>
               <span v-if="it.twoHanded" class="tag">{{ $t('inventory.twoHanded') }}</span>
-              <span v-if="it.rare" class="tag gold">{{ $t('inventory.rare') }}</span>
+              <span v-if="it.myth" class="tag myth-tag" :style="{ '--m': MYTHIC_TIERS[it.myth].color }">{{ $t('mythic.tiers.' + it.myth) }}</span>
+              <span v-else-if="it.rare" class="tag gold">{{ $t('inventory.rare') }}</span>
             </div>
           </div>
         </div>
@@ -93,6 +96,10 @@ const sellAtShop = () => router.push({ path: '/shop', query: { sell: selected.va
         </template>
         <div v-for="(l, sk) in it.req || {}" :key="sk" class="kv"><span>{{ $t('inventory.requires') }}</span><b :class="G.level(sk) >= l ? 'ok-text' : 'bad-text'">{{ SKILLS[sk].name }} {{ l }}</b></div>
         <p v-if="it.desc" class="small muted">{{ it.desc }}</p>
+        <div v-if="it.myth && it.mods" class="myth-box" :style="{ '--m': MYTHIC_TIERS[it.myth].color }">
+          <div v-for="(v, k) in it.mods" :key="k">{{ modText(k, v) }}</div>
+          <div v-if="it.type === 'charm'" class="small faint">{{ $t('mythic.charmTip') }}</div>
+        </div>
 
         <ItemCompare v-if="comparable" :id="selected" />
         <SetBonuses v-if="SET_OF[selected]" :set="SET_OF[selected]" pieces style="margin-top:10px" />
@@ -146,6 +153,8 @@ const sellAtShop = () => router.push({ path: '/shop', query: { sell: selected.va
 .inv-layout { display: grid; grid-template-columns: 1fr 360px; gap: 18px; align-items: start; }
 .detail { position: sticky; top: 90px; max-height: calc(100vh - 110px); overflow-y: auto; }
 .detail-name { font-family: var(--font-display); font-size: 20px; line-height: 1.15; }
+.myth-tag { color: var(--m); border-color: color-mix(in srgb, var(--m) 50%, transparent); background: color-mix(in srgb, var(--m) 12%, transparent); }
+.myth-box { margin-top: 10px; padding: 8px 12px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--m) 45%, transparent); background: color-mix(in srgb, var(--m) 8%, transparent); color: var(--ink); font-size: 13.5px; }
 .uses { margin-top: 12px; }
 .uses-title { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .use-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 13.5px; }

@@ -31,6 +31,7 @@ import { realm, realmState } from './realm.js'
 import { unlocks, unlocksState } from './unlocks.js'
 import { echoes } from './echoes.js'
 import { records, recordsState } from './records.js'
+import { mythics, mythicsState } from './mythics.js'
 import { writeBackup } from './backup.js'
 import { FRAIL_HP } from './data/trials.js'
 import { ECHOES } from './data/echoes.js'
@@ -142,6 +143,7 @@ export function newState(profile = {}) {
     ...realmState(),
     ...unlocksState(),
     ...recordsState(),
+    ...mythicsState(),
     ...churchState(),
     ...thiefState(),
     ...festivalsState(),
@@ -499,7 +501,7 @@ export const G = {
     return v
   },
   modNow(key) {
-    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key) + this.echoMods(key) + this.trialMods(key)
+    let v = (ROLES[this.s.role]?.bonus[key] || 0) + this.extraMods(key) + this.petMods(key) + this.ascensionMods(key) + this.setMods(key) + this.bestiaryMods(key) + this.festivalMods(key) + this.omenMods(key) + this.weatherMods(key) + this.streakMods(key) + this.guildMods(key) + this.codexMods(key) + this.crownMods(key) + this.techniqueMods(key) + this.echoMods(key) + this.trialMods(key) + this.mythicMods(key)
     for (const [a, per] of ATTR_BY_MOD[key] || []) v += per * this.attr(a)
     const tal = this.s.hero.talents
     for (const tt of TALENTS_BY_MOD[key] || []) if (tal[tt.id]) v += tt.per * tal[tt.id]
@@ -943,6 +945,8 @@ export const G = {
         if (e.chance < 0.02) { this.log(ITEMS[e.item].icon, 'log.found', { item: '@item:' + e.item }); this.emit('rare', { item: e.item, n }) }
       }
     })
+    const myth = this.mythicAction(skill, a.time)
+    if (myth.length) bonus = '@item:' + myth[0]
     xp = this.techniqueAfter(skill, a, xp, double)
     this.addXp(skill, xp)
     gain ||= msg('gain.xp', { n: Math.round(xp * this.xpMult(skill)) })
@@ -1064,6 +1068,8 @@ export const G = {
     // Now and then a harvest turns up a pouch of seeds
     if (Math.random() < SEED_POUCH_CHANCE * (1 + this.mod('loot'))) this.addItem('seed_pouch', 1)
     this.rollSkillPet('farming')
+    // A harvest rolls like a few actions, as crops take minutes to grow
+    this.mythicAction('farming', 12)
     this.omenAction(3)
     this.s.farm.plots[i] = null
     if (replant && this.qty(c.id + '_seed') > 0 && this.level('farming') >= c.lvl) this.plant(i, c.id)
@@ -1346,6 +1352,7 @@ export const G = {
         }
       }
     })
+    for (const id of this.mythicKill(m, act)) loot.push({ item: id, n: 1 })
     const task = st.slayer.task
     let taskDone = false
     if (task && task.monster === m.id) {
@@ -1652,6 +1659,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records, mythics)
 
 export { SKILLS, ITEMS }

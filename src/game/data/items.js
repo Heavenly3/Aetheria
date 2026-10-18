@@ -375,6 +375,41 @@ HIDES.forEach(h => {
 })
 def('dhide_coif', { icon: 'hood', type: 'equip', slot: 'head', style: 'ranged', value: 600, tint: '#3aa86a', stats: { def: 15, rAtk: 7 }, req: { ranged: 40 } })
 
+/* ---------------- Mythic finds ---------------- */
+// Ultra rare finds, far beyond anything that can be made (where and how often: data/mythics.js).
+// myth: epic, legendary or mythic · mods: bonuses while worn, or while in the bag for charms
+const myth = (id, tier, d) => def(id, { myth: tier, rare: true, hasDesc: true, req: {}, ...d })
+const ALL_ATK = n => ({ atk: n, str: n, rAtk: n, mAtk: n })
+// Epic tools: a tier no smith can reach
+myth('worldheart_pickaxe', 'epic', { icon: 'mining', type: 'tool', toolType: 'pickaxe', tier: 10, value: 250000, tint: '#c77dff', mods: { 'speed.mining': 0.3, 'xp.mining': 0.3 } })
+myth('evergreen_axe', 'epic', { icon: 'wood-axe', type: 'tool', toolType: 'axe', tier: 10, value: 250000, tint: '#7ee08a', mods: { 'speed.woodcutting': 0.3, 'xp.woodcutting': 0.3 } })
+myth('moontide_rod', 'epic', { icon: 'fishing-pole', type: 'tool', toolType: 'rod', tier: 10, value: 250000, tint: '#8fd0ff', mods: { 'speed.fishing': 0.3, 'xp.fishing': 0.3, fishLuck: 0.5 } })
+myth('golden_harvest_sickle', 'epic', { icon: 'sickle', type: 'tool', toolType: 'sickle', tier: 10, value: 250000, tint: '#ffd36e', mods: { farmSpeed: 0.3, farmYield: 2, 'xp.farming': 0.3 } })
+// Epic charms: they work from the bag
+myth('forgefather_ember', 'epic', { icon: 'anvil-impact', type: 'charm', value: 200000, tint: '#ff8a3c', mods: { 'xp.smithing': 0.5, 'speed.smithing': 0.25 } })
+myth('eternal_hearth', 'epic', { icon: 'cooking-pot', type: 'charm', value: 200000, tint: '#ffb347', mods: { 'xp.cooking': 0.5, 'speed.cooking': 0.25 } })
+myth('weavers_needle', 'epic', { icon: 'sewing-needle', type: 'charm', value: 200000, tint: '#e0a0ff', mods: { 'xp.crafting': 0.5, 'speed.crafting': 0.25 } })
+myth('windsong_feather', 'epic', { icon: 'feather', type: 'charm', value: 200000, tint: '#9fe8d0', mods: { 'xp.fletching': 0.5, 'speed.fletching': 0.25 } })
+myth('philosophers_flask', 'epic', { icon: 'bubbling-flask', type: 'charm', value: 200000, tint: '#7dffb0', mods: { 'xp.herblore': 0.5, 'speed.herblore': 0.25 } })
+myth('primordial_rune', 'epic', { icon: 'rune-stone', type: 'charm', value: 200000, tint: '#b8c8ff', mods: { 'xp.runecrafting': 0.5, 'speed.runecrafting': 0.25 } })
+myth('undying_flame', 'epic', { icon: 'flame', type: 'charm', value: 200000, tint: '#ff5a3c', mods: { 'xp.firemaking': 0.5, 'speed.firemaking': 0.25 } })
+myth('shadow_kings_mask', 'epic', { icon: 'hooded-figure', type: 'charm', value: 200000, tint: '#9d79bc', mods: { 'xp.thieving': 0.5, 'speed.thieving': 0.25, thieving: 0.15 } })
+myth('zephyr_sigil', 'epic', { icon: 'sprint', type: 'charm', value: 200000, tint: '#4ecdc4', mods: { 'xp.agility': 0.5, 'speed.agility': 0.25 } })
+myth('saints_relic', 'epic', { icon: 'holy-symbol', type: 'charm', value: 200000, tint: '#fff2b0', mods: { 'xp.prayer': 0.5, 'speed.prayer': 0.25 } })
+// Legendary
+myth('hourglass_of_ages', 'legendary', { icon: 'hourglass', type: 'charm', value: 2000000, tint: '#ffd36e', mods: { speed: 0.25 } })
+myth('forgotten_kings_crown', 'legendary', { icon: 'crown-of-thorns', type: 'equip', slot: 'head', value: 2000000, tint: '#ffd36e', stats: { def: 90, ...ALL_ATK(40) }, mods: { maxHp: 40 } })
+myth('starfall_cloak', 'legendary', { icon: 'cape-armor', type: 'equip', slot: 'cape', value: 2000000, tint: '#a8b8ff', stats: { def: 35, ...ALL_ATK(35), mDmg: 0.1 }, mods: { crit: 0.1 } })
+myth('titans_aegis', 'legendary', { icon: 'shield-reflect', type: 'equip', slot: 'shield', value: 2000000, tint: '#e8d8a8', stats: { def: 190 }, mods: { reduction: 0.1, block: 0.15 } })
+myth('eternal_dragonplate', 'legendary', { icon: 'chest-armor', type: 'equip', slot: 'body', value: 2000000, tint: '#ff6a3c', stats: { def: 180, ...ALL_ATK(20) }, mods: { reduction: 0.1, maxHp: 40 } })
+myth('voidwalker_greaves', 'legendary', { icon: 'armored-pants', type: 'equip', slot: 'legs', value: 2000000, tint: '#9b5cff', stats: { def: 120, ...ALL_ATK(15) }, mods: { dodge: 0.1, atkSpeed: 0.1 } })
+// Mythic: one in a million
+myth('doomsday_edge', 'mythic', { icon: 'energy-sword', type: 'equip', slot: 'weapon', style: 'melee', value: 50000000, tint: '#ff4d6d', stats: { atk: 260, str: 250 }, mods: { meleeDmg: 0.5, crit: 0.15, critDmg: 0.5 } })
+myth('horizon_breaker', 'mythic', { icon: 'high-shot', type: 'equip', slot: 'weapon', style: 'ranged', twoHanded: true, value: 50000000, tint: '#ff4d6d', stats: { rAtk: 260, rStr: 80 }, mods: { rangedDmg: 0.5, crit: 0.2, critDmg: 0.4 } })
+myth('first_dawn_staff', 'mythic', { icon: 'sun', type: 'equip', slot: 'weapon', style: 'magic', twoHanded: true, value: 50000000, tint: '#ff4d6d', stats: { mAtk: 250, mDmg: 1 }, mods: { magicDmg: 0.5, crit: 0.15, critDmg: 0.4 } })
+myth('amulet_of_endless_fortune', 'mythic', { icon: 'eye-of-horus', type: 'equip', slot: 'amulet', value: 50000000, tint: '#ff4d6d', stats: { def: 30, ...ALL_ATK(30) }, mods: { loot: 1, gold: 1, double: 0.25, petChance: 1 } })
+myth('heart_of_aetheria', 'mythic', { icon: 'cosmic-egg', type: 'charm', value: 50000000, tint: '#ff4d6d', mods: { xp: 1, mastery: 1 } })
+
 // Attach localized names: an explicit `name` (key or function) or the default "items.<id>" key
 Object.values(ITEMS).forEach(it => {
   const n = it.name

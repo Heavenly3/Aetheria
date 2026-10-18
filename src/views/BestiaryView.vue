@@ -16,13 +16,14 @@ import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import CodexItems from '../components/CodexItems.vue'
 import CodexMasterworks from '../components/CodexMasterworks.vue'
+import CodexMythics from '../components/CodexMythics.vue'
 
 const { t } = useI18n()
 // The compendium: creatures, every item ever held, and masterworks; the last tab is remembered
 const TAB_KEY = 'aetheria-codex-tab'
 const tab = ref((() => { try { return localStorage.getItem(TAB_KEY) || 'beasts' } catch { return 'beasts' } })())
-const tabs = computed(() => ['beasts', 'items', 'masterworks'].map(v => {
-  const n = v === 'beasts' ? G.claimableGroups() : v === 'items' ? G.codexClaimable() - G.masterworksClaimable() : G.masterworksClaimable()
+const tabs = computed(() => ['beasts', 'items', 'masterworks', 'mythics'].map(v => {
+  const n = v === 'beasts' ? G.claimableGroups() : v === 'items' ? G.codexClaimable() - G.masterworksClaimable() : v === 'masterworks' ? G.masterworksClaimable() : 0
   return { value: v, label: t(`codex.tabs.${v}`) + (n ? ` (${n})` : '') }
 }))
 function setTab(v) { tab.value = v; try { localStorage.setItem(TAB_KEY, v) } catch { /* storage unavailable */ } }
@@ -48,6 +49,7 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
     <SelectButton :modelValue="tab" @update:modelValue="setTab" :options="tabs" optionLabel="label" optionValue="value" :allowEmpty="false" class="page-tabs" />
     <CodexItems v-if="tab === 'items'" />
     <CodexMasterworks v-else-if="tab === 'masterworks'" />
+    <CodexMythics v-else-if="tab === 'mythics'" />
     <template v-else>
     <div class="panel pad" style="margin-bottom:20px">
       <div class="row wrap">

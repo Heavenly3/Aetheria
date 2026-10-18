@@ -20,7 +20,7 @@ export const CATEGORY_ICON = {
 }
 
 const SLOT_CAT = { weapon: 'weapons', head: 'armour', body: 'armour', legs: 'armour', shield: 'armour', amulet: 'accessories', cape: 'accessories', ammo: 'ammo' }
-const TYPE_CAT = { tool: 'tools', food: 'food', drink: 'food', potion: 'potions', rune: 'runes', seed: 'seeds', chest: 'chests', junk: 'junk' }
+const TYPE_CAT = { tool: 'tools', food: 'food', drink: 'food', potion: 'potions', rune: 'runes', seed: 'seeds', chest: 'chests', junk: 'junk', charm: 'special' }
 const HERBS = new Set(CROPS.filter(c => c.herb).map(c => c.id))
 const CROP_IDS = new Set(CROPS.map(c => c.id))
 const GEMS = new Set(['sapphire', 'emerald', 'ruby', 'diamond'])

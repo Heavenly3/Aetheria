@@ -12,7 +12,7 @@ import { TRIALS, TRIAL_MAP, TRIAL_SHARDS } from './data/trials.js'
 const START_SKILLS = ['mining', 'woodcutting', 'fishing', 'farming', 'thieving', 'smithing', 'cooking', 'firemaking', 'fletching', 'crafting', 'herblore', 'runecrafting', 'agility', 'prayer']
 
 // What survives an ascension; everything else goes back to a fresh character
-const KEPT = ['created', 'name', 'role', 'avatar', 'tint', 'difficulty', 'pets', 'achievements', 'stats', 'history', 'settings', 'daily', 'ascension', 'bestiary', 'cosmetics', 'festival', 'omens', 'companions', 'weekly', 'relicForge', 'journal', 'abilities', 'guilds', 'codex', 'church', 'thief', 'log', 'legacy', 'routines', 'unlocks', 'records']
+const KEPT = ['created', 'name', 'role', 'avatar', 'tint', 'difficulty', 'pets', 'achievements', 'stats', 'history', 'settings', 'daily', 'ascension', 'bestiary', 'cosmetics', 'festival', 'omens', 'companions', 'weekly', 'relicForge', 'journal', 'abilities', 'guilds', 'codex', 'church', 'thief', 'log', 'legacy', 'routines', 'unlocks', 'records', 'mythics']
 
 export const ascensionState = () => ({
   // trial: the rule this life is lived under · trials: how many times each was completed
@@ -77,6 +77,7 @@ export const ascension = {
     const guildTasks = this.guildSnapshot()
     const kept = {}
     for (const k of KEPT) kept[k] = JSON.parse(JSON.stringify(this.s[k] ?? null))
+    const myths = this.mythicsHeld()
     const fresh = this.freshState({ name: kept.name, role: kept.role, avatar: kept.avatar, tint: kept.tint, difficulty: kept.difficulty })
     for (const k of Object.keys(fresh)) this.s[k] = k in kept && kept[k] !== null ? kept[k] : fresh[k]
     const asc = this.s.ascension
@@ -90,6 +91,7 @@ export const ascension = {
     }
     asc.trial = TRIAL_MAP[next] ? next : null
     this.setupCharacter()
+    this.returnMythics(myths)
     const lvl = Math.floor(this.ascensionMods('startSkills'))
     if (lvl > 1) START_SKILLS.forEach(sk => { this.s.skills[sk].xp = Math.max(this.s.skills[sk].xp, XP_TABLE[lvl]) })
     this.s.gold += Math.floor(this.ascensionMods('startGold'))

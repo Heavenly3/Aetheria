@@ -1,6 +1,7 @@
 import { named } from '../../i18n/bind.js'
 import { CHAPTERS } from './journal.js'
 import { ENDINGS } from './crown.js'
+import { ITEMS } from './items.js'
 import { t, intlLocale } from '../../i18n/index.js'
 
 /* ---------------- Quests ---------------- */
@@ -112,6 +113,9 @@ const ach = (id, group, n, icon, check, gold) => {
   return named(a, () => t(`ach.${group}.name`, { n: num() }), () => t(`ach.${group}.desc`, { n: num() }))
 }
 const tiers = (group, list, icon, check) => list.map(([n, g]) => ach(`${group}_${n}`, group, n, icon, G => check(G, n), g))
+// The ultra rare finds of one tier
+const MYTHIC_IDS_BY = tier => Object.keys(ITEMS).filter(id => ITEMS[id].myth === tier)
+
 export const ACHIEVEMENTS = [
   ...tiers('total', [[50, 100], [100, 300], [250, 1000], [500, 5000], [1000, 25000], [1500, 100000]], 'star-medal', (G, n) => G.totalLevel() >= n),
   ...tiers('skill', [[10, 100], [50, 3000], [99, 50000]], 'laurels-trophy', (G, n) => G.maxSkillLevel() >= n),
@@ -204,6 +208,11 @@ export const ACHIEVEMENTS = [
   ach('all_endings', 'allEndings', ENDINGS.length, 'crown', G => ENDINGS.every(e => G.s.legacy?.endings?.[e.id]), 250000),
   ach('all_echoes', 'allEchoes', 7, 'trophy', G => G.echoesBeaten() >= 7, 300000),
   ach('all_trials', 'allTrials', 4, 'laurels-trophy', G => G.trialsDone() >= 4, 300000),
+  // Ultra rare finds
+  ach('myth_first', 'mythFirst', 1, 'sparkles', G => G.mythicsFound() >= 1, 25000),
+  ach('myth_legendary', 'mythLegendary', 1, 'sparkles', G => MYTHIC_IDS_BY('legendary').some(id => G.mythicFound(id)), 100000),
+  ach('myth_mythic', 'mythMythic', 1, 'cosmic-egg', G => MYTHIC_IDS_BY('mythic').some(id => G.mythicFound(id)), 1000000),
+  ach('myth_all', 'mythAll', 25, 'cosmic-egg', G => G.mythicsFound() >= Object.values(ITEMS).filter(it => it.myth).length, 10000000),
   ach('fest_stories', 'festStories', 12, 'quill-ink', G => ['spring', 'summer', 'harvest', 'winter'].every(f => [1, 2, 3].every(i => G.chapterUnlocked(`fest_${f}_${i}`))), 100000),
 ]
 
