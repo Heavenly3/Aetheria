@@ -157,7 +157,7 @@ export const CROPS = [
   { id: 'irit',        icon: 'herbs-bundle', lvl: 44, xp: 230, yield: [2, 4], value: 95,  tint: '#c4b13a', seedValue: 300, herb: true },
   { id: 'kwuarm',      icon: 'herbs-bundle', lvl: 56, xp: 320, yield: [2, 4], value: 130, tint: '#7a9e3a', seedValue: 420, herb: true },
   { id: 'snapdragon',  icon: 'herbs-bundle', lvl: 62, xp: 420, yield: [2, 4], value: 180, tint: '#e0703a', seedValue: 600, herb: true },
-  { id: 'torstol',     icon: 'herbs-bundle', lvl: 85, xp: 700, yield: [2, 4], value: 350, tint: '#b04ae0', seedValue: 1200, herb: true },
+  { id: 'torstol',     icon: 'herbs-bundle', lvl: 80, xp: 700, yield: [2, 4], value: 350, tint: '#b04ae0', seedValue: 1200, herb: true },
   // Hybrids: only grown from seeds got by crossing two parent crops side by side (see data/farm.js)
   { id: 'moonroot',    icon: 'carrot',       lvl: 20, xp: 150, yield: [2, 4], value: 45,  tint: '#9fc4ff', seedValue: 150, hybrid: true },
   { id: 'emberbloom',  icon: 'fire',         lvl: 30, xp: 210, yield: [2, 4], value: 70,  tint: '#ff7a3a', seedValue: 220, hybrid: true },
@@ -169,11 +169,11 @@ export const CROPS = [
   { id: 'bloomflower', icon: 'butterfly',    lvl: 1,  xp: 60,  yield: [1, 3], value: 20,  tint: '#f08fb8', seedValue: 0, festival: true },
 ]
 // Real-time growth per plot (seconds)
-const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1800, torstol: 2700, moonroot: 900, emberbloom: 1000, sunberry: 1200, starpetal: 2400, aether_lotus: 3600, bloomflower: 480 }
+const GROW = { potato: 180, flax: 200, onion: 240, guam: 300, tomato: 360, marrentill: 420, tarromin: 540, harralander: 720, strawberry: 600, ranarr: 900, irit: 1200, kwuarm: 1500, snapdragon: 1500, torstol: 2700, moonroot: 900, emberbloom: 1000, sunberry: 1200, starpetal: 2400, aether_lotus: 3600, bloomflower: 480 }
 CROPS.forEach(c => {
   c.grow = GROW[c.id]
-  // Higher crops grow slowly, so their harvest pays more per point of base XP
-  c.harvestXp = Math.round(c.xp * (3 + c.lvl / 10))
+  // Higher crops grow slowly, so their harvest pays more per point of base XP, and more again past level 50
+  c.harvestXp = Math.round(c.xp * (3 + c.lvl / 10) * (1 + Math.max(0, c.lvl - 50) / 40))
   named(c, `crops.${c.id}`)
   def(c.id + '_seed', { icon: 'plant-seed', value: c.seedValue, tint: c.tint, type: 'seed', festival: c.festival, name: () => t('tpl.seed', { crop: t(`crops.${c.id}`) }) })
   def(c.id, { icon: c.icon, value: c.value, tint: c.tint, name: `crops.${c.id}`, festival: c.festival, ...(c.food ? { type: 'food', heal: c.food } : {}) })
@@ -221,10 +221,10 @@ export const RUNES = [
   { id: 'earth_rune',  lvl: 9,  xp: 6.5,  value: 5,   tint: '#8b6b3a', icon: 'earth-crack' },
   { id: 'fire_rune',   lvl: 14, xp: 7,    value: 6,   tint: '#e8572a', icon: 'fire' },
   { id: 'chaos_rune',  lvl: 35, xp: 12,  value: 40,  tint: '#e0a030', icon: 'magic-swirl' },
-  { id: 'nature_rune', lvl: 44, xp: 16,   value: 90,  tint: '#3aa05a', icon: 'sprout' },
-  { id: 'death_rune',  lvl: 65, xp: 27,   value: 180, tint: '#d0d0d0', icon: 'death-skull' },
-  { id: 'blood_rune',  lvl: 77, xp: 42,   value: 300, tint: '#c0102a', icon: 'blood' },
-  { id: 'soul_rune',   lvl: 90, xp: 60,   value: 420, tint: '#b8c8ff', icon: 'spectre' },
+  { id: 'nature_rune', lvl: 44, xp: 18,   value: 90,  tint: '#3aa05a', icon: 'sprout' },
+  { id: 'death_rune',  lvl: 65, xp: 38,   value: 180, tint: '#d0d0d0', icon: 'death-skull' },
+  { id: 'blood_rune',  lvl: 77, xp: 64,   value: 300, tint: '#c0102a', icon: 'blood' },
+  { id: 'soul_rune',   lvl: 90, xp: 95,   value: 420, tint: '#b8c8ff', icon: 'spectre' },
 ]
 RUNES.forEach(r => def(r.id, { icon: r.icon, value: r.value, tint: r.tint, type: 'rune' }))
 

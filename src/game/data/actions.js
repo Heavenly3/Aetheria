@@ -27,8 +27,8 @@ const GEM_DROPS = [
 ]
 ;[
   ['copper_ore', 1, 17.5, 3, 1], ['tin_ore', 1, 17.5, 3, 1], ['rune_essence', 1, 5, 2.4, 1], ['iron_ore', 15, 35, 3.5, 1],
-  ['coal', 30, 50, 4.5, 2], ['gold_ore', 40, 65, 5, 2], ['mithril_ore', 55, 80, 5.5, 3], ['adamantite_ore', 70, 95, 6.5, 4],
-  ['runite_ore', 85, 145, 8, 5], ['aetherium_ore', 92, 195, 9, 6],
+  ['coal', 30, 50, 4.5, 2], ['gold_ore', 40, 65, 5, 2], ['mithril_ore', 55, 100, 5.5, 3], ['adamantite_ore', 70, 140, 6.5, 4],
+  ['runite_ore', 85, 215, 8, 5], ['aetherium_ore', 92, 290, 9, 6],
 ].forEach(([id, lvl, xp, time, tier]) => add('mining', {
   id, nameKey: `nodes.${id}`, icon: ITEMS[id].icon, tint: ITEMS[id].tint, lvl, xp, time, out: { [id]: 1 }, extra: GEM_DROPS, tool: { type: 'pickaxe', tier },
 }))
@@ -224,7 +224,7 @@ RUNES.forEach(r => add('runecrafting', {
 }))
 
 /* ---------- Agility ---------- */
-;[[1, 100, 30], [15, 180, 34], [30, 310, 38], [45, 500, 42], [60, 740, 48], [75, 1080, 54], [90, 1450, 58]].forEach(([lvl, xp, time], i) => add('agility', {
+;[[1, 100, 30], [15, 180, 34], [30, 310, 38], [45, 500, 42], [60, 950, 48], [75, 1500, 54], [90, 2200, 58]].forEach(([lvl, xp, time], i) => add('agility', {
   id: 'course_' + i, nameKey: `courses.${i}`, icon: i < 2 ? 'run' : 'sprint', tint: '#4ecdc4', lvl, xp, time,
   extra: [{ item: 'mark_of_grace', chance: 0.04 + i * 0.01, qty: [1, 1] }, { item: 'coin_pouch', chance: 0.02 + i * 0.004, qty: [1, 1] }, { item: 'bird_nest', chance: 0.012, qty: [1, 1] }],
 }))
