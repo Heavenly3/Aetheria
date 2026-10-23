@@ -81,3 +81,16 @@ describe('fighting', () => {
     expect(state.tower.tokens).toBeGreaterThan(0)
   })
 })
+
+describe('spell runes', () => {
+  it('cost one rune of the element and one catalyst, and a staff channels the air', async () => {
+    const { SPELLS } = await import('../src/game/data/combat.js')
+    for (const sp of SPELLS) expect(Object.values(sp.runes).reduce((a, b) => a + b, 0), sp.id).toBe(2)
+    newHero({ role: 'mage' })
+    const wind = SPELLS.find(s => s.id === 'wind_strike')
+    expect(G.staffInHand()).toBe(true)
+    expect(G.spellRunes(wind)).toEqual({ mind_rune: 1 })
+    G.unequip('weapon')
+    expect(G.spellRunes(wind)).toEqual({ air_rune: 1, mind_rune: 1 })
+  })
+})

@@ -1097,6 +1097,13 @@ export const G = {
   stance() { return COMBAT_STYLES[this.s.combatStyle] || COMBAT_STYLES.attack },
   styleType() { return this.stance().type },
   currentSpell() { return SPELLS.find(sp => sp.id === this.s.spell) || SPELLS[0] },
+  // A staff channels the air: with one in hand, spells need no air runes
+  staffInHand() { return ITEMS[this.s.equipment.weapon]?.style === 'magic' },
+  spellRunes(sp = this.currentSpell()) {
+    if (!this.staffInHand() || !sp.runes.air_rune) return sp.runes
+    const { air_rune, ...rest } = sp.runes
+    return rest
+  },
   onTask(m) { return this.s.slayer.task && m && this.s.slayer.task.monster === m.id },
   areaUnlocked(area) { return !area.reqQuest || this.questDone(area.reqQuest) },
   // Apply the difficulty multiplier to a monster's stats
@@ -1163,7 +1170,7 @@ export const G = {
     if (type === 'magic') {
       const sp = this.currentSpell()
       if (this.level('magic') < sp.lvl) return msg('msg.spellLevel', { lvl: sp.lvl, spell: sp.name })
-      if (!this.hasItems(sp.runes)) return msg('msg.noRunes', { spell: sp.name })
+      if (!this.hasItems(this.spellRunes(sp))) return msg('msg.noRunes', { spell: sp.name })
     }
     return null
   },
@@ -1261,7 +1268,7 @@ export const G = {
       if (blocker) return this.stop(blocker)
       const type = this.styleType()
       if (type === 'ranged' && Math.random() >= this.mod('ammoSave')) this.removeItem(this.s.equipment.ammo, 1)
-      if (type === 'magic' && Math.random() >= this.mod('runeSave')) Object.entries(this.currentSpell().runes).forEach(([r, q]) => this.removeItem(r, q))
+      if (type === 'magic' && Math.random() >= this.mod('runeSave')) Object.entries(this.spellRunes()).forEach(([r, q]) => this.removeItem(r, q))
       const r = this.heroTurn(act, m, ps, mr)
       if (r === 'end') return
       if (r === 'kill') return this.killMonster(m)

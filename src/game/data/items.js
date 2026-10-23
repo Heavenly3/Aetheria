@@ -215,12 +215,12 @@ BREWS.forEach(b => def(b.id, { icon: b.icon, value: b.value, tint: b.tint, type:
 
 /* ---------------- Runes ---------------- */
 export const RUNES = [
-  { id: 'air_rune',    lvl: 1,  xp: 5,    value: 4,   tint: '#cfe3f0', icon: 'tornado' },
-  { id: 'mind_rune',   lvl: 2,  xp: 5.5,  value: 4,   tint: '#e0a050', icon: 'all-seeing-eye' },
-  { id: 'water_rune',  lvl: 5,  xp: 6,    value: 5,   tint: '#4a90e2', icon: 'water-drop' },
-  { id: 'earth_rune',  lvl: 9,  xp: 6.5,  value: 5,   tint: '#8b6b3a', icon: 'earth-crack' },
-  { id: 'fire_rune',   lvl: 14, xp: 7,    value: 6,   tint: '#e8572a', icon: 'fire' },
-  { id: 'chaos_rune',  lvl: 35, xp: 12,  value: 40,  tint: '#e0a030', icon: 'magic-swirl' },
+  { id: 'air_rune',    lvl: 1,  xp: 5,    value: 1,   tint: '#cfe3f0', icon: 'tornado' },
+  { id: 'mind_rune',   lvl: 2,  xp: 5.5,  value: 1,   tint: '#e0a050', icon: 'all-seeing-eye' },
+  { id: 'water_rune',  lvl: 5,  xp: 6,    value: 1,   tint: '#4a90e2', icon: 'water-drop' },
+  { id: 'earth_rune',  lvl: 9,  xp: 6.5,  value: 1,   tint: '#8b6b3a', icon: 'earth-crack' },
+  { id: 'fire_rune',   lvl: 14, xp: 7,    value: 1,   tint: '#e8572a', icon: 'fire' },
+  { id: 'chaos_rune',  lvl: 35, xp: 12,  value: 8,  tint: '#e0a030', icon: 'magic-swirl' },
   { id: 'nature_rune', lvl: 44, xp: 18,   value: 90,  tint: '#3aa05a', icon: 'sprout' },
   { id: 'death_rune',  lvl: 65, xp: 38,   value: 180, tint: '#d0d0d0', icon: 'death-skull' },
   { id: 'blood_rune',  lvl: 77, xp: 64,   value: 300, tint: '#c0102a', icon: 'blood' },

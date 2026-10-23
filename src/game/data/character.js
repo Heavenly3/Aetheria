@@ -58,7 +58,7 @@ export const ROLES = {
     attrs: { str: 0, dex: 1, int: 8, vit: 2, wis: 3, luck: 1 },
     bonus: { magicDmg: 0.15, magicAcc: 0.05, 'xp.runecrafting': 0.1, runeSave: 0.1 },
     skills: { magic: 5, runecrafting: 3 },
-    items: { air_rune: 300, mind_rune: 300, water_rune: 100, shrimp: 15 }, equip: ['apprentice_staff'], style: 'magic',
+    items: { mind_rune: 500, water_rune: 150, air_rune: 100, shrimp: 15 }, equip: ['apprentice_staff'], style: 'magic',
   },
   artisan: {
     icon: 'anvil-impact', color: '#e3a64a',

@@ -182,10 +182,11 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
         <Select inputId="spell-select" v-model="state.spell" :options="spells" optionLabel="label" optionValue="value" optionDisabled="disabled" class="w-full" />
         <div class="row wrap">
           <span class="small muted">{{ $t('combat.castCost') }}</span>
-          <span v-for="(q, r) in spell.runes" :key="r" class="row" style="gap:4px">
+          <span v-for="(q, r) in G.spellRunes(spell)" :key="r" class="row" style="gap:4px">
             <ItemTile :item="r" size="xs" /><b class="small tnum" :class="{ 'bad-text': G.qty(r) < q }">{{ q }}</b><span class="faint small">({{ fmt(G.qty(r)) }})</span>
           </span>
         </div>
+        <p v-if="G.staffInHand()" class="small faint" style="margin:0"><i class="pi pi-sparkles" /> {{ $t('combat.staffAir') }}</p>
       </div>
       <div v-if="type === 'ranged'" class="row wrap" style="margin-top:14px">
         <span class="small muted">{{ $t('combat.ammo') }} <HelpTip k="combat.ammo" /></span>

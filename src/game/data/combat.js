@@ -32,22 +32,23 @@ export const stancesOf = type => Object.keys(COMBAT_STYLES).filter(k => COMBAT_S
 
 const spell = (id, lvl, max, runes, xp, el) => named({ id, lvl, max, runes, xp, el }, `spells.${id}`)
 export const SPELLS = [
+  // One rune of the element and one catalyst a cast; a staff channels the air (see engine spellRunes)
   spell('wind_strike',  1,  2,  { air_rune: 1, mind_rune: 1 }, 5.5, 'air'),
-  spell('water_strike', 5,  4,  { air_rune: 1, water_rune: 1, mind_rune: 1 }, 7.5, 'water'),
-  spell('earth_strike', 9,  6,  { air_rune: 1, earth_rune: 2, mind_rune: 1 }, 9.5, 'earth'),
-  spell('fire_strike',  13, 8,  { air_rune: 2, fire_rune: 3, mind_rune: 1 }, 11.5, 'fire'),
-  spell('wind_bolt',    17, 9,  { air_rune: 2, chaos_rune: 1 }, 13.5, 'air'),
-  spell('water_bolt',   23, 10, { air_rune: 2, water_rune: 2, chaos_rune: 1 }, 16.5, 'water'),
-  spell('earth_bolt',   29, 11, { air_rune: 2, earth_rune: 3, chaos_rune: 1 }, 19.5, 'earth'),
-  spell('fire_bolt',    35, 12, { air_rune: 3, fire_rune: 4, chaos_rune: 1 }, 22.5, 'fire'),
-  spell('wind_blast',   41, 13, { air_rune: 3, death_rune: 1 }, 25.5, 'air'),
-  spell('water_blast',  47, 14, { air_rune: 3, water_rune: 3, death_rune: 1 }, 28.5, 'water'),
-  spell('earth_blast',  53, 15, { air_rune: 3, earth_rune: 4, death_rune: 1 }, 31.5, 'earth'),
-  spell('fire_blast',   59, 16, { air_rune: 4, fire_rune: 5, death_rune: 1 }, 34.5, 'fire'),
-  spell('wind_wave',    62, 17, { air_rune: 5, blood_rune: 1 }, 36, 'air'),
-  spell('water_wave',   65, 18, { air_rune: 5, water_rune: 7, blood_rune: 1 }, 37.5, 'water'),
-  spell('earth_wave',   70, 19, { air_rune: 5, earth_rune: 7, blood_rune: 1 }, 40, 'earth'),
-  spell('fire_wave',    75, 20, { air_rune: 5, fire_rune: 7, blood_rune: 1 }, 42.5, 'fire'),
+  spell('water_strike', 5,  4,  { water_rune: 1, mind_rune: 1 }, 7.5, 'water'),
+  spell('earth_strike', 9,  6,  { earth_rune: 1, mind_rune: 1 }, 9.5, 'earth'),
+  spell('fire_strike',  13, 8,  { fire_rune: 1, mind_rune: 1 }, 11.5, 'fire'),
+  spell('wind_bolt',    17, 9,  { air_rune: 1, chaos_rune: 1 }, 13.5, 'air'),
+  spell('water_bolt',   23, 10, { water_rune: 1, chaos_rune: 1 }, 16.5, 'water'),
+  spell('earth_bolt',   29, 11, { earth_rune: 1, chaos_rune: 1 }, 19.5, 'earth'),
+  spell('fire_bolt',    35, 12, { fire_rune: 1, chaos_rune: 1 }, 22.5, 'fire'),
+  spell('wind_blast',   41, 13, { air_rune: 1, death_rune: 1 }, 25.5, 'air'),
+  spell('water_blast',  47, 14, { water_rune: 1, death_rune: 1 }, 28.5, 'water'),
+  spell('earth_blast',  53, 15, { earth_rune: 1, death_rune: 1 }, 31.5, 'earth'),
+  spell('fire_blast',   59, 16, { fire_rune: 1, death_rune: 1 }, 34.5, 'fire'),
+  spell('wind_wave',    62, 17, { air_rune: 1, blood_rune: 1 }, 36, 'air'),
+  spell('water_wave',   65, 18, { water_rune: 1, blood_rune: 1 }, 37.5, 'water'),
+  spell('earth_wave',   70, 19, { earth_rune: 1, blood_rune: 1 }, 40, 'earth'),
+  spell('fire_wave',    75, 20, { fire_rune: 1, blood_rune: 1 }, 42.5, 'fire'),
 ]
 
 const d = (item, chance, a = 1, b = a) => ({ item, chance, qty: [a, b] })
