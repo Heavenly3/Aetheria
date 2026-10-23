@@ -1987,7 +1987,7 @@ export default {
       dragons: "Any dragon",
     },
   },
-  tracker: { title: "Tracking", label: "Objective", readyLabel: "Ready", intro: "Everything you have on the go: story quests, the slayer task, guild contracts, tavern orders and daily tasks. Pick one and you go straight to where it is done.", handIn: "Done: hand it in", ready: "Ready", go: "Go there", missing: "Missing:", more: "and {n} more", all: "Every objective", empty: "Nothing on the go. Start a quest or take a task and it shows up here.", sources: { story: "Story", slayer: "Slayer task", guild: "Guild contract", order: "Tavern order", daily: "Daily task", weekly: "Weekly task" } },
+  tracker: { needLevel: "Needs {skill} {lvl} first: this takes you to train it.", tough: "The creatures that drop it are still tough for you.", title: "Tracking", label: "Objective", readyLabel: "Ready", intro: "Everything you have on the go: story quests, the slayer task, guild contracts, tavern orders and daily tasks. Pick one and you go straight to where it is done.", handIn: "Done: hand it in", ready: "Ready", go: "Go there", missing: "Missing:", more: "and {n} more", all: "Every objective", empty: "Nothing on the go. Start a quest or take a task and it shows up here.", sources: { story: "Story", slayer: "Slayer task", guild: "Guild contract", order: "Tavern order", daily: "Daily task", weekly: "Weekly task" } },
   backup: {
     saveFailed: "Could not save your game: this browser's storage is full or blocked. Download a copy in Settings → Save so nothing is lost.",
     openFailed: "That save could not be opened. If it has automatic backups, you can bring one back from its slot.",

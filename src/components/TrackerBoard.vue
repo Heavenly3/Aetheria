@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ITEMS } from '../game/data/items.js'
+import { SKILLS } from '../game/data/skills.js'
 import { trackedGoals } from '../ui/tracker.js'
 import { goTo } from '../ui/focus.js'
 import { fmt } from '../game/format.js'
@@ -34,10 +35,12 @@ function go(target) {
         <span v-else-if="g.max" class="small muted tnum tr-state">{{ fmt(g.cur) }}/{{ fmt(g.max) }}</span>
         <span class="tr-go" :aria-label="$t('tracker.go')"><i class="pi pi-directions" /></span>
       </button>
+      <div v-if="g.go.level && !g.ready" class="tr-need small faint">{{ $t('tracker.needLevel', { skill: SKILLS[g.go.level.skill].name, lvl: g.go.level.lvl }) }}</div>
+      <div v-else-if="g.go.tough && !g.ready" class="tr-need small faint">{{ $t('tracker.tough') }}</div>
       <div v-if="g.go.need?.length && !g.ready" class="tr-need">
         <span class="small faint">{{ $t('tracker.missing') }}</span>
         <button v-for="n in g.go.need" :key="n.item" class="tr-need-btn small" @click="go(n.go)">
-          <ItemTile :item="n.item" size="xs" :tip="false" /> {{ ITEMS[n.item].name }} <i class="pi pi-angle-right" />
+          <ItemTile :item="n.item" size="xs" :tip="false" /> {{ ITEMS[n.item].name }}<template v-if="n.go.level"> · {{ SKILLS[n.go.level.skill].name }} {{ n.go.level.lvl }}</template> <i class="pi pi-angle-right" />
         </button>
       </div>
     </div>

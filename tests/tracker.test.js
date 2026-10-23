@@ -27,7 +27,10 @@ describe('the tracker', () => {
   it('finds how to get an item: an action the hero can do, with what is missing for it', () => {
     newHero()
     setLevel('smithing', 20)
-    // Too low to mine iron: a creature that drops it
+    // Too low to mine iron, and the creatures that drop it are too strong: train Mining up to it
+    expect(whereToGet('iron_ore')).toMatchObject({ to: '/skill/mining', level: { skill: 'mining', lvl: 15 } })
+    // Strong enough for them: the creature
+    for (const k of ['attack', 'strength', 'defense', 'hitpoints']) setLevel(k, 30)
     expect(whereToGet('iron_ore').focus).toMatch(/^monster:/)
     setLevel('mining', 20)
     const bar = whereToGet('iron_bar')

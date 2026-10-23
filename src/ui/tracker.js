@@ -35,14 +35,23 @@ export function whereToHunt() {
   return best ? whereToKill(best.id) : { to: '/combat' }
 }
 // The best action of a skill the hero can do right now (or the screen, when none)
-export function whereToTrain(skill) {
+export function whereToTrain(skill, depth = 0) {
   if (skill === 'farming') return { to: '/skill/farming' }
   const list = (ACTIONS[skill] || []).filter(a => !a.festival && G.level(skill) >= a.lvl && G.hasTool(a))
   const ready = list.filter(a => G.canDo(skill, a))
   const best = (ready.length ? ready : list).sort((a, b) => xph(skill, b) - xph(skill, a))[0]
   if (!SKILLS[skill] || ['attack', 'strength', 'defense', 'ranged', 'magic', 'hitpoints'].includes(skill)) return { to: '/combat' }
   if (skill === 'slayer') return { to: '/slayer' }
-  return best ? { to: '/skill/' + skill, focus: 'action:' + best.id } : { to: '/skill/' + skill }
+  if (!best) return { to: '/skill/' + skill }
+  const go = { to: '/skill/' + skill, focus: 'action:' + best.id }
+  // Nothing ready to make: the cheapest action, and what is missing for it
+  if (!ready.length) {
+    const cheap = list.sort((a, b) => a.lvl - b.lvl)[0]
+    go.focus = 'action:' + cheap.id
+    const missing = Object.entries(cheap.in || {}).filter(([k, q]) => G.qty(k) < q).map(([k]) => k)
+    if (missing.length && depth === 0) go.need = missing.map(k => ({ item: k, go: whereToGet(k, 1) }))
+  }
+  return go
 }
 // How to get an item: an action the hero can do, else a creature they can reach, the shop, a crop,
 // and failing that the first maker or dropper there is
@@ -62,13 +71,20 @@ export function whereToGet(id, depth = 0) {
   }
   const crop = CROPS.find(c => c.id === id && !c.festival)
   if (crop && G.level('farming') >= crop.lvl) return { to: '/skill/farming', focus: 'crop:' + crop.id }
+  // Creatures that drop it: the likeliest one the hero can take on now
+  const cl = G.combatLevel()
   const drops = Object.values(MONSTERS).flatMap(m => m.drops.filter(d => d.item === id).map(d => ({ m, chance: d.chance })))
     .filter(({ m }) => G.areaUnlocked(AREA_OF[m.id]) && (!m.slayer || G.level('slayer') >= m.slayer))
     .sort((a, b) => b.chance - a.chance)
-  if (drops.length) return whereToKill(drops[0].m.id)
+  const safe = drops.find(({ m }) => monsterLevel(m) <= cl + 3)
+  if (safe) return whereToKill(safe.m.id)
   if (SHOP_ITEMS.has(id)) return { to: '/shop', focus: 'shop:' + id }
+  // Made by a skill not high enough yet: train it up to the level (`level` says which)
+  const next = makers.filter(m => m.a.lvl > G.level(m.skill)).sort((a, b) => a.a.lvl - G.level(a.skill) - (b.a.lvl - G.level(b.skill)))[0]
+  if (next) return { ...whereToTrain(next.skill, depth), level: { skill: next.skill, lvl: next.a.lvl } }
   if (makers.length) return { to: '/skill/' + makers[0].skill, focus: 'action:' + makers[0].a.id }
-  if (crop) return { to: '/skill/farming', focus: 'crop:' + crop.id }
+  if (drops.length) return { ...whereToKill(drops[0].m.id), tough: true }
+  if (crop) return { to: '/skill/farming', focus: 'crop:' + crop.id, level: { skill: 'farming', lvl: crop.lvl } }
   // Anything else: the item's own page, with every place it comes from
   return { to: { path: '/inventory', query: { item: id } } }
 }
