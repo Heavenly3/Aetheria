@@ -58,7 +58,7 @@ export default {
   welcome: {
     title: 'Welcome, {name}',
     tips: [
-      'Pick a skill in the side menu and press <b>Start</b>. Actions repeat on their own.',
+      'Pick a skill in the menu and press one of its actions to start. Actions repeat on their own.',
       'Gathering skills feed the artisan ones: ore becomes bars, bars become gear.',
       'Every level you earn also gives <b>hero XP</b>. Spend attribute and talent points in the Hero screen.',
       'The game keeps going while you are away, up to the offline limit.',
