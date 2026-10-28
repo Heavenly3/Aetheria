@@ -5,6 +5,8 @@
    anywhere on its own.
    ========================================================= */
 
+import { storage } from './saveGuard.js'
+
 export const ITCH_URL = 'https://3vynia.itch.io/aetheria'
 export const ISSUES_URL = 'https://github.com/Heavenly3/Aetheria/issues/new'
 const KEEP = 5
@@ -61,6 +63,7 @@ export function buildReport({ version, locale, hero, now = Date.now() }) {
     `Browser: ${nav.userAgent || 'unknown'}`,
     `Screen: ${win.innerWidth || '?'}x${win.innerHeight || '?'} @${win.devicePixelRatio || 1}x`,
     `Playing on: ${embedded ? 'embedded page (itch.io)' : 'website'}`,
+    `Storage: ${storage.mode}`,
   ]
   if (hero) {
     lines.push(

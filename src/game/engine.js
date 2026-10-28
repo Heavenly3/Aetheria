@@ -24,6 +24,8 @@ import { journal, journalState } from './journal.js'
 import { fighting, fightingState } from './fighting.js'
 import { guilds, guildsState } from './guilds.js'
 import { codex, codexState } from './codex.js'
+import { repairNumbers } from './saveGuard.js'
+import { recordError } from './feedback.js'
 import { crown, crownState } from './crown.js'
 import { routines, routinesState } from './routines.js'
 import { techniques, techniquesState } from './techniques.js'
@@ -76,6 +78,15 @@ const BOSS_MAP = Object.fromEntries([...BOSSES, ...ECHOES].map(b => [b.id, b]))
 const CROP_MAP = Object.fromEntries(CROPS.map(c => [c.id, c]))
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
 const msg = (key, params = {}) => ({ key, params })
+// Defaults to compare a save's numbers against, made once
+let defaults = null
+const DEFAULTS = () => (defaults ||= newState())
+// Puts bad numbers back to their defaults and notes it once in the error log for bug reports
+function guardNumbers(st, nulls) {
+  const bad = repairNumbers(st, DEFAULTS(), nulls)
+  if (bad.length) recordError(new Error(`Repaired ${bad.length} bad number(s) in the save: ${bad.slice(0, 5).join(', ')}`), 'save')
+  return bad
+}
 const store = {
   get(k) { try { return localStorage.getItem(k) } catch { return null } },
   set(k, v) { try { localStorage.setItem(k, v); return true } catch { return false } },
@@ -291,6 +302,7 @@ export const G = {
   save() {
     if (this.slot === null) return false
     state.lastTick = Date.now()
+    guardNumbers(toRaw(state), false)
     const ok = store.set(SLOT_KEY(this.slot), JSON.stringify(toRaw(state)))
     if (ok) store.set(META_KEY, JSON.stringify({ last: this.slot }))
     else if (Date.now() - saveWarnedAt > SAVE_WARN_EVERY) { saveWarnedAt = Date.now(); this.emit('saveFailed') }
@@ -350,6 +362,7 @@ export const G = {
   // Fill in whatever older saves are missing
   migrateState() {
     const st = this.s
+    guardNumbers(st, true)
     // The bestiary keeps its own lifetime kill count; saves from before it start from the current one
     if (!Object.keys(st.bestiary.kills).length) st.bestiary.kills = { ...st.killsBy }
     // Events from before omens existed are dropped

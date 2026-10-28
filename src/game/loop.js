@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 import { G, state } from './engine.js'
 import { BACKUP_EVERY } from './backup.js'
+import { keepStorage } from './saveGuard.js'
 
 const CATCHUP = 5        // a gap longer than this (seconds) is simulated in one go, e.g. after a sleeping tab
 const SUMMARY_MIN = 60   // show the "welcome back" summary after this many seconds away
@@ -51,6 +52,8 @@ async function catchUp(seconds) {
 
 function startLoop() {
   stopLoop()
+  // Once there is a game worth keeping, ask the browser not to clear it
+  keepStorage()
   let last = performance.now()
   timers.push(setInterval(() => {
     const now = performance.now()
