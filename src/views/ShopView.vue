@@ -177,7 +177,7 @@ function sellJunk() {
               </div>
             </div>
             <div class="row" style="margin-top:12px;gap:6px">
-              <InputNumber :modelValue="q(o.id)" @update:modelValue="v => (qty[o.id] = v || 1)" :min="1" :max="9999" size="small" inputClass="shop-qty" class="grow" :inputId="'qty-' + o.id" />
+              <InputNumber :modelValue="q(o.id)" @update:modelValue="v => (qty[o.id] = v || 1)" :min="1" :max="9999" size="small" inputClass="shop-qty" class="grow" :inputId="'qty-' + o.id" :ariaLabel="$t('inventory.quantity') + ' · ' + ITEMS[o.id].name" />
               <Button :label="$t('shop.max')" size="small" text :disabled="state.gold < o.price" v-tooltip.top="$t('shop.maxTip')" @click="qty[o.id] = maxAfford(o.price)" />
               <Button :label="fmt(o.price * q(o.id))" icon="pi pi-shopping-cart" size="small" :disabled="state.gold < o.price * q(o.id)" @click="buy(o.id, o.price)" />
             </div>
@@ -229,7 +229,7 @@ function sellJunk() {
           <p v-for="w in warnings(selected, have)" :key="w" class="small warn-line"><i class="pi pi-exclamation-triangle" /> {{ w }}</p>
           <template v-if="!G.isLocked(selected)">
             <div class="row" style="margin-top:14px">
-              <InputNumber v-model="sellQty" :min="1" :max="Math.max(1, have)" showButtons buttonLayout="horizontal" size="small" inputClass="qty-input" class="grow"
+              <InputNumber v-model="sellQty" :min="1" :max="Math.max(1, have)" showButtons buttonLayout="horizontal" size="small" inputClass="qty-input" class="grow" :ariaLabel="$t('inventory.quantity')"
                 incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" />
               <Button :label="$t('inventory.goldAmount', { n: fmt(G.sellPrice(selected) * sellQty) })" icon="pi pi-wallet" @click="sell(sellQty)" />
             </div>

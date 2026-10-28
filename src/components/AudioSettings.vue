@@ -146,11 +146,11 @@ function reset() {
         </div>
         <div>
           <div class="row small"><span class="muted grow">{{ $t('audio.tempo') }}</span><b class="tnum">{{ st.tempo }}%</b></div>
-          <Slider v-model="st.tempo" :min="60" :max="140" :step="5" />
+          <Slider v-model="st.tempo" :min="60" :max="140" :step="5" :aria-label="$t('audio.tempo')" />
         </div>
         <div>
           <div class="row small"><span class="muted grow">{{ $t('audio.density') }}</span><b class="tnum">{{ st.density }}%</b></div>
-          <Slider v-model="st.density" :min="0" :max="100" :step="5" />
+          <Slider v-model="st.density" :min="0" :max="100" :step="5" :aria-label="$t('audio.density')" />
           <div class="small faint" style="margin-top:6px">{{ $t('audio.densityHint') }}</div>
         </div>
       </div>

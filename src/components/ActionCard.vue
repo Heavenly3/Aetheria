@@ -34,11 +34,11 @@ const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q
 </script>
 
 <template>
-  <button class="card action" :data-tut="'action:' + a.id" :class="{ locked: locked || noTool, active, missing }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
+  <div class="card action clickable" :data-tut="'action:' + a.id" :class="{ locked: locked || noTool, active, missing }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
     <div class="row">
       <ItemTile :icon="a.icon" :tint="a.tint" size="md" :tip="false" />
       <div class="grow">
-        <div class="row" style="gap:4px"><div class="card-name grow">{{ a.name }}</div><QueueButton v-if="!locked" :skill="skill" :action="a" /></div>
+        <div class="row" style="gap:4px"><button class="card-btn card-name grow" @click.stop="G.startSkill(skill, a.id)">{{ a.name }}</button><QueueButton v-if="!locked" :skill="skill" :action="a" /></div>
         <div class="card-sub">
           <template v-if="locked"><i class="pi pi-lock" style="font-size:11px" /> {{ $t('skill.requiresLevel', { n: a.lvl }) }}</template>
           <template v-else-if="noTool"><i class="pi pi-wrench" style="font-size:11px" /> {{ $t('skill.requiresTool', { tool: TOOL_TYPES[a.tool.type].name, tier: a.tool.tier }) }}</template>
@@ -83,7 +83,7 @@ const outQty = q => (a.value.runeMult ? q * G.runeMult(props.skill, a.value) : q
       <b class="small tnum" style="color:#c9b0ff">{{ mLvl }}</b>
     </div>
     <div class="card-progress" :style="{ width: progress * 100 + '%' }" />
-  </button>
+  </div>
 </template>
 
 <style scoped>

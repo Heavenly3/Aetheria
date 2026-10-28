@@ -214,7 +214,7 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
         <div class="row small">
           <span class="muted grow">{{ $t('combat.eatBelow', { n: state.autoEatPct }) }} <HelpTip k="combat.eatBelow" /></span>
         </div>
-        <Slider v-model="state.autoEatPct" :min="20" :max="80" :step="5" />
+        <Slider v-model="state.autoEatPct" :min="20" :max="80" :step="5" :aria-label="$t('combat.eatBelow', { n: state.autoEatPct })" />
         <label class="small muted" for="potion-select" style="margin-top:6px">{{ $t('combat.autoPotion') }} <HelpTip k="combat.potion" /></label>
         <Select inputId="potion-select" v-model="state.potion" :options="potions" optionLabel="label" optionValue="value" showClear :placeholder="$t('combat.noPotion')" :emptyMessage="$t('combat.noPotionHint')" class="w-full" />
         <label class="small muted" for="prayer-select" style="margin-top:6px">{{ $t('combat.prayerLabel', { n: PRAYER_DRAIN }) }} <HelpTip k="combat.prayer" :params="{ n: PRAYER_DRAIN }" /></label>
@@ -240,7 +240,7 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
         </label>
         <template v-if="state.tactics.retreat">
           <div class="small muted" style="margin-top:10px">{{ $t('tactics.retreatAt', { n: state.tactics.retreatPct }) }}</div>
-          <Slider v-model="state.tactics.retreatPct" :min="10" :max="50" :step="5" style="margin-top:10px" />
+          <Slider v-model="state.tactics.retreatPct" :min="10" :max="50" :step="5" style="margin-top:10px" :aria-label="$t('tactics.retreatAt', { n: state.tactics.retreatPct })" />
           <div v-if="!state.food" class="small warn-text" style="margin-top:10px"><i class="pi pi-info-circle" /> {{ $t('tactics.noFoodNow') }}</div>
         </template>
       </div>

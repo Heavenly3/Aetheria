@@ -23,10 +23,10 @@ const out = computed(() => Object.entries(a.value.out)[0])
 </script>
 
 <template>
-  <button class="arow" :data-tut="'action:' + a.id" :class="{ locked: locked || noTool, active }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
+  <div class="arow" :data-tut="'action:' + a.id" :class="{ locked: locked || noTool, active }" :style="{ '--c': SKILLS[skill].color }" @click="G.startSkill(skill, a.id)">
     <ItemTile :icon="a.icon" :tint="a.tint" size="sm" :tip="false" />
     <div class="name">
-      <b>{{ a.name }}</b>
+      <button class="card-btn" @click.stop="G.startSkill(skill, a.id)"><b>{{ a.name }}</b></button>
       <span class="small" :class="locked || noTool ? 'bad-text' : 'faint'">
         <template v-if="locked">{{ $t('common.levelN', { n: a.lvl }) }}</template>
         <template v-else-if="noTool">{{ TOOL_TYPES[a.tool.type].name }} {{ a.tool.tier }}</template>
@@ -45,7 +45,7 @@ const out = computed(() => Object.entries(a.value.out)[0])
     <span class="tag tnum">{{ $t('common.seconds', { n: time.toFixed(1) }) }}</span>
     <QueueButton v-if="!locked" :skill="skill" :action="a" />
     <i class="bar-line" :style="{ width: progress * 100 + '%' }" />
-  </button>
+  </div>
 </template>
 
 <style scoped>
@@ -57,7 +57,8 @@ const out = computed(() => Object.entries(a.value.out)[0])
 .arow.locked { filter: grayscale(0.7); border-style: dashed; cursor: not-allowed; }
 .arow.locked .tile { opacity: 0.55; }
 .name { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
-.name b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.name .card-btn { min-width: 0; }
+.name b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ins { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12.5px; color: var(--muted); }
 .in { display: inline-flex; align-items: center; gap: 5px; }
 .in.miss { color: var(--danger); }

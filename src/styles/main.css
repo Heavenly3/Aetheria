@@ -217,8 +217,8 @@ h1, h2, h3 { text-wrap: balance; }
 /* Generic interactive card */
 .card { position: relative; overflow: hidden; padding: 16px; border-radius: var(--radius); background: var(--panel); border: 1px solid var(--line);
   backdrop-filter: blur(12px); transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s, background 0.2s; text-align: left; color: inherit; font: inherit; }
-button.card { cursor: pointer; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; }
-button.card:hover:not(.locked) { transform: translateY(-2px); border-color: color-mix(in srgb, var(--c, var(--gold)) 45%, transparent);
+button.card, .card.clickable { cursor: pointer; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; }
+button.card:hover:not(.locked), .card.clickable:hover:not(.locked) { transform: translateY(-2px); border-color: color-mix(in srgb, var(--c, var(--gold)) 45%, transparent);
   box-shadow: 0 18px 40px -20px color-mix(in srgb, var(--c, var(--gold)) 70%, transparent); }
 .card.active { border-color: color-mix(in srgb, var(--c, var(--gold)) 70%, transparent);
   background: linear-gradient(160deg, color-mix(in srgb, var(--c, var(--gold)) 15%, transparent), var(--panel) 60%);
@@ -227,6 +227,9 @@ button.card:hover:not(.locked) { transform: translateY(-2px); border-color: colo
 .card.locked { filter: grayscale(0.7); border-style: dashed; cursor: not-allowed; }
 .card.locked .tile { opacity: 0.55; }
 .card.locked .card-name { color: var(--muted); }
+/* A card that holds other controls takes the click itself, and its name is the real button for keyboard and screen readers */
+.card-btn { all: unset; cursor: pointer; text-align: start; }
+.card-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
 .card.done { border-color: rgba(98, 193, 126, 0.3); }
 .card-name { font-weight: 700; font-size: 16px; line-height: 1.2; }
 .card-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
@@ -361,6 +364,9 @@ body.cue-flash::after { content: ''; position: fixed; inset: 0; pointer-events: 
 [data-motion="reduce"] .focus-glow { animation: none; }
 @keyframes tutGlow { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--gold) 25%, transparent), 0 0 26px -4px var(--gold); } }
 
+.skip-link { position: fixed; left: 12px; top: -60px; z-index: 2000; padding: 10px 16px; border-radius: 10px; background: var(--gold); color: var(--on-gold); font-weight: 700; text-decoration: none; }
+.skip-link:focus { top: 12px; }
+#content:focus { outline: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 /* ---------------- Mobile: bottom navigation and touch sizes ---------------- */
@@ -400,7 +406,7 @@ body.cue-flash::after { content: ''; position: fixed; inset: 0; pointer-events: 
   .p-inputtext, .p-select { min-height: 44px; }
   .p-select .p-select-label { display: flex; align-items: center; }
   .inv-grid { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
-  button.card:hover:not(.locked) { transform: none; }
+  button.card:hover:not(.locked), .card.clickable:hover:not(.locked) { transform: none; }
 }
 
 /* Text tinted with a data colour (difficulty, rarity…); darkened on parchment so it stays readable */

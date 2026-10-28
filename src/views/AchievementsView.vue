@@ -17,7 +17,7 @@ const sorted = computed(() => [...ACHIEVEMENTS].sort((a, b) => (state.achievemen
         <b class="grow">{{ $t('achievements.progress') }}</b>
         <span class="gold-text tnum">{{ unlocked }} / {{ ACHIEVEMENTS.length }}</span>
       </div>
-      <ProgressBar :value="Math.round((unlocked / ACHIEVEMENTS.length) * 100)" style="height:10px" />
+      <ProgressBar :aria-label="$t('achievements.progress')" :value="Math.round((unlocked / ACHIEVEMENTS.length) * 100)" style="height:10px" />
     </div>
     <div class="grid-cards">
       <div v-for="a in sorted" :key="a.id" class="card ach" :class="{ got: state.achievements[a.id] }">

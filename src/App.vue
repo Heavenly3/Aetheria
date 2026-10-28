@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Toast from 'primevue/toast'
@@ -51,6 +51,11 @@ const router = useRouter()
 const toast = useToast()
 const drawer = ref(false)
 const menu = ref()
+
+// Keyboard and screen reader users land on the new screen, not back at the top of the menu
+const content = ref()
+const toContent = () => content.value?.focus({ preventScroll: true })
+watch(() => route.path, (to, from) => { if (from) nextTick(toContent) })
 
 const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.name : route.meta.titleKey && t(route.meta.titleKey)) || 'Aetheria')
 const hpPct = computed(() => (Math.max(0, state.hp) / G.maxHp()) * 100)
@@ -274,6 +279,7 @@ function startAdventure() {
   <TitleScreen v-if="!session.inGame" />
 
   <template v-else>
+    <a href="#content" class="skip-link" @click.prevent="toContent">{{ $t('common.skipToContent') }}</a>
     <div class="app">
       <aside class="sidebar">
         <div class="brand">
@@ -291,7 +297,7 @@ function startAdventure() {
             <button class="chip mute-chip" :aria-label="$t(state.settings.muted ? 'settings.unmute' : 'settings.mute')" v-tooltip.bottom="$t(state.settings.muted ? 'settings.unmute' : 'settings.mute')" @click="toggleMute">
               <i class="pi" :class="state.settings.muted ? 'pi-volume-off' : 'pi-volume-up'" />
             </button>
-            <span class="chip wx-chip" :style="{ '--c': wxLook.tint }" v-tooltip.bottom="wxTip" :aria-label="$t(`weather.${wxLook.key}.name`)">
+            <span class="chip wx-chip" :style="{ '--c': wxLook.tint }" v-tooltip.bottom="wxTip" role="img" :aria-label="$t(`weather.${wxLook.key}.name`)">
               <GameIcon v-if="wxLook.icon" :name="wxLook.icon" :size="15" /><i v-else :class="wxLook.pi" />
             </span>
             <span class="chip hp-chip" v-tooltip.bottom="help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
@@ -333,7 +339,7 @@ function startAdventure() {
           </Dialog>
         </header>
 
-        <section class="view">
+        <section id="content" ref="content" class="view" tabindex="-1" :aria-label="title">
           <TutorialCoach />
           <GoalBar />
           <router-view v-slot="{ Component }">

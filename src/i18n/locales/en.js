@@ -7,6 +7,7 @@ export default {
     moveUp: 'Move up', moveDown: 'Move down', remove: 'Remove', always: 'always', locked: 'Locked', equip: 'Equip',
     missingMaterials: 'Missing materials', notEnoughGold: 'Not enough gold', back: 'Back', next: 'Next',
     delete: 'Delete', save: 'Save', bought: 'Bought: <b>{name}</b>', maxLevel: 'Max level',
+    skipToContent: 'Skip to content',
   },
 
   time: { dh: '{d}d {h}h', hm: '{h}h {m}m', ms: '{m}m {s}s', s: '{s}s', hours: '{n} h' },
