@@ -3,7 +3,7 @@
    and spend them on permanent upgrades.
    Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
-import { XP_TABLE } from './data/skills.js'
+import { SKILLS, XP_TABLE } from './data/skills.js'
 import { BOSSES } from './data/combat.js'
 import { UPGRADES, UPGRADE_MAP, ASCEND_MIN_TOTAL } from './data/ascension.js'
 import { TRIALS, TRIAL_MAP, TRIAL_SHARDS } from './data/trials.js'
@@ -14,9 +14,13 @@ const START_SKILLS = ['mining', 'woodcutting', 'fishing', 'farming', 'thieving',
 // What survives an ascension; everything else goes back to a fresh character
 const KEPT = ['created', 'name', 'role', 'avatar', 'tint', 'difficulty', 'pets', 'achievements', 'stats', 'history', 'settings', 'daily', 'ascension', 'bestiary', 'cosmetics', 'festival', 'omens', 'companions', 'weekly', 'relicForge', 'journal', 'abilities', 'guilds', 'codex', 'church', 'thief', 'log', 'legacy', 'routines', 'unlocks', 'records', 'mythics', 'mythicStreak']
 
+// How many finished lives the record keeps, newest last
+export const LIVES_KEPT = 100
+
 export const ascensionState = () => ({
   // trial: the rule this life is lived under · trials: how many times each was completed
-  ascension: { shards: 0, total: 0, count: 0, upgrades: {}, trial: null, trials: {} },
+  // lives: a summary of every life finished · lifeAt: when this life began (time and play time)
+  ascension: { shards: 0, total: 0, count: 0, upgrades: {}, trial: null, trials: {}, lives: [], lifeAt: null },
 })
 
 export const ascension = {
@@ -60,6 +64,24 @@ export const ascension = {
   giveUpTrial() { if (this.s.ascension.trial) { this.s.ascension.trial = null; return true } return false },
 
   canAscend() { return this.totalLevel() >= ASCEND_MIN_TOTAL },
+  // What this life has come to so far. Its start is unknown for a life begun before the record
+  // existed (a save that had already ascended), so its length is left out
+  lifeSummary() {
+    const asc = this.s.ascension
+    const start = asc.lifeAt || (asc.count ? null : { t: this.s.created, play: 0 })
+    const best = Object.keys(SKILLS).reduce((a, k) => (this.s.skills[k].xp > this.s.skills[a].xp ? k : a))
+    return {
+      n: asc.count + 1,
+      start: start?.t ?? null,
+      played: start ? Math.max(0, (this.s.stats.playTime || 0) - start.play) : null,
+      total: this.totalLevel(), hero: this.heroLevel(), combat: this.combatLevel(),
+      bosses: BOSSES.filter(b => (this.s.killsBy[b.id] || 0) > 0).length,
+      kills: Object.values(this.s.killsBy || {}).reduce((sum, n) => sum + n, 0),
+      best: { skill: best, lvl: this.level(best) },
+      finds: start ? Object.keys(this.s.mythics || {}).filter(id => this.s.mythics[id].first >= start.t) : [],
+      trial: this.trial(),
+    }
+  },
   // Shards grow with total level, hero level, quest points and bosses defeated this life
   shardsForAscension() {
     if (!this.canAscend()) return 0
@@ -73,6 +95,7 @@ export const ascension = {
     if (!this.canAscend()) return 0
     const gained = this.shardsForAscension()
     const completed = this.trial()
+    const life = { ...this.lifeSummary(), end: Date.now(), shards: gained }
     const tasks = this.taskSnapshot()
     const guildTasks = this.guildSnapshot()
     const kept = {}
@@ -90,6 +113,8 @@ export const ascension = {
       this.log(TRIAL_MAP[completed].icon, 'log.trialDone', { trial: '@trial:' + completed })
     }
     asc.trial = TRIAL_MAP[next] ? next : null
+    asc.lives = [...(asc.lives || []), life].slice(-LIVES_KEPT)
+    asc.lifeAt = { t: life.end, play: this.s.stats.playTime || 0 }
     this.setupCharacter()
     this.returnMythics(myths)
     const lvl = Math.floor(this.ascensionMods('startSkills'))

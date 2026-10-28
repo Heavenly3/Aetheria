@@ -13,6 +13,7 @@ import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import HelpTip from '../components/HelpTip.vue'
+import PastLives from '../components/PastLives.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -146,6 +147,10 @@ function ascend() {
         </div>
       </div>
     </div>
+
+    <div class="section-title" style="margin-top:26px">{{ $t('ascension.lives.title') }}</div>
+    <p class="small muted" style="margin-top:0">{{ $t('ascension.lives.intro') }}</p>
+    <PastLives />
   </div>
 </template>
 
