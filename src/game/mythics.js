@@ -7,13 +7,15 @@
    ========================================================= */
 import { ITEMS } from './data/items.js'
 import { MONSTERS } from './data/combat.js'
-import { SKILL_DROPS, KILL_DROPS, MYTHIC_LUCK } from './data/mythics.js'
+import { SKILL_DROPS, KILL_DROPS, MYTHIC_LUCK, STREAK_MAX } from './data/mythics.js'
 
 export const MYTHIC_IDS = Object.keys(ITEMS).filter(id => ITEMS[id].myth)
 const CHARM_IDS = MYTHIC_IDS.filter(id => ITEMS[id].type === 'charm')
 
 // id → { first: when the first was found, n: how many were found in all }
-export const mythicsState = () => ({ mythics: {} })
+// mythicStreak: id → how many finds were due since it last turned up (epic and legendary only)
+export const mythicsState = () => ({ mythics: {}, mythicStreak: {} })
+const streaks = id => ITEMS[id].myth !== 'mythic'
 
 export const mythics = {
   mythicFound(id) { return !!this.s.mythics?.[id] },
@@ -28,10 +30,20 @@ export const mythics = {
     return v
   },
 
+  // How much a find's chance has grown from going without it
+  mythicStreak(id) { return streaks(id) ? 1 + Math.min(STREAK_MAX - 1, this.s.mythicStreak?.[id] || 0) : 1 },
   rollMythics(list, fits, scale = 1) {
     const luck = 1 + this.mod('loot') * MYTHIC_LUCK
     const found = []
-    for (const d of list) if (fits(d) && Math.random() < d.chance * scale * luck) { this.awardMythic(d.item); found.push(d.item) }
+    const due = (this.s.mythicStreak ||= {})
+    for (const d of list) {
+      if (!fits(d)) continue
+      if (Math.random() < d.chance * scale * luck * this.mythicStreak(d.item)) {
+        if (streaks(d.item)) due[d.item] = 0
+        this.awardMythic(d.item)
+        found.push(d.item)
+      } else if (streaks(d.item)) due[d.item] = (due[d.item] || 0) + d.chance * scale
+    }
     return found
   },
   // One action of a skill, `time` seconds long

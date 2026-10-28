@@ -48,9 +48,10 @@ describe('ultra rare finds', () => {
 
   it('keep the tiers apart: a roll good enough for an epic is far from a legendary', () => {
     newHero()
-    fixRandom(1 / 5500)
+    fixRandom(1 / 55000)
     expect(G.mythicAction('mining', 3)).toEqual(['worldheart_pickaxe'])
-    fixRandom(1 / 4500)
+    state.mythicStreak = {}
+    fixRandom(1 / 45000)
     expect(G.mythicAction('mining', 3)).toEqual([])
     // A slow action counts for more
     expect(G.mythicAction('mining', 6)).toEqual(['worldheart_pickaxe'])
@@ -76,6 +77,30 @@ describe('ultra rare finds', () => {
     expect(G.mod('speed.mining')).toBeCloseTo(speed + 0.3)
     expect(G.toolTier('pickaxe')).toBe(10)
     expect(G.mythicsFound()).toBe(2)
+  })
+
+  it('grow likelier the longer an epic or legendary find is overdue, never a mythic one', () => {
+    newHero()
+    fixRandom(0.999)
+    // 25,000 actions of 3 s (here as 25 of 3,000 s): half an epic and a tenth of the hourglass were due
+    for (let i = 0; i < 25; i++) G.mythicAction('mining', 3000)
+    expect(G.mythicStreak('worldheart_pickaxe')).toBeCloseTo(1.5)
+    expect(G.mythicStreak('hourglass_of_ages')).toBeCloseTo(1.1)
+    expect(G.mythicStreak('heart_of_aetheria')).toBe(1)
+    expect(G.mythicStreak('evergreen_axe')).toBe(1)
+    // Capped at three times the chance
+    for (let i = 0; i < 200; i++) G.mythicAction('mining', 3000)
+    expect(G.mythicStreak('worldheart_pickaxe')).toBe(3)
+    // A roll that would miss at the base chance now hits, and the count starts again
+    fixRandom(2.5 / 50000)
+    expect(G.mythicAction('mining', 3)).toContain('worldheart_pickaxe')
+    expect(G.mythicStreak('worldheart_pickaxe')).toBe(1)
+    // The streak is kept through an ascension
+    fixRandom(0.999)
+    for (let i = 0; i < 25; i++) G.mythicAction('mining', 3000)
+    for (const k of Object.keys(state.skills)) state.skills[k].xp = 1e6
+    G.ascend()
+    expect(G.mythicStreak('worldheart_pickaxe')).toBeCloseTo(1.5)
   })
 
   it('come through an ascension in the new bag', () => {

@@ -1961,6 +1961,7 @@ export default {
   search: { label: "Buscar", tip: "Buscar (Ctrl+K)", placeholder: "Busca una pantalla, habilidad, objeto, criatura o misión…", hint: "Escribe unas letras. Las flechas se mueven y Enter te lleva allí. Pulsa ? fuera de esta caja para ver todos los atajos.", none: "Nada se llama «{q}».", kinds: { screen: "Pantalla", skill: "Habilidad", item: "Objeto", monster: "Criatura", quest: "Misión" } },
   keys: { title: "Atajos de teclado", search: "Buscar", activity: "Ir a lo que estás haciendo", keys: "Estos atajos", close: "Cerrar una ventana" },
   mythic: {
+    streak: 'Tu suerte con este hallazgo está creciendo',
     tiers: {
       epic: "Épico",
       legendary: "Legendario",

@@ -4,6 +4,9 @@
     per 3 seconds of action, so slow actions are not worse off
   - on 'kill': rolled for every creature defeated, narrowed to some creatures, areas, bosses or the tower
   Luck helps a little: the loot bonus raises the chance by a quarter of itself.
+  A streak keeps bad luck in check for epic and legendary finds (never mythic ones): each find counts
+  how many it was "due" since it last turned up, and its chance grows by that much, up to
+  STREAK_MAX times the base. Finding it starts the count again.
 */
 export const MYTHIC_TIERS = {
   epic:      { color: '#c77dff' },
@@ -11,7 +14,8 @@ export const MYTHIC_TIERS = {
   mythic:    { color: '#ff4d6d' },
 }
 export const MYTHIC_LUCK = 0.25
-const EPIC = 1 / 5000, LEGENDARY = 1 / 50000, MYTHIC = 1 / 1e6
+export const STREAK_MAX = 3
+const EPIC = 1 / 50000, LEGENDARY = 1 / 250000, MYTHIC = 1 / 1e6
 
 const DRAGONS = ['green_dragon', 'red_dragon', 'wyvern', 'elder_wyrm', 'ancient_dragon', 'bronze_wyrm']
 

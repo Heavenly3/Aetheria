@@ -35,6 +35,7 @@ const when = ts => new Date(ts).toLocaleDateString(undefined, { dateStyle: 'medi
               <b>{{ ITEMS[id].name }}</b>
               <div v-for="(v, k) in ITEMS[id].mods" :key="k" class="small">{{ modText(k, v) }}</div>
               <div class="small faint">{{ $t('mythic.foundOn', { date: when(state.mythics[id].first), n: state.mythics[id].n }) }}</div>
+              <div v-if="G.mythicStreak(id) >= 1.5" class="small streak"><GameIcon name="sparkles" :size="11" /> {{ $t('mythic.streak') }}</div>
             </div>
           </template>
           <template v-else>
@@ -42,6 +43,7 @@ const when = ts => new Date(ts).toLocaleDateString(undefined, { dateStyle: 'medi
             <div class="grow">
               <b class="muted">???</b>
               <div v-for="(d, i) in drops(id)" :key="i" class="small faint">{{ mythicWhere(d) }} · 1/{{ oneIn(d.chance) }}</div>
+              <div v-if="G.mythicStreak(id) >= 1.5" class="small streak"><GameIcon name="sparkles" :size="11" /> {{ $t('mythic.streak') }}</div>
             </div>
           </template>
         </div>
@@ -52,6 +54,7 @@ const when = ts => new Date(ts).toLocaleDateString(undefined, { dateStyle: 'medi
 
 <style scoped>
 .myth-title { color: var(--m); }
+.streak { color: var(--gold); margin-top: 2px; }
 .myth-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
 .myth-card { display: flex; align-items: flex-start; gap: 12px; padding: 10px; border-radius: 12px; border: 1px dashed var(--line); }
 .myth-card.found { border: 1px solid color-mix(in srgb, var(--m) 45%, transparent); background: color-mix(in srgb, var(--m) 6%, transparent); }

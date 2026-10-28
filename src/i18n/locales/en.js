@@ -1961,6 +1961,7 @@ export default {
   search: { label: "Search", tip: "Search (Ctrl+K)", placeholder: "Find a screen, skill, item, creature or quest…", hint: "Type a few letters. Arrows move, Enter goes there. Press ? outside this box for every shortcut.", none: "Nothing called \"{q}\".", kinds: { screen: "Screen", skill: "Skill", item: "Item", monster: "Creature", quest: "Quest" } },
   keys: { title: "Keyboard shortcuts", search: "Search", activity: "Go to what you are doing", keys: "These shortcuts", close: "Close a window" },
   mythic: {
+    streak: 'Your luck with this find is growing',
     tiers: {
       epic: "Epic",
       legendary: "Legendary",
