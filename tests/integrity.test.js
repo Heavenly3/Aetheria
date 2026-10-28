@@ -56,9 +56,25 @@ describe('game data integrity', () => {
     const missing = []
     for (const f of ['journal', 'crown']) {
       const src = readFileSync(new URL(`../src/game/data/${f}.js`, import.meta.url), 'utf8')
-      for (const [, id] of src.matchAll(/(?:beat|life)\((?:g, )?'([a-z_]+)'/g)) if (!creatures.has(id)) missing.push(`${f}: ${id}`)
-      for (const [, id] of src.matchAll(/(?:beatArea|lifeArea)\((?:g, )?'([a-z_]+)'/g)) if (!areas.has(id)) missing.push(`${f}: area ${id}`)
+      for (const [, id] of src.matchAll(/\b(?:beat|life)\((?:g, )?'([a-z_]+)'/g)) if (!creatures.has(id)) missing.push(`${f}: ${id}`)
+      for (const [, id] of src.matchAll(/\b(?:beatArea|lifeArea)\((?:g, )?'([a-z_]+)'/g)) if (!areas.has(id)) missing.push(`${f}: area ${id}`)
     }
     expect(missing).toEqual([])
+  })
+
+  it('gives every entry of a list its own id', () => {
+    const repeated = []
+    for (const [file, mod] of Object.entries(MODULES)) {
+      for (const [name, list] of Object.entries(mod)) {
+        if (!Array.isArray(list)) continue
+        const seen = new Set()
+        for (const e of list) {
+          if (!e || typeof e.id !== 'string') continue
+          if (seen.has(e.id)) repeated.push(`${file.replace(/.*\//, '')} ${name}: ${e.id}`)
+          seen.add(e.id)
+        }
+      }
+    }
+    expect(repeated).toEqual([])
   })
 })

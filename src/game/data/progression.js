@@ -3,7 +3,7 @@ import { CHAPTERS } from './journal.js'
 import { ENDINGS } from './crown.js'
 import { ITEMS } from './items.js'
 import { fmtNum } from '../format.js'
-import { t, intlLocale } from '../../i18n/index.js'
+import { t } from '../../i18n/index.js'
 
 /* ---------------- Quests ---------------- */
 // Objectives: { type: 'item', item, qty } (handed in) | { type: 'kill', monster, qty } | { type: 'level', skill, lvl }
@@ -61,29 +61,29 @@ export const QUESTS = [
   { id: 'slayer_initiate', icon: 'death-skull',
     req: { levels: { slayer: 5 } }, obj: [{ type: 'slayer', tasks: 5 }], reward: { gold: 3000, xp: { slayer: 10000 }, slayerPoints: 50, qp: 2 } },
   { id: 'sea_terror', icon: 'kraken-tentacle',
-    req: { levels: { fishing: 40 } }, obj: [item('raw_lobster', 50), kill('troll', 20)], reward: { gold: 6000, xp: { fishing: 12000 }, qp: 3, unlock: 'unlocks.kraken' } },
+    req: { levels: { fishing: 40 } }, obj: [item('raw_lobster', 50), kill('troll', 20)], reward: { gold: 6000, xp: { fishing: 12000 }, qp: 3, unlock: 'questUnlocks.kraken' } },
   { id: 'tower_climber', icon: 'stone-tower',
     req: {}, obj: [{ type: 'tower', floor: 25 }], reward: { gold: 15000, items: { wisdom_elixir: 3 }, qp: 3 } },
   { id: 'dragon_threat', icon: 'dragon-head',
     req: { quests: ['undead_menace', 'wolf_hunt'], levels: { attack: 40, defense: 40 } }, obj: [kill('werewolf', 30), item('ectoplasm', 10)],
-    reward: { gold: 12000, xp: { attack: 15000, strength: 15000, defense: 15000 }, qp: 4, unlock: 'unlocks.lair' } },
+    reward: { gold: 12000, xp: { attack: 15000, strength: 15000, defense: 15000 }, qp: 4, unlock: 'questUnlocks.lair' } },
   { id: 'master_smith', icon: 'anvil',
     req: { quests: ['smith_apprentice'], levels: { smithing: 60 } }, obj: [item('mithril_body', 1), item('adamant_bar', 10)], reward: { gold: 20000, xp: { smithing: 50000 }, qp: 3 } },
   { id: 'abyss_gates', icon: 'magic-portal',
     req: { quests: ['dragon_threat', 'arcane_studies'], levels: { magic: 55 } }, obj: [kill('red_dragon', 25), item('blood_rune', 50)],
-    reward: { gold: 50000, xp: { magic: 40000 }, qp: 5, unlock: 'unlocks.abyss' } },
+    reward: { gold: 50000, xp: { magic: 40000 }, qp: 5, unlock: 'questUnlocks.abyss' } },
   { id: 'dragon_slayer', icon: 'sea-dragon',
     req: { quests: ['abyss_gates'] }, obj: [kill('demon', 40), kill('wyvern', 30)],
-    reward: { gold: 100000, xp: { attack: 50000, strength: 50000, defense: 50000, hitpoints: 50000 }, qp: 6, unlock: 'unlocks.ancient_dragon' } },
+    reward: { gold: 100000, xp: { attack: 50000, strength: 50000, defense: 50000, hitpoints: 50000 }, qp: 6, unlock: 'questUnlocks.ancient_dragon' } },
   { id: 'void_herald', icon: 'vortex',
     req: { quests: ['dragon_slayer'], levels: { slayer: 70 } }, obj: [kill('demon', 60), kill('hydra', 30), item('blood_rune', 200)],
-    reward: { gold: 150000, xp: { slayer: 60000, magic: 40000 }, qp: 6, unlock: 'unlocks.void' } },
+    reward: { gold: 150000, xp: { slayer: 60000, magic: 40000 }, qp: 6, unlock: 'questUnlocks.void' } },
   // Quests through the newer parts of the realm
   { id: 'guild_initiation', icon: 'swords-emblem',
     req: {}, obj: [reach('guildRank', 1), stat('contracts', 3)], reward: { gold: 3000, items: { coin_pouch: 3 }, qp: 2 } },
   { id: 'angler_tales', icon: 'fishing',
     req: { levels: { fishing: 20 } }, obj: [stat('fish', 150), item('raw_salmon', 20)], reward: { gold: 4000, xp: { fishing: 8000 }, items: { feather_fly: 60 }, qp: 2 } },
-  { id: 'green_thumb', icon: 'sprout',
+  { id: 'third_crop', icon: 'sprout',
     req: { levels: { farming: 15 } }, obj: [stat('bountiful', 3), reach('hybrids', 1)], reward: { gold: 5000, xp: { farming: 10000 }, items: { seed_pouch: 5, supercompost: 4 }, qp: 2 } },
   { id: 'full_house', icon: 'beer-horn',
     req: {}, obj: [stat('patrons', 15)], reward: { gold: 4000, items: { honey: 10, amber_ale: 5 }, qp: 2 } },
@@ -99,7 +99,7 @@ export const QUESTS = [
     req: { quests: ['angler_tales'], levels: { fishing: 70 } }, obj: [item('raw_shark', 30), item('raw_anglerfish', 5)], reward: { gold: 40000, xp: { fishing: 50000 }, items: { glow_lure: 20 }, qp: 4 } },
   { id: 'heavens_fall', icon: 'sun',
     req: { quests: ['void_herald'] }, obj: [kill('abyssal_titan', 40), item('aether_bar', 20), item('void_essence', 50)],
-    reward: { gold: 300000, xp: { attack: 100000, strength: 100000, defense: 100000, ranged: 100000, magic: 100000 }, qp: 8, unlock: 'unlocks.celestial' } },
+    reward: { gold: 300000, xp: { attack: 100000, strength: 100000, defense: 100000, ranged: 100000, magic: 100000 }, qp: 8, unlock: 'questUnlocks.celestial' } },
 ]
 QUESTS.forEach(q => {
   named(q, `quests.${q.id}.name`, `quests.${q.id}.desc`)

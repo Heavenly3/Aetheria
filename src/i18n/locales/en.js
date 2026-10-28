@@ -540,7 +540,7 @@ export default {
   quests: {
     guild_initiation: { name: "Under a Banner", giver: "The tavern keeper", desc: "\"A hero on their own is a corpse with good luck. Find yourself a guild, and earn your place in it.\"" },
     angler_tales: { name: "Tales of the Angler", giver: "Old Merrin, the fisherman", desc: "An old fisherman swears the salmon run is the best in years. He wants proof, and a full creel." },
-    green_thumb: { name: "Green Thumb", giver: "Hilde of the meadow farms", desc: "Hilde has heard that two crops side by side can make a third. She wants to see it with her own eyes." },
+    third_crop: { name: "A Third Crop", giver: "Hilde of the meadow farms", desc: "Hilde has heard that two crops side by side can make a third. She wants to see it with her own eyes." },
     full_house: { name: "Full House", giver: "The tavern keeper", desc: "\"A bar is only as good as the people drinking at it. Fill those stools!\"" },
     the_fence: { name: "A Friend in Low Places", giver: "A man with no name", desc: "A quiet man at the back of the tavern buys what nobody should sell. First, he wants to see what you can do." },
     superior_hunt: { name: "Bigger Game", giver: "Master Vannaka", desc: "The slayer master has heard of Superior creatures. Bring down a few and prove they bleed." },
@@ -579,7 +579,7 @@ export default {
     heavens_fall: { name: 'When Heaven Falls', giver: 'The Last Oracle', desc: 'The rift leads upward, to a spire among the stars. Forge aether and climb.' },
   },
 
-  unlocks: { kraken: 'Boss: Kraken', lair: "Area: Dragon's Lair", abyss: 'Area: The Abyss', ancient_dragon: 'Boss: Ancient Dragon', void: 'Area: Void Rift', celestial: 'Area: Celestial Spire' },
+  questUnlocks: { kraken: 'Boss: Kraken', lair: "Area: Dragon's Lair", abyss: 'Area: The Abyss', ancient_dragon: 'Boss: Ancient Dragon', void: 'Area: Void Rift', celestial: 'Area: Celestial Spire' },
 
   achievements: { progress: 'Achievement progress' },
 

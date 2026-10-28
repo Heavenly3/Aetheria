@@ -540,7 +540,7 @@ export default {
   quests: {
     guild_initiation: { name: "Bajo un estandarte", giver: "El tabernero", desc: "«Un héroe solo es un cadáver con suerte. Búscate un gremio y gánate tu sitio en él»." },
     angler_tales: { name: "Historias de pescador", giver: "El viejo Merrin, pescador", desc: "Un viejo pescador jura que este año los salmones remontan como nunca. Quiere pruebas y una cesta llena." },
-    green_thumb: { name: "Buena mano", giver: "Hilde, de las granjas del prado", desc: "Hilde ha oído que dos cultivos juntos pueden dar un tercero. Quiere verlo con sus propios ojos." },
+    third_crop: { name: "Buena mano", giver: "Hilde, de las granjas del prado", desc: "Hilde ha oído que dos cultivos juntos pueden dar un tercero. Quiere verlo con sus propios ojos." },
     full_house: { name: "Lleno total", giver: "El tabernero", desc: "«Una barra vale lo que la gente que bebe en ella. ¡Llena esos taburetes!»." },
     the_fence: { name: "Amigos en los bajos fondos", giver: "Un hombre sin nombre", desc: "Un hombre callado al fondo de la taberna compra lo que nadie debería vender. Antes quiere ver de lo que eres capaz." },
     superior_hunt: { name: "Presas mayores", giver: "Maestro Vannaka", desc: "El maestro cazador ha oído hablar de las criaturas Superiores. Abate unas cuantas y demuestra que sangran." },
@@ -579,7 +579,7 @@ export default {
     heavens_fall: { name: 'Cuando cae el cielo', giver: 'La Última Oráculo', desc: 'La grieta lleva hacia arriba, a una aguja entre las estrellas. Forja éter y sube.' },
   },
 
-  unlocks: { kraken: 'Jefe: Kraken', lair: 'Zona: Guarida del Dragón', abyss: 'Zona: El Abismo', ancient_dragon: 'Jefe: Dragón Ancestral', void: 'Zona: Grieta del Vacío', celestial: 'Zona: Aguja Celestial' },
+  questUnlocks: { kraken: 'Jefe: Kraken', lair: 'Zona: Guarida del Dragón', abyss: 'Zona: El Abismo', ancient_dragon: 'Jefe: Dragón Ancestral', void: 'Zona: Grieta del Vacío', celestial: 'Zona: Aguja Celestial' },
 
   achievements: { progress: 'Progreso de logros' },
 
