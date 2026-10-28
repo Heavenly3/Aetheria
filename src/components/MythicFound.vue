@@ -9,6 +9,7 @@ import { MYTHIC_TIERS, MYTHIC_DROPS } from '../game/data/mythics.js'
 import { modText } from '../i18n/mods.js'
 import { oneIn } from '../ui/itemSources.js'
 import ItemTile from './ItemTile.vue'
+import ShareCard from './ShareCard.vue'
 
 // The moment an ultra rare find drops: a window of its own, one find at a time
 const router = useRouter()
@@ -25,6 +26,8 @@ let off
 onMounted(() => { off = G.on('mythic', e => queue.value.push(e)) })
 onUnmounted(() => off?.())
 const next = () => queue.value.shift()
+// The find being shared stays open behind the picture until the player is done with both
+const sharing = ref(false)
 function look() {
   const id = cur.value.item
   next()
@@ -46,10 +49,12 @@ function look() {
       </div>
       <div class="row wrap" style="justify-content:center;gap:8px;margin-top:14px">
         <Button :label="$t('mythic.look')" icon="pi pi-eye" @click="look" />
+        <Button :label="$t('share.find')" icon="pi pi-image" severity="secondary" outlined @click="sharing = true" />
         <Button :label="$t('mythic.ok')" severity="secondary" outlined @click="next" />
       </div>
     </div>
   </Dialog>
+  <ShareCard v-if="cur" v-model:visible="sharing" :item="cur.item" />
 </template>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { G, state } from '../game/engine.js'
 import { ITEMS } from '../game/data/items.js'
 import { MYTHIC_TIERS, MYTHIC_DROPS } from '../game/data/mythics.js'
@@ -8,12 +8,14 @@ import { mythicWhere, oneIn } from '../ui/itemSources.js'
 import { modText } from '../i18n/mods.js'
 import ItemTile from './ItemTile.vue'
 import GameIcon from './GameIcon.vue'
+import ShareCard from './ShareCard.vue'
 
 // Every ultra rare find, by tier: the ones found with all they do, the rest as a silhouette with
 // where they drop and how rarely
 const TIERS = Object.keys(MYTHIC_TIERS)
 const groups = computed(() => TIERS.map(tier => ({ tier, color: MYTHIC_TIERS[tier].color, ids: MYTHIC_IDS.filter(id => ITEMS[id].myth === tier) })))
 const drops = id => MYTHIC_DROPS.filter(d => d.item === id)
+const sharing = ref(null)
 const when = ts => new Date(ts).toLocaleDateString(undefined, { dateStyle: 'medium' })
 </script>
 
@@ -32,7 +34,7 @@ const when = ts => new Date(ts).toLocaleDateString(undefined, { dateStyle: 'medi
           <template v-if="G.mythicFound(id)">
             <ItemTile :item="id" size="md" />
             <div class="grow">
-              <b>{{ ITEMS[id].name }}</b>
+              <div class="row"><b class="grow">{{ ITEMS[id].name }}</b><button class="myth-share" :aria-label="$t('share.findTitle') + ': ' + ITEMS[id].name" v-tooltip.top="$t('share.find')" @click="sharing = id"><i class="pi pi-image" aria-hidden="true" /></button></div>
               <div v-for="(v, k) in ITEMS[id].mods" :key="k" class="small">{{ modText(k, v) }}</div>
               <div class="small faint">{{ $t('mythic.foundOn', { date: when(state.mythics[id].first), n: state.mythics[id].n }) }}</div>
               <div v-if="G.mythicStreak(id) >= 1.5" class="small streak"><GameIcon name="sparkles" :size="11" /> {{ $t('mythic.streak') }}</div>
@@ -49,12 +51,15 @@ const when = ts => new Date(ts).toLocaleDateString(undefined, { dateStyle: 'medi
         </div>
       </div>
     </div>
+    <ShareCard :visible="!!sharing" :item="sharing" @update:visible="v => { if (!v) sharing = null }" />
   </div>
 </template>
 
 <style scoped>
 .myth-title { color: var(--m); }
 .streak { color: var(--gold); margin-top: 2px; }
+.myth-share { flex-shrink: 0; width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--m); cursor: pointer; }
+.myth-share:hover { background: var(--tint-2); }
 .myth-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
 .myth-card { display: flex; align-items: flex-start; gap: 12px; padding: 10px; border-radius: 12px; border: 1px dashed var(--line); }
 .myth-card.found { border: 1px solid color-mix(in srgb, var(--m) 45%, transparent); background: color-mix(in srgb, var(--m) 6%, transparent); }

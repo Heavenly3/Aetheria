@@ -29,6 +29,7 @@ import TalentsPanel from '../components/TalentsPanel.vue'
 import SetBonuses from '../components/SetBonuses.vue'
 import CombatStats from '../components/CombatStats.vue'
 import AppearanceDialog from '../components/AppearanceDialog.vue'
+import ShareCard from '../components/ShareCard.vue'
 
 const tab = ref('overview')
 const { t } = useI18n()
@@ -66,6 +67,7 @@ function askUnequipTool(type) {
   ask(t('hero.unequipTitle', { slot: TOOL_TYPES[type].name }), lines, () => { if (busy) G.stop(); G.unequipTool(type) })
 }
 const appearance = ref(false)
+const sharing = ref(false)
 const b = computed(() => G.bonuses())
 const activeBlessings = computed(() => BLESSINGS.filter(x => G.blessed(x.id)))
 const drink = computed(() => (state.tavern.drink ? DRINKS.find(d => d.id === state.tavern.drink.id) : null))
@@ -95,8 +97,9 @@ const diary = computed(() => state.log.map(l => ({ icon: l.icon, text: tm(l), ho
               <div class="avatar" :style="{ '--t': state.tint }"><ItemTile :icon="state.avatar" :tint="state.tint" size="xl" :tip="false" /></div>
               <div class="hero-name">{{ state.name }}</div>
               <div v-if="G.heroTitle()" class="hero-title">{{ G.heroTitle().name }}</div>
-              <div class="row" style="justify-content:center;margin-top:6px"><Button :label="$t('cosmetics.edit')" icon="pi pi-palette" size="small" text @click="appearance = true" /></div>
+              <div class="row" style="justify-content:center;margin-top:6px"><Button :label="$t('cosmetics.edit')" icon="pi pi-palette" size="small" text @click="appearance = true" /><Button :label="$t('share.button')" icon="pi pi-image" size="small" text @click="sharing = true" /></div>
               <AppearanceDialog v-model:visible="appearance" />
+              <ShareCard v-model:visible="sharing" />
               <div class="row" style="justify-content:center;gap:6px;margin:6px 0 14px">
                 <span class="tag" :style="{ color: role.color }"><GameIcon :name="role.icon" :size="13" /> {{ role.name }}</span>
                 <span class="tag hue" :style="{ '--hue': diff.color }">{{ diff.name }}</span>
