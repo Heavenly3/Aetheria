@@ -84,7 +84,7 @@ describe('creatures', () => {
     G.startCombat('area', 'golem')
     expect(G.traitValue(G.getMonster(state.activity), 'armour')).toBeGreaterThan(0)
     G.startCombat('area', 'troll')
-    const act = state.activity, m = G.getMonster(act)
+    const act = state.activity
     act.mHp = 1
     vi.spyOn(G, 'attackSpeed').mockReturnValue(999)
     G.update(1)

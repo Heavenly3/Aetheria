@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { G, state, newHero, setLevel, fixRandom } from './helpers.js'
+import { G, state, newHero } from './helpers.js'
 import { ITEMS, BREWS } from '../src/game/data/items.js'
 import { DRINKS, EXPEDITIONS } from '../src/game/data/tavern.js'
 import { findAction } from '../src/game/data/actions.js'

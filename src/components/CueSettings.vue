@@ -1,7 +1,5 @@
 <script setup>
 import { computed, reactive } from 'vue'
-import { useI18n } from 'vue-i18n'
-import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
 import Slider from 'primevue/slider'
 import { G, state } from '../game/engine.js'
@@ -9,7 +7,6 @@ import { CUES, CUE_CATS, PACKS } from '../game/data/audio.js'
 import { cueSettings, setCue, previewCue, previewPack, requestNotify } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
 
-const { t } = useI18n()
 const st = state.settings
 const CAT_ICONS = { progress: 'laurel-crown', loot: 'locked-chest', combat: 'crossed-swords', world: 'crystal-ball', town: 'beer-horn', system: 'gears' }
 const groups = computed(() => CUE_CATS.map(cat => ({ cat, list: CUES.filter(c => c.cat === cat) })))

@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
 import { G, state } from '../game/engine.js'
-import { ITEMS } from '../game/data/items.js'
 import { modText } from '../i18n/mods.js'
 import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'

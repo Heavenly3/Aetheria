@@ -8,9 +8,8 @@ import TabPanels from 'primevue/tabpanels'
 import TabPanel from 'primevue/tabpanel'
 import ToggleButton from 'primevue/togglebutton'
 import { G, state } from '../game/engine.js'
-import { AREAS, BOSSES, MERCENARIES, DUNGEONS, MONSTERS, monsterLevel } from '../game/data/combat.js'
+import { AREAS, BOSSES, MERCENARIES, DUNGEONS, MONSTERS } from '../game/data/combat.js'
 import { ECHOES, ECHO_BONUS } from '../game/data/echoes.js'
-import { ITEMS } from '../game/data/items.js'
 import Button from 'primevue/button'
 import { QUESTS } from '../game/data/progression.js'
 import { fmt } from '../game/format.js'
@@ -28,7 +27,6 @@ const TABS = ['areas', 'bosses', 'dungeons']
 const tab = ref(TABS.includes(route.query.tab) ? route.query.tab : state.activity?.kind === 'boss' ? 'bosses' : state.activity?.kind === 'dungeon' ? 'dungeons' : 'areas')
 watch(() => route.query.tab, v => { if (TABS.includes(v)) tab.value = v })
 const inDungeon = id => state.activity?.type === 'combat' && state.activity.kind === 'dungeon' && state.activity.target === id
-const pct = v => Math.round(v * 100) + '%'
 const showArena = computed(() => state.activity?.type === 'combat' && state.activity.kind !== 'tower')
 const hire = ref({ squire: false, archer: false, mage: false })
 const hireCost = computed(() => MERCENARIES.filter(m => hire.value[m.id]).reduce((s, m) => s + m.cost, 0))

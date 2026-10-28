@@ -29,7 +29,6 @@ import TalentsPanel from '../components/TalentsPanel.vue'
 import SetBonuses from '../components/SetBonuses.vue'
 import CombatStats from '../components/CombatStats.vue'
 import AppearanceDialog from '../components/AppearanceDialog.vue'
-import { titled } from '../game/data/cosmetics.js'
 
 const tab = ref('overview')
 const { t } = useI18n()

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { G, state, newHero, setLevel, fixRandom, run } from './helpers.js'
+import { G, state, newHero, setLevel, fixRandom } from './helpers.js'
 import { CROPS, ITEMS } from '../src/game/data/items.js'
 import { HYBRIDS, BUILDINGS, FAVOURITE_SEASON, SOIL } from '../src/game/data/farm.js'
 import { findAction } from '../src/game/data/actions.js'

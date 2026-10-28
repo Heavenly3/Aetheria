@@ -28,7 +28,6 @@ const active = computed(() => fishingAt.value === picked.value)
 const progress = computed(() => (active.value ? Math.min(1, Math.max(0, state.activity.progress) / G.actionTime('fishing', water.value)) : 0))
 const lockText = a => (!G.festivalOpen(a) ? t('festival.onlyDuring', { name: G.festivalById(a.festival).name }) : G.level('fishing') < a.lvl ? t('common.lvlShort', { n: a.lvl }) : t('angling.needsRod', { tool: TOOL_TYPES.rod.name, n: a.tool.tier }))
 const fishOf = a => Object.keys(a.catch)
-const fishLocked = id => G.catchTable(water.value).find(r => r.id === id)?.locked
 const motion = computed(() => !state.settings.reduceMotion)
 // A bite is coming: the bobber dips (it only moves, it never changes size)
 const biting = computed(() => active.value && progress.value > 0.82)

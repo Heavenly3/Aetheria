@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
-import { G, state, newHero, setLevel, fixRandom } from './helpers.js'
+import { G, state, newHero, fixRandom } from './helpers.js'
 import { BLOOM_CROP, BLOOM_SCORE, FREE_SEEDS, BONFIRE_LEVELS, SUNFISH, GIANT, WRAITH, GIFTS, GIFT_POINTS } from '../src/game/data/festivalActs.js'
 import { findAction, outputsOf } from '../src/game/data/actions.js'
 import { PAGES } from '../src/game/data/codex.js'

@@ -10,7 +10,7 @@ import { ITEMS } from '../game/data/items.js'
 import { MONSTERS, BOSSES } from '../game/data/combat.js'
 import {
   MAX_LEVEL, xpToNext, FULL_MAX, BOND_MAX, BOND_TIERS, BASKET_MAX, NICK_MAX, HATCH_MS, PAT_COOLDOWN,
-  GIFTS_AT, LOYAL_AT, DEVOTED_AT, bondTier, companionBoost, dietOf, feedValue, giftEveryMs,
+  GIFTS_AT, bondTier, companionBoost, dietOf, feedValue, giftEveryMs,
 } from '../game/data/companions.js'
 import { fmt, fmtDate, fmtTime } from '../game/format.js'
 import { modText } from '../i18n/mods.js'

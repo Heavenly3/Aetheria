@@ -10,12 +10,11 @@ import Button from 'primevue/button'
 import ToggleSwitch from 'primevue/toggleswitch'
 import { ROLES, DIFFICULTIES, AVATARS, TINTS, ATTRIBUTES } from '../game/data/character.js'
 import { SKILLS } from '../game/data/skills.js'
-import { ITEMS } from '../game/data/items.js'
 import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'
 
 const escape = v => v.replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`)
-const props = defineProps({ slot: Number })
+defineProps({ slotIndex: Number })
 const emit = defineEmits(['cancel', 'create'])
 
 const NAMES = ['Lyra', 'Aldric', 'Seren', 'Kael', 'Mira', 'Thorne', 'Elowen', 'Darian', 'Isolde', 'Rowan', 'Vesper', 'Bran']
@@ -52,7 +51,7 @@ function create() {
     <div class="row" style="margin-bottom:18px">
       <div class="grow">
         <h1 class="cc-title">{{ $t('creation.title') }}</h1>
-        <div class="muted small">{{ $t('creation.slot', { n: slot + 1 }) }}</div>
+        <div class="muted small">{{ $t('creation.slot', { n: slotIndex + 1 }) }}</div>
       </div>
       <Button :label="$t('common.cancel')" icon="pi pi-times" text severity="secondary" @click="emit('cancel')" />
     </div>
@@ -138,7 +137,7 @@ function create() {
               </label>
               <p class="small faint" style="margin:0">{{ $t('creation.startLater') }}</p>
             </div>
-            <p class="small muted">{{ $t('creation.note', { n: slot + 1 }) }}</p>
+            <p class="small muted">{{ $t('creation.note', { n: slotIndex + 1 }) }}</p>
             <div class="cc-nav">
               <Button :label="$t('common.back')" icon="pi pi-arrow-left" severity="secondary" text @click="activateCallback('3')" />
               <Button :label="$t('creation.begin')" icon="pi pi-play" @click="create" />

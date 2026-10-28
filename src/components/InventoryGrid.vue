@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import InputText from 'primevue/inputtext'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
@@ -15,7 +14,6 @@ import GameIcon from './GameIcon.vue'
 const props = defineProps({ mode: { type: String, default: 'inventory' } })
 const selected = defineModel({ type: String, default: null })
 const emit = defineEmits(['filtered'])
-const { t } = useI18n()
 
 const group = ref('all')
 const cat = ref(null)

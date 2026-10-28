@@ -5,7 +5,7 @@ import { ACTIONS, findAction, QUALITIES, qualityChances, withQuality, FISH_INFO 
 import { BAITS, WATERS, MASTERY_LUCK } from './data/fishing.js'
 import {
   PLAYER_ATTACK_SPEED, COMBAT_STYLES, SPELLS, MONSTERS, AREAS, BOSSES, MERCENARIES,
-  SLAYER_SHOP, TOWER_SHOP, towerMonster, monsterLevel, DUNGEONS,
+  TOWER_SHOP, towerMonster, DUNGEONS,
 } from './data/combat.js'
 import { QUESTS, ACHIEVEMENTS, ROOMS, BLESSINGS, BLESSING_DURATION, PRESTIGE, QUEST_STATS } from './data/progression.js'
 import {

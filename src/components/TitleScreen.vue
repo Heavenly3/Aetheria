@@ -136,7 +136,7 @@ function created(profile) { startNewGame(createSlot.value, profile) }
     </div>
     <div class="ts-lang"><ThemeSelect /><LanguageSelect input-id="title-language" /></div>
 
-    <CharacterCreation v-if="mode === 'create'" :slot="createSlot" @cancel="mode = hasAny ? 'new' : 'menu'" @create="created" />
+    <CharacterCreation v-if="mode === 'create'" :slot-index="createSlot" @cancel="mode = hasAny ? 'new' : 'menu'" @create="created" />
 
     <div v-else class="ts-content">
       <div class="logo">

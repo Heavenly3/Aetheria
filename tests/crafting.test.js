@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { G, state, newHero, setLevel, fixRandom, run } from './helpers.js'
 import { ITEMS, CLOTHS, ROBES, HIDES, HIDE_PIECES } from '../src/game/data/items.js'
-import { ACTIONS, QUALITIES, qualityChances, withQuality, findAction } from '../src/game/data/actions.js'
+import { ACTIONS, qualityChances, withQuality, findAction } from '../src/game/data/actions.js'
 import { SET_OF } from '../src/game/data/sets.js'
 import { MONSTERS } from '../src/game/data/combat.js'
 import { weaponProfile } from '../src/game/data/fighting.js'

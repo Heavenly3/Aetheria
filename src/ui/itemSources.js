@@ -1,5 +1,5 @@
 import { fmtNum } from '../game/format.js'
-import { t, intlLocale } from '../i18n/index.js'
+import { t } from '../i18n/index.js'
 import { G } from '../game/engine.js'
 import { ITEMS } from '../game/data/items.js'
 import { SKILLS } from '../game/data/skills.js'

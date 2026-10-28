@@ -104,7 +104,6 @@ const costTags = cost => [
 const reforgeCost = computed(() => (it.value ? G.reforgeCost(current.value.id) : null))
 const fuseCost = computed(() => G.fuseCost(fuseQ.value))
 const shapeCost = computed(() => (it.value ? G.reshapeCost(current.value.id) : null))
-const fromRank = computed(() => (reveal.value?.from ? qualityRank(ITEMS[reveal.value.from].quality) : 0))
 </script>
 
 <template>
