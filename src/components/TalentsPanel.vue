@@ -53,5 +53,4 @@ function learn(tal) { if (G.learnTalent(tal.id)) G.toast(tal.icon, 'talents.lear
 .pips { display: flex; gap: 4px; }
 .pips i { flex: 1; height: 5px; border-radius: 5px; background: var(--tint-3); }
 .pips i.on { background: var(--c); box-shadow: 0 0 8px color-mix(in srgb, var(--c) 60%, transparent); }
-.card.locked { opacity: 0.5; }
 </style>

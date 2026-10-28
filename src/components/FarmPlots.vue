@@ -284,7 +284,8 @@ const buildingEffect = id => {
 .plot-empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px; border: 0; background: none; color: var(--muted); font: inherit; cursor: pointer; border-radius: 12px; }
 .plot-empty:hover { color: var(--gold-hi); background: rgba(226, 182, 90, 0.06); }
 .building.locked :deep(.tile) { filter: grayscale(0.8); }
-.hybrid:not(.known) { opacity: 0.75; }
+.hybrid:not(.known) { border-style: dashed; }
+.hybrid:not(.known) .tile { opacity: 0.55; }
 .hybrid.known { border-color: rgba(201, 176, 255, 0.4); }
 .seed-pop { width: 280px; max-height: 360px; overflow-y: auto; }
 .seed-opt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border-radius: 10px; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; text-align: start; }

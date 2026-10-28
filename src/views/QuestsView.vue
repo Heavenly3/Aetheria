@@ -109,5 +109,4 @@ const reqText = q => [
 <style scoped>
 .quest { display: flex; flex-direction: column; }
 .rewards { margin-top: auto; padding-top: 14px; gap: 6px; }
-.card.locked { opacity: 0.6; }
 </style>

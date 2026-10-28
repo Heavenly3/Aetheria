@@ -34,6 +34,7 @@ const hint = computed(() => {
 <style scoped>
 .threat { display: inline-flex; align-items: center; gap: 8px; padding: 3px 10px; border-radius: 999px; cursor: help; font-size: 12px; font-weight: 700;
   color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); background: color-mix(in srgb, var(--c) 10%, transparent); }
+:root[data-theme="light"] .threat { color: color-mix(in srgb, var(--c) 45%, #1d1a14); }
 .meter { width: 60px; }
 .meter > i { background: var(--c); }
 </style>

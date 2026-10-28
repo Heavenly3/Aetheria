@@ -15,7 +15,7 @@
   --ink: #ece4d3;
   --ink-2: #d3ccbd;
   --muted: #9d98ae;
-  --faint: #66627a;
+  --faint: #8a869e;
   --gold: #e2b65a;
   --gold-hi: #f6dc9a;
   --gold-lo: #a87a2a;
@@ -69,8 +69,8 @@
   --line-hi: rgba(168, 122, 42, 0.5);
   --ink: #2a2418;
   --ink-2: #4a4234;
-  --muted: #6b6253;
-  --faint: #978d7a;
+  --muted: #5e5647;
+  --faint: #6e6554;
   --gold: #a8741c;
   --gold-hi: #855a0e;
   --gold-lo: #6f4b1e;
@@ -78,7 +78,7 @@
   --on-gold: #fffaf0;
   --arcane: #2c8a7e;
   --danger: #c0392b;
-  --ok: #2d8a4c;
+  --ok: #23733d;
   --warn: #b0701a;
   --violet: #7a3fcf;
   --sky: #1f7fb0;
@@ -223,7 +223,10 @@ button.card:hover:not(.locked) { transform: translateY(-2px); border-color: colo
 .card.active { border-color: color-mix(in srgb, var(--c, var(--gold)) 70%, transparent);
   background: linear-gradient(160deg, color-mix(in srgb, var(--c, var(--gold)) 15%, transparent), var(--panel) 60%);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--c, var(--gold)) 35%, transparent), 0 18px 40px -18px color-mix(in srgb, var(--c, var(--gold)) 70%, transparent); }
-.card.locked { opacity: 0.45; filter: grayscale(0.6); cursor: not-allowed; }
+/* Locked reads as out of reach yet stays legible: greyed, dashed, with dimmed art rather than faded text */
+.card.locked { filter: grayscale(0.7); border-style: dashed; cursor: not-allowed; }
+.card.locked .tile { opacity: 0.55; }
+.card.locked .card-name { color: var(--muted); }
 .card.done { border-color: rgba(98, 193, 126, 0.3); }
 .card-name { font-weight: 700; font-size: 16px; line-height: 1.2; }
 .card-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
@@ -402,7 +405,7 @@ body.cue-flash::after { content: ''; position: fixed; inset: 0; pointer-events: 
 
 /* Text tinted with a data colour (difficulty, rarity…); darkened on parchment so it stays readable */
 .hue { color: var(--hue); }
-:root[data-theme="light"] .hue { color: color-mix(in srgb, var(--hue) 60%, #1d1a14); }
+:root[data-theme="light"] .hue { color: color-mix(in srgb, var(--hue) 40%, #1d1a14); }
 
 /* ---------- Tooltips: one look for all of them, themed for light and dark ---------- */
 .p-tooltip .p-tooltip-text {

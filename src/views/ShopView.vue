@@ -251,7 +251,7 @@ function sellJunk() {
 .buy-filters { margin-bottom: 4px; }
 .buy-filters .groups { margin-bottom: 12px; }
 .sort-select { min-width: 170px; }
-.shop-item.poor { opacity: 0.7; }
+.shop-item.poor .tile { opacity: 0.55; }
 :deep(.shop-qty) { width: 100%; }
 :deep(.qty-input) { width: 100%; text-align: center; }
 .sell-layout { display: grid; grid-template-columns: 1fr 340px; gap: 18px; align-items: start; }

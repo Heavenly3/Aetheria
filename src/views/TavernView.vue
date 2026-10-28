@@ -238,7 +238,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
                 <ItemTile :icon="c.avatar" :tint="RARITIES[c.rarity].color" size="md" :tip="false" />
                 <div class="grow">
                   <div class="card-name">{{ c.name }}</div>
-                  <div class="small" :style="{ color: RARITIES[c.rarity].color }">{{ RARITIES[c.rarity].name }} · {{ SPECIALTIES[c.spec].name }}</div>
+                  <div class="small hue" :style="{ '--hue': RARITIES[c.rarity].color }">{{ RARITIES[c.rarity].name }} · {{ SPECIALTIES[c.spec].name }}</div>
                 </div>
               </div>
               <div class="row wrap" style="gap:5px">

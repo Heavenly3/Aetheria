@@ -160,8 +160,10 @@ function ascend() {
 .node { position: relative; padding: 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); }
 .node + .node::before { content: ''; position: absolute; top: -11px; inset-inline-start: 31px; width: 2px; height: 10px; background: color-mix(in srgb, var(--c) 40%, transparent); }
 .node.owned { border-color: color-mix(in srgb, var(--c) 55%, transparent); box-shadow: 0 0 22px -12px var(--c); }
-.node.locked { opacity: 0.55; }
+.node.locked { filter: grayscale(0.7); border-style: dashed; }
+.node.locked .tile { opacity: 0.55; }
 .n-icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; display: grid; place-items: center; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); }
 .rank { color: var(--c); font-weight: 700; }
+:root[data-theme="light"] .rank, :root[data-theme="light"] .branch-head { color: color-mix(in srgb, var(--c) 45%, #1d1a14); }
 @media (max-width: 1000px) { .tree { grid-template-columns: 1fr; } }
 </style>

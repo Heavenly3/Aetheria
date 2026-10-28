@@ -301,7 +301,8 @@ const sorted = computed(() => [...listed.value].sort((a, b) => (G.isCompanion(b.
 button.pet { cursor: pointer; }
 .pet.got { border-color: color-mix(in srgb, var(--c) 45%, transparent); box-shadow: 0 0 24px -12px var(--c); }
 .pet.viewing { outline: 2px solid color-mix(in srgb, var(--c) 70%, transparent); outline-offset: 2px; }
-.pet:not(.got) { opacity: 0.75; }
+.pet:not(.got) { filter: grayscale(0.7); border-style: dashed; }
+.pet:not(.got) .tile { opacity: 0.55; }
 .pet-tile.hidden :deep(svg) { filter: brightness(0.25); }
 @keyframes idle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 @keyframes hop { 0% { transform: scale(1); } 30% { transform: scale(1.12) translateY(-8px); } 60% { transform: scale(0.96); } 100% { transform: scale(1); } }

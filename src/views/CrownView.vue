@@ -178,7 +178,8 @@ function choose(e) {
 .mini { background: none; border: 0; color: var(--muted); padding: 6px 8px; border-radius: 8px; cursor: pointer; }
 .mini:hover { background: var(--tint-2); color: var(--ink); }
 .shard.set { border-color: color-mix(in srgb, var(--c) 55%, transparent); }
-.shard.locked { opacity: 0.6; filter: none; cursor: default; }
+.shard.locked { border-style: dashed; cursor: default; }
+.shard.locked .tile { opacity: 0.55; }
 .power { display: flex; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
 .endings { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .ending { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 14px; border-radius: var(--radius); text-align: center; border: 1px solid var(--line); background: var(--tint-1); }

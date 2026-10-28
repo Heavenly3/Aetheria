@@ -79,7 +79,8 @@ function toggle(a) {
 .ab { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); color: inherit; font: inherit; text-align: start; cursor: pointer; }
 .ab:hover:not(.locked) { border-color: var(--line-hi); }
 .ab.on { border-color: color-mix(in srgb, var(--ok) 50%, transparent); background: color-mix(in srgb, var(--ok) 6%, var(--panel)); }
-.ab.locked { opacity: 0.55; cursor: default; }
+.ab.locked { filter: grayscale(0.7); border-style: dashed; cursor: default; }
+.ab.locked .tile { opacity: 0.55; }
 .ab-name { display: block; font-weight: 700; font-size: 14px; }
 .ab-desc { display: block; font-size: 12px; color: var(--ink-2); line-height: 1.4; margin-top: 2px; }
 .ab-meta { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }

@@ -2,7 +2,8 @@ import { ref } from 'vue'
 import { definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
 
-// Aura with forged gold as the primary colour, indigo-night surfaces in the dark and parchment in the light
+// Aura with forged gold as the primary colour, indigo-night surfaces in the dark and parchment in the light.
+// Steps 300-400 carry muted text (inactive tabs, toggles, tags), so they keep 4.5:1 on every surface
 export const AetheriaPreset = definePreset(Aura, {
   semantic: {
     primary: {
@@ -13,14 +14,14 @@ export const AetheriaPreset = definePreset(Aura, {
       light: {
         surface: {
           0: '#ffffff', 50: '#fbf8f1', 100: '#f3eee3', 200: '#e6dfcf', 300: '#cfc5b0', 400: '#a99e88',
-          500: '#857a65', 600: '#675e4c', 700: '#4d4638', 800: '#363026', 900: '#231f18', 950: '#15120d',
+          500: '#6e6554', 600: '#5c5445', 700: '#4d4638', 800: '#363026', 900: '#231f18', 950: '#15120d',
         },
         primary: { color: '{primary.700}', contrastColor: '#fffaf0', hoverColor: '{primary.800}', activeColor: '{primary.900}' },
         highlight: { background: '{primary.100}', focusBackground: '{primary.200}', color: '{primary.800}', focusColor: '{primary.900}' },
       },
       dark: {
         surface: {
-          0: '#ffffff', 50: '#ece8f3', 100: '#d0cbdb', 200: '#aaa5b9', 300: '#837f96', 400: '#625e76',
+          0: '#ffffff', 50: '#ece8f3', 100: '#d0cbdb', 200: '#aaa5b9', 300: '#9692a9', 400: '#8a869e',
           500: '#48455c', 600: '#353347', 700: '#282638', 800: '#1d1b2b', 900: '#15141f', 950: '#0d0c15',
         },
         primary: { color: '{primary.400}', contrastColor: '#1a1206', hoverColor: '{primary.300}', activeColor: '{primary.200}' },

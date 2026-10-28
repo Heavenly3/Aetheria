@@ -40,6 +40,7 @@ const sorted = computed(() => [...ACHIEVEMENTS].sort((a, b) => (state.achievemen
 </template>
 
 <style scoped>
-.ach:not(.got) { opacity: 0.6; }
+.ach:not(.got) { filter: grayscale(0.7); border-style: dashed; }
+.ach:not(.got) .tile { opacity: 0.55; }
 .ach.got { border-color: rgba(226, 182, 90, 0.3); }
 </style>

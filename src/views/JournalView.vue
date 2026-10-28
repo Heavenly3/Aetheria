@@ -123,7 +123,7 @@ function readAll() {
 .soon { margin: -4px 0 14px; font-style: italic; }
 .page { border-radius: var(--radius); background: var(--panel); border: 1px solid var(--line); margin-bottom: 10px; overflow: hidden; }
 .page.open { border-color: var(--line-hi); }
-.page.locked { opacity: 0.6; }
+.page.locked { border-style: dashed; }
 .page-head { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; background: none; border: 0; color: inherit; font: inherit; text-align: start; }
 button.page-head { cursor: pointer; }
 button.page-head:hover { background: var(--tint-1); }
@@ -133,6 +133,7 @@ button.page-head:hover { background: var(--tint-1); }
 .page-text { padding: 4px 22px 20px 70px; max-width: 78ch; }
 .page-text p { margin: 0 0 12px; font-size: 16.5px; line-height: 1.7; color: var(--ink-2); }
 .page-text p:first-child::first-letter { font-family: var(--font-display); font-size: 2.4em; float: inline-start; line-height: 0.9; margin: 4px 8px 0 0; color: var(--gold); }
-.person.unknown { opacity: 0.6; }
+.person.unknown { border-style: dashed; }
+.person.unknown .tile { opacity: 0.55; }
 @media (max-width: 640px) { .page-text { padding: 2px 16px 16px; } }
 </style>

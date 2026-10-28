@@ -205,7 +205,8 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
 .hunt-name { font-family: var(--font-display); font-size: 19px; font-weight: 400; }
 .gifts { margin: 4px 0 6px; }
 .rarity-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 10px currentColor; }
-.entry.unknown { opacity: 0.7; }
+.entry.unknown { border-style: dashed; }
+.entry.unknown .tile { opacity: 0.55; }
 .entry:not(.unknown) { border-color: color-mix(in srgb, var(--c) 35%, transparent); }
 .dim :deep(svg) { filter: brightness(0.3); }
 .omen-riddle { margin: 10px 0 0; font-size: 13.5px; font-style: italic; color: var(--muted); line-height: 1.5; }

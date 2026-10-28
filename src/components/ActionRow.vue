@@ -54,7 +54,8 @@ const out = computed(() => Object.entries(a.value.out)[0])
   background: var(--panel); border: 1px solid var(--line); transition: border-color 0.18s, background 0.18s; }
 .arow:hover:not(.locked) { border-color: color-mix(in srgb, var(--c) 45%, transparent); }
 .arow.active { border-color: color-mix(in srgb, var(--c) 70%, transparent); background: linear-gradient(90deg, color-mix(in srgb, var(--c) 14%, transparent), var(--panel) 70%); }
-.arow.locked { opacity: 0.45; cursor: not-allowed; }
+.arow.locked { filter: grayscale(0.7); border-style: dashed; cursor: not-allowed; }
+.arow.locked .tile { opacity: 0.55; }
 .name { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
 .name b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ins { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12.5px; color: var(--muted); }

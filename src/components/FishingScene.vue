@@ -170,7 +170,7 @@ function setBait(id) { state.bait = state.bait === id ? null : id }
 .fishing { margin-bottom: 22px; }
 .waters .water { text-align: start; color: inherit; font: inherit; cursor: pointer; }
 .water.picked { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
-.water.locked { opacity: 0.6; }
+.water.locked { filter: grayscale(0.7); border-style: dashed; }
 .water .pulse { margin-inline-end: 2px; }
 .fish-icons { gap: 4px; margin-top: 10px; }
 /* The scene keeps one size whatever happens beside it */
@@ -197,14 +197,15 @@ function setBait(id) { state.bait = state.bait === id ? null : id }
 @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
 .fish-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
 .fish-row:last-of-type { border-bottom: 0; }
-.fish-row.locked { opacity: 0.55; }
+.fish-row.locked { filter: grayscale(0.7); }
+.fish-row.locked .tile { opacity: 0.55; }
 .odds { width: 80px; }
 .chance { min-width: 44px; text-align: end; }
 .baits { display: flex; flex-direction: column; gap: 6px; }
 .bait { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; background: var(--tint-1); border: 1px solid var(--line); color: inherit; font: inherit; cursor: pointer; text-align: start; }
 .bait:hover { border-color: var(--line-hi); }
 .bait.on { border-color: var(--gold); background: rgba(226, 182, 90, 0.08); }
-.bait.empty { opacity: 0.55; }
+.bait.empty .tile { opacity: 0.55; }
 .bait-name { display: block; font-weight: 600; font-size: 14px; }
 /* Phones: the waters in two short columns, so the scene and its button are close at hand */
 @media (max-width: 600px) {
