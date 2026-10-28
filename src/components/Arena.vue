@@ -94,7 +94,7 @@ onUnmounted(() => { off && off(); offAb && offAb() })
       <div class="bar thick hp-ok"><i :style="{ width: (Math.max(0, state.hp) / G.maxHp()) * 100 + '%' }" /></div>
       <div class="small muted tnum" style="margin-top:5px">{{ Math.max(0, state.hp) }} / {{ G.maxHp() }} {{ $t('common.hp') }}</div>
       <div class="bar thin" style="margin-top:8px"><i :style="{ width: (alive ? Math.min(1, act.pTimer / G.attackSpeed()) : 0) * 100 + '%' }" /></div>
-      <div class="bar thin energy" style="margin-top:6px" v-tooltip.top="help('combat.energy')"><i :style="{ width: ((act.energy || 0) / ENERGY_MAX) * 100 + '%' }" /></div>
+      <div class="bar thin energy" style="margin-top:6px" v-tooltip.top="() => help('combat.energy')"><i :style="{ width: ((act.energy || 0) / ENERGY_MAX) * 100 + '%' }" /></div>
       <div v-if="bar.length" class="ab-row">
         <span v-for="b in bar" :key="b.a.id" class="ab-slot" :class="{ ready: b.ready }" v-tooltip.top="abilityTip(b.a)">
           <ItemTile :icon="b.a.icon" tint="#6a4fbf" size="sm" :tip="false" />
@@ -102,7 +102,7 @@ onUnmounted(() => { off && off(); offAb && offAb() })
         </span>
       </div>
       <div class="fx-row">
-        <span v-for="bf in buffs" :key="bf.id" class="fx" :style="{ '--c': bf.color }" v-tooltip.top="tip($t(`abilities.list.${Object.keys(ABILITY_MAP).find(k => ABILITY_MAP[k].buff === bf.id)}`), $t(`abilities.buffs.${bf.id}`, { t: bf.time }))">
+        <span v-for="bf in buffs" :key="bf.id" class="fx" :style="{ '--c': bf.color }" v-tooltip.top="() => tip($t(`abilities.list.${Object.keys(ABILITY_MAP).find(k => ABILITY_MAP[k].buff === bf.id)}`), $t(`abilities.buffs.${bf.id}`, { t: bf.time }))">
           <GameIcon :name="bf.icon" :size="13" />{{ bf.left }}
         </span>
         <span v-for="s in statuses('player')" :key="s.id" class="fx" :style="{ '--c': s.color }" v-tooltip.top="statusTip(s)">
@@ -124,10 +124,10 @@ onUnmounted(() => { off && off(); offAb && offAb() })
         <ItemTile :icon="m.icon" :tint="elite ? elite.color : m.boss ? '#c0392b' : '#8a2a32'" size="xl" :tip="false" />
       </div>
       <div class="fighter-name">
-        <span v-if="elite" class="elite-tag" v-tooltip.top="tip($t('fighting.elite'), $t('fighting.eliteHint', { gold: ELITE_LOOT.gold, drops: ELITE_LOOT.drops }))">{{ $t('fighting.elite') }}</span>
+        <span v-if="elite" class="elite-tag" v-tooltip.top="() => tip($t('fighting.elite'), $t('fighting.eliteHint', { gold: ELITE_LOOT.gold, drops: ELITE_LOOT.drops }))">{{ $t('fighting.elite') }}</span>
         {{ monsterName }}
       </div>
-      <div v-if="phase" class="phase-tag" v-tooltip.top="tip($t(`fighting.phases.${phase.id}.name`), $t(`fighting.phases.${phase.id}.desc`))">{{ $t('fighting.phase', { n: act.phase + 1 }) }} · {{ $t(`fighting.phases.${phase.id}.name`) }}</div>
+      <div v-if="phase" class="phase-tag" v-tooltip.top="() => tip($t(`fighting.phases.${phase.id}.name`), $t(`fighting.phases.${phase.id}.desc`))">{{ $t('fighting.phase', { n: act.phase + 1 }) }} · {{ $t(`fighting.phases.${phase.id}.name`) }}</div>
       <div class="bar thick hp"><i :style="{ width: (alive ? act.mHp / m.hp : 0) * 100 + '%' }" /></div>
       <div v-if="charge && alive" class="charge" :style="{ '--c': charge.def.color }">
         <div class="row small" style="gap:6px">
@@ -154,26 +154,26 @@ onUnmounted(() => { off && off(); offAb && offAb() })
     </div>
 
     <div class="arena-meta">
-      <span class="tag" v-tooltip.top="tip(stance.name, stance.desc)"><GameIcon :name="stance.icon" :size="12" /> {{ $t(`combat.typeNames.${stance.type}`) }} · {{ stance.name }}</span>
-      <span class="tag" v-tooltip.top="help('combat.accuracy')">{{ $t('combat.accuracy', { v: pct(G.hitChance(ps.accRoll, mr.defRoll)) }) }}</span>
-      <span class="tag" v-tooltip.top="help('stats.maxHit')">{{ $t('combat.maxHit', { v: ps.maxHit }) }}</span>
-      <span class="tag" v-tooltip.top="help('combat.speed')">{{ $t('fighting.speed', { v: +G.attackSpeed().toFixed(1) }) }}</span>
-      <span class="tag" v-tooltip.top="help('combat.crit')">{{ $t('fighting.critChance', { v: pct(G.critChance()) }) }}</span>
-      <span class="tag" v-tooltip.top="help('combat.hitsYou')">{{ $t('combat.hitsYou', { v: pct(G.hitChance(mr.accRoll, ps.defRoll)) }) }}</span>
-      <span v-if="G.dodgeChance()" class="tag" v-tooltip.top="help('combat.dodge')">{{ $t('fighting.dodge', { v: pct(G.dodgeChance()) }) }}</span>
-      <span v-if="G.blockChance()" class="tag" v-tooltip.top="help('combat.block')">{{ $t('fighting.block', { v: pct(G.blockChance()) }) }}</span>
-      <span v-if="m.weak" class="tag" :class="m.weak === G.styleType() ? 'ok' : ''" v-tooltip.top="help('combat.weakness')">{{ $t('combat.weakTo', { style: $t(`combat.types.${m.weak}`) }) }}</span>
+      <span class="tag" v-tooltip.top="() => tip(stance.name, stance.desc)"><GameIcon :name="stance.icon" :size="12" /> {{ $t(`combat.typeNames.${stance.type}`) }} · {{ stance.name }}</span>
+      <span class="tag" v-tooltip.top="() => help('combat.accuracy')">{{ $t('combat.accuracy', { v: pct(G.hitChance(ps.accRoll, mr.defRoll)) }) }}</span>
+      <span class="tag" v-tooltip.top="() => help('stats.maxHit')">{{ $t('combat.maxHit', { v: ps.maxHit }) }}</span>
+      <span class="tag" v-tooltip.top="() => help('combat.speed')">{{ $t('fighting.speed', { v: +G.attackSpeed().toFixed(1) }) }}</span>
+      <span class="tag" v-tooltip.top="() => help('combat.crit')">{{ $t('fighting.critChance', { v: pct(G.critChance()) }) }}</span>
+      <span class="tag" v-tooltip.top="() => help('combat.hitsYou')">{{ $t('combat.hitsYou', { v: pct(G.hitChance(mr.accRoll, ps.defRoll)) }) }}</span>
+      <span v-if="G.dodgeChance()" class="tag" v-tooltip.top="() => help('combat.dodge')">{{ $t('fighting.dodge', { v: pct(G.dodgeChance()) }) }}</span>
+      <span v-if="G.blockChance()" class="tag" v-tooltip.top="() => help('combat.block')">{{ $t('fighting.block', { v: pct(G.blockChance()) }) }}</span>
+      <span v-if="m.weak" class="tag" :class="m.weak === G.styleType() ? 'ok' : ''" v-tooltip.top="() => help('combat.weakness')">{{ $t('combat.weakTo', { style: $t(`combat.types.${m.weak}`) }) }}</span>
       <RegionThreat v-if="act.kind === 'area' && REGION_OF[act.target]" :area="REGION_OF[act.target]" />
-      <span v-if="G.onTask(m)" class="tag arcane" v-tooltip.top="help('combat.task')">{{ $t('combat.taskLeft', { n: state.slayer.task.left }) }}</span>
+      <span v-if="G.onTask(m)" class="tag arcane" v-tooltip.top="() => help('combat.task')">{{ $t('combat.taskLeft', { n: state.slayer.task.left }) }}</span>
       <span v-if="dungeon" class="tag arcane">{{ dungeon.name }} · {{ act.room >= dungeon.rooms.length ? $t('combat.boss') : $t('combat.room', { n: act.room + 1, total: dungeon.rooms.length }) }} · {{ $t('combat.clears', { n: act.clears }) }}</span>
       <span v-if="state.prayer" class="tag ok">{{ $t('combat.prayerActive') }}</span>
-      <span class="tag gold" v-tooltip.top="help('combat.kills')">{{ $t('combat.kills', { n: act.runKills }) }}</span>
-      <span v-if="streak" class="tag" :class="{ gold: G.streakBonus() > 0 }" v-tooltip.top="help('combat.streak', { best: fmt(state.hunt.best) })"><GameIcon name="flame" :size="12" /> {{ $t('fighting.streak', { n: fmt(streak), v: fmtDec(G.streakBonus() * 100) }) }}</span>
+      <span class="tag gold" v-tooltip.top="() => help('combat.kills')">{{ $t('combat.kills', { n: act.runKills }) }}</span>
+      <span v-if="streak" class="tag" :class="{ gold: G.streakBonus() > 0 }" v-tooltip.top="() => help('combat.streak', { best: fmt(state.hunt.best) })"><GameIcon name="flame" :size="12" /> {{ $t('fighting.streak', { n: fmt(streak), v: fmtDec(G.streakBonus() * 100) }) }}</span>
     </div>
 
     <!-- The fight in numbers, and its notable moments -->
     <div v-if="live" class="live">
-      <span v-tooltip.top="help('combat.live')" class="live-title">{{ $t('fighting.live.title') }}</span>
+      <span v-tooltip.top="() => help('combat.live')" class="live-title">{{ $t('fighting.live.title') }}</span>
       <span><b class="tnum">{{ fmtDec(live.dps) }}</b> {{ $t('fighting.live.dps') }}</span>
       <span><b class="tnum">{{ fmt(live.killsH) }}</b> {{ $t('fighting.live.killsH') }}</span>
       <span><b class="tnum">{{ fmt(live.xpH) }}</b> {{ $t('fighting.live.xpH') }}</span>

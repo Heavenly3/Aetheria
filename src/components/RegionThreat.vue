@@ -4,15 +4,17 @@ import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { THREAT_EFFECT, CLEANSE, threatLevel, threatShare } from '../game/data/realm.js'
 import { tip } from '../ui/tips.js'
+import { throttled } from '../ui/throttled.js'
 
 // How troubled a region is, and what that does to its fights
 const props = defineProps({ area: { type: String, required: true } })
 const { t } = useI18n()
-const value = computed(() => (void state.lastTick, void state.realm, G.threatOf(props.area)))
+// Threat drifts slowly, so a refresh every couple of seconds is plenty
+const value = throttled(() => (void state.lastTick, void state.realm, G.threatOf(props.area)), 2000)
 const level = computed(() => threatLevel(value.value))
 const share = computed(() => threatShare(value.value))
 const overrun = computed(() => !!state.realm?.regions?.[props.area]?.overrun)
-const hint = computed(() => {
+const hint = () => {
   const s = share.value, lines = [{ text: t('realm.value', { n: Math.round(value.value) }), kind: 'muted' }]
   if (s > 0) {
     lines.push({ text: t('realm.effects.monster', { v: Math.round(s * THREAT_EFFECT.monster * 100) }), kind: 'bad' })
@@ -21,7 +23,7 @@ const hint = computed(() => {
   }
   if (overrun.value) lines.push({ text: t('realm.bounty', { n: CLEANSE.to }), kind: 'gold' })
   return tip(t(`realm.levels.${level.value.id}.name`), t(`realm.levels.${level.value.id}.desc`), lines)
-})
+}
 </script>
 
 <template>

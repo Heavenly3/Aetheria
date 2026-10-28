@@ -99,7 +99,7 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
             <span v-if="G.knows(m, 'hunted')" class="ok-text">+{{ Math.round(HUNT_BONUS * 100) }}% {{ $t('bestiary.vsThis') }}</span>
           </div>
           <div v-if="G.knowledge(m) && traitsOf(m.id).length" class="row wrap traits">
-            <span v-for="tr in traitsOf(m.id)" :key="tr" class="tag" v-tooltip.top="tip($t(`fighting.traits.${tr}.name`), $t(`fighting.traits.${tr}.desc`))"><GameIcon :name="TRAITS[tr].icon" :size="11" /> {{ $t(`fighting.traits.${tr}.name`) }}</span>
+            <span v-for="tr in traitsOf(m.id)" :key="tr" class="tag" v-tooltip.top="() => tip($t(`fighting.traits.${tr}.name`), $t(`fighting.traits.${tr}.desc`))"><GameIcon :name="TRAITS[tr].icon" :size="11" /> {{ $t(`fighting.traits.${tr}.name`) }}</span>
           </div>
 
           <div v-if="G.knowledge(m)" class="drops">

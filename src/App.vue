@@ -11,6 +11,7 @@ import Menu from 'primevue/menu'
 import { useToast } from 'primevue/usetoast'
 import { G, state, HP_REGEN, HP_REGEN_COMBAT } from './game/engine.js'
 import { help, tip } from './ui/tips.js'
+import { throttled } from './ui/throttled.js'
 import { session, exitToTitle, continueGame } from './game/loop.js'
 import { SKILLS } from './game/data/skills.js'
 import { ITEMS } from './game/data/items.js'
@@ -61,12 +62,13 @@ const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.
 const hpPct = computed(() => (Math.max(0, state.hp) / G.maxHp()) * 100)
 const fest = computed(() => G.activeFestival())
 // Weather follows the clock (it changes every few hours, the same for everyone)
-const wx = computed(() => (void state.lastTick, weatherAt()))
+const wx = throttled(() => (void state.lastTick, weatherAt()), 10000)
 const wxLook = computed(() => {
   const w = wx.value.weather, clearNight = w.id === 'clear' && wx.value.night
   return { icon: clearNight ? null : w.icon, pi: clearNight ? 'pi pi-moon' : w.pi, key: clearNight ? 'clearNight' : w.id, tint: w.tint }
 })
-const wxTip = computed(() => {
+// Built when hovered: it reads the clock and every modifier of the sky
+function wxTip() {
   const w = wx.value, next = nextWeather()
   const lines = []
   if (w.weather.event) lines.unshift({ text: t('weather.eventLine'), kind: 'gold' })
@@ -79,7 +81,7 @@ const wxTip = computed(() => {
     if (part.from === 'weather' && w.weather.monster > 1) lines.push({ text: t('weather.monsters', { v: Math.round((w.weather.monster - 1) * 100) }), kind: 'bad' })
   }
   return tip(t(`weather.${wxLook.value.key}.name`), t(`weather.${wxLook.value.key}.desc`), lines)
-})
+}
 // Music follows what the hero is doing and the weather; settings apply as soon as they change
 const place = computed(() => (route.name === 'skill' ? route.params.id : String(route.name || '')))
 watch(() => ({ mood: moodFor(state, place.value, wx.value.weather.id), weather: wx.value.weather.id, night: wx.value.night, area: areaFor() }), setScene, { immediate: true, deep: true })
@@ -300,18 +302,18 @@ function startAdventure() {
             <span class="chip wx-chip" :style="{ '--c': wxLook.tint }" v-tooltip.bottom="wxTip" role="img" :aria-label="$t(`weather.${wxLook.key}.name`)">
               <GameIcon v-if="wxLook.icon" :name="wxLook.icon" :size="15" /><i v-else :class="wxLook.pi" />
             </span>
-            <span class="chip hp-chip" v-tooltip.bottom="help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
+            <span class="chip hp-chip" v-tooltip.bottom="() => help('top.hp', { out: HP_REGEN, fight: HP_REGEN_COMBAT })">
               <GameIcon name="glass-heart" :size="15" />
               <span class="mini-hp"><i :style="{ width: hpPct + '%' }" /></span>
               {{ Math.max(0, state.hp) }}/{{ G.maxHp() }}
             </span>
-            <span class="chip" v-tooltip.bottom="help('top.combat')"><GameIcon name="crossed-swords" :size="15" />{{ G.combatLevel() }}</span>
-            <span class="chip" v-tooltip.bottom="help('top.total')"><GameIcon name="star-medal" :size="15" />{{ G.totalLevel() }}</span>
-            <router-link v-if="omenSign" to="/omens" class="chip omen-chip sign" v-tooltip.bottom="tip($t('omens.signTitle'), $t(G.omenSignHint()))"><GameIcon name="crystal-ball" :size="15" />…</router-link>
-            <router-link v-else-if="ev && state.event" to="/omens" class="chip omen-chip" :style="{ '--c': RARITY_TINT[ev.rarity] }" v-tooltip.bottom="tip(ev.name, ev.desc)">
+            <span class="chip" v-tooltip.bottom="() => help('top.combat')"><GameIcon name="crossed-swords" :size="15" />{{ G.combatLevel() }}</span>
+            <span class="chip" v-tooltip.bottom="() => help('top.total')"><GameIcon name="star-medal" :size="15" />{{ G.totalLevel() }}</span>
+            <router-link v-if="omenSign" to="/omens" class="chip omen-chip sign" v-tooltip.bottom="() => tip($t('omens.signTitle'), $t(G.omenSignHint()))"><GameIcon name="crystal-ball" :size="15" />…</router-link>
+            <router-link v-else-if="ev && state.event" to="/omens" class="chip omen-chip" :style="{ '--c': RARITY_TINT[ev.rarity] }" v-tooltip.bottom="() => tip(ev.name, ev.desc)">
               <GameIcon :name="ev.icon" :size="15" />{{ ev.name }} · {{ fmtClock(state.event.t) }}
             </router-link>
-            <router-link v-if="fest" to="/festival" class="chip fest-chip" :style="{ '--c': fest.tint }" v-tooltip.bottom="tip(fest.name, fest.desc, [{ text: $t('help.top.festTokens', { n: fmt(G.festivalState().tokens) }), kind: 'gold' }])"><GameIcon :name="fest.icon" :size="15" />{{ fmt(G.festivalState().tokens) }}</router-link>
+            <router-link v-if="fest" to="/festival" class="chip fest-chip" :style="{ '--c': fest.tint }" v-tooltip.bottom="() => tip(fest.name, fest.desc, [{ text: $t('help.top.festTokens', { n: fmt(G.festivalState().tokens) }), kind: 'gold' }])"><GameIcon :name="fest.icon" :size="15" />{{ fmt(G.festivalState().tokens) }}</router-link>
             <router-link v-if="pal" to="/pets" class="chip pal-chip" :class="{ alert: pal.alert }" :style="{ '--c': pal.tint }" v-tooltip.bottom="pal.tip" :aria-label="pal.tip">
               <GameIcon :name="pal.icon" :size="15" />
               <span v-if="!pal.egg" class="pal-meter" :class="{ low: pal.full < 25 }"><i :style="{ width: pal.full + '%' }" /></span>

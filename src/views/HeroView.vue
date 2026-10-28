@@ -77,6 +77,8 @@ const sets = computed(() => G.activeSets().filter(x => x.worn >= x.set.bonuses[0
 const statRows = computed(() => Object.entries(STAT_LABELS).map(([k, l]) => ({ k, l, v: k === 'mDmg' ? `+${Math.round(b.value[k] * 100)}%` : `+${b.value[k]}` })))
 const role = computed(() => ROLES[state.role])
 const diff = computed(() => DIFFICULTIES[state.difficulty])
+// Translated once per new entry, not on every tick the screen redraws
+const diary = computed(() => state.log.map(l => ({ icon: l.icon, text: tm(l), hour: fmtHour(l.t) })))
 </script>
 
 <template>
@@ -118,7 +120,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div class="section-title" style="margin-top:20px">{{ $t('hero.equipment') }} <HelpTip k="sections.equipment" /></div>
               <div class="equip-grid">
                 <template v-for="(s, slot) in SLOTS" :key="slot">
-                  <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="itemTip(state.equipment[slot], $t('hero.clickToRemove'))" @click="askUnequip(slot)">
+                  <button v-if="state.equipment[slot]" class="equip-slot filled" v-tooltip.top="() => itemTip(state.equipment[slot], $t('hero.clickToRemove'))" @click="askUnequip(slot)">
                     <ItemTile :item="state.equipment[slot]" size="sm" :tip="false" :qty="ITEMS[state.equipment[slot]].stackEquip ? G.qty(state.equipment[slot]) : null" />
                     <div class="grow"><div class="slot-name">{{ s.name }}</div><div class="slot-item">{{ ITEMS[state.equipment[slot]].name }}<b v-if="G.enchantLevel(slot)" class="ench"> +{{ G.enchantLevel(slot) }}</b></div></div>
                   </button>
@@ -131,7 +133,7 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div class="section-title" style="margin-top:20px">{{ $t('hero.tools') }} <HelpTip k="sections.tools" /></div>
               <div class="equip-grid tools">
                 <template v-for="(t, type) in TOOL_TYPES" :key="type">
-                  <button v-if="state.tools[type]" class="equip-slot filled" v-tooltip.top="itemTip(state.tools[type], $t('hero.clickToRemove'))" @click="askUnequipTool(type)">
+                  <button v-if="state.tools[type]" class="equip-slot filled" v-tooltip.top="() => itemTip(state.tools[type], $t('hero.clickToRemove'))" @click="askUnequipTool(type)">
                     <ItemTile :item="state.tools[type]" size="sm" :tip="false" />
                     <div class="grow"><div class="slot-name">{{ $t('hero.toolTier', { tool: t.name, n: G.toolTier(type) }) }}</div><div class="slot-item">{{ ITEMS[state.tools[type]].name }}</div></div>
                   </button>
@@ -186,10 +188,10 @@ const diff = computed(() => DIFFICULTIES[state.difficulty])
               <div>
                 <div class="section-title" style="margin-top:0">{{ $t('hero.diary') }}</div>
                 <div class="panel pad diary">
-                  <div v-for="(l, i) in state.log" :key="i" class="diary-row">
+                  <div v-for="(l, i) in diary" :key="i" class="diary-row">
                     <GameIcon :name="l.icon" :size="16" />
-                    <span class="grow">{{ tm(l) }}</span>
-                    <span class="faint small tnum">{{ fmtHour(l.t) }}</span>
+                    <span class="grow">{{ l.text }}</span>
+                    <span class="faint small tnum">{{ l.hour }}</span>
                   </div>
                   <div v-if="!state.log.length" class="muted small">{{ $t('hero.diaryEmpty') }}</div>
                 </div>

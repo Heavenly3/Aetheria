@@ -1,3 +1,4 @@
+import { fmtNum } from '../game/format.js'
 import { t, intlLocale } from '../i18n/index.js'
 import { G } from '../game/engine.js'
 import { ITEMS } from '../game/data/items.js'
@@ -10,7 +11,7 @@ import { AREAS } from '../game/data/combat.js'
    asks for (a level, a price) or how likely it is. Used by the inventory and the item tooltips. */
 
 // 12%, 2.5% or 1/400 (rare odds in full: 1/1,000,000 says more than 1/1M)
-export const oneIn = c => Math.round(1 / c).toLocaleString(intlLocale())
+export const oneIn = c => fmtNum(Math.round(1 / c))
 const chance = c => (c >= 0.1 ? `${Math.round(c * 100)}%` : c >= 0.01 ? `${+(c * 100).toFixed(1)}%` : `1/${oneIn(c)}`)
 const lvl = (skill, n) => ({ text: `${SKILLS[skill].name} ${n}`, ok: G.level(skill) >= n, color: SKILLS[skill].color })
 const crop = id => t(`crops.${id}`)

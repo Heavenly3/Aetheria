@@ -2,6 +2,7 @@ import { named } from '../../i18n/bind.js'
 import { CHAPTERS } from './journal.js'
 import { ENDINGS } from './crown.js'
 import { ITEMS } from './items.js'
+import { fmtNum } from '../format.js'
 import { t, intlLocale } from '../../i18n/index.js'
 
 /* ---------------- Quests ---------------- */
@@ -109,7 +110,7 @@ QUESTS.forEach(q => {
 // Names and descriptions come from `ach.<group>` templates that receive the threshold `n`
 const ach = (id, group, n, icon, check, gold) => {
   const a = { id, icon, check, gold }
-  const num = () => (typeof n === 'number' ? n.toLocaleString(intlLocale()) : n)
+  const num = () => (typeof n === 'number' ? fmtNum(n) : n)
   return named(a, () => t(`ach.${group}.name`, { n: num() }), () => t(`ach.${group}.desc`, { n: num() }))
 }
 const tiers = (group, list, icon, check) => list.map(([n, g]) => ach(`${group}_${n}`, group, n, icon, G => check(G, n), g))

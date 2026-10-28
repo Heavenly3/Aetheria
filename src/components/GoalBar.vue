@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import Popover from 'primevue/popover'
 import { G, state } from '../game/engine.js'
 import { trackedGoals } from '../ui/tracker.js'
+import { throttled } from '../ui/throttled.js'
 import { goTo } from '../ui/focus.js'
 import { fmt } from '../game/format.js'
 import GameIcon from './GameIcon.vue'
@@ -18,7 +19,7 @@ const router = useRouter()
 const board = ref(null)
 const hidden = ref((() => { try { return localStorage.getItem(STORE) || '' } catch { return '' } })())
 const on = computed(() => state.tutorial.done && state.settings.goalBar !== false)
-const goals = computed(() => (on.value ? trackedGoals() : []))
+const goals = throttled(() => (on.value ? trackedGoals() : []))
 const top = computed(() => goals.value[0] || null)
 const goal = computed(() => (on.value && !top.value ? G.nextGoal() : null))
 const key = computed(() => (top.value ? 'track:' + top.value.key : goal.value && `${goal.value.kind}:${goal.value.quest?.id || goal.value.hint || ''}`))

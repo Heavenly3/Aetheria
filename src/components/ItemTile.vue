@@ -20,10 +20,10 @@ const p = defineProps({
 })
 const it = computed(() => (p.item ? ITEMS[p.item] : null))
 const px = computed(() => SIZES[p.size] || 46)
-// The full item card on hover (kind, stats, effects, needs and value)
 // Finer crafted gear wears coloured gems in its corner
 const grade = computed(() => (it.value?.grade ? QUALITIES[it.value.grade] : null))
-const tipValue = computed(() => (p.tip && p.item ? itemTip(p.item, p.note) : null))
+// The full item card on hover (kind, stats, effects, needs and value), built only when hovered
+const tipValue = computed(() => (p.tip && p.item ? () => itemTip(p.item, p.note) : null))
 const style = computed(() => ({
   '--t': p.tint || it.value?.tint || '#8a8a8a',
   // Ultra rare finds glow in their tier's colour

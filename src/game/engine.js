@@ -188,6 +188,10 @@ for (const [a, def] of Object.entries(ATTRIBUTES)) for (const [k, per] of Object
 for (const tt of TALENTS) if (tt.mod) (TALENTS_BY_MOD[tt.mod] ||= []).push(tt)
 // Values remembered for the length of one update (see G.memo)
 const TICK_CACHE = new Map()
+// The same cache for UI work outside an update (fight estimates for every creature on screen): it
+// lives for one task only, so nothing a player does afterwards can find a stale value in it
+const UI_CACHE = new Map()
+let uiCacheLive = false
 // Offline progress is worked out in slices this long, with a breath for the page in between
 const SIM_SLICE_MS = 30
 const MOD_PREFIX = 'mod|'
@@ -1575,6 +1579,12 @@ export const G = {
   },
 
   /* ================= main loop ================= */
+  withCache(fn) {
+    if (this.tickCache) return fn()
+    if (!uiCacheLive) { uiCacheLive = true; UI_CACHE.clear(); queueMicrotask(() => { uiCacheLive = false }) }
+    this.tickCache = UI_CACHE
+    try { return fn() } finally { this.tickCache = null }
+  },
   update(dt) {
     TICK_CACHE.clear()
     this.tickCache = TICK_CACHE

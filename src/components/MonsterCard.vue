@@ -8,6 +8,7 @@ import GameIcon from './GameIcon.vue'
 import { ITEMS } from '../game/data/items.js'
 import { fmt, fmtDec, pct } from '../game/format.js'
 import { chanceNote, tip } from '../ui/tips.js'
+import { throttled } from '../ui/throttled.js'
 import { useI18n } from 'vue-i18n'
 import ItemTile from './ItemTile.vue'
 
@@ -20,17 +21,18 @@ const danger = computed(() => (ml.value <= cl.value ? 'ok' : ml.value <= cl.valu
 const fighting = computed(() => state.activity?.type === 'combat' && state.activity.kind === props.kind && state.activity.target === m.value.id)
 const slayerLocked = computed(() => m.value.slayer && G.level('slayer') < m.value.slayer)
 const kills = computed(() => state.killsBy[m.value.id] || 0)
-// How the hero would fare: time per kill and the share of health lost per kill
+// How the hero would fare: time per kill and the share of health lost per kill. A full fight
+// estimate per card; buff timers touch it every tick, so it is refreshed every couple of seconds
 const { t } = useI18n()
-const fight = computed(() => (void state.equipment, void state.combatStyle, G.combatProfile(G.scaleMonster(m.value))))
+const fight = throttled(() => (void state.equipment, void state.combatStyle, G.combatProfile(G.scaleMonster(m.value))), 2000)
 const risk = computed(() => { const r = fight.value.risk; return r < 0.3 ? 'low' : r < 0.8 ? 'mid' : 'high' })
 const killText = computed(() => (fight.value.killTime === Infinity ? '∞' : fight.value.killTime < 60 ? `${Math.max(1, Math.round(fight.value.killTime))} s` : `${fmtDec(fight.value.killTime / 60)} min`))
-const fightTip = computed(() => tip(t(`power.risk.${risk.value}`), t('power.riskHint'), [
+const fightTip = () => tip(t(`power.risk.${risk.value}`), t('power.riskHint'), [
   { text: t('power.killTime', { t: killText.value }), kind: 'muted' },
   { text: `${t('power.dps')}: ${fmtDec(fight.value.dps)}`, kind: 'muted' },
   { text: `${t('power.accuracy')}: ${pct(fight.value.accuracy)}`, kind: 'muted' },
   { text: `${t('power.hitTaken')}: ${pct(fight.value.hitTaken)}`, kind: 'muted' },
-]))
+])
 </script>
 
 <template>
@@ -55,7 +57,7 @@ const fightTip = computed(() => tip(t(`power.risk.${risk.value}`), t('power.risk
       <span v-if="kills" v-tooltip.top="$t('combat.defeated')"><i class="pi pi-flag" /> {{ fmt(kills) }}</span>
     </div>
     <div v-if="G.bossMechs(m).length" class="row wrap" style="gap:5px;margin-top:10px">
-      <span v-for="id in G.bossMechs(m)" :key="id" class="tag" :style="{ color: MECHS[id].color }" v-tooltip.top="tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
+      <span v-for="id in G.bossMechs(m)" :key="id" class="tag" :style="{ color: MECHS[id].color }" v-tooltip.top="() => tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
     </div>
     <div class="row wrap" style="gap:5px;margin-top:10px">
       <span v-for="d in m.drops" :key="d.item" class="drop" :class="{ rare: d.chance < 0.05 }">

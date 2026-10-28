@@ -50,8 +50,8 @@ function askPrestige() {
         <span v-else class="gold-text">{{ $t('skill.maxLevel') }}</span>
       </div>
       <div class="row wrap" style="margin-top:10px">
-        <span class="tag gold" v-tooltip.top="help('skill.xp')">XP ×{{ G.xpMult(skill).toFixed(2) }}</span>
-        <span class="tag arcane" v-tooltip.top="help('skill.speed')">{{ $t('skill.speed') }} ×{{ G.speedFactor(skill).toFixed(2) }}</span>
+        <span class="tag gold" v-tooltip.top="() => help('skill.xp')">XP ×{{ G.xpMult(skill).toFixed(2) }}</span>
+        <span class="tag arcane" v-tooltip.top="() => help('skill.speed')">{{ $t('skill.speed') }} ×{{ G.speedFactor(skill).toFixed(2) }}</span>
         <span v-if="skill === 'agility'" class="tag ok">{{ $t('skill.agilityBonus', { v: pct(lvl * 0.002, 1) }) }}</span>
       </div>
     </div>

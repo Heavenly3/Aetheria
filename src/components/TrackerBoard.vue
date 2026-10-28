@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { ITEMS } from '../game/data/items.js'
 import { SKILLS } from '../game/data/skills.js'
 import { trackedGoals } from '../ui/tracker.js'
+import { throttled } from '../ui/throttled.js'
 import { goTo } from '../ui/focus.js'
 import { fmt } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
@@ -12,7 +13,7 @@ import ItemTile from './ItemTile.vue'
 const props = defineProps({ limit: { type: Number, default: 0 }, compact: Boolean })
 const emit = defineEmits(['went'])
 const router = useRouter()
-const goals = computed(() => trackedGoals())
+const goals = throttled(() => trackedGoals())
 const shown = computed(() => (props.limit ? goals.value.slice(0, props.limit) : goals.value))
 function go(target) {
   emit('went')
