@@ -7,6 +7,8 @@ import { G, state } from '../game/engine.js'
 import { ACTS, CHAPTERS, CHARACTERS, MEMORIES } from '../game/data/journal.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
+import SpokenText from '../components/SpokenText.vue'
+import VoiceNote from '../components/VoiceNote.vue'
 
 const { t } = useI18n()
 const tab = ref('story')
@@ -20,13 +22,17 @@ const unlockedCount = computed(() => CHAPTERS.filter(c => G.chapterUnlocked(c.id
 const total = CHAPTERS.length + MEMORIES.length
 const unread = computed(() => G.journalUnread())
 
-// One page is open at a time; opening it marks it as read
+// One page is open at a time; opening it marks it as read. A page read for the first time is told
+// aloud by the narrator; one read before simply shows
 const open = ref(null)
+const telling = ref(null)
 function toggle(id) {
   open.value = open.value === id ? null : id
+  telling.value = open.value && isNew(open.value) ? open.value : null
   if (open.value) G.readJournal(id)
 }
-const paragraphs = key => t(key, names.value).split('\n\n')
+// Any open page can be told again, or stopped
+const retell = id => { telling.value = telling.value === id ? null : id }
 function readAll() {
   CHAPTERS.forEach(c => { if (G.chapterUnlocked(c.id)) G.readJournal(c.id) })
   MEMORIES.forEach(m => { if (G.memoryUnlocked(m)) G.readJournal(m.id) })
@@ -66,7 +72,8 @@ function readAll() {
             </span>
           </div>
           <div v-if="open === c.id" class="page-text">
-            <p v-for="(p, i) in paragraphs(`journal.chapters.${c.id}.text`)" :key="i">{{ p }}</p>
+            <SpokenText :text="$t(`journal.chapters.${c.id}.text`, names)" voice="narrator" :play="telling === c.id" @done="telling = null" />
+            <Button class="retell" :label="$t(telling === c.id ? 'voice.stop' : 'voice.again')" :icon="telling === c.id ? 'pi pi-stop' : 'pi pi-replay'" size="small" text @click="retell(c.id)" />
           </div>
         </div>
       </section>
@@ -88,7 +95,8 @@ function readAll() {
             </template>
           </div>
         </div>
-        <p v-if="G.chapterUnlocked(p.met)" class="small muted" style="margin:10px 0 0">{{ $t(`journal.people.${p.id}.desc`, names) }}</p>
+        <VoiceNote v-if="G.chapterUnlocked(p.met)" class="small muted person-desc" :style="{ '--voice-c': p.tint }"
+          :text="$t(`journal.people.${p.id}.desc`, names)" :voice="p.id" :who="$t(`journal.people.${p.id}.name`, names)" />
       </div>
     </div>
 
@@ -110,7 +118,8 @@ function readAll() {
           </span>
         </div>
         <div v-if="open === m.id" class="page-text">
-          <p v-for="(p, i) in paragraphs(`journal.memories.${m.id}.text`)" :key="i">{{ p }}</p>
+          <SpokenText :text="$t(`journal.memories.${m.id}.text`, names)" voice="narrator" :play="telling === m.id" @done="telling = null" />
+          <Button class="retell" :label="$t(telling === m.id ? 'voice.stop' : 'voice.again')" :icon="telling === m.id ? 'pi pi-stop' : 'pi pi-replay'" size="small" text @click="retell(m.id)" />
         </div>
       </div>
     </template>
@@ -131,9 +140,11 @@ button.page-head:hover { background: var(--tint-1); }
 .hint { display: block; margin-top: 2px; }
 /* The open page reads like a book */
 .page-text { padding: 4px 22px 20px 70px; max-width: 78ch; }
-.page-text p { margin: 0 0 12px; font-size: 16.5px; line-height: 1.7; color: var(--ink-2); }
-.page-text p:first-child::first-letter { font-family: var(--font-display); font-size: 2.4em; float: inline-start; line-height: 0.9; margin: 4px 8px 0 0; color: var(--gold); }
+.page-text :deep(p) { margin: 0 0 12px; font-size: 16.5px; line-height: 1.7; color: var(--ink-2); }
+.page-text :deep(p:first-of-type)::first-letter { font-family: var(--font-display); font-size: 2.4em; float: inline-start; line-height: 0.9; margin: 4px 8px 0 0; color: var(--gold); }
 .person.unknown { border-style: dashed; }
+.person-desc { margin: 10px 0 0; }
+.retell { margin: 4px 0 0 -10px; }
 .person.unknown .tile { opacity: 0.55; }
 @media (max-width: 640px) { .page-text { padding: 2px 16px 16px; } }
 </style>

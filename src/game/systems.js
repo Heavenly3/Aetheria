@@ -47,7 +47,7 @@ export const extraState = () => ({
   // Volumes are 0-100; muteHidden silences the game while its tab is in the background
   settings: {
     sound: true, notify: false, autoChain: true, music: true, ambience: true,
-    masterVol: 80, musicVol: 45, ambienceVol: 50, sfxVol: 70, muteHidden: true, reduceMotion: false, compactNumbers: true, quietToasts: false, muted: false,
+    masterVol: 80, musicVol: 45, ambienceVol: 50, sfxVol: 70, voices: true, voiceVol: 60, voiceSpeed: 'normal', muteHidden: true, reduceMotion: false, compactNumbers: true, quietToasts: false, muted: false,
     // Backups: the reminder to keep a copy outside the browser, when the save was last downloaded or shared and when it last reminded
     backupReminder: true, lastExport: 0, remindedAt: 0,
     // Display and guidance: text size, which pop-ups show, the next-step bar and the welcome-back summary

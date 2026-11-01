@@ -744,7 +744,17 @@ export default {
     cats: { supplies: 'Supplies', seeds: 'Seeds', runes: 'Runes', tools: 'Tools', gear: 'Gear' },
   },
 
+  voice: {
+    listen: "Listen",
+    hear: "Hear {name}",
+    stop: "Stop",
+    again: "Read it again",
+  },
   audio: {
+    voiceSpeed: "Reading speed",
+    voiceSpeedHint: "How fast the characters speak and their words appear.",
+    voiceSpeeds: { slow: "Slow", normal: "Normal", fast: "Fast" },
+    voiceSample: "Welcome back, friend! Pull up a stool, the ale is still warm.",
     groupsHint: "Open a group to tune each alert: its volume, whether it plays with the tab hidden, and browser notifications.",
     groupCount: "{on} of {n} on",
     moreTitle: "More music options",
@@ -1103,6 +1113,8 @@ export default {
     ambience: "Ambient sound",
     ambienceHint: "Rain, wind, thunder, birds and crickets, following the weather.",
     soundHint: "Short sounds for level ups, loot and quests.",
+    voices: "Voices",
+    voicesHint: "The characters speak in voices of their own while their words appear.",
     muteHidden: "Silence in the background",
     muteHiddenHint: "No sound while the game tab is hidden or minimised.",
     muteAll: "Mute everything",

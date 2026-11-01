@@ -744,7 +744,17 @@ export default {
     cats: { supplies: 'Suministros', seeds: 'Semillas', runes: 'Runas', tools: 'Herramientas', gear: 'Equipo' },
   },
 
+  voice: {
+    listen: "Escuchar",
+    hear: "Escuchar a {name}",
+    stop: "Parar",
+    again: "Leer de nuevo",
+  },
   audio: {
+    voiceSpeed: "Velocidad de lectura",
+    voiceSpeedHint: "Lo rápido que hablan los personajes y aparecen sus palabras.",
+    voiceSpeeds: { slow: "Lenta", normal: "Normal", fast: "Rápida" },
+    voiceSample: "¡Bienvenido de nuevo, amigo! Siéntate, que la cerveza sigue caliente.",
     groupsHint: "Abre un grupo para ajustar cada aviso: su volumen, si suena con la pestaña oculta y las notificaciones del navegador.",
     groupCount: "{on} de {n} activos",
     moreTitle: "Más opciones de música",
@@ -1103,6 +1113,8 @@ export default {
     ambience: "Sonido ambiente",
     ambienceHint: "Lluvia, viento, truenos, pájaros y grillos, según el clima.",
     soundHint: "Sonidos cortos al subir de nivel, conseguir botín y completar misiones.",
+    voices: "Voces",
+    voicesHint: "Los personajes hablan con su propia voz mientras aparecen sus palabras.",
     muteHidden: "Silencio en segundo plano",
     muteHiddenHint: "Sin sonido mientras la pestaña del juego está oculta o minimizada.",
     muteAll: "Silenciar todo",

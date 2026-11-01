@@ -66,7 +66,7 @@ export const nowPlaying = reactive({ theme: 'calm', reason: 'auto', area: null, 
 
 /* ================= the audio graph ================= */
 // buses -> master -> tone (soft treble) -> mono -> limiter -> speakers; music also goes through a ducker
-let ctx = null, master, tone, mono, limiter, musicBus, duckGain, ambBus, sfxBus, wet, noise
+let ctx = null, master, tone, mono, limiter, musicBus, duckGain, ambBus, sfxBus, voiceBus, wet, noise
 let unlocked = false, running = false, timer = null
 let scene = { mood: 'calm', weather: 'clear', night: false, area: null }
 let nextBar = 0, barIndex = 0, lastTheme = null, preview = null
@@ -93,9 +93,9 @@ export function audioContext() {
   mono = ctx.createGain(); mono.connect(limiter)
   tone = ctx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 20000; tone.connect(mono)
   master = ctx.createGain(); master.connect(tone)
-  musicBus = ctx.createGain(); duckGain = ctx.createGain(); ambBus = ctx.createGain(); sfxBus = ctx.createGain()
+  musicBus = ctx.createGain(); duckGain = ctx.createGain(); ambBus = ctx.createGain(); sfxBus = ctx.createGain(); voiceBus = ctx.createGain()
   musicBus.connect(duckGain).connect(master)
-  ambBus.connect(master); sfxBus.connect(master)
+  ambBus.connect(master); sfxBus.connect(master); voiceBus.connect(master)
   // A soft hall: a generated impulse with a long, dark tail (made once)
   wet = ctx.createConvolver()
   const len = ctx.sampleRate * 3.2, ir = ctx.createBuffer(2, len, ctx.sampleRate)
@@ -115,6 +115,8 @@ export function audioContext() {
 }
 // Where sound effects go, so they follow the effects and master volume
 export const sfxOut = () => (audioContext() ? sfxBus : null)
+// Where the characters' voices go, with their own volume
+export const voiceOut = () => (audioContext() ? voiceBus : null)
 
 const previewing = () => !!(preview && ctx && ctx.currentTime < preview.until)
 export function applyAudioSettings() {
@@ -126,12 +128,13 @@ export function applyAudioSettings() {
   musicBus.gain.setTargetAtTime(musicOn ? curve(level(st.musicVol ?? 45)) * 0.55 : 0, t, 0.5)
   ambBus.gain.setTargetAtTime(st.ambience !== false && !quiet ? curve(level(st.ambienceVol ?? 50)) * 0.7 : 0, t, 0.5)
   sfxBus.gain.setTargetAtTime(st.sound !== false ? curve(level(st.sfxVol ?? 70)) : 0, t, 0.05)
+  voiceBus.gain.setTargetAtTime(st.voices !== false ? curve(level(st.voiceVol ?? 60)) : 0, t, 0.05)
   // Accessibility: softer treble and mono sound
   tone.frequency.setTargetAtTime(st.softTone ? 4200 : 20000, t, 0.2)
   mono.channelCount = st.mono ? 1 : 2
   mono.channelCountMode = st.mono ? 'explicit' : 'max'
   // Nothing to play at all: the context rests, and wakes again when something is turned back on
-  const silentAll = st.muted || (st.music === false && st.ambience === false && st.sound === false && !previewing())
+  const silentAll = st.muted || (st.music === false && st.ambience === false && st.sound === false && st.voices === false && !previewing())
   if (silentAll && ctx.state === 'running') ctx.suspend?.()
   else if (!silentAll && ctx.state === 'suspended' && unlocked) ctx.resume?.()
 }
@@ -250,6 +253,15 @@ export function duckMusic() {
   duckGain.gain.cancelScheduledValues(t)
   duckGain.gain.setTargetAtTime(0.7, t, 0.04)
   duckGain.gain.setTargetAtTime(1, t + 0.4, 0.25)
+}
+// The music steps back while a character speaks, and comes back when every voice is done
+let holds = 0
+export function holdDuck(on) {
+  holds = Math.max(0, holds + (on ? 1 : -1))
+  if (!ctx) return
+  const t = ctx.currentTime
+  duckGain.gain.cancelScheduledValues(t)
+  duckGain.gain.setTargetAtTime(holds ? 0.55 : 1, t, holds ? 0.15 : 0.6)
 }
 export const musicPlaying = () => !!(running && ctx && ctx.state === 'running' && settings().music !== false && !hiddenQuiet())
 // Hear a theme for a while, whatever the hero is doing; the game itself is not touched

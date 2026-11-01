@@ -10,6 +10,7 @@ import { G, state } from '../game/engine.js'
 import { THEME_IDS, PALETTES, PROFILE_IDS } from '../game/data/audio.js'
 import { nowPlaying, previewTheme, stopPreview } from '../game/music.js'
 import { play } from '../game/sound.js'
+import { speak, VOICE_SPEEDS } from '../game/voices.js'
 import { applyProfile, saveCustomProfile, matchingProfile, resetAudio } from '../game/audioProfiles.js'
 import GameIcon from './GameIcon.vue'
 
@@ -33,8 +34,18 @@ const channels = [
   { on: 'music', vol: 'musicVol', label: 'settings.music', hint: 'settings.musicHint' },
   { on: 'ambience', vol: 'ambienceVol', label: 'settings.ambience', hint: 'settings.ambienceHint' },
   { on: 'sound', vol: 'sfxVol', label: 'settings.sound', hint: 'settings.soundHint' },
+  { on: 'voices', vol: 'voiceVol', label: 'settings.voices', hint: 'settings.voicesHint' },
 ]
-function setChannel(c, v) { st[c.on] = v; if (v && c.on === 'sound') play('coin') }
+function setChannel(c, v) {
+  st[c.on] = v
+  if (v && c.on === 'sound') play('coin')
+  // A few words from the tavern keeper, to hear the voices come back
+  if (v && c.on === 'voices') speak(t('audio.voiceSample'), 'keeper')
+}
+
+// How fast the characters read; a few words let the player hear the new pace
+const voiceSpeeds = computed(() => Object.keys(VOICE_SPEEDS).map(v => ({ value: v, label: t(`audio.voiceSpeeds.${v}`) })))
+function setVoiceSpeed(v) { st.voiceSpeed = v; speak(t('audio.voiceSample'), 'keeper') }
 
 /* ---------- music ---------- */
 const THEME_ICONS = {
@@ -78,6 +89,10 @@ function reset() {
         <label class="grow" :for="'pref-' + c.on">{{ $t(c.label) }}<span class="small faint block">{{ $t(c.hint) }}</span></label>
         <Slider v-model="st[c.vol]" :min="0" :max="100" :disabled="!st[c.on] || st.muted" class="vol-slider" :aria-label="$t(c.label)" />
         <span class="tnum small muted vol-n">{{ st[c.vol] }}</span>
+      </div>
+      <div class="pref">
+        <span class="grow">{{ $t('audio.voiceSpeed') }}<span class="small faint block">{{ $t('audio.voiceSpeedHint') }}</span></span>
+        <SelectButton :modelValue="st.voiceSpeed || 'normal'" :options="voiceSpeeds" optionLabel="label" optionValue="value" :allowEmpty="false" :disabled="st.voices === false" :aria-label="$t('audio.voiceSpeed')" @update:modelValue="setVoiceSpeed" />
       </div>
       <label class="pref" for="pref-hidden"><span class="grow">{{ $t('settings.muteHidden') }}<span class="small faint block">{{ $t('audio.muteHiddenHint') }}</span></span><ToggleSwitch v-model="st.muteHidden" inputId="pref-hidden" /></label>
       <label class="pref" for="pref-muted"><span class="grow">{{ $t('settings.muteAll') }}</span><ToggleSwitch v-model="st.muted" inputId="pref-muted" /></label>

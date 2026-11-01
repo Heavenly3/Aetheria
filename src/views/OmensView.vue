@@ -11,6 +11,7 @@ import { modText } from '../i18n/mods.js'
 import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
+import VoiceNote from '../components/VoiceNote.vue'
 import Arena from '../components/Arena.vue'
 import HelpTip from '../components/HelpTip.vue'
 
@@ -158,7 +159,10 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
           </div>
           <p class="small muted" style="margin:10px 0 0">{{ o.desc }}</p>
           <!-- Once the astrologer is met, she leaves a note on every omen witnessed -->
-          <p v-if="G.chapterUnlocked('sky_watcher')" class="omen-note"><span class="faint">{{ $t('journal.noteBy', G.journalNames()) }}:</span> “{{ $t(`journal.omenNotes.${o.id}`) }}”</p>
+          <div v-if="G.chapterUnlocked('sky_watcher')" class="omen-note">
+            <span class="faint">{{ $t('journal.noteBy', G.journalNames()) }}:</span>
+            <VoiceNote :text="`“${$t(`journal.omenNotes.${o.id}`)}”`" voice="astrologer" :who="$t('journal.people.astrologer.name', G.journalNames())" style="--voice-c:#a98bff" />
+          </div>
           <div v-if="petsOf(o.id).length" class="row wrap" style="gap:6px;margin-top:10px">
             <span v-for="p in petsOf(o.id)" :key="p.id" v-tooltip.top="G.hasPet(p.id) ? p.name : $t('omens.secretPet')" :class="{ dim: !G.hasPet(p.id) }">
               <ItemTile :icon="p.icon" :tint="G.hasPet(p.id) ? p.tint : '#2a2838'" size="xs" :tip="false" />

@@ -14,6 +14,7 @@ import { modText } from '../i18n/mods.js'
 import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
+import VoiceNote from '../components/VoiceNote.vue'
 import CodexItems from '../components/CodexItems.vue'
 import CodexMasterworks from '../components/CodexMasterworks.vue'
 import CodexMythics from '../components/CodexMythics.vue'
@@ -111,7 +112,7 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
           </div>
 
           <!-- Studying a creature reveals its place in the story -->
-          <p v-if="G.knows(m, 'studied')" class="lore">{{ $t(`bestiary.lore.${m.id}`, G.journalNames()) }}</p>
+          <VoiceNote v-if="G.knows(m, 'studied')" class="lore" :text="$t(`bestiary.lore.${m.id}`, G.journalNames())" voice="narrator" />
           <p v-else-if="G.knowledge(m)" class="lore faint">{{ $t('bestiary.loreLocked') }}</p>
 
           <div v-if="nextTier(m)" class="next">
