@@ -43,6 +43,10 @@ function talk(p) {
   G.noteTalk(p.id)
 }
 
+// The first page ends with the one thing the hero remembers: where they come from
+const PARAGRAPH = String.fromCharCode(10).repeat(2)
+const chapterText = c => [t(`journal.chapters.${c.id}.text`, names.value), c.id === 'awakening' && t(`origins.${state.origin || 'wanderer'}.memory`)].filter(Boolean).join(PARAGRAPH)
+
 // Any open page can be told again, or stopped
 const retell = id => { telling.value = telling.value === id ? null : id }
 function readAll() {
@@ -84,7 +88,7 @@ function readAll() {
             </span>
           </div>
           <div v-if="open === c.id" class="page-text">
-            <SpokenText :text="$t(`journal.chapters.${c.id}.text`, names)" voice="narrator" :play="telling === c.id" @done="telling = null" />
+            <SpokenText :text="chapterText(c)" voice="narrator" :play="telling === c.id" @done="telling = null" />
             <Button class="retell" :label="$t(telling === c.id ? 'voice.stop' : 'voice.again')" :icon="telling === c.id ? 'pi pi-stop' : 'pi pi-replay'" size="small" text @click="retell(c.id)" />
           </div>
         </div>

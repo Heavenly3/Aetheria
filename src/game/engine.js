@@ -9,7 +9,7 @@ import {
 } from './data/combat.js'
 import { QUESTS, ACHIEVEMENTS, ROOMS, BLESSINGS, BLESSING_DURATION, PRESTIGE, QUEST_STATS } from './data/progression.js'
 import {
-  SLOT_COUNT, DIFFICULTIES, ATTRIBUTES, ROLES, TALENTS, POINTS_PER_LEVEL, HERO_MAX_LEVEL, HERO_XP_SHARE, heroXpFor,
+  SLOT_COUNT, DIFFICULTIES, ATTRIBUTES, ROLES, ORIGINS, TALENTS, POINTS_PER_LEVEL, HERO_MAX_LEVEL, HERO_XP_SHARE, heroXpFor,
   TALENT_POINT_EVERY, MASTERY, masteryXpPerAction, TOOL_TYPES, TOOL_SPEED_PER_TIER,
 } from './data/character.js'
 import { systems, extraState, LOADOUT_SLOTS } from './systems.js'
@@ -107,6 +107,8 @@ export function newState(profile = {}) {
     avatar: profile.avatar || 'wizard-face',
     tint: profile.tint || '#6f5cd2',
     difficulty: profile.difficulty || 'normal',
+    // Where the hero comes from (data/character.js ORIGINS)
+    origin: ORIGINS[profile.origin] ? profile.origin : 'wanderer',
     gold: 50,
     skills,
     hero: { xp: 0, attrs: Object.fromEntries(Object.keys(ATTRIBUTES).map(k => [k, 0])), talents: {} },
@@ -347,6 +349,13 @@ export const G = {
     Object.entries(role.skills).forEach(([k, l]) => (this.s.skills[k].xp = XP_TABLE[l]))
     Object.entries(role.items).forEach(([k, q]) => this.addItem(k, q))
     if (role.gold) this.s.gold += role.gold
+    // What the origin adds: a skill raised where the role starts lower, a few items and coins
+    const origin = ORIGINS[this.s.origin]
+    if (origin) {
+      Object.entries(origin.skills || {}).forEach(([k, l]) => { this.s.skills[k].xp = Math.max(this.s.skills[k].xp, XP_TABLE[l]) })
+      Object.entries(origin.items || {}).forEach(([k, q]) => this.addItem(k, q))
+      if (origin.gold) this.s.gold += origin.gold
+    }
     ;['bronze_pickaxe', 'bronze_axe', 'rod'].forEach(id => { this.addItem(id, 1); this.equip(id) })
     role.equip.forEach(id => {
       if (!ITEMS[id]) return

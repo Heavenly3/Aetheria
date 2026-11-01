@@ -91,9 +91,39 @@ Object.entries(ROLES).forEach(([k, r]) => {
   })
 })
 
+// How each role fares at the main parts of the game, from 1 to 3, for the character creation
+export const ROLE_RATINGS = {
+  warrior: { combat: 3, gathering: 1, crafting: 1, toughness: 3 },
+  ranger: { combat: 2, gathering: 3, crafting: 1, toughness: 2 },
+  mage: { combat: 3, gathering: 1, crafting: 2, toughness: 1 },
+  artisan: { combat: 1, gathering: 2, crafting: 3, toughness: 1 },
+  rogue: { combat: 2, gathering: 2, crafting: 1, toughness: 1 },
+  paladin: { combat: 2, gathering: 1, crafting: 1, toughness: 3 },
+}
+export const RATING_AXES = ['combat', 'gathering', 'crafting', 'toughness']
+// The way of fighting a role starts with
+export const roleCombat = r => (r.style === 'ranged' ? 'ranged' : r.style === 'magic' ? 'magic' : 'melee')
+// The friendliest start for a new player
+export const STARTER_ROLE = 'warrior'
+
+/* ---------------- Origins ---------------- */
+// Where the hero comes from: the one thing they remember when they wake. A small head start (skill
+// levels, items, gold) and a line of their own in the first page of the journal. Names, descriptions
+// and that line are in `origins.<id>`. `skills` raise a skill to that level if the role starts lower
+export const ORIGINS = {
+  wanderer: { icon: 'hood', color: '#9fb8d0' },
+  forge: { icon: 'anvil-impact', color: '#ff9a3c', skills: { smithing: 5, mining: 3 }, items: { bronze_bar: 6 } },
+  harbour: { icon: 'fishing', color: '#3fb6c6', skills: { fishing: 5, cooking: 3 }, items: { raw_sardine: 15 } },
+  streets: { icon: 'robber-hand', color: '#9d79bc', skills: { thieving: 5, agility: 3 }, gold: 150 },
+  observatory: { icon: 'crystal-ball', color: '#a98bff', skills: { magic: 3, runecrafting: 4 }, items: { stardust: 40, air_rune: 60 } },
+  farmstead: { icon: 'wheat', color: '#90be6d', skills: { farming: 5, woodcutting: 3 }, items: { potato_seed: 10, onion_seed: 6 } },
+  watch: { icon: 'stone-tower', color: '#c0392b', skills: { defense: 5, attack: 3 }, items: { shrimp: 15 } },
+}
+Object.entries(ORIGINS).forEach(([k, o]) => named(o, `origins.${k}.name`, `origins.${k}.desc`))
+
 /* ---------------- Portraits ---------------- */
 export const AVATARS = ['wizard-face', 'woman-elf-face', 'dwarf-face', 'barbarian', 'swordwoman', 'archer', 'rogue', 'monk-face', 'nun-face', 'viking-head', 'ninja-head', 'visored-helm', 'hooded-assassin', 'dwarf-king', 'elf-helmet', 'warlock-hood']
-export const TINTS = ['#6f5cd2', '#c0392b', '#2e8b57', '#2f6fdf', '#c9a04a', '#9d3fbf', '#3fb6c6', '#7a7a8a']
+export const TINTS = ['#6f5cd2', '#c0392b', '#2e8b57', '#2f6fdf', '#c9a04a', '#9d3fbf', '#3fb6c6', '#7a7a8a', '#e84393', '#16a085', '#d35400', '#90be6d']
 
 /* ---------------- Talents ---------------- */
 // mod: modifier key · per: value per rank · max: ranks · lvl: hero level required · role: exclusive to that role
