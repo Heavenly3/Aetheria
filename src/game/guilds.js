@@ -82,10 +82,12 @@ export const guilds = {
     this.s.gold -= this.guildFee(g)
     const rng = seeded(g.seed + Date.now())
     const asks = asksOf(g)
+    // The entry task, and the guild's own enigma (older trials kept a simpler puzzle)
+    const trial = this.trialEnigma(g, rng)
     this.s.guilds.trial = {
       guild: g.id, started: Date.now(),
       task: makeTask(this, asks[Math.floor(rng() * asks.length)], TRIAL_SIZE[g.tier], rng),
-      puzzle: makePuzzle(g.puzzle, g.tier, rng), solved: false, waitUntil: 0,
+      enigma: trial.enigma, ctx: trial.ctx, kind: trial.kind, level: trial.level, solved: false, waitUntil: 0,
     }
     this.log('scroll-quill', 'log.guildApply', { guild: '@guild:' + g.id })
     return true
@@ -115,7 +117,7 @@ export const guilds = {
   // Riddles and sequences: pick an option. Returns 'right', 'wrong' or null
   answerPuzzle(value) {
     const tr = this.s.guilds.trial
-    if (!tr || tr.solved || this.puzzleWait() > 0 || tr.puzzle.kind === 'lock') return null
+    if (!tr?.puzzle || tr.solved || this.puzzleWait() > 0 || tr.puzzle.kind === 'lock') return null
     if (value === tr.puzzle.answer) { tr.solved = true; return 'right' }
     this.failPuzzle()
     return 'wrong'
@@ -123,7 +125,7 @@ export const guilds = {
   // The lock: try a code. Returns the feedback, plus `solved` or `failed`
   guessLock(guess) {
     const tr = this.s.guilds.trial
-    if (!tr || tr.solved || this.puzzleWait() > 0 || tr.puzzle.kind !== 'lock') return null
+    if (!tr?.puzzle || tr.solved || this.puzzleWait() > 0 || tr.puzzle.kind !== 'lock') return null
     if (guess.length !== LOCK_DIGITS || guess.some(d => !(d >= 1 && d <= LOCK_FACES))) return null
     const p = tr.puzzle
     const fb = lockFeedback(p.code, guess)

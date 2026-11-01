@@ -7,7 +7,8 @@ import { G } from '../game/engine.js'
 import { ALPHABET, plain, shiftText } from '../game/data/enigmas.js'
 
 // The sealed letter: the dials turn the letters back, and the place it names is typed in
-const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean })
+// where: 'affair' for a guild affair, 'trial' for a guild's entry trial
+const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean, where: { type: String, default: 'affair' } })
 const emit = defineEmits(['answer'])
 const { t } = useI18n()
 const e = computed(() => props.affair.enigma)
@@ -19,7 +20,7 @@ const turn = (i, d) => { dials.value[i] = (dials.value[i] + d + 26) % 26 }
 const reading = computed(() => shiftText(coded.value, dials.value, -1))
 
 // What the leads and hints have told about the key
-const known = computed(() => G.affairKnown())
+const known = computed(() => G.affairKnown(props.where))
 const keyLine = computed(() => {
   const a = props.affair, k = e.value.key
   if (k.length === 3) {

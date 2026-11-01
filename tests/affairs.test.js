@@ -172,6 +172,33 @@ describe('guild affairs', () => {
     expect(state.guilds.affair).toBe(null)
   })
 
+  it('set each guild its own kind of enigma for the entry trial, a notch easier', () => {
+    G.ensureGuilds()
+    state.gold = 1e9
+    setLevel('thieving', 99); setLevel('agility', 99); state.hero.xp = 1e9
+    const g = G.guildList().find(x => G.guildStatus(x) === 'open')
+    expect(G.applyGuild(g.id)).toBe(true)
+    const tr = state.guilds.trial
+    expect(tr.puzzle).toBeUndefined()
+    expect(AFFAIRS[tr.kind].enigma).toBe(tr.enigma.kind)
+    expect(tr.level).toBe(Math.max(0, G.enigmaLevel(g) - 1))
+    // The same guild always sets the same kind
+    expect(G.trialEnigma(g, Math.random).kind).toBe(tr.kind)
+    // Wrong answers wait (the beam and astrolabe just are not there yet); the right one opens the door
+    const e = tr.enigma
+    const wrong = { deduction: (e.answer + 1) % (e.n || 1), cipher: 'nowhere', balance: (e.fake + 1) % (e.coins || 1), echo: [99] }[e.kind]
+    if (wrong !== undefined) {
+      expect(G.answerTrial(wrong)).toBe('wrong')
+      expect(G.puzzleWait()).toBeGreaterThan(0)
+      tr.waitUntil = 0
+    }
+    const right = { deduction: e.answer, cipher: t(`affairs.words.${e.word}`), balance: tr.enigma.fake, echo: tr.enigma.seq }[e.kind]
+    if (e.kind === 'beam') e.grid = e.solution.map(r => [...r])
+    if (e.kind === 'astrolabe') for (let i = 0; i < e.rings.length; i++) for (let n = 0; n < 8 && e.rings[i][e.at[i]] !== e.target[i]; n++) G.affairTurnRing(i, 1, 'trial')
+    expect(G.answerTrial(right)).toBe('right')
+    expect(tr.solved).toBe(true)
+  })
+
   it('give every kind its texts in both languages', () => {
     for (const kind of Object.keys(AFFAIRS)) for (const k of ['name', 'intro', 'question']) expect(t(`affairs.kinds.${kind}.${k}`)).not.toContain('affairs.')
     vi.restoreAllMocks()

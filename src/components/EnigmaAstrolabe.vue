@@ -8,17 +8,18 @@ import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
 
 // The old astrolabe: rings of constellations turned under a fixed pointer; linked rings drag the next ones
-const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean })
+// where: 'affair' for a guild affair, 'trial' for a guild's entry trial
+const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean, where: { type: String, default: 'affair' } })
 const emit = defineEmits(['answer'])
 const { t } = useI18n()
 const STAR_ICONS = { wolf: 'wolf-head', crown: 'crown', eye: 'all-seeing-eye', serpent: 'snake', tower: 'stone-tower', flame: 'flame', raven: 'raven', anvil: 'anvil-impact' }
 const e = computed(() => props.affair.enigma)
 // Two faces either side of the pointer
 const faces = i => [-2, -1, 0, 1, 2].map(o => e.value.rings[i][(e.value.at[i] + o + RING_FACES) % RING_FACES])
-const known = computed(() => G.affairStarsKnown())
+const known = computed(() => G.affairStarsKnown(props.where))
 const solved = computed(() => (void e.value.at.join(), astrolabeSolved(e.value)))
 const starName = s => t(`affairs.stars.names.${s}`)
-function turn(i, dir) { if (G.affairTurnRing(i, dir)) play('coin') }
+function turn(i, dir) { if (G.affairTurnRing(i, dir, props.where)) play('coin') }
 </script>
 
 <template>

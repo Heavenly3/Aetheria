@@ -7,7 +7,8 @@ import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
 
 // The great lens: mirrors that turn on a click, and the beam drawn as it falls
-const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean })
+// where: 'affair' for a guild affair, 'trial' for a guild's entry trial
+const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean, where: { type: String, default: 'affair' } })
 const emit = defineEmits(['answer'])
 const e = computed(() => props.affair.enigma)
 const size = computed(() => e.value.size)
@@ -17,7 +18,7 @@ const lit = computed(() => new Set(trace.value.path.map(([r, c]) => r * size.val
 const solved = computed(() => (void JSON.stringify(e.value.grid), beamSolved(e.value)))
 const fixed = i => (props.affair.fixed || []).includes(i)
 function turn(r, c) {
-  if (G.affairTurnMirror(r, c)) play('ui')
+  if (G.affairTurnMirror(r, c, props.where)) play('coin')
 }
 // The frame around the grid holds the lens on the left and the crystal where the beam must leave
 const cells = computed(() => {

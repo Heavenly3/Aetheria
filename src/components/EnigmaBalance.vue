@@ -7,7 +7,8 @@ import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
 
 // The scales: coins go on either pan, a few weighings show which way the false one leans
-const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean })
+// where: 'affair' for a guild affair, 'trial' for a guild's entry trial
+const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean, where: { type: String, default: 'affair' } })
 const emit = defineEmits(['answer'])
 const { t } = useI18n()
 const e = computed(() => props.affair.enigma)
@@ -20,7 +21,7 @@ const tip = r => t(r === -1 ? 'affairs.balance.tipLeft' : r === 1 ? 'affairs.bal
 const msg = ref('')
 function doWeigh() {
   if (left.value.length !== right.value.length) { msg.value = t('affairs.balance.same'); return }
-  const r = G.affairWeigh(left.value, right.value)
+  const r = G.affairWeigh(left.value, right.value, props.where)
   if (r === null) return
   msg.value = ''
   play(r === 0 ? 'coin' : 'dice')

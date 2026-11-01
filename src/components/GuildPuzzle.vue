@@ -6,14 +6,29 @@ import { LOCK_DIGITS, LOCK_FACES } from '../game/data/guilds.js'
 import { fmtTime } from '../game/format.js'
 import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
+import { AFFAIRS } from '../game/data/affairs.js'
+import EnigmaDeduction from './EnigmaDeduction.vue'
+import EnigmaCipher from './EnigmaCipher.vue'
+import EnigmaBeam from './EnigmaBeam.vue'
+import EnigmaAstrolabe from './EnigmaAstrolabe.vue'
+import EnigmaBalance from './EnigmaBalance.vue'
+import EnigmaEcho from './EnigmaEcho.vue'
 
-// The puzzle of the entry trial: a riddle, a rune sequence or the guild lock
+// The enigma of the entry trial, the guild's own kind; trials begun before kept a riddle, a number
+// sequence or the guild lock
+const ENIGMAS = { deduction: EnigmaDeduction, cipher: EnigmaCipher, beam: EnigmaBeam, astrolabe: EnigmaAstrolabe, balance: EnigmaBalance, echo: EnigmaEcho }
 const props = defineProps({ now: { type: Number, default: 0 } })
 const trial = computed(() => state.guilds.trial)
 const pz = computed(() => trial.value?.puzzle)
 const wait = computed(() => (props.now, G.puzzleWait()))
 const icons = { riddle: 'scroll-quill', sequence: 'rune-stone', lock: 'locked-chest' }
 const result = ref(null)
+function answerEnigma(v) {
+  const r = G.answerTrial(v)
+  if (!r) return
+  result.value = r
+  play(r === 'right' ? 'level' : 'bad')
+}
 
 function answer(v) {
   const r = G.answerPuzzle(v)
@@ -35,7 +50,25 @@ const marks = g => '●'.repeat(g.exact) + '○'.repeat(g.near) + '·'.repeat(LO
 </script>
 
 <template>
-  <div v-if="pz" class="puzzle">
+  <div v-if="trial?.enigma" class="puzzle">
+    <div class="row" style="gap:8px;margin-bottom:8px">
+      <GameIcon :name="AFFAIRS[trial.kind].icon" :size="16" />
+      <b>{{ $t(`affairs.kinds.${trial.kind}.name`) }}</b>
+      <span class="small muted">· {{ $t(`affairs.levels.l${trial.level}`) }}</span>
+      <span v-if="trial.solved" class="tag ok"><i class="pi pi-check" /> {{ $t('guilds.trial.solved') }}</span>
+    </div>
+    <p v-if="trial.solved" class="small muted" style="margin:0">{{ $t('guilds.trial.right') }}</p>
+    <template v-else>
+      <p class="small muted" style="margin:0 0 6px">{{ $t(`affairs.kinds.${trial.kind}.intro`) }}</p>
+      <p class="small" style="margin:0 0 12px;font-weight:700">{{ $t(`affairs.kinds.${trial.kind}.question`) }}</p>
+      <div v-if="wait > 0" class="small bad-text" style="margin-bottom:10px">
+        <i class="pi pi-hourglass" /> {{ result === 'wrong' ? $t('guilds.trial.wrong') + ' ' : '' }}{{ $t('guilds.trial.wait', { time: fmtTime(Math.ceil(wait / 1000)) }) }}
+      </div>
+      <component :is="ENIGMAS[trial.enigma.kind]" :affair="trial" where="trial" :disabled="wait > 0" @answer="answerEnigma" />
+      <p v-if="result === 'wrong' && wait <= 0" class="small bad-text" style="margin:8px 0 0">{{ $t('affairs.wrong') }}</p>
+    </template>
+  </div>
+  <div v-else-if="pz" class="puzzle">
     <div class="row" style="gap:8px;margin-bottom:8px">
       <GameIcon :name="icons[pz.kind]" :size="16" />
       <b>{{ $t(`guilds.puzzles.${pz.kind}.title`) }}</b>

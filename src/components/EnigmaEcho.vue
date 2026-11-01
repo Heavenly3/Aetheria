@@ -5,7 +5,8 @@ import { runeTone } from '../game/voices.js'
 import GameIcon from './GameIcon.vue'
 
 // The founding rite: runes light and sing one after another; the hero sings them back, a longer row each round
-const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean })
+// where: 'affair' for a guild affair, 'trial' for a guild's entry trial
+const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean, where: { type: String, default: 'affair' } })
 const emit = defineEmits(['answer'])
 const RUNES = [
   { icon: 'flame', color: '#ff7a3c' }, { icon: 'water-drop', color: '#7ad7ff' }, { icon: 'oak', color: '#62c17e' },

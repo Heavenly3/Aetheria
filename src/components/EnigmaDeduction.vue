@@ -7,7 +7,8 @@ import { AREAS } from '../game/data/combat.js'
 import { ITEMS } from '../game/data/items.js'
 
 // Who did it: the clues heard so far, a grid to work them out on, and one accusation
-const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean })
+// where: 'affair' for a guild affair, 'trial' for a guild's entry trial
+const props = defineProps({ affair: { type: Object, required: true }, disabled: Boolean, where: { type: String, default: 'affair' } })
 const emit = defineEmits(['answer'])
 const { t } = useI18n()
 const ctx = computed(() => props.affair.ctx)
@@ -15,12 +16,12 @@ const placeName = i => AREAS.find(a => a.id === ctx.value.places[i])?.name || ct
 const itemName = i => ITEMS[ctx.value.items[i]]?.name.toLowerCase() || ctx.value.items[i]
 const who = i => ctx.value.suspects[i]
 const clueText = c => t(`affairs.clues.${c.t}`, { who: c.s != null ? who(c.s) : '', place: c.place != null ? placeName(c.place) : '', item: c.item != null ? itemName(c.item) : '' })
-const clues = computed(() => (void props.affair.extra?.length, G.affairClues()))
+const clues = computed(() => (void props.affair.extra?.length, G.affairClues(props.where)))
 const hidden = computed(() => Math.max(0, props.affair.enigma.clues.length - clues.value.length + (props.affair.extra?.length || 0)))
 
 // The grid of notes is saved with the affair, so it survives a reload
 const mark = key => props.affair.notes?.[key] || ''
-const cycle = key => G.setAffairNote(key, { '': 'x', x: 'v', v: '' }[mark(key)])
+const cycle = key => G.setAffairNote(key, { '': 'x', x: 'v', v: '' }[mark(key)], props.where)
 const n = computed(() => props.affair.enigma.n)
 </script>
 

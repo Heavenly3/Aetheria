@@ -138,7 +138,8 @@ function leave() {
       <div v-if="trial && trialGuild" class="panel pad" :style="{ '--c': trialGuild.color }">
         <h3 class="panel-title"><GameIcon name="scroll-quill" /> {{ $t('guilds.trial.for', { guild: guildName(trialGuild) }) }}</h3>
         <p class="small muted" style="margin-top:-6px">{{ $t('guilds.trial.hint') }}</p>
-        <div class="two-col">
+        <!-- The guild's enigma needs the whole width; the older puzzles sit beside the task -->
+        <div :class="trial.enigma ? 'stack' : 'two-col'">
           <div>
             <div class="small muted label">{{ $t('guilds.trial.task') }}</div>
             <div class="task">

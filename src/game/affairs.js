@@ -5,7 +5,7 @@
    Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
 import { t } from '../i18n/index.js'
-import { seeded, asksOf, makeTask } from './data/guilds.js'
+import { seeded, asksOf, makeTask, PUZZLE_COOLDOWN } from './data/guilds.js'
 import { AREAS } from './data/combat.js'
 import { CHARACTERS } from './data/journal.js'
 import {
@@ -99,27 +99,42 @@ export const affairs = {
     return a && g ? affairReward(this, g, a.level, a.hints) : null
   },
 
+  /* ---------- where an enigma is: a guild affair, or the entry trial of a guild ---------- */
+  enigmaHolder(where = 'affair') {
+    if (where !== 'trial') return this.affair()
+    const tr = this.s.guilds?.trial
+    return tr?.enigma ? tr : null
+  },
+  // Whether its enigma can be worked on now: an affair once its leads are followed, a trial until solved
+  enigmaOpen(where = 'affair') {
+    if (where !== 'trial') return this.affairReady()
+    const tr = this.enigmaHolder('trial')
+    return !!tr && !tr.solved
+  },
+
   /* ---------- what is known: grows with every lead found ---------- */
-  // The share of the enigma's secrets known so far, from 0 to 1. Some are known from the start
-  affairKnown() {
+  // The share of the enigma's secrets known so far, from 0 to 1. Some are known from the start;
+  // everything about a trial's is known
+  affairKnown(where = 'affair') {
+    if (where === 'trial') return 1
     const a = this.affair()
     if (!a) return 0
     const total = a.leads.length + 1
     return (1 + this.leadsFound()) / total
   },
   // Deduction: the clues heard so far
-  affairClues() {
-    const a = this.affair()
+  affairClues(where = 'affair') {
+    const a = this.enigmaHolder(where)
     if (a?.enigma.kind !== 'deduction') return []
-    const known = Math.ceil(a.enigma.clues.length * this.affairKnown())
+    const known = Math.ceil(a.enigma.clues.length * this.affairKnown(where))
     return [...a.enigma.clues.slice(0, known), ...(a.extra || [])]
   },
   // Astrolabe: which rings' stars are known
-  affairStarsKnown() {
-    const a = this.affair()
+  affairStarsKnown(where = 'affair') {
+    const a = this.enigmaHolder(where)
     if (a?.enigma.kind !== 'astrolabe') return []
     const n = a.enigma.rings.length
-    const known = Math.ceil(n * this.affairKnown())
+    const known = Math.ceil(n * this.affairKnown(where))
     return a.enigma.target.map((s, i) => (i < known ? s : null))
   },
 
@@ -169,28 +184,29 @@ export const affairs = {
 
   /* ---------- the enigma ---------- */
   // The hero's own marks on the deduction grid, kept with the affair
-  setAffairNote(key, value) {
-    const a = this.affair()
+  setAffairNote(key, value, where = 'affair') {
+    const a = this.enigmaHolder(where)
     if (!a) return
     a.notes ||= {}
     if (value) a.notes[key] = value
     else delete a.notes[key]
   },
   // Moves that change the enigma as the hero works on it
-  affairTurnMirror(r, c) {
-    const a = this.affair()
-    if (!this.affairReady() || a.enigma.kind !== 'beam' || (a.fixed || []).includes(r * a.enigma.size + c)) return false
+  affairTurnMirror(r, c, where = 'affair') {
+    const a = this.enigmaHolder(where)
+    if (!this.enigmaOpen(where) || a.enigma.kind !== 'beam' || (a.fixed || []).includes(r * a.enigma.size + c)) return false
     return turnMirror(a.enigma, r, c)
   },
-  affairTurnRing(i, dir) {
-    const a = this.affair()
-    if (!this.affairReady() || a.enigma.kind !== 'astrolabe') return false
+  affairTurnRing(i, dir, where = 'affair') {
+    const a = this.enigmaHolder(where)
+    if (!this.enigmaOpen(where) || a.enigma.kind !== 'astrolabe') return false
     turnRing(a.enigma, i, dir)
     return true
   },
-  affairWeigh(left, right) {
-    const a = this.affair()
-    if (!this.affairReady() || a.enigma.kind !== 'balance' || this.affairWait() > 0) return null
+  affairWeigh(left, right, where = 'affair') {
+    const a = this.enigmaHolder(where)
+    const waiting = where === 'trial' ? this.puzzleWait() > 0 : this.affairWait() > 0
+    if (!this.enigmaOpen(where) || a.enigma.kind !== 'balance' || waiting) return null
     return weigh(a.enigma, left, right)
   },
   // The answer: a suspect, the typed word, a coin, the echoed runes; the beam and the astrolabe are
@@ -199,14 +215,7 @@ export const affairs = {
     const a = this.affair()
     if (!this.affairReady() || this.affairWait() > 0) return null
     const e = a.enigma
-    let right = false
-    if (e.kind === 'deduction') right = answer === e.answer
-    else if (e.kind === 'cipher') right = cipherSolved(e, answer, t(`affairs.words.${e.word}`))
-    else if (e.kind === 'beam') right = beamSolved(e)
-    else if (e.kind === 'astrolabe') right = astrolabeSolved(e)
-    else if (e.kind === 'balance') right = answer === e.fake
-    else if (e.kind === 'echo') right = Array.isArray(answer) && answer.length === e.seq.length && answer.every((r, i) => r === e.seq[i])
-    if (right) return this.closeAffair(true)
+    if (enigmaRight(e, answer)) return this.closeAffair(true)
     // The beam and the astrolabe are simply not there yet
     if (e.kind === 'beam' || e.kind === 'astrolabe') return 'wrong'
     a.tries++
@@ -234,8 +243,49 @@ export const affairs = {
     s.affairAt = Date.now() + AFFAIR_PERIOD
     return solved ? 'solved' : 'lost'
   },
+  /* ---------- the entry trial ---------- */
+  // Every guild sets the same kind of enigma to those who would join it, one notch easier than its affairs
+  trialEnigma(g, rng) {
+    const pool = g.focus === 'open' || g.focus === 'multi' ? Object.keys(AFFAIRS) : AFFAIRS_BY[g.focus]
+    const kind = pool[g.seed % pool.length]
+    const level = Math.max(0, this.enigmaLevel(g) - 1)
+    const enigma = makeEnigma(AFFAIRS[kind].enigma, seeded(Math.floor(rng() * 1e9)), level)
+    const ctx = {}
+    if (enigma.kind === 'deduction') {
+      ctx.suspects = shuffle(rng, this.guildMembers(g).filter(m => !m.hero).map(m => m.name)).slice(0, enigma.n)
+      ctx.places = shuffle(rng, AREAS.map(a => a.id)).slice(0, enigma.n)
+      ctx.items = shuffle(rng, AFFAIR_ITEMS).slice(0, enigma.n)
+    }
+    return { kind, level, enigma, ctx }
+  },
+  // Returns 'right', 'wrong' (after a wait the enigma can be tried again) or null
+  answerTrial(answer) {
+    const tr = this.enigmaHolder('trial')
+    if (!tr || tr.solved || this.puzzleWait() > 0) return null
+    const e = tr.enigma
+    if (enigmaRight(e, answer)) { tr.solved = true; return 'right' }
+    if (e.kind === 'beam' || e.kind === 'astrolabe') return 'wrong'
+    tr.waitUntil = Date.now() + PUZZLE_COOLDOWN
+    tr.tries = (tr.tries || 0) + 1
+    if (e.kind === 'balance') { e.log = []; e.fake = Math.floor(seeded(tr.started + tr.tries)() * e.coins) }
+    if (e.kind === 'echo') tr.enigma = makeEchoAgain(e, { seed: tr.started, tries: tr.tries })
+    return 'wrong'
+  },
+
   // Leaving a guild drops its affair
   dropAffair() { const s = this.s.guilds; s.affair = null; s.affairAt = 0 },
+}
+
+// Whether an answer settles an enigma: a suspect, the typed word, a coin or the echoed runes; the beam
+// and the astrolabe are read from how they stand
+export function enigmaRight(e, answer) {
+  if (e.kind === 'deduction') return answer === e.answer
+  if (e.kind === 'cipher') return cipherSolved(e, answer, t(`affairs.words.${e.word}`))
+  if (e.kind === 'beam') return beamSolved(e)
+  if (e.kind === 'astrolabe') return astrolabeSolved(e)
+  if (e.kind === 'balance') return answer === e.fake
+  if (e.kind === 'echo') return Array.isArray(answer) && answer.length === e.seq.length && answer.every((r, i) => r === e.seq[i])
+  return false
 }
 
 // A new rite of the same length after a wrong echo
