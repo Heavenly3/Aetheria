@@ -183,5 +183,28 @@ export const RUMORS = [
   { id: 'weekly', when: g => g.weeklyUnlocked() },
   { id: 'reborn', when: g => (g.s.ascension?.count || 0) > 0 },
   { id: 'omenNow', when: g => !!g.activeOmen() },
+  { id: 'faceless', when: has('crown_tale') },
+  { id: 'remembers', when: g => (g.s.ascension?.count || 0) > 0 },
 ]
 export const rumorsFor = g => RUMORS.filter(r => { try { return r.when(g) } catch { return false } })
+
+/* What the people of the journal say when the hero talks to them, in `journal.talk.<person>.<id>`.
+   Like the rumours, what they say grows with the story: the newest fitting line comes first. The
+   prophecy of the one who remembers runs through them, each reading it their own way */
+const always = () => true
+export const TALKS = {
+  edmund: [{ id: 'door', when: always }, { id: 'tomb', when: has('empty_tomb') }, { id: 'crown', when: has('the_crown_whole') }],
+  king: [{ id: 'light', when: has('the_emperor') }, { id: 'dark', when: has('the_emperor') }],
+  astrologer: [{ id: 'look', when: always }, { id: 'hunters', when: always }, { id: 'prophecy', when: has('empty_tomb') }, { id: 'language', when: has('the_crown_whole') }],
+  smith: [{ id: 'forge', when: always }, { id: 'shard', when: has('brins_secret') }, { id: 'prophecy', when: all(has('brins_secret'), has('empty_tomb')) }],
+  morwen: [{ id: 'light', when: always }, { id: 'prophecy', when: has('empty_tomb') }, { id: 'seven', when: has('the_crown_whole') }],
+  priest: [{ id: 'lent', when: always }, { id: 'scratches', when: always }, { id: 'prophecy', when: always }],
+  captain: [{ id: 'north', when: always }, { id: 'thaw', when: has('winter_queen') }, { id: 'children', when: has('into_the_wound') }],
+  winter: [{ id: 'wish', when: always }, { id: 'tall', when: has('the_emperor') }],
+  wyrm: [{ id: 'promises', when: always }, { id: 'seven', when: has('the_crown_whole') }],
+  selene: [{ id: 'words', when: always }, { id: 'circle', when: has('into_the_wound') }, { id: 'children', when: has('beyond_the_gate') }],
+  ancient: [{ id: 'witness', when: always }, { id: 'closer', when: g => (g.s.ascension?.count || 0) > 0 }],
+  warden: [{ id: 'gate', when: always }, { id: 'children', when: always }],
+  firstKing: [{ id: 'stars', when: always }, { id: 'curse', when: has('the_crown_whole') }],
+}
+export const talksFor = (g, who) => (TALKS[who] || []).filter(l => { try { return l.when(g) } catch { return false } })

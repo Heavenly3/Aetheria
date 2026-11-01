@@ -793,7 +793,7 @@ export default {
       intro: "Así que tú eres quien recuerda.",
       enraged: "Llevas la corona de mi hermano y ni siquiera lo sabes.",
       desperate: "Golpea, pues. Ella solo era mi voz.",
-      defeat: "Volveremos a vernos, pequeña ladrona de luz.",
+      defeat: "Volveremos a vernos, pequeño ladrón de luz.",
     },
     winter_queen: {
       intro: "Aquí nada cambia. Nada cambiará hasta que él vuelva a casa.",
@@ -2590,7 +2590,73 @@ export default {
       says: "{keeper}, tras la barra",
       ask: "¿Alguna novedad?",
     },
+    talkBtn: "Hablar",
+    talkTo: "Hablar con {name}",
+    talk: {
+      edmund: {
+        door: "Todos los héroes que despiertan en esos prados acaban llamando a mi puerta. La mayoría se marcha y no vuelve. Tú vuelve.",
+        tomb: "Una tumba vacía bajo mi propia capital, y la Orden lo sabía. Siempre soy el último en enterarme de todo en este reino.",
+        crown: "Hagas lo que hagas con ella, no me la des a mí. He visto lo que les hizo a hombres mejores que yo.",
+      },
+      king: {
+        light: "Solo quería guardar la luz. ¿No es para eso un rey?",
+        dark: "Trescientos años sujetando la oscuridad con mis propias manos. Díselo cuando maldigan mi nombre.",
+      },
+      astrologer: {
+        look: "No me preguntes qué va a pasar. Pregúntame hacia dónde mirar.",
+        hunters: "Los cazadores de señales persiguen cada prodigio por todo el reino. Casi todos son unos locos. Pero han visto más cielo que nadie en el Observatorio.",
+        prophecy: "Hay un verso antiguo en la Crónica: «Cuando la luz vuelva a caer, despertará quien ya cayó antes. No será rey ni santo: será quien recuerde». Creo que habla de ti.",
+        language: "Los prodigios nunca fueron avisos. Algo ahí arriba está aprendiendo nuestro idioma, señal a señal.",
+      },
+      smith: {
+        forge: "Trescientos años y nadie le ha echado ni un carbón a esa forja. Y sigue latiendo. Escucha.",
+        shard: "Ya has visto mi fragmento. Ahora sabes por qué me fijo en cada héroe que cruza esa puerta.",
+        prophecy: "Quien recuerde, dicen. Yo digo que será quien forje una Corona nueva. Si no, ¿por qué despierta la forja cuando entras tú?",
+      },
+      morwen: {
+        light: "Mi hermano robó la luz. Mi familia tiene que devolverla. Es lo único que he querido siempre.",
+        prophecy: "Quien recuerde llevará la Corona, pequeño ladrón. Necesita sangre real. Necesita la mía.",
+        seven: "Siete fragmentos en tus manos. ¿Entiendes ahora por qué esperé mil años?",
+      },
+      priest: {
+        lent: "«La luz se presta, nunca se toma». Lo escribió nuestro fundador. Era el confesor del último rey.",
+        scratches: "La tumba del rey está vacía. Pero la piedra de dentro está arañada. Desde dentro. Nunca se lo había contado a nadie.",
+        prophecy: "La Orden enseña que quien recuerde será un santo que vendrá a pedir perdón por todos. Ojalá sea verdad. Ojalá seas tú.",
+      },
+      captain: {
+        north: "El Norte no perdona los errores. Comételos en un sitio más cálido.",
+        thaw: "Hollowmere se está deshelando. Hay niños corriendo por calles que estaban heladas antes de que naciera mi abuela.",
+        children: "La semana pasada subió por el paso gente con túnicas, cantando que hay que liberar al rey. Se llaman los Hijos del Vacío. Los mandé de vuelta abajo.",
+      },
+      winter: {
+        wish: "Deseé que nada cambiara. Tendría que haber deseado que él volviera.",
+        tall: "Lo has visto, ¿verdad? ¿Sigue siendo tan alto?",
+      },
+      wyrm: {
+        promises: "Portaescudos. Cada promesa que hizo su familia, la llevé yo a lomos.",
+        seven: "Tienes los siete. He volado lo bastante para saber qué viene ahora. Elige bien.",
+      },
+      selene: {
+        words: "Cada palabra es un hechizo que aún no ha terminado. Cuidado con lo que dices cerca del portal.",
+        circle: "Algunos del Círculo de las Runas cruzaron la grieta para estudiarla. Volvieron distintos. No quieren decir cómo.",
+        children: "Los Hijos del Vacío quieren abrir la grieta del todo para liberar al rey. No tienen ni idea de qué más saldría por ella.",
+      },
+      ancient: {
+        witness: "Vi forjar la Corona en la oscuridad del hierro. La vi romperse sobre las nubes. Pregunta.",
+        closer: "Sigues volviendo, pequeño. Cada vez un poco más cerca de recordar. Lo huelo en ti.",
+      },
+      warden: {
+        gate: "Alguien tenía que guardar la puerta. Elegí recordar para poder hacerlo.",
+        children: "Los Hijos del Vacío cantan ante mi puerta cada noche. Creen que el rey quiere ser liberado. Él no sabe lo que quiere.",
+      },
+      firstKing: {
+        stars: "Atrapé las estrellas que caían con mis propias manos. Tendría que haberlas dejado caer.",
+        curse: "Te llamarán quien recuerda. Yo también recuerdo. Esa es la maldición.",
+      },
+    },
     rumors: {
+      faceless: "Anoche pasó un mercader sin cara. Preguntó por ti por tu nombre y dijo que sería «como la otra vez». No le pregunté qué quería decir.",
+      remembers: "Quien recuerde, dicen las canciones antiguas. Lo curioso es que juraría que ya te he servido esta misma cerveza antes.",
       void: "Selene volvió sola por la puerta. Pidió un vaso de agua y se lo bebió de pie, mirando al techo como si pudiera abrirse.",
       endingQueen: "Anoche la campana de Alba Mayor sonó una vez, muy suave. Mi abuela decía que así sonaba en las bodas.",
       endingSky: "¿Has visto las estrellas? He vivido en Albor toda mi vida y no sabía que hubiera tantas. Esta noche no bebe nadie. Todo el mundo está fuera.",

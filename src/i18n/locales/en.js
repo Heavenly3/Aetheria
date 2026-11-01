@@ -2590,7 +2590,73 @@ export default {
       says: "{keeper}, behind the bar",
       ask: "Any news?",
     },
+    talkBtn: "Talk",
+    talkTo: "Talk to {name}",
+    talk: {
+      edmund: {
+        door: "Every hero who wakes in those meadows ends up at my door. Most of them leave and never come back. Come back.",
+        tomb: "An empty tomb under my own capital, and the Order knew. I am always the last to hear anything in this realm.",
+        crown: "Whatever you do with it, do not give it to me. I have seen what it did to better men than I am.",
+      },
+      king: {
+        light: "I only wanted to keep the light. Is that not what a king is for?",
+        dark: "Three hundred years I held the dark back with my bare hands. Tell them that, when they curse my name.",
+      },
+      astrologer: {
+        look: "Do not ask me what is coming. Ask me where to look.",
+        hunters: "The signal hunters chase every omen across the realm. They are fools, mostly. But they have seen more sky than anyone at the Observatory.",
+        prophecy: "There is an old line in the Chronicle: \"When the light falls again, the one who fell before will wake. Neither king nor saint: the one who remembers.\" I think it is about you.",
+        language: "The omens were never warnings. Something up there is learning our language, one sign at a time.",
+      },
+      smith: {
+        forge: "Three hundred years, and nobody has fed that forge a single coal. It still beats. Listen.",
+        shard: "You have seen my shard. Now you know why I watch every hero who comes through that door.",
+        prophecy: "The one who remembers, they say. I say it will be whoever forges a new Crown. Why else would the forge wake when you walk in?",
+      },
+      morwen: {
+        light: "My brother stole the light. My family has to give it back. That is all I have ever wanted.",
+        prophecy: "The one who remembers will wear the Crown, little thief. It needs royal blood. It needs mine.",
+        seven: "Seven shards in your hands. Do you understand now why I waited a thousand years?",
+      },
+      priest: {
+        lent: "\"The light is lent, never taken.\" Our founder wrote that. He was the last king's confessor.",
+        scratches: "The king's tomb is empty. But the stone inside is scratched. From the inside. I have never told anyone that.",
+        prophecy: "The Order teaches that the one who remembers will be a saint, come to ask forgiveness for us all. I hope it is true. I hope it is you.",
+      },
+      captain: {
+        north: "The North does not forgive mistakes. Make yours somewhere warmer.",
+        thaw: "Hollowmere is thawing. Children are running in streets that were frozen before my grandmother was born.",
+        children: "Robed folk came up the pass last week, singing about freeing the king. Children of the Void, they call themselves. I sent them back down.",
+      },
+      winter: {
+        wish: "I wished that nothing would change. I should have wished that he would come back.",
+        tall: "You have seen him, haven't you? Is he still so tall?",
+      },
+      wyrm: {
+        promises: "Shield-bearer. Every promise his family ever made, I carried on my back.",
+        seven: "You hold all seven. I have flown long enough to know what comes next. Choose well.",
+      },
+      selene: {
+        words: "Every word is a spell that has not finished yet. Mind what you say near the portal.",
+        circle: "Some of the Circle of Runes went through the rift to study it. They came back different. They will not say how.",
+        children: "The Children of the Void want the rift torn open to free the king. They have no idea what else would come through.",
+      },
+      ancient: {
+        witness: "I watched the Crown forged in the iron dark. I watched it break above the clouds. Ask.",
+        closer: "You keep coming back, little one. Each time a little closer to remembering. I can smell it on you.",
+      },
+      warden: {
+        gate: "Someone had to keep the gate. I chose to remember, so that I could.",
+        children: "The Children of the Void sing outside my gate every night. They think the king wants to be freed. He does not know what he wants.",
+      },
+      firstKing: {
+        stars: "I caught the falling stars with my bare hands. I should have let them fall.",
+        curse: "The one who remembers, they will call you. I remember too. That is the curse.",
+      },
+    },
     rumors: {
+      faceless: "A merchant with no face came through last night. He asked for you by name, and said it would be \"just like last time\". I did not ask what he meant.",
+      remembers: "The one who remembers, the old songs say. Funny thing: I could swear I have poured you this very ale before.",
       void: "Selene came back through the gate alone. She asked for a glass of water and drank it standing up, staring at the ceiling as if it might open.",
       endingQueen: "The bell in Highdawn rang once last night, very softly. My grandmother always said that was how it rang for weddings.",
       endingSky: "Have you seen the stars? I have lived in Albor all my life and I never knew there were so many. Nobody is drinking tonight. Everyone is outside.",

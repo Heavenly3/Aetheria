@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import SelectButton from 'primevue/selectbutton'
 import { G, state } from '../game/engine.js'
-import { ACTS, CHAPTERS, CHARACTERS, MEMORIES } from '../game/data/journal.js'
+import { ACTS, CHAPTERS, CHARACTERS, MEMORIES, talksFor } from '../game/data/journal.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import SpokenText from '../components/SpokenText.vue'
@@ -31,6 +31,17 @@ function toggle(id) {
   telling.value = open.value && isNew(open.value) ? open.value : null
   if (open.value) G.readJournal(id)
 }
+// Talking to someone: the newest thing they have to say comes first, then another each time
+const talking = ref(null)
+const canTalk = p => G.chapterUnlocked(p.met) && talksFor(G, p.id).length > 0
+function talk(p) {
+  const ids = talksFor(G, p.id).map(l => l.id)
+  const cur = talking.value?.who === p.id ? talking.value.line : null
+  const others = ids.filter(id => id !== cur)
+  const line = cur ? others[Math.floor(Math.random() * others.length)] || cur : ids[ids.length - 1]
+  talking.value = { who: p.id, line, n: (talking.value?.n || 0) + 1 }
+}
+
 // Any open page can be told again, or stopped
 const retell = id => { telling.value = telling.value === id ? null : id }
 function readAll() {
@@ -97,6 +108,11 @@ function readAll() {
         </div>
         <VoiceNote v-if="G.chapterUnlocked(p.met)" class="small muted person-desc" :style="{ '--voice-c': p.tint }"
           :text="$t(`journal.people.${p.id}.desc`, names)" :voice="p.id" :who="$t(`journal.people.${p.id}.name`, names)" />
+        <div v-if="talking?.who === p.id" :key="talking.n" class="said">
+          <SpokenText :text="`“${$t(`journal.talk.${p.id}.${talking.line}`, names)}”`" :voice="p.id" />
+        </div>
+        <Button v-if="canTalk(p)" class="talk-btn" :label="$t('journal.talkBtn')" icon="pi pi-comments" size="small" text
+          :aria-label="$t('journal.talkTo', { name: $t(`journal.people.${p.id}.name`, names) })" @click="talk(p)" />
       </div>
     </div>
 
@@ -145,6 +161,9 @@ button.page-head:hover { background: var(--tint-1); }
 .person.unknown { border-style: dashed; }
 .person-desc { margin: 10px 0 0; }
 .retell { margin: 4px 0 0 -10px; }
+.said { margin-top: 10px; padding: 8px 12px; border-radius: 10px; border-inline-start: 3px solid var(--c); background: color-mix(in srgb, var(--c) 9%, transparent); font-size: 14px; font-style: italic; color: var(--ink-2); line-height: 1.5; }
+.talk-btn { align-self: flex-start; margin: 6px 0 -6px -10px; color: color-mix(in srgb, var(--c) 65%, var(--ink)) !important; }
+.person { display: flex; flex-direction: column; }
 .person.unknown .tile { opacity: 0.55; }
 @media (max-width: 640px) { .page-text { padding: 2px 16px 16px; } }
 </style>
