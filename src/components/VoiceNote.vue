@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SpokenText from './SpokenText.vue'
 
@@ -9,9 +9,12 @@ const props = defineProps({
   voice: { type: String, default: 'narrator' },
   // Who speaks, for the button's name
   who: { type: String, default: '' },
+  // Changing it to a new number has the line said at once, as when a quest is accepted
+  start: { type: Number, default: 0 },
 })
 const { t } = useI18n()
 const playing = ref(false)
+watch(() => props.start, n => { if (n) playing.value = true })
 const label = () => (playing.value ? t('voice.stop') : props.who ? t('voice.hear', { name: props.who }) : t('voice.listen'))
 </script>
 

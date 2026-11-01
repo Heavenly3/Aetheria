@@ -42,7 +42,8 @@ async function catchUp(seconds) {
   catching = true
   try {
     const sum = await G.simulateAsync(seconds, p => { session.catching = p })
-    if (hadActivity && seconds >= SUMMARY_MIN && state.settings.offlineSummary !== false) session.offline = sum
+    // away: the real time gone, before the offline cap, for the tavern keeper's greeting
+    if (hadActivity && seconds >= SUMMARY_MIN && state.settings.offlineSummary !== false) session.offline = { ...sum, away: seconds }
     G.save()
   } finally {
     catching = false

@@ -26,6 +26,17 @@ export const VOICES = {
   ancient: { base: 52, range: 3, wave: 'sawtooth', formant: 380, q: 5, cps: 16, syll: 0.18, vol: 0.6, vibrato: 0, echo: 0.6, breath: 0.2 },
   warden: { base: 75, range: 2, wave: 'sawtooth', formant: 500, q: 6, cps: 18, syll: 0.15, vol: 0.55, vibrato: 40, echo: 0.6, breath: 0.3 },
   firstKing: { base: 140, range: 5, wave: 'triangle', formant: 1000, q: 2, cps: 22, syll: 0.12, vol: 0.65, vibrato: 10, echo: 0.5, breath: 0 },
+  // The people who give quests
+  oldman: { base: 115, range: 6, wave: 'triangle', formant: 800, q: 2.5, cps: 24, syll: 0.1, vol: 0.65, vibrato: 30, echo: 0, breath: 0.15 },
+  farmer: { base: 205, range: 7, wave: 'triangle', formant: 1100, q: 2, cps: 34, syll: 0.075, vol: 0.65, vibrato: 0, echo: 0, breath: 0 },
+  granny: { base: 240, range: 8, wave: 'sine', formant: 1250, q: 2.5, cps: 22, syll: 0.1, vol: 0.6, vibrato: 45, echo: 0, breath: 0.15 },
+  huntress: { base: 225, range: 5, wave: 'triangle', formant: 1300, q: 2, cps: 36, syll: 0.07, vol: 0.6, vibrato: 0, echo: 0, breath: 0.05 },
+  shade: { base: 135, range: 4, wave: 'sine', formant: 1500, q: 1.5, cps: 30, syll: 0.08, vol: 0.45, vibrato: 0, echo: 0.1, breath: 0.6 },
+  druid: { base: 140, range: 4, wave: 'sine', formant: 700, q: 1.5, cps: 22, syll: 0.12, vol: 0.6, vibrato: 8, echo: 0.2, breath: 0.3 },
+  merchant: { base: 175, range: 9, wave: 'square', formant: 1400, q: 4, cps: 38, syll: 0.06, vol: 0.35, vibrato: 0, echo: 0, breath: 0 },
+  youth: { base: 260, range: 9, wave: 'triangle', formant: 1500, q: 2, cps: 46, syll: 0.055, vol: 0.55, vibrato: 0, echo: 0, breath: 0 },
+  slayer: { base: 105, range: 3, wave: 'triangle', formant: 650, q: 3, cps: 26, syll: 0.09, vol: 0.7, vibrato: 0, echo: 0.1, breath: 0.1 },
+  oracle: { base: 270, range: 5, wave: 'sine', formant: 1700, q: 3, cps: 20, syll: 0.13, vol: 0.55, vibrato: 20, echo: 0.55, breath: 0.2 },
   // Bosses that are not people of the story
   goblin: { base: 330, range: 10, wave: 'square', formant: 1600, q: 3, cps: 44, syll: 0.05, vol: 0.35, vibrato: 0, echo: 0, breath: 0.1 },
   troll: { base: 70, range: 4, wave: 'triangle', formant: 450, q: 3, cps: 16, syll: 0.16, vol: 0.75, vibrato: 0, echo: 0.1, breath: 0.1 },

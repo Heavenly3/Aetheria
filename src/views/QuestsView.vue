@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SelectButton from 'primevue/selectbutton'
 import Button from 'primevue/button'
@@ -15,6 +15,9 @@ import GameIcon from '../components/GameIcon.vue'
 import DailyTasks from '../components/DailyTasks.vue'
 import TrackerBoard from '../components/TrackerBoard.vue'
 import HelpTip from '../components/HelpTip.vue'
+import SpokenText from '../components/SpokenText.vue'
+import VoiceNote from '../components/VoiceNote.vue'
+import { QUEST_VOICES } from '../game/data/questVoices.js'
 
 const { t } = useI18n()
 const filter = ref('open')
@@ -26,6 +29,23 @@ const list = computed(() => QUESTS.filter(q => {
   if (filter.value === 'done') return st === 'done'
   return true
 }).sort((a, b) => order(a) - order(b)))
+// Whoever gives a quest tells it when it is accepted, and thanks the hero when it is handed in
+const voiceOf = q => QUEST_VOICES[q.id] || 'keeper'
+const told = ref({})
+function accept(q) {
+  G.startQuest(q.id)
+  if (G.questStatus(q) === 'active') told.value = { ...told.value, [q.id]: (told.value[q.id] || 0) + 1 }
+}
+const thanks = ref(null)
+let thanksTimer = 0
+function hideThanksIn(ms) { const id = thanks.value?.id; clearTimeout(thanksTimer); thanksTimer = setTimeout(() => { if (thanks.value?.id === id) thanks.value = null }, ms) }
+function complete(q) {
+  if (G.completeQuest(q.id) === false) return
+  const text = t(`questThanks.${q.id}`)
+  thanks.value = { id: q.id + Date.now(), icon: q.icon, giver: q.giver, text: `“${text}”`, voice: voiceOf(q) }
+  hideThanksIn(6000 + text.length * 90)
+}
+onUnmounted(() => clearTimeout(thanksTimer))
 const order = q => (G.questReady(q) ? 0 : { active: 1, available: 2, locked: 3, done: 4 }[G.questStatus(q)])
 
 function objLabel(o) {
@@ -58,6 +78,16 @@ const reqText = q => [
     </div>
     <SelectButton v-model="filter" :options="filters" optionLabel="label" optionValue="value" :allowEmpty="false" size="small" style="margin-bottom:18px" />
 
+    <Transition name="say">
+      <div v-if="thanks" :key="thanks.id" class="quest-thanks">
+        <ItemTile :icon="thanks.icon" tint="#8a6a2a" size="sm" :tip="false" />
+        <div class="grow">
+          <div class="quest-thanks-name">{{ thanks.giver }}</div>
+          <SpokenText :text="thanks.text" :voice="thanks.voice" @done="hideThanksIn(3500)" />
+        </div>
+      </div>
+    </Transition>
+
     <div class="grid-wide">
       <div v-for="q in list" :key="q.id" :data-focus="'quest:' + q.id" class="card quest" :class="{ done: G.questStatus(q) === 'done', active: G.questReady(q), locked: G.questStatus(q) === 'locked' }" style="--c:#e2b65a">
         <div class="row">
@@ -68,7 +98,7 @@ const reqText = q => [
           </div>
           <Tag :value="G.questReady(q) ? $t('quests.status.ready') : $t('quests.status.' + G.questStatus(q))" :severity="G.questReady(q) ? 'success' : SEVERITY[G.questStatus(q)]" />
         </div>
-        <p class="small muted">{{ q.desc }}</p>
+        <VoiceNote class="small muted quest-desc" :text="q.desc" :voice="voiceOf(q)" :who="q.giver" :start="told[q.id] || 0" />
 
         <div v-if="reqText(q).length && G.questStatus(q) === 'locked'" class="row wrap" style="gap:6px;margin-bottom:10px">
           <span class="small faint">{{ $t('quests.requires') }}</span>
@@ -98,8 +128,8 @@ const reqText = q => [
           <span class="tag gold">{{ $t('quests.qp', { n: q.reward.qp }) }}</span>
         </div>
 
-        <Button v-if="G.questStatus(q) === 'available'" :label="$t('quests.accept')" icon="pi pi-check" fluid style="margin-top:14px" @click="G.startQuest(q.id)" />
-        <Button v-else-if="G.questStatus(q) === 'active'" :label="$t('quests.complete')" icon="pi pi-star" fluid style="margin-top:14px" :disabled="!G.questReady(q)" @click="G.completeQuest(q.id)" />
+        <Button v-if="G.questStatus(q) === 'available'" :label="$t('quests.accept')" icon="pi pi-check" fluid style="margin-top:14px" @click="accept(q)" />
+        <Button v-else-if="G.questStatus(q) === 'active'" :label="$t('quests.complete')" icon="pi pi-star" fluid style="margin-top:14px" :disabled="!G.questReady(q)" @click="complete(q)" />
       </div>
     </div>
     <div v-if="!list.length" class="empty-state"><GameIcon name="scroll-unfurled" :size="46" /><div>{{ $t('quests.empty') }}</div></div>
@@ -108,5 +138,11 @@ const reqText = q => [
 
 <style scoped>
 .quest { display: flex; flex-direction: column; }
+.quest-desc { margin: 12px 0; }
+.quest-thanks { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 10px 14px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--line));
+  background: color-mix(in srgb, var(--gold) 8%, var(--panel)); font-style: italic; color: var(--ink-2); line-height: 1.45; }
+.quest-thanks-name { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+.say-enter-active, .say-leave-active { transition: opacity 0.35s, transform 0.35s; }
+.say-enter-from, .say-leave-to { opacity: 0; transform: translateY(-4px); }
 .rewards { margin-top: auto; padding-top: 14px; gap: 6px; }
 </style>

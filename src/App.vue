@@ -37,6 +37,8 @@ import GlobalSearch from './components/GlobalSearch.vue'
 import MythicFound from './components/MythicFound.vue'
 import GameIcon from './components/GameIcon.vue'
 import ItemTile from './components/ItemTile.vue'
+import SpokenText from './components/SpokenText.vue'
+import { welcomeKind } from './game/data/questVoices.js'
 import TitleScreen from './components/TitleScreen.vue'
 import BottomNav from './components/BottomNav.vue'
 import TutorialCoach from './components/TutorialCoach.vue'
@@ -242,6 +244,8 @@ onMounted(() => {
 })
 
 const off = computed(() => session.offline)
+// The tavern keeper greets the hero, more warmly the longer they were away
+const welcomeLine = computed(() => (off.value ? `“${t(`offline.welcome.${welcomeKind(off.value.away ?? off.value.seconds)}`, { name: state.name })}”` : ''))
 // After an update, returning players see what changed once; new players start with it seen
 const news = ref(false)
 const newsList = ref([])
@@ -391,6 +395,13 @@ function startAdventure() {
 
   <Dialog :visible="!!off" modal :header="$t('offline.title')" style="width: min(540px, calc(100vw - 32px))" @update:visible="session.offline = null">
     <template v-if="off">
+      <div class="welcome-keeper">
+        <ItemTile icon="beer-horn" tint="#e2b65a" size="sm" :tip="false" />
+        <div class="grow">
+          <div class="welcome-name">{{ $t('offline.keeper') }}</div>
+          <SpokenText :text="welcomeLine" voice="keeper" />
+        </div>
+      </div>
       <p class="muted" style="margin-top:0">
         <span v-html="$t('offline.away', { time: fmtTime(off.seconds) })" />
         <span v-if="off.capped"> {{ $t('offline.capped', { h: +G.offlineCapHours().toFixed(1) }) }}</span>
@@ -464,6 +475,8 @@ function startAdventure() {
 </template>
 
 <style>
+.welcome-keeper { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--line)); background: color-mix(in srgb, var(--gold) 7%, transparent); font-style: italic; color: var(--ink-2); line-height: 1.45; }
+.welcome-name { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
 .catching { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(3px); }
 .catching-box { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(320px, calc(100vw - 48px)); padding: 24px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line-hi); text-align: center; }
 .catching-box .gi { color: var(--gold); }
