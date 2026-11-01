@@ -69,7 +69,7 @@ onUnmounted(() => off?.())
     <div class="row" style="align-items:flex-start">
       <ItemTile :icon="kind.icon" tint="#8a6a2a" size="md" :tip="false" />
       <div class="grow" style="min-width:0">
-        <div class="small muted">{{ $t('affairs.title') }} · <span class="lvl" :class="'l' + a.level">{{ $t(`affairs.levels.l${a.level}`) }}</span></div>
+        <div class="small muted">{{ $t('affairs.title') }}</div>
         <div class="card-name">{{ $t(`affairs.kinds.${a.kind}.name`) }}</div>
         <div class="small muted">{{ $t('affairs.brings', { name: a.giver }) }}</div>
       </div>
@@ -138,10 +138,6 @@ onUnmounted(() => off?.())
 <style scoped>
 .affair { margin-top: 18px; border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 7%, var(--panel)), var(--panel)); }
 .intro-line { margin-top: 12px; font-style: italic; color: var(--ink-2); line-height: 1.5; }
-.lvl { font-weight: 800; }
-.lvl.l0 { color: var(--ok); }
-.lvl.l1 { color: var(--gold); }
-.lvl.l2 { color: var(--danger); }
 .lead { padding: 8px 10px; border-radius: 10px; background: var(--tint-1); }
 .lead.done { opacity: 0.8; }
 .reward { gap: 6px; margin-top: 12px; align-items: center; }

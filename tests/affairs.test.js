@@ -161,8 +161,6 @@ describe('guild affairs', () => {
     newHero({ difficulty: 'hard' })
     expect(G.enigmaLevel({ tier: 2 })).toBe(2)
     expect(G.enigmaLevel({ tier: 1 })).toBe(1)
-    state.mind = 0
-    expect(G.enigmaLevel({ tier: 5 })).toBe(1)
   })
 
   it('end when the hero leaves the guild, and their leads carry over a rebirth', () => {

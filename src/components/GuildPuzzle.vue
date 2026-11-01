@@ -54,7 +54,6 @@ const marks = g => '●'.repeat(g.exact) + '○'.repeat(g.near) + '·'.repeat(LO
     <div class="row" style="gap:8px;margin-bottom:8px">
       <GameIcon :name="AFFAIRS[trial.kind].icon" :size="16" />
       <b>{{ $t(`affairs.kinds.${trial.kind}.name`) }}</b>
-      <span class="small muted">· {{ $t(`affairs.levels.l${trial.level}`) }}</span>
       <span v-if="trial.solved" class="tag ok"><i class="pi pi-check" /> {{ $t('guilds.trial.solved') }}</span>
     </div>
     <p v-if="trial.solved" class="small muted" style="margin:0">{{ $t('guilds.trial.right') }}</p>

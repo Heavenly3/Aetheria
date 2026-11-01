@@ -172,7 +172,7 @@ export const ACHIEVEMENTS = [
   ach('guild_rank_5', 'guildMaster', 5, 'star-medal', G => G.bestGuildRank() >= 5, 150000),
   ...tiers('contracts', [[10, 3000], [100, 40000]], 'scroll-unfurled', (G, n) => (G.s.stats.contracts || 0) >= n),
   ...tiers('affairs', [[1, 2000], [10, 25000], [50, 120000]], 'all-seeing-eye', (G, n) => (G.s.stats.affairs || 0) >= n),
-  ach('affairs_fiendish', 'affairsHard', 5, 'eclipse', G => (G.s.stats.affairsHard || 0) >= 5, 60000),
+  ach('affairs_alone', 'affairsAlone', 5, 'eclipse', G => (G.s.stats.affairsAlone || 0) >= 5, 60000),
   // Compendium and craft
   ...tiers('pages', [[1, 2000], [10, 40000]], 'open-book', (G, n) => Object.keys(G.s.codex?.claimed || {}).filter(k => k.startsWith('page:')).length >= n),
   ...tiers('masterworks', [[1, 3000], [25, 60000]], 'anvil-impact', (G, n) => G.masterworks() >= n),

@@ -19,9 +19,9 @@ const shuffle = (rng, a) => { const b = [...a]; for (let i = b.length - 1; i > 0
 const LEAD_ASKS = ask => !ask.startsWith('deliver') && ask !== 'gold'
 
 export const affairs = {
-  // How hard the enigmas are: the game's difficulty (or the hero's own choice), nudged by the guild's standing
+  // How hard the enigmas are: the game's difficulty, nudged by the guild's standing
   enigmaLevel(g = this.myGuild()) {
-    const base = this.s.mind ?? { easy: 0, normal: 1, hard: 2 }[this.s.difficulty] ?? 1
+    const base = { easy: 0, normal: 1, hard: 2 }[this.s.difficulty] ?? 1
     const nudge = !g ? 0 : g.tier >= 4 ? 1 : g.tier <= 1 ? -1 : 0
     return Math.max(0, Math.min(2, base + nudge))
   },
@@ -235,7 +235,7 @@ export const affairs = {
       this.addGold(reward.gold)
       this.addGuildRep(reward.rep)
       this.s.stats.affairs = (this.s.stats.affairs || 0) + 1
-      if (a.level === 2 && !a.hints) this.s.stats.affairsHard = (this.s.stats.affairsHard || 0) + 1
+      if (!a.hints) this.s.stats.affairsAlone = (this.s.stats.affairsAlone || 0) + 1
       this.log(AFFAIRS[a.kind].icon, 'log.affairSolved', { affair: '@affair:' + a.kind })
     } else this.log('cross-mark', 'log.affairLost', { affair: '@affair:' + a.kind })
     this.emit('affairClosed', { kind: a.kind, solved, reward })
