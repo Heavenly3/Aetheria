@@ -210,6 +210,8 @@ export const TASK_TYPES = {
   gold: { read: G => G.s.gold, icon: 'two-coins', deliver: true },
   // During a big festival: festival points earned
   fest: { read: G => G.s.festival?.points || 0, icon: 'laurel-crown' },
+  // An affair's lead: a word with someone from the journal
+  talk: { read: (G, t) => G.s.guilds.talked?.[t.who] || 0, icon: 'hooded-figure' },
 }
 
 const levelGap = lvl => XP_TABLE[Math.min(99, lvl + 1)] - XP_TABLE[Math.min(98, lvl)]

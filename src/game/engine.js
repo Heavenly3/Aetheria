@@ -23,6 +23,7 @@ import { relicForge, relicForgeState } from './relicforge.js'
 import { journal, journalState } from './journal.js'
 import { fighting, fightingState } from './fighting.js'
 import { guilds, guildsState } from './guilds.js'
+import { affairs } from './affairs.js'
 import { codex, codexState } from './codex.js'
 import { repairNumbers } from './saveGuard.js'
 import { recordError } from './feedback.js'
@@ -1689,6 +1690,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records, mythics)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, affairs, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records, mythics)
 
 export { SKILLS, ITEMS }

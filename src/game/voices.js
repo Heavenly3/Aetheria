@@ -149,6 +149,18 @@ function echoOut(ctx, out, amount) {
 
 export const voicesOn = () => state.settings?.voices !== false && !state.settings?.muted
 
+// One rune of a rite: a short sung note, each rune on its own step of a pentatonic scale
+const RUNE_STEPS = [0, 2, 4, 7, 9, 12]
+export function runeTone(i, length = 0.35) {
+  const ctx = !state.settings?.muted ? audioContext() : null
+  if (!ctx) return
+  if (ctx.state === 'suspended') ctx.resume?.()
+  const v = { ...VOICES.priest, syll: length, vol: 0.9, echo: 0.3 }
+  const echo = echoOut(ctx, voiceOut(), v.echo)
+  syllable(ctx, echo.node, v, { freq: 220 * 2 ** (RUNE_STEPS[i % RUNE_STEPS.length] / 12), stress: true }, ctx.currentTime + 0.02)
+  echo.close()
+}
+
 /* Speaks a line. Returns { timeline, stop }: the syllables are scheduled a little ahead at a time, so
    stopping (a skip, or leaving the screen) silences the rest at once */
 export function speak(text, voiceId) {

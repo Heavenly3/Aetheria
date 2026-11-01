@@ -12,6 +12,8 @@ const title = (id, unlock, of = false) => named({ id, of, ...unlock }, `cosmetic
 
 export const TITLES = [
   title('apprentice', {}),
+  title('sleuth', { ach: 'affairs_10' }),
+  title('mastermind', { ach: 'affairs_fiendish' }),
   title('goblin_hunter', { ach: 'boss_goblin_king' }),
   title('dragonslayer', { ach: 'boss_ancient_dragon' }),
   title('voidwalker', { ach: 'boss_void_emperor' }),

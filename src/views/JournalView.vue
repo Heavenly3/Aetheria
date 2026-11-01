@@ -40,6 +40,7 @@ function talk(p) {
   const others = ids.filter(id => id !== cur)
   const line = cur ? others[Math.floor(Math.random() * others.length)] || cur : ids[ids.length - 1]
   talking.value = { who: p.id, line, n: (talking.value?.n || 0) + 1 }
+  G.noteTalk(p.id)
 }
 
 // Any open page can be told again, or stopped

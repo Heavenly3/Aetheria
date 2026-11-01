@@ -17,6 +17,7 @@ import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import HelpTip from '../components/HelpTip.vue'
 import GuildPuzzle from '../components/GuildPuzzle.vue'
+import AffairPanel from '../components/AffairPanel.vue'
 
 const { t } = useI18n()
 const confirm = useConfirm()
@@ -199,6 +200,8 @@ function leave() {
             </template>
           </div>
         </div>
+
+        <AffairPanel :now="now" />
 
         <div class="row" style="margin:24px 0 12px">
           <div class="section-title grow" style="margin:0">{{ $t('guilds.contracts.title') }}</div>

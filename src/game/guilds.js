@@ -16,7 +16,8 @@ export const guildsState = () => ({
   // list: the guilds of this world · founded: the day they were founded · member: id of the hero's guild
   // rep: reputation earned in each guild · marks: guild marks to spend · trial: the entry trial under way
   // contracts / period: the current contracts and the four-hour period they belong to · leftAt: when the hero last left a guild
-  guilds: { list: [], founded: 0, member: null, joined: 0, rep: {}, marks: 0, trial: null, contracts: [], period: -1, leftAt: 0, best: {} },
+  // affair / affairAt: the guild affair offered or under way, and when the next one comes · talked: words with people of the journal
+  guilds: { list: [], founded: 0, member: null, joined: 0, rep: {}, marks: 0, trial: null, contracts: [], period: -1, leftAt: 0, best: {}, affair: null, affairAt: 0, talked: {} },
 })
 
 export const guilds = {
@@ -152,6 +153,7 @@ export const guilds = {
     if (!g) return false
     s.rep[g.id] = 0
     Object.assign(s, { member: null, contracts: [], period: -1, leftAt: Date.now() })
+    this.dropAffair()
     this.log('cross-mark', 'log.guildLeave', { guild: '@guild:' + g.id })
     return true
   },
@@ -191,6 +193,7 @@ export const guilds = {
       s.contracts = [...kept, ...fresh]
       s.period = period
     }
+    this.ensureAffair(now)
     return s.contracts
   },
   makeContract(g, asks, size, rng = Math.random) {
@@ -232,18 +235,19 @@ export const guilds = {
   guildsReady() {
     const s = this.s.guilds
     if (!s) return 0
-    return (s.member ? s.contracts.filter(c => !c.claimed && this.taskMet(c)).length : 0) + (this.trialReady() ? 1 : 0)
+    return (s.member ? s.contracts.filter(c => !c.claimed && this.taskMet(c)).length : 0) + (this.trialReady() ? 1 : 0) + (this.affairReady() ? 1 : 0)
   },
 
   // Skill XP starts over on ascension: keep how far the tasks had come
   guildSnapshot() {
     const s = this.s.guilds
-    return { trial: s.trial ? this.taskCur(s.trial.task) : 0, contracts: s.contracts.map(c => this.taskCur(c)) }
+    return { trial: s.trial ? this.taskCur(s.trial.task) : 0, contracts: s.contracts.map(c => this.taskCur(c)), leads: (s.affair?.leads || []).map(l => this.taskCur(l)) }
   },
   restoreGuildTasks(snap) {
     const s = this.s.guilds
     const rebase = (t, cur) => { if (!TASK_TYPES[t.type].deliver) t.base = TASK_TYPES[t.type].read(this, t) - cur }
     if (s.trial) rebase(s.trial.task, snap.trial)
     s.contracts.forEach((c, i) => rebase(c, snap.contracts[i] || 0))
+    ;(s.affair?.leads || []).forEach((l, i) => rebase(l, snap.leads?.[i] || 0))
   },
 }
