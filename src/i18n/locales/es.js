@@ -744,6 +744,86 @@ export default {
     cats: { supplies: 'Suministros', seeds: 'Semillas', runes: 'Runas', tools: 'Herramientas', gear: 'Equipo' },
   },
 
+  bossLines: {
+    goblin_king: {
+      intro: "¡Brillitos! ¡Dale al Rey Goblin todos tus brillitos!",
+      enraged: "¿Le has pegado al REY? ¡Nadie le pega al rey!",
+      desperate: "¡Guardias! ¡GUARDIAS! ¿Por qué nunca hay guardias?",
+      defeat: "No es justo... el rey tenía que ganar...",
+    },
+    warren_chief: {
+      intro: "¡Ja! ¿Otro que viene a robar a la Madriguera?",
+      enraged: "¡El Cacique muerde! ¡El Cacique siempre devuelve el mordisco!",
+      desperate: "El cristal no... ¡el cristal brillante no se toca!",
+      defeat: "Llévatelo, pues... total, zumba toda la noche...",
+    },
+    troll_lord: {
+      intro: "Cosa pequeña. Señor tiene hambre.",
+      enraged: "¿Pegar a Señor? Ahora Señor tiene hambre y enfado.",
+      desperate: "Señor se cura... Señor siempre se cura...",
+      defeat: "Señor... dormir ya...",
+    },
+    skeleton_king: {
+      intro: "¡Fuera! Cada moneda de esta cripta es de mi señor.",
+      enraged: "Trescientos años contándolo. No sale ni una moneda.",
+      desperate: "¡Guardias de la cripta, alzaos! ¿Por qué no os alzáis?",
+      defeat: "Cuatro mil doce... he perdido la cuenta...",
+    },
+    kraken: {
+      intro: "Lo profundo tiene hambre, marinerito.",
+      enraged: "La marea cambia. La marea siempre cambia.",
+      desperate: "Abajo... te arrastraré conmigo hasta el fondo...",
+      defeat: "Vuelta a la oscuridad... vuelta al frío...",
+    },
+    necromancer: {
+      intro: "Otra alma que entra por su propio pie. Qué considerada.",
+      enraged: "¡Alzaos, alzaos! ¡Los muertos nunca se cansan!",
+      desperate: "¡No puedes matar lo que ya ha muerto!",
+      defeat: "La muerte... tenía que estar de mi lado...",
+    },
+    naga: {
+      intro: "Así que tú eres quien recuerda.",
+      enraged: "Llevas la corona de mi hermano y ni siquiera lo sabes.",
+      desperate: "Golpea, pues. Ella solo era mi voz.",
+      defeat: "Volveremos a vernos, pequeña ladrona de luz.",
+    },
+    winter_queen: {
+      intro: "Aquí nada cambia. Nada cambiará hasta que él vuelva a casa.",
+      enraged: "¿Crees que el frío es mi arma? Es mi promesa.",
+      desperate: "Esperé trescientos años. Puedo esperar a que pases.",
+      defeat: "¿Ha terminado, entonces? ¿Vuelve... a casa?",
+    },
+    bronze_wyrm: {
+      intro: "Portaescudos. Hueles a su corona.",
+      enraged: "Llevé a un rey por encima de las nubes. Tú pesas mucho menos.",
+      desperate: "Cada promesa de su familia, rota. ¿Romperás tú la tuya?",
+      defeat: "Basta, portaescudos. Pregunta, y recordaré.",
+    },
+    ancient_dragon: {
+      intro: "Vi forjar la Corona. Te veré caer.",
+      enraged: "Más viejo que los reyes. Más viejo que tus estrellas.",
+      desperate: "El cielo lo recuerda todo. Yo también.",
+      defeat: "Escucha, pequeño. Te contaré por qué se rompió.",
+    },
+    void_emperor: {
+      intro: "Vuelve atrás. Solo quiero guardar la luz un poco más.",
+      enraged: "Trescientos años en la oscuridad. No los alargues.",
+      desperate: "Solo lo justo para el reino... ¿es tanto pedir?",
+      defeat: "Tú también la llevas... la séptima luz.",
+    },
+    rift_warden: {
+      intro: "Nadie cruza la puerta. Ni siquiera tú.",
+      enraged: "Elegí no olvidar. No hagas que me arrepienta.",
+      desperate: "Alguien... tiene que guardar... la puerta...",
+      defeat: "Ve, pues. Está detrás de mí. El rey.",
+    },
+    aether_sovereign: {
+      intro: "Novecientos noventa y nueve escalones, ¿para esto?",
+      enraged: "¡Atrapé las estrellas que caían con mis propias manos!",
+      desperate: "Cada rey después de mí llevó mi robo. Tú no. ¡Tú no!",
+      defeat: "Así que la luz nunca fue mía...",
+    },
+  },
   voice: {
     listen: "Escuchar",
     hear: "Escuchar a {name}",

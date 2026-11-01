@@ -744,6 +744,86 @@ export default {
     cats: { supplies: 'Supplies', seeds: 'Seeds', runes: 'Runes', tools: 'Tools', gear: 'Gear' },
   },
 
+  bossLines: {
+    goblin_king: {
+      intro: "Shinies! Give the Goblin King all your shinies!",
+      enraged: "You hit the KING? Nobody hits the king!",
+      desperate: "Guards! GUARDS! Why are there never any guards?",
+      defeat: "Not fair... the king is supposed to win...",
+    },
+    warren_chief: {
+      intro: "Hah! Another one come to rob the Warren?",
+      enraged: "The Chief bites back! The Chief always bites back!",
+      desperate: "Not the glass... you do not touch the shiny glass!",
+      defeat: "Take it, then... it hums all night anyway...",
+    },
+    troll_lord: {
+      intro: "Small thing. Lord is hungry.",
+      enraged: "Hit Lord? Now Lord is angry and hungry.",
+      desperate: "Lord heals... Lord always heals...",
+      defeat: "Lord... sleep now...",
+    },
+    skeleton_king: {
+      intro: "Out! Every coin in this crypt belongs to my lord.",
+      enraged: "Three hundred years I have counted it. Not one coin leaves.",
+      desperate: "Guards of the crypt, rise! Why do you not rise?",
+      defeat: "Four thousand and twelve... I have lost count...",
+    },
+    kraken: {
+      intro: "The deep is hungry, little sailor.",
+      enraged: "The tide turns. The tide always turns.",
+      desperate: "Down... I will drag you down with me...",
+      defeat: "Back to the dark... back to the cold...",
+    },
+    necromancer: {
+      intro: "Another soul that walks in on its own feet. How thoughtful.",
+      enraged: "Rise, rise! The dead never tire!",
+      desperate: "You cannot kill what has already died!",
+      defeat: "Death... was supposed to be on my side...",
+    },
+    naga: {
+      intro: "So you are the one who remembers.",
+      enraged: "You carry my brother's crown and you do not even know it.",
+      desperate: "Strike, then. She was only my voice.",
+      defeat: "We will meet again, little thief of light.",
+    },
+    winter_queen: {
+      intro: "Nothing changes here. Nothing will, until he comes home.",
+      enraged: "You think the cold is my weapon? It is my promise.",
+      desperate: "Three hundred years I waited. I can wait through you.",
+      defeat: "Is it over, then? Is he... coming home?",
+    },
+    bronze_wyrm: {
+      intro: "Shield-bearer. You smell of his crown.",
+      enraged: "I carried a king above the clouds. You weigh far less.",
+      desperate: "Every promise his family made, broken. Will you break yours?",
+      defeat: "Enough, shield-bearer. Ask, and I will remember.",
+    },
+    ancient_dragon: {
+      intro: "I saw the Crown forged. I will see you fall.",
+      enraged: "Older than kings. Older than your stars.",
+      desperate: "The sky remembers everything. So do I.",
+      defeat: "Then listen, little one. I will tell you why it broke.",
+    },
+    void_emperor: {
+      intro: "Turn back. I only want to keep the light a little longer.",
+      enraged: "Three hundred years in the dark. Do not make it more.",
+      desperate: "Just enough for the realm... is that so much?",
+      defeat: "You carry it too... the seventh light.",
+    },
+    rift_warden: {
+      intro: "None pass the gate. Not even you.",
+      enraged: "I chose not to forget. Do not make me regret it.",
+      desperate: "Someone... has to keep... the gate...",
+      defeat: "Go, then. He is behind me. The king.",
+    },
+    aether_sovereign: {
+      intro: "Nine hundred and ninety-nine steps, for this?",
+      enraged: "I caught the falling stars with my bare hands!",
+      desperate: "Every king after me wore my theft. Not you. Not you!",
+      defeat: "So the light was never mine to keep...",
+    },
+  },
   voice: {
     listen: "Listen",
     hear: "Hear {name}",

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { MERCENARIES, DUNGEONS } from '../game/data/combat.js'
@@ -11,6 +11,9 @@ import RegionThreat from './RegionThreat.vue'
 import { REGION_OF } from '../game/data/realm.js'
 import GameIcon from './GameIcon.vue'
 import { help, tip } from '../ui/tips.js'
+import SpokenText from './SpokenText.vue'
+import { BOSS_VOICES } from '../game/data/bossLines.js'
+import { speakerOf, mayTalk } from '../ui/bossTalk.js'
 
 const { t } = useI18n()
 const act = computed(() => state.activity)
@@ -60,10 +63,28 @@ const NOTE_PARAMS = {
 const noteText = n => t(`fighting.notes.${n.kind}`, NOTE_PARAMS[n.kind]?.(n) || {})
 const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))
 
+// Bosses speak when the fight begins, at each phase and when they fall. The line stays a moment
+// after it is said; with the voices off it simply shows for a while
+const talk = ref(null)
+let talkId = 0, talkTimer = 0
+function hideTalkIn(ms) {
+  const id = talk.value?.id
+  clearTimeout(talkTimer)
+  talkTimer = setTimeout(() => { if (talk.value?.id === id) talk.value = null }, ms)
+}
+function bossSay(mon, kind) {
+  const boss = speakerOf(mon)
+  if (!boss || !mayTalk(boss, kind)) return
+  const text = t(`bossLines.${boss}.${kind}`, G.journalNames())
+  talk.value = { id: ++talkId, text: `“${text}”`, voice: BOSS_VOICES[boss], name: mon.name, icon: mon.icon }
+  hideTalkIn(6000 + text.length * 90)
+}
+watch(() => (alive.value ? speakerOf(m.value) : null), boss => { if (boss) bossSay(m.value, 'intro') }, { immediate: true })
+
 const splats = ref([])
 const shake = ref({ player: 0, monster: 0 })
 let id = 0
-let off, offAb
+let off, offAb, offPhase, offKill
 
 onMounted(() => {
   off = G.on('hit', d => {
@@ -76,6 +97,8 @@ onMounted(() => {
     setTimeout(() => (splats.value = splats.value.filter(x => x.id !== s.id)), 900)
     if (d.dmg > 0 && !d.fx) shake.value[target]++
   })
+  offPhase = G.on('bossPhase', d => bossSay(d.monster, d.id))
+  offKill = G.on('kill', d => bossSay(d.monster, 'defeat'))
   // An ability's name pops over the hero when it fires
   offAb = G.on('ability', d => {
     const s = { id: ++id, target: 'player', text: t(`abilities.list.${d.id}`), cast: true }
@@ -83,7 +106,7 @@ onMounted(() => {
     setTimeout(() => (splats.value = splats.value.filter(x => x.id !== s.id)), 1100)
   })
 })
-onUnmounted(() => { off && off(); offAb && offAb() })
+onUnmounted(() => { off && off(); offAb && offAb(); offPhase && offPhase(); offKill && offKill(); clearTimeout(talkTimer) })
 </script>
 
 <template>
@@ -153,6 +176,16 @@ onUnmounted(() => { off && off(); offAb && offAb() })
       <div v-for="s in splats.filter(x => x.target === 'monster')" :key="s.id" class="splat" :class="{ miss: s.miss, merc: s.merc, crit: s.crit, soft: s.soft, fx: s.fx }" :style="s.color ? { background: s.color } : null">{{ s.text }}</div>
     </div>
 
+    <Transition name="say">
+      <div v-if="talk" :key="talk.id" class="boss-say">
+        <ItemTile :icon="talk.icon" tint="#c0392b" size="sm" :tip="false" />
+        <div class="grow">
+          <div class="boss-say-name">{{ talk.name }}</div>
+          <SpokenText :text="talk.text" :voice="talk.voice" @done="hideTalkIn(3000)" />
+        </div>
+      </div>
+    </Transition>
+
     <div class="arena-meta">
       <span class="tag" v-tooltip.top="() => tip(stance.name, stance.desc)"><GameIcon :name="stance.icon" :size="12" /> {{ $t(`combat.typeNames.${stance.type}`) }} · {{ stance.name }}</span>
       <span class="tag" v-tooltip.top="() => help('combat.accuracy')">{{ $t('combat.accuracy', { v: pct(G.hitChance(ps.accRoll, mr.defRoll)) }) }}</span>
@@ -187,6 +220,11 @@ onUnmounted(() => { off && off(); offAb && offAb() })
 </template>
 
 <style scoped>
+.boss-say { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; max-width: 560px; width: 100%; justify-self: center; padding: 8px 12px; border-radius: 12px;
+  border: 1px solid color-mix(in srgb, #c0392b 40%, var(--line)); background: color-mix(in srgb, #c0392b 8%, var(--panel)); font-style: italic; color: var(--ink-2); line-height: 1.45; }
+.boss-say-name { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--danger); }
+.say-enter-active, .say-leave-active { transition: opacity 0.35s, transform 0.35s; }
+.say-enter-from, .say-leave-to { opacity: 0; transform: translateY(4px); }
 .fx-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; min-height: 22px; margin-top: 8px; }
 .fx { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
   color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); background: color-mix(in srgb, var(--c) 12%, transparent); }

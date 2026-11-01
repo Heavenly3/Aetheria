@@ -26,6 +26,12 @@ export const VOICES = {
   ancient: { base: 52, range: 3, wave: 'sawtooth', formant: 380, q: 5, cps: 16, syll: 0.18, vol: 0.6, vibrato: 0, echo: 0.6, breath: 0.2 },
   warden: { base: 75, range: 2, wave: 'sawtooth', formant: 500, q: 6, cps: 18, syll: 0.15, vol: 0.55, vibrato: 40, echo: 0.6, breath: 0.3 },
   firstKing: { base: 140, range: 5, wave: 'triangle', formant: 1000, q: 2, cps: 22, syll: 0.12, vol: 0.65, vibrato: 10, echo: 0.5, breath: 0 },
+  // Bosses that are not people of the story
+  goblin: { base: 330, range: 10, wave: 'square', formant: 1600, q: 3, cps: 44, syll: 0.05, vol: 0.35, vibrato: 0, echo: 0, breath: 0.1 },
+  troll: { base: 70, range: 4, wave: 'triangle', formant: 450, q: 3, cps: 16, syll: 0.16, vol: 0.75, vibrato: 0, echo: 0.1, breath: 0.1 },
+  skeleton: { base: 125, range: 6, wave: 'square', formant: 900, q: 6, cps: 26, syll: 0.08, vol: 0.35, vibrato: 50, echo: 0.3, breath: 0.25 },
+  kraken: { base: 48, range: 5, wave: 'sine', formant: 300, q: 2, cps: 15, syll: 0.2, vol: 0.85, vibrato: 35, echo: 0.6, breath: 0.2 },
+  necromancer: { base: 145, range: 7, wave: 'sawtooth', formant: 1200, q: 5, cps: 28, syll: 0.09, vol: 0.4, vibrato: 15, echo: 0.35, breath: 0.45 },
 }
 export const voiceOf = id => VOICES[id] || VOICES.narrator
 
