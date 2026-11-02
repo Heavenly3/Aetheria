@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Button from 'primevue/button'
 import InputNumber from 'primevue/inputnumber'
 import { G, state } from '../game/engine.js'
-import { DART_RINGS, DART_THROWS, DART_PAYS } from '../game/data/tavern.js'
+import { DART_RINGS, DART_THROWS } from '../game/data/tavern.js'
 import { fmt } from '../game/format.js'
 import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
@@ -90,13 +90,11 @@ function land({ x, y }) {
   play(r.result ? (r.result.net > 0 ? (r.result.mult >= 3 ? 'rare' : 'coin') : r.result.net < 0 ? 'bad' : 'dice') : pts >= 25 ? 'coin' : 'dice')
 }
 function onKey(e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); shoot() } }
-const pays = DART_PAYS.map(p => `${p.min}+ ×${p.mult}`).join(' · ')
 </script>
 
 <template>
   <div class="panel pad">
     <h3 class="panel-title"><GameIcon name="archery-target" /> {{ $t('tavern.darts.title') }} <HelpTip k="sections.darts" /></h3>
-    <p class="small muted" style="margin-top:0">{{ $t('tavern.darts.rules', { n: DART_THROWS, pays }) }}</p>
 
     <div class="board-wrap">
       <svg class="board" :class="{ shake }" viewBox="-1.2 -1.2 2.4 2.4" role="img" :aria-label="$t('tavern.darts.board')"

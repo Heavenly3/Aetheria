@@ -399,7 +399,6 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
             <div class="games-side">
               <div class="panel pad">
                 <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
-                <p class="small muted" style="margin-top:0">{{ $t('tavern.diceRules', { keeper: G.journalNames().keeper }) }}</p>
                 <div class="dice-table">
                   <div class="dice-side">
                     <div class="small muted">{{ $t('tavern.you') }}</div>

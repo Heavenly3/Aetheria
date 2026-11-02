@@ -5,7 +5,7 @@ import Button from 'primevue/button'
 import InputNumber from 'primevue/inputnumber'
 import { G, state } from '../game/engine.js'
 import { handValue } from '../game/tavernGames.js'
-import { BLACKJACK, KEEPER_STANDS, SUIT_LOOK } from '../game/data/tavern.js'
+import { BLACKJACK, SUIT_LOOK } from '../game/data/tavern.js'
 import { fmt } from '../game/format.js'
 import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
@@ -49,7 +49,6 @@ function sound() {
 <template>
   <div class="panel pad">
     <h3 class="panel-title"><GameIcon name="crown" /> {{ $t('tavern.cards.title') }} <HelpTip k="sections.cards" /></h3>
-    <p class="small muted" style="margin-top:0">{{ $t('tavern.cards.rules', { keeper: keeperName, n: KEEPER_STANDS }) }}</p>
 
     <div class="table">
       <div class="hand">
