@@ -379,6 +379,10 @@ export default {
   },
   world: {
     intro: "Elige una región para ver sus lugares, su mazmorra y sus jefes. Cada pelea ocurre en su sitio.",
+    zoomIn: "Acercar", zoomOut: "Alejar", showAll: "Ver todo el reino", toHero: "Ir a mi héroe", full: "Pantalla completa", exitFull: "Salir de pantalla completa",
+    mapHelp: "Mapa del reino. Arrastra o usa las flechas para moverte, y la rueda o + y − para acercar.",
+    zoomHint: "Acércate para ver mazmorras, jefes y lugares", dragHint: "Arrastra para moverte · rueda o pellizco para acercar",
+    landmarks: { town: "Pueblo", tower: "Torre infinita", weekly: "Arena del jefe semanal" },
     map: "Mapa del reino", list: "Regiones",
     level: "Nivel {n}+", locked: "Requiere la misión {quest}", here: "Estás aquí",
     progress: "{n} de {total} criaturas derrotadas", cleared: "Mazmorra superada", beaten: "Jefe derrotado",
