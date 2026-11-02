@@ -96,7 +96,10 @@ const sections = computed(() => {
 .cat-title { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 .cat-title .gi { color: var(--gold); }
 .cat-title small { color: var(--faint); letter-spacing: 0; }
-.lock-mark { position: absolute; inset-inline-end: 6px; top: 5px; color: var(--muted); font-size: 11px; }
-.market-mark { position: absolute; inset-inline-start: 6px; bottom: 5px; color: var(--ok); font-size: 11px; }
+/* Small badges over the tile's corners, so the icon never hides them */
+.lock-mark, .market-mark { position: absolute; z-index: 2; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 10px;
+  background: var(--panel-solid); box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.6); }
+.lock-mark { inset-inline-end: 1px; top: 1px; color: var(--gold-hi); border: 1px solid var(--line-hi); }
+.market-mark { inset-inline-start: 1px; bottom: 1px; color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 45%, transparent); }
 .slot-price { position: absolute; left: 0; right: 0; bottom: -2px; text-align: center; font-size: 10.5px; font-weight: 800; color: var(--gold-hi); text-shadow: 0 1px 2px #000; }
 </style>
