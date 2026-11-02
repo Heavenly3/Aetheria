@@ -18,7 +18,7 @@ import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'
 import HelpTip from './HelpTip.vue'
 
-// section: show only one part ('style', 'supplies' or 'loadouts'), or 'all' of them
+// section: show only one part ('style', 'supplies', 'tactics' or 'loadouts'), or 'all' of them
 const props = defineProps({ section: { type: String, default: 'all' } })
 const show = part => props.section === 'all' || props.section === part
 const { t } = useI18n()
@@ -119,7 +119,7 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
 </script>
 
 <template>
-  <div :class="{ 'two-col': section === 'all' || section === 'supplies' }">
+  <div :class="{ 'two-col': section === 'all' }">
     <div v-if="show('style')" class="panel pad">
       <h3 class="panel-title"><GameIcon name="crossed-swords" /> {{ $t('combat.style') }} <HelpTip k="combat.style" /></h3>
 
@@ -230,7 +230,7 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
     </div>
 
     <!-- Tactics: when to pull out of a fight -->
-    <div v-if="show('supplies')" class="panel pad">
+    <div v-if="show('tactics')" class="panel pad">
       <h3 class="panel-title"><GameIcon name="run" /> {{ $t('tactics.title') }} <HelpTip k="combat.tactics" /></h3>
       <p class="small muted" style="margin-top:0">{{ $t('tactics.intro') }}</p>
       <div class="tactic">
@@ -297,6 +297,7 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
 .type-btn { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 6px; border-radius: 12px; cursor: pointer;
   border: 1px solid var(--line); background: var(--tint-1); color: var(--ink); font: inherit; transition: all 0.18s; }
 .type-btn .gi { color: var(--muted); }
+.type-btn.active .faint { color: var(--muted); }
 .type-btn:hover { border-color: var(--tint-border); }
 .type-btn.active { border-color: var(--gold); background: rgba(226, 182, 90, 0.08); box-shadow: inset 0 0 0 1px rgba(226, 182, 90, 0.3); }
 .type-btn.active .gi { color: var(--gold); }

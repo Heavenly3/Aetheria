@@ -4,8 +4,9 @@
    ========================================================= */
 import { CHAPTERS, CHAPTER_MAP, MEMORIES, NAMED, rollNames, rollName } from './data/journal.js'
 import { QUESTS } from './data/progression.js'
+import { STORY_REGION, regionPath } from './data/world.js'
 
-// Where the next page of the story is earned; every other hint is a creature or a boss to beat
+// Where the next page of the story is earned; every other hint is a region of the map (data/world.js)
 const GOAL_ROUTE = { firstQuest: '/quests', abyssGates: '/quests', smithing: '/skill/smithing', coldIron: '/skill/smithing', guild: '/guilds', crownWhole: '/crown' }
 
 export const journalState = () => ({
@@ -40,7 +41,9 @@ export const journal = {
     if (this.canChooseEnding?.()) return { kind: 'ending', to: '/crown', icon: 'crown' }
     // Omens come by luck, so waiting for one is no goal
     const c = CHAPTERS.find(x => x.act !== 'festivals' && !x.ending && x.hint !== 'firstOmen' && !this.chapterUnlocked(x.id))
-    return c ? { kind: 'story', to: GOAL_ROUTE[c.hint] || '/combat', icon: c.icon, hint: c.hint, act: c.act } : null
+    if (!c) return null
+    const region = STORY_REGION[c.hint]
+    return { kind: 'story', to: GOAL_ROUTE[c.hint] || (region ? regionPath(region) : '/combat'), icon: c.icon, hint: c.hint, act: c.act, region }
   },
   memoryUnlocked(m) { return (this.s.ascension?.count || 0) >= m.n },
   // Everything new the hero has not opened yet: chapters, and memories of past lives

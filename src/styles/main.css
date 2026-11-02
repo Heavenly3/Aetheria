@@ -417,6 +417,10 @@ body.cue-flash::after { content: ''; position: fixed; inset: 0; pointer-events: 
   button.card:hover:not(.locked), .card.clickable:hover:not(.locked) { transform: none; }
 }
 
+/* Gold badges keep their numbers readable on parchment */
+:root[data-theme="light"] .nav-badge { background: #8a5d12; }
+:root[data-theme="light"] .p-button-danger:not(.p-button-outlined):not(.p-button-text) { background: var(--danger); border-color: var(--danger); }
+
 /* Text tinted with a data colour (difficulty, rarity…); darkened on parchment so it stays readable */
 .hue { color: var(--hue); }
 :root[data-theme="light"] .hue { color: color-mix(in srgb, var(--hue) 40%, #1d1a14); }

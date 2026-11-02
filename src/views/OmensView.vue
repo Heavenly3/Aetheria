@@ -13,6 +13,7 @@ import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import VoiceNote from '../components/VoiceNote.vue'
 import Arena from '../components/Arena.vue'
+import PrepButton from '../components/PrepButton.vue'
 import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
@@ -84,6 +85,7 @@ function offer() { if (G.makeOffering()) { play('rare'); G.toast('crystal-ball',
           </div>
           <Button v-if="!fighting && G.canHunt()" :label="$t(`omens.huntBtn.${creature.id}`)" icon="pi pi-bolt" @click="hunt" />
           <Button v-else-if="fighting" :label="$t('common.stop')" icon="pi pi-stop" severity="secondary" outlined @click="G.stop()" />
+          <PrepButton />
         </div>
       </div>
       <Arena v-if="fighting" />

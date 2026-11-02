@@ -20,6 +20,7 @@ import { fmt, fmtDec, fmtTime, fmtClock } from './game/format.js'
 import { cue, notify } from './game/sound.js'
 import { SHARDS } from './game/data/crown.js'
 import { AREAS } from './game/data/combat.js'
+import { regionOfActivity, regionPath } from './game/data/world.js'
 import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaFor, setCaptionHandler } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
 import { zoomFor } from './game/data/settings.js'
@@ -70,7 +71,7 @@ const content = ref()
 const toContent = () => content.value?.focus({ preventScroll: true })
 watch(() => route.path, (to, from) => { if (from) nextTick(toContent) })
 
-const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.name : route.meta.titleKey && t(route.meta.titleKey)) || 'Aetheria')
+const title = computed(() => (route.name === 'skill' ? SKILLS[route.params.id]?.name : route.name === 'region' ? AREAS.find(a => a.id === route.params.region)?.name : route.meta.titleKey && t(route.meta.titleKey)) || 'Aetheria')
 const hpPct = computed(() => (Math.max(0, state.hp) / G.maxHp()) * 100)
 const fest = computed(() => G.activeFestival())
 // Weather follows the clock (it changes every few hours, the same for everyone)
@@ -158,7 +159,8 @@ const activityRoute = () => {
   const a = state.activity
   if (!a) return null
   if (a.type === 'skill') return '/skill/' + a.skill
-  return { tower: '/tower', omen: '/omens', weekly: '/weekly', festival: '/festival' }[a.kind] || '/combat'
+  const region = regionOfActivity(a)
+  return { tower: '/tower', omen: '/omens', weekly: '/weekly', festival: '/festival' }[a.kind] || (region ? regionPath(region) : '/combat')
 }
 const JUMPS = { h: '/', i: '/inventory', c: '/combat', q: '/quests', t: '/tavern', p: '/pets', ',': '/settings' }
 const SHORTCUTS = [['Ctrl K', 'search'], ['/', 'search'], ['A', 'activity'], ...Object.entries(JUMPS).map(([k, to]) => [k.toUpperCase(), to]), ['?', 'keys'], ['Esc', 'close']]

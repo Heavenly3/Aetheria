@@ -19,7 +19,7 @@ export const STEPS = [
   { id: 'smeltBar', icon: 'metal-bar', goal: 1, targets: ['action:bronze_bar'], base: () => G.qty('bronze_bar'), count: b => G.qty('bronze_bar') - b },
   { id: 'openInventory', icon: 'knapsack', route: '/inventory', targets: ['nav:/inventory'] },
   { id: 'openCombat', icon: 'crossed-swords', route: '/combat', targets: ['nav:/combat'] },
-  { id: 'startFight', icon: 'chicken', targets: ['monster:chicken', 'monster:goblin', 'monster:cow'], done: () => state.activity?.type === 'combat' },
+  { id: 'startFight', icon: 'chicken', targets: ['region:meadow', 'monster:chicken', 'monster:goblin', 'monster:cow'], done: () => state.activity?.type === 'combat' },
   { id: 'winFights', icon: 'broken-skull', goal: 3, base: () => state.stats.kills, count: b => state.stats.kills - b },
   { id: 'openHero', icon: 'laurel-crown', route: '/', targets: ['nav:/'] },
   { id: 'openQuests', icon: 'scroll-unfurled', route: '/quests', targets: ['nav:/quests'] },

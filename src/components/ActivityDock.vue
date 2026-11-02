@@ -8,6 +8,7 @@ import { findAction } from '../game/data/actions.js'
 import { G, state } from '../game/engine.js'
 import { SKILLS } from '../game/data/skills.js'
 import { ITEMS } from '../game/data/items.js'
+import { regionOfActivity, regionPath } from '../game/data/world.js'
 import { tm } from '../i18n/index.js'
 import ItemTile from './ItemTile.vue'
 
@@ -44,7 +45,7 @@ const info = computed(() => {
     icon: m.icon, tint: '#9b2a32', color: '#e0554b',
     title: `${t(KIND[a.kind] || 'dock.combat')} · ${m.name}`,
     progress: a.respawn > 0 ? 0 : a.mHp / m.hp,
-    to: a.kind === 'tower' ? '/tower' : a.kind === 'omen' ? '/omens' : a.kind === 'weekly' ? '/weekly' : a.kind === 'festival' ? '/festival' : '/combat',
+    to: a.kind === 'tower' ? '/tower' : a.kind === 'omen' ? '/omens' : a.kind === 'weekly' ? '/weekly' : a.kind === 'festival' ? '/festival' : regionOfActivity(a) ? regionPath(regionOfActivity(a)) : '/combat',
   }
 })
 
@@ -71,7 +72,7 @@ onUnmounted(() => offs.forEach(f => f()))
 </script>
 
 <template>
-  <div class="dock" :class="{ show: !!info || state.queue.length > 0, mini }">
+  <div class="dock" :class="{ show: !!info || state.queue.length > 0, mini }" role="region" :aria-label="$t('dock.region')">
     <!-- Folded: a bubble with the action, its progress as a ring and the queue size -->
     <button v-if="mini" class="dock-bubble" :style="{ '--c': info?.color || 'var(--gold)', '--p': (info ? Math.min(1, info.progress) * 360 : 0) + 'deg' }"
       :aria-label="$t('dock.show')" v-tooltip.left="info ? info.title : $t('dock.queueWaiting', { n: state.queue.length })" @click="mini = false">

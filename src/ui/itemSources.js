@@ -6,6 +6,7 @@ import { SKILLS } from '../game/data/skills.js'
 import { BUILDINGS } from '../game/data/farm.js'
 import { sourcesOf } from '../game/data/sources.js'
 import { AREAS } from '../game/data/combat.js'
+import { REGION_OF, regionPath } from '../game/data/world.js'
 
 /* Where an item comes from, as rows ready to show: icon, name, the screen it links to, and what it
    asks for (a level, a price) or how likely it is. Used by the inventory and the item tooltips. */
@@ -32,10 +33,10 @@ function row(s) {
     case 'shop': return { icon: 'shop', name: t('inventory.from.shop'), to: '/shop', price: t('inventory.from.gold', { n: s.price }) }
     case 'slayerShop': return { icon: 'death-skull', name: t('inventory.from.slayerShop'), to: '/slayer', price: t('inventory.from.points', { n: s.price }) }
     case 'towerShop': return { icon: 'stone-tower', name: t('inventory.from.towerShop'), to: '/tower', price: t('inventory.from.tokens', { n: s.price }) }
-    case 'monster': return { icon: s.monster.icon, name: s.monster.name, to: '/combat', odds: odds || t('inventory.from.always') }
+    case 'monster': return { icon: s.monster.icon, name: s.monster.name, to: regionTo(s.monster.id), odds: odds || t('inventory.from.always') }
     case 'boss':
-    case 'echo': return { icon: s.monster.icon, name: s.monster.name, to: '/combat', tag: t(`inventory.from.${s.kind}`), odds: odds || t('inventory.from.always') }
-    case 'dungeon': return { icon: s.dungeon.icon, name: s.monster ? `${s.dungeon.name} · ${s.monster.name}` : t('inventory.from.dungeonChest', { name: s.dungeon.name }), to: '/combat', odds: odds || t('inventory.from.always') }
+    case 'echo': return { icon: s.monster.icon, name: s.monster.name, to: regionTo(s.monster.id), tag: t(`inventory.from.${s.kind}`), odds: odds || t('inventory.from.always') }
+    case 'dungeon': return { icon: s.dungeon.icon, name: s.monster ? `${s.dungeon.name} · ${s.monster.name}` : t('inventory.from.dungeonChest', { name: s.dungeon.name }), to: regionTo(s.dungeon.id), odds: odds || t('inventory.from.always') }
     case 'weekly': return { icon: s.boss.icon, tint: s.boss.tint, name: s.boss.name, to: '/weekly', tag: t('inventory.from.weekly') }
     case 'expedition': return { icon: s.expedition.icon, name: s.expedition.name, to: '/tavern', tag: t('inventory.from.expedition'), odds }
     case 'mythic': return { icon: 'sparkles', name: mythicWhere(s.drop), to: mythicTo(s.drop), odds: chance(s.chance) }
@@ -52,6 +53,8 @@ export function mythicWhere(d) {
   if (d.monsters) return t('mythic.where.dragons')
   return t('mythic.where.anyKill')
 }
-const mythicTo = d => (d.on === 'skill' ? (d.skill ? '/skill/' + d.skill : null) : d.tower ? '/tower' : '/combat')
+const mythicTo = d => (d.on === 'skill' ? (d.skill ? '/skill/' + d.skill : null) : d.tower ? '/tower' : d.areas?.length === 1 ? regionPath(d.areas[0]) : '/combat')
+// The page of the region where something is fought
+const regionTo = id => (REGION_OF[id] ? regionPath(REGION_OF[id]) : '/combat')
 
 export const sourceRows = id => sourcesOf(id).map(row).filter(Boolean)

@@ -6,7 +6,8 @@ import Dialog from 'primevue/dialog'
 import { G } from '../game/engine.js'
 import { SKILLS } from '../game/data/skills.js'
 import { ITEMS } from '../game/data/items.js'
-import { MONSTERS, BOSSES } from '../game/data/combat.js'
+import { MONSTERS, BOSSES, AREAS } from '../game/data/combat.js'
+import { REGION_OF, regionPath } from '../game/data/world.js'
 import { QUESTS } from '../game/data/progression.js'
 import ItemTile from './ItemTile.vue'
 
@@ -40,7 +41,8 @@ const entries = computed(() => {
   for (const [id, s] of Object.entries(SKILLS)) list.push({ kind: 'skill', icon: s.icon, tint: s.color, name: s.name, to: '/skill/' + id, note: t('common.lvlShort', { n: G.level(id) }) })
   for (const [id, it] of Object.entries(ITEMS)) if (!it.festival && !it.quality && !it.grade) list.push({ kind: 'item', item: id, name: it.name, to: { path: '/inventory', query: { item: id } }, note: G.qty(id) ? `×${G.qty(id)}` : null })
   // Creatures and quests only once their screens are open in the menu
-  if (G.screenOpen('/combat')) for (const m of [...Object.values(MONSTERS), ...BOSSES]) list.push({ kind: 'monster', icon: m.icon, name: m.name, to: '/combat', note: m.boss ? t('inventory.from.boss') : null })
+  if (G.screenOpen('/combat')) for (const m of [...Object.values(MONSTERS), ...BOSSES]) list.push({ kind: 'monster', icon: m.icon, name: m.name, to: REGION_OF[m.id] ? regionPath(REGION_OF[m.id]) : '/combat', note: m.boss ? t('inventory.from.boss') : null })
+  if (G.screenOpen('/combat')) for (const a of AREAS) list.push({ kind: 'region', icon: a.icon, name: a.name, to: regionPath(a.id), note: t('common.lvlShort', { n: a.recLvl }) })
   if (G.screenOpen('/quests')) for (const q of QUESTS) list.push({ kind: 'quest', icon: 'scroll-unfurled', name: q.name, to: '/quests', note: G.questDone(q.id) ? '✓' : null })
   return list.map(e => ({ ...e, key: norm(e.name) }))
 })

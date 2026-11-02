@@ -11,7 +11,7 @@ import { fmt } from '../game/format.js'
 import { tip } from '../ui/tips.js'
 import { guildName } from '../i18n/names.js'
 import Arena from '../components/Arena.vue'
-import CombatSettings from '../components/CombatSettings.vue'
+import PrepButton from '../components/PrepButton.vue'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
@@ -58,13 +58,15 @@ function buy(it) {
           <span class="tag gold"><GameIcon name="two-coins" :size="12" /> {{ $t('tower.tokens', { n: fmt(state.tower.tokens) }) }}</span>
         </div>
       </div>
-      <Button :label="inTower ? $t('tower.leave') : $t('tower.enter')" :icon="inTower ? 'pi pi-flag' : 'pi pi-arrow-up'" :severity="inTower ? 'danger' : undefined"
-        @click="inTower ? G.stop() : G.startCombat('tower')" />
+      <div class="stack tower-actions">
+        <Button :label="inTower ? $t('tower.leave') : $t('tower.enter')" :icon="inTower ? 'pi pi-flag' : 'pi pi-arrow-up'" :severity="inTower ? 'danger' : undefined"
+          @click="inTower ? G.stop() : G.startCombat('tower')" />
+        <PrepButton />
+      </div>
     </div>
 
     <div style="height:18px" />
     <Arena v-if="inTower" />
-    <CombatSettings />
 
     <div class="section-title">{{ $t('tower.next') }} <HelpTip k="sections.towerNext" /></div>
     <div class="floors">
@@ -120,6 +122,7 @@ function buy(it) {
 </template>
 
 <style scoped>
+.tower-actions { align-items: stretch; gap: 10px; }
 .floors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 .floor { text-align: center; display: flex; flex-direction: column; align-items: center; }
 .floor.guardian { border-color: rgba(192, 57, 43, 0.45); }

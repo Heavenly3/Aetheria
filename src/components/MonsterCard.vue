@@ -11,7 +11,8 @@ import { throttled } from '../ui/throttled.js'
 import { useI18n } from 'vue-i18n'
 import ItemTile from './ItemTile.vue'
 
-const props = defineProps({ monster: Object, kind: { type: String, default: 'area' }, locked: Boolean, lockText: String })
+// place: the name of the spot in its region where the creature is found
+const props = defineProps({ monster: Object, kind: { type: String, default: 'area' }, locked: Boolean, lockText: String, place: String })
 const emit = defineEmits(['fight'])
 const m = computed(() => props.monster)
 const ml = computed(() => monsterLevel(m.value))
@@ -36,6 +37,7 @@ const fightTip = () => tip(t(`power.risk.${risk.value}`), t('power.riskHint'), [
 
 <template>
   <div class="card" :data-tut="'monster:' + m.id" :class="{ active: fighting, locked: locked || slayerLocked }" style="--c:#e0554b">
+    <div v-if="place" class="place-name"><i class="pi pi-map-marker" /> {{ place }}</div>
     <div class="row">
       <ItemTile :icon="m.icon" :tint="m.echo ? '#7b5cff' : m.boss ? '#c0392b' : '#7a2a32'" size="lg" :tip="false" />
       <div class="grow">
@@ -56,7 +58,7 @@ const fightTip = () => tip(t(`power.risk.${risk.value}`), t('power.riskHint'), [
       <span v-if="kills" v-tooltip.top="$t('combat.defeated')"><i class="pi pi-flag" /> {{ fmt(kills) }}</span>
     </div>
     <div v-if="G.bossMechs(m).length" class="row wrap" style="gap:5px;margin-top:10px">
-      <span v-for="id in G.bossMechs(m)" :key="id" class="tag" :style="{ color: MECHS[id].color }" v-tooltip.top="() => tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
+      <span v-for="id in G.bossMechs(m)" :key="id" class="tag hue" :style="{ '--hue': MECHS[id].color }" v-tooltip.top="() => tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
     </div>
     <div class="row wrap" style="gap:5px;margin-top:10px">
       <span v-for="d in m.drops" :key="d.item" class="drop" :class="{ rare: d.chance < 0.05 }">
@@ -71,5 +73,7 @@ const fightTip = () => tip(t(`power.risk.${risk.value}`), t('power.riskHint'), [
 
 <style scoped>
 .fight { margin-top: 14px; }
+.place-name { font-family: var(--font-display); font-size: 14px; letter-spacing: 0.04em; color: var(--gold-hi); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.place-name i { font-size: 12px; color: var(--gold); }
 .drop.rare :deep(.tile) { box-shadow: 0 0 0 1px #b48cff inset, 0 0 12px -2px #8a5cff; }
 </style>

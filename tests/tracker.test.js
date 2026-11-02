@@ -11,7 +11,7 @@ describe('the tracker', () => {
     const ore = goals.find(g => g.item === 'copper_ore')
     expect(ore.go).toEqual({ to: '/skill/mining', focus: 'action:copper_ore' })
     expect(ore.max).toBe(10)
-    expect(goals.find(g => g.text.includes('Goblin')).go).toEqual({ to: { path: '/combat', query: { tab: 'areas' } }, focus: 'monster:goblin' })
+    expect(goals.find(g => g.text.includes('Goblin')).go).toEqual({ to: '/combat/meadow', focus: 'monster:goblin' })
   })
 
   it('turns a finished quest into one line to hand it in', () => {
@@ -42,9 +42,9 @@ describe('the tracker', () => {
     expect(whereToGet('potato').focus).toBe('crop:potato')
   })
 
-  it('knows the tab of every kind of foe and the best action to train', () => {
+  it('knows the region of every kind of foe and the best action to train', () => {
     newHero()
-    expect(whereToKill('goblin_king').to.query.tab).toBe('bosses')
+    expect(whereToKill('goblin_king')).toEqual({ to: '/combat/forest', focus: 'monster:goblin_king' })
     expect(whereToKill('naga')).toMatchObject({ focus: 'dungeon:serpent_temple' })
     expect(whereToTrain('mining')).toMatchObject({ to: '/skill/mining', focus: expect.stringMatching(/^action:/) })
     expect(whereToHunt().focus).toMatch(/^monster:/)

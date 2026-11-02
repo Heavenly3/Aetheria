@@ -9,23 +9,23 @@ import { G, state } from '../game/engine.js'
 import { ITEMS, CROPS } from '../game/data/items.js'
 import { SKILLS } from '../game/data/skills.js'
 import { ACTIONS } from '../game/data/actions.js'
-import { MONSTERS, BOSSES, DUNGEONS, AREAS, monsterLevel } from '../game/data/combat.js'
-import { ECHOES } from '../game/data/echoes.js'
+import { MONSTERS, DUNGEONS, AREAS, monsterLevel } from '../game/data/combat.js'
+import { REGION_OF, regionPath } from '../game/data/world.js'
 import { QUESTS, QUEST_STAT_ICONS, SHOP } from '../game/data/progression.js'
 import { fmt } from '../game/format.js'
 
 const AREA_OF = Object.fromEntries(AREAS.flatMap(a => a.monsters.map(m => [m.id, a])))
-const BOSS_IDS = new Set([...BOSSES, ...ECHOES].map(b => b.id))
 const DUNGEON_OF = Object.fromEntries(DUNGEONS.map(dg => [dg.boss.id, dg]))
 const SHOP_ITEMS = new Set(SHOP.flatMap(c => c.items.map(([id]) => id)))
 const xph = (skill, a) => (a.xp * 3600) / G.actionTime(skill, a)
 
 /* ---------------- where things are done ---------------- */
-// The creature, in the right tab of the combat screen
+// The creature, on the page of its region (a dungeon's boss: the dungeon itself)
 export function whereToKill(id) {
-  if (BOSS_IDS.has(id)) return { to: { path: '/combat', query: { tab: 'bosses' } }, focus: 'monster:' + id }
-  if (DUNGEON_OF[id]) return { to: { path: '/combat', query: { tab: 'dungeons' } }, focus: 'dungeon:' + DUNGEON_OF[id].id }
-  return { to: { path: '/combat', query: { tab: 'areas' } }, focus: 'monster:' + id }
+  const region = REGION_OF[id]
+  if (!region) return { to: '/combat' }
+  if (DUNGEON_OF[id]) return { to: regionPath(region), focus: 'dungeon:' + DUNGEON_OF[id].id }
+  return { to: regionPath(region), focus: 'monster:' + id }
 }
 // Any creature will do: the toughest one the hero can sensibly take on
 export function whereToHunt() {
@@ -93,7 +93,7 @@ const STAT_ROUTES = {
   fish: { to: '/skill/fishing' }, patrons: { to: { path: '/tavern', query: { tab: 'bar' } } }, contracts: { to: '/guilds' }, guildRank: { to: '/guilds' },
   bountiful: { to: '/skill/farming', focus: 'plots' }, hybrids: { to: '/skill/farming', focus: 'plots' }, harvest: { to: '/skill/farming', focus: 'plots' },
   superiors: { to: '/slayer' }, slayer: { to: '/slayer' }, heists: { to: '/skill/thieving' }, guardians: { to: '/tower' }, tower: { to: '/tower' },
-  masterworks: { to: '/skill/smithing' }, dungeon: { to: { path: '/combat', query: { tab: 'dungeons' } } }, 
+  masterworks: { to: '/skill/smithing' }, dungeon: { to: '/combat' },
   orders: { to: { path: '/tavern', query: { tab: 'orders' } }, focus: 'orders' }, fest: { to: '/festival' },
 }
 export const whereForStat = key => (['kills', 'elites', 'elite'].includes(key) ? whereToHunt() : STAT_ROUTES[key] || { to: '/quests' })

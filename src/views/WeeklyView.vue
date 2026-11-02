@@ -10,6 +10,7 @@ import { play } from '../game/sound.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import Arena from '../components/Arena.vue'
+import PrepButton from '../components/PrepButton.vue'
 import HelpTip from '../components/HelpTip.vue'
 
 const { t } = useI18n()
@@ -105,8 +106,9 @@ const rewardText = i => {
         <template v-else>
           <Button v-if="!fighting" :label="$t('weekly.challenge')" icon="pi pi-bolt" @click="challenge" />
           <Button v-else :label="$t('weekly.retreat')" icon="pi pi-flag" severity="secondary" outlined @click="G.stop()" />
-          <span class="small faint">{{ $t('weekly.rules', { min: ATTEMPT_TIME / 60 }) }}</span>
+          <span class="small faint grow">{{ $t('weekly.rules', { min: ATTEMPT_TIME / 60 }) }}</span>
         </template>
+        <PrepButton v-if="unlocked && !wk.killed" />
       </div>
     </div>
 
