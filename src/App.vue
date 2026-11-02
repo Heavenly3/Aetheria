@@ -21,6 +21,7 @@ import { cue, notify } from './game/sound.js'
 import { SHARDS } from './game/data/crown.js'
 import { AREAS } from './game/data/combat.js'
 import { regionOfActivity, regionPath } from './game/data/world.js'
+import { UNIQUE_MERCS } from './game/data/company.js'
 import { startAmbient, stopAmbient, setScene, applyAudioSettings, moodFor, areaFor, setCaptionHandler } from './game/music.js'
 import { setCompactNumbers } from './game/format.js'
 import { zoomFor } from './game/data/settings.js'
@@ -218,6 +219,7 @@ onMounted(() => {
   on('streak', d => { cue('dailyStreak'); push('flame', t('toast.streak', { n: d.n }), 'success', 6000) })
   on('death', () => cue('death'))
   on('retreat', () => cue('retreat'))
+  on('companionQuest', m => push(UNIQUE_MERCS[m.unique].icon, t('company.questToast', { name: t(`company.uniques.${m.unique}.name`) }), 'rare', 6000))
   on('overrun', e => { cue('omen'); push('death-skull', t('realm.overrunToast', { area: AREAS.find(a => a.id === e.area).name }), 'warn', 8000) })
   on('ascend', e => { if (e.completed) push('laurels-trophy', t('trials.completedToast', { name: t(`trials.list.${e.completed}.name`) }), 'success', 8000) })
   // The first error of a session says where to report it; later ones are only kept for the report

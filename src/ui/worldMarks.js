@@ -8,7 +8,7 @@ import { AREAS } from '../game/data/combat.js'
 import { REGION_OF, regionDungeon, regionBosses } from '../game/data/world.js'
 import { trackedGoals } from './tracker.js'
 
-const SOURCE_MARK = { story: 'story', quest: 'quest', slayer: 'slayer', guild: 'guild', daily: 'task', weekly: 'task' }
+const SOURCE_MARK = { story: 'story', quest: 'quest', companion: 'quest', slayer: 'slayer', guild: 'guild', daily: 'task', weekly: 'task' }
 export const MARK_ICONS = { story: 'quill-ink', quest: 'scroll-unfurled', slayer: 'death-skull', guild: 'swords-emblem', task: 'calendar' }
 export const MARK_ORDER = ['story', 'quest', 'slayer', 'guild', 'task']
 

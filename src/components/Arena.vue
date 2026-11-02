@@ -74,6 +74,7 @@ const NOTE_PARAMS = {
   mercInterrupt: n => ({ name: mercNameOf(n.who) }),
   mercCleanse: n => ({ name: mercNameOf(n.who), status: t(`fighting.statuses.${n.status}.name`).toLowerCase() }),
   mercLevel: n => ({ name: mercNameOf(n.who), n: n.lvl }),
+  mercQuest: n => ({ name: mercNameOf(n.who) }),
 }
 const noteText = n => t(`fighting.notes.${n.kind}`, NOTE_PARAMS[n.kind]?.(n) || {})
 const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))

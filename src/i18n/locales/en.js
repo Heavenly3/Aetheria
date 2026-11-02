@@ -1820,7 +1820,7 @@ export default {
       goldH: "gold/h",
       taken: "taken/s",
     },
-    notes: { mercInterrupt: "{name} cuts off its move!", mercCleanse: "{name} lifts your {status}", mercLevel: "{name} reaches level {n}",
+    notes: { mercQuest: "{name} completes their quest!", mercInterrupt: "{name} cuts off its move!", mercCleanse: "{name} lifts your {status}", mercLevel: "{name} reaches level {n}",
       mechInterrupted: "You cut off its {mech}!", mechMissed: "{mech} misses you", mechBuff: "{mech}: it grows stronger for a while", stole: "It stole {gold} gold. Defeat it before it runs off!", fled: "It ran off with {gold} gold", recovered: "You got back {gold} gold",
       mechCharge: "It charges: {mech}", mechHit: "{mech} lands for {dmg}", mechGuarded: "You guard against {mech}: only {dmg}", mechBroken: "You break its {mech}", mechHealed: "{mech}: it heals",
       ability: "You used {ability}",
@@ -2342,7 +2342,7 @@ export default {
       dragons: "Any dragon",
     },
   },
-  tracker: { needLevel: "Needs {skill} {lvl} first: this takes you to train it.", tough: "The creatures that drop it are still tough for you.", title: "Tracking", label: "Objective", readyLabel: "Ready", intro: "Everything you have on the go: story quests, the slayer task, guild contracts, tavern orders and daily tasks. Pick one and you go straight to where it is done.", handIn: "Done: hand it in", ready: "Ready", go: "Go there", missing: "Missing:", more: "and {n} more", all: "Every objective", empty: "Nothing on the go. Start a quest or take a task and it shows up here.", sources: { story: "Story", slayer: "Slayer task", guild: "Guild contract", order: "Tavern order", daily: "Daily task", weekly: "Weekly task" } },
+  tracker: { needLevel: "Needs {skill} {lvl} first: this takes you to train it.", tough: "The creatures that drop it are still tough for you.", title: "Tracking", label: "Objective", readyLabel: "Ready", intro: "Everything you have on the go: story quests, the slayer task, guild contracts, tavern orders and daily tasks. Pick one and you go straight to where it is done.", handIn: "Done: hand it in", ready: "Ready", go: "Go there", missing: "Missing:", more: "and {n} more", all: "Every objective", empty: "Nothing on the go. Start a quest or take a task and it shows up here.", sources: { companion: "Companion", story: "Story", slayer: "Slayer task", guild: "Guild contract", order: "Tavern order", daily: "Daily task", weekly: "Weekly task" } },
   backup: {
     saveFailed: "Could not save your game: this browser's storage is full or blocked. Download a copy in Settings → Save so nothing is lost.",
     openFailed: "That save could not be opened. If it has automatic backups, you can bring one back from its slot.",
@@ -2762,6 +2762,7 @@ export default {
   },
 
   journal: {
+    companions: "Your company",
     noteBy: "{astrologer}'s note",
     omenNotes: {
       stars: "Starfalls are aether coming home. The old books say the Crown was forged from exactly this kind of light.",
@@ -3540,6 +3541,21 @@ export default {
   },
 
   company: {
+    trust: "Trust {n}",
+    trustTip: "Trust grows with every creature you defeat together, more with a boss. At 50 they are loyal and fight better; companions met along the way ask for your help at 100.",
+    loyal: "Loyal",
+    questLater: "They will ask for your help once they trust you fully.",
+    questNow: "Their quest: {task} ({n}/{max})",
+    questDone: "Quest done: {reward}",
+    questAffairs: "Settle {n} guild affairs with them in your company",
+    questToast: "{name} has what they were looking for. Their trade grows stronger.",
+    talk: {
+      maelis: { hello: "The mire talks, if you sit still long enough. Mostly it complains. Today it says you smell of the road.", past: "I was the one they sent the sick to, before the water turned. Then the water turned, and nobody came. I kept brewing anyway.", ask: "The great naga drinks from the oldest pool in the swamp, and the mire has been weeping since. Take me to her. Three times, if that is what it takes to silence her.", after: "Hear that? Nothing. The mire is sleeping for the first time in years. I owe you more than a potion, {hero}." },
+      hollis: { hello: "Stand behind me. No, closer. I keep my shield up whether you thank me or not.", past: "Thirty years at that crypt, and the night I slept, someone walked out of it. The king who should have been inside, maybe. Or something wearing him.", ask: "The skeleton king still sits in that crypt, on a throne that is not his. Help me put him down. Three times, until I am sure he stays down.", after: "I had the smith mend the crack. Funny. It holds better than before. Maybe that is what happens to things that break and are kept anyway." },
+      seren: { hello: "Wind from the north. Snow by evening. And you, walking straight into it, as usual.", past: "There were twelve of us on the watch. The cold took them one by one, and I kept counting storms because someone had to.", ask: "The queen of winter sends the storms that took my watch. I want to look her in the eye when I loose. Three times. Then I will stop counting.", after: "The storms are only storms now. I thought I would feel lighter. I feel colder, and that is fine. Cold I understand." },
+      ardan: { hello: "Peace on your road. Mine was long, and it ended somewhere strange, and here I am beside you all the same.", past: "Inside the wound there is no up and no down, only voices. I prayed until they listened. My hair turned white; I do not know which of us won.", ask: "The warden at the rift lets nothing heal, on either side of it. I would like to try one more prayer. It will be louder if you are there. Three times, to be sure.", after: "The voices are quieter now. Not gone. Quieter. That is the most any prayer has ever done, and I am grateful you were there for it." },
+      vela: { hello: "Don’t look at me like that. The guild sends me where I am needed, and apparently that is wherever you are.", past: "I was a thief before I was an agent. The guild caught me with my hand in its own strongbox and offered me a job instead of a rope.", ask: "Someone in the guild has been selling our secrets. Settle five affairs with me along and I will see who flinches.", after: "Found them. You do not need to know who. Just know the guild owes you, and so do I, which is rarer." },
+    },
     title: "Company",
     intro: "Companions you hire for good. Up to {n} come along to every boss fight and dungeon, each with a trade of their own, and they grow with every fight.",
     inParty: "Going along: {n} of {max}",
@@ -3563,11 +3579,11 @@ export default {
     empty: "Nobody is set to come along. Hire companions in Preparation.",
     met: "Met along the way", join: "Join",
     uniques: {
-      maelis: { name: "Maelis", title: "Witch of the Mire", bio: "She has brewed in the Putrid Swamp longer than the frogs remember. When the mire woke, she was the one who listened to it, and she has not stopped listening since.", hint: "Waits deep in the Putrid Swamp, where the story leads in its second act." },
-      hollis: { name: "Hollis", title: "The Broken Shield", bio: "He guarded the forgotten crypt for the old kings until the tomb was found empty. His shield cracked that night; he kept it anyway, as a reminder of what he failed to keep.", hint: "Keeps watch over a tomb you will find in the third act of the story." },
-      seren: { name: "Seren", title: "Northern Watcher", bio: "Last of the watchers on the frozen peaks. She counts the storms and the things that walk inside them, and never misses twice.", hint: "Holds the northern watch, high in the frozen peaks of the fourth act." },
-      ardan: { name: "Ardan", title: "Pilgrim of the Rift", bio: "He walked into the wound in the world to pray for it, and walked out again with his faith intact and his hair white.", hint: "Wanders beyond the gate of the Void, in the last act of the story." },
-      vela: { name: "Vela", title: "Agent of the Guild", bio: "The guild sends her where questions are not welcome. She answers to whoever has earned the guild’s trust, and right now that is you.", hint: "Joins when you have settled ten affairs for your guild." },
+      maelis: { name: "Maelis", title: "Witch of the Mire", bio: "She has brewed in the Putrid Swamp longer than the frogs remember. When the mire woke, she was the one who listened to it, and she has not stopped listening since.", hint: "Waits deep in the Putrid Swamp, where the story leads in its second act.", reward: "her spells break healing four times over" },
+      hollis: { name: "Hollis", title: "The Broken Shield", bio: "He guarded the forgotten crypt for the old kings until the tomb was found empty. His shield cracked that night; he kept it anyway, as a reminder of what he failed to keep.", hint: "Keeps watch over a tomb you will find in the third act of the story.", reward: "his mended shield takes more of every charged strike" },
+      seren: { name: "Seren", title: "Northern Watcher", bio: "Last of the watchers on the frozen peaks. She counts the storms and the things that walk inside them, and never misses twice.", hint: "Holds the northern watch, high in the frozen peaks of the fourth act.", reward: "she cuts off nine moves in ten" },
+      ardan: { name: "Ardan", title: "Pilgrim of the Rift", bio: "He walked into the wound in the world to pray for it, and walked out again with his faith intact and his hair white.", hint: "Wanders beyond the gate of the Void, in the last act of the story.", reward: "he mends more and lifts statuses sooner" },
+      vela: { name: "Vela", title: "Agent of the Guild", bio: "The guild sends her where questions are not welcome. She answers to whoever has earned the guild’s trust, and right now that is you.", hint: "Joins when you have settled ten affairs for your guild.", reward: "her blows land harder" },
     },
     roles: {
       squire: { name: "Squire", desc: "Draws the enemy’s blows and takes part of every charged strike for you." },

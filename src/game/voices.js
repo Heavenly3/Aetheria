@@ -26,6 +26,12 @@ export const VOICES = {
   ancient: { base: 52, range: 3, wave: 'sawtooth', formant: 380, q: 5, cps: 16, syll: 0.18, vol: 0.6, vibrato: 0, echo: 0.6, breath: 0.2 },
   warden: { base: 75, range: 2, wave: 'sawtooth', formant: 500, q: 6, cps: 18, syll: 0.15, vol: 0.55, vibrato: 40, echo: 0.6, breath: 0.3 },
   firstKing: { base: 140, range: 5, wave: 'triangle', formant: 1000, q: 2, cps: 22, syll: 0.12, vol: 0.65, vibrato: 10, echo: 0.5, breath: 0 },
+  // Companions met along the way
+  maelis: { base: 200, range: 8, wave: 'triangle', formant: 1000, q: 2.5, cps: 26, syll: 0.1, vol: 0.6, vibrato: 14, echo: 0.1, breath: 0.35 },
+  hollis: { base: 100, range: 3, wave: 'square', formant: 700, q: 3, cps: 24, syll: 0.1, vol: 0.4, vibrato: 0, echo: 0, breath: 0.05 },
+  seren: { base: 215, range: 4, wave: 'triangle', formant: 1350, q: 2, cps: 30, syll: 0.08, vol: 0.6, vibrato: 0, echo: 0.25, breath: 0.1 },
+  ardan: { base: 145, range: 4, wave: 'sine', formant: 900, q: 1.8, cps: 22, syll: 0.12, vol: 0.6, vibrato: 10, echo: 0.3, breath: 0.25 },
+  vela: { base: 190, range: 6, wave: 'triangle', formant: 1250, q: 2, cps: 40, syll: 0.06, vol: 0.55, vibrato: 0, echo: 0, breath: 0.2 },
   // The people who give quests
   oldman: { base: 115, range: 6, wave: 'triangle', formant: 800, q: 2.5, cps: 24, syll: 0.1, vol: 0.65, vibrato: 30, echo: 0, breath: 0.15 },
   farmer: { base: 205, range: 7, wave: 'triangle', formant: 1100, q: 2, cps: 34, syll: 0.075, vol: 0.65, vibrato: 0, echo: 0, breath: 0 },

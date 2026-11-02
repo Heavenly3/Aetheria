@@ -235,6 +235,7 @@ export const affairs = {
       this.addGold(reward.gold)
       this.addGuildRep(reward.rep)
       this.s.stats.affairs = (this.s.stats.affairs || 0) + 1
+      this.companyAffairSettled()
       if (!a.hints) this.s.stats.affairsAlone = (this.s.stats.affairsAlone || 0) + 1
       this.log(AFFAIRS[a.kind].icon, 'log.affairSolved', { affair: '@affair:' + a.kind })
     } else this.log('cross-mark', 'log.affairLost', { affair: '@affair:' + a.kind })

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { G, state, newHero, setLevel } from './helpers.js'
-import { MERC_ROLES, PARTY_SLOTS, HURT_TIME, UNIQUE_MERCS, wageOf, mercXpNeed, mercTrade } from '../src/game/data/company.js'
+import { MERC_ROLES, PARTY_SLOTS, HURT_TIME, UNIQUE_MERCS, TRUST_MAX, LOYAL_AT, COMPANION_TALKS, wageOf, mercXpNeed, mercTrade, companionTalks } from '../src/game/data/company.js'
+import { trackedGoals } from '../src/ui/tracker.js'
 import { CHAPTER_MAP } from '../src/game/data/journal.js'
 import { MECHS } from '../src/game/data/fighting.js'
 import { te } from '../src/i18n/index.js'
@@ -126,5 +127,51 @@ describe('the company', () => {
     state.ascension.upgrades.war_banner = 1
     expect(G.partySlots()).toBe(PARTY_SLOTS + 1)
     expect(G.toggleParty('mage')).toBe(true)
+  })
+
+  it('grows trust with every kill together, and full trust opens a companion’s own quest', () => {
+    hero()
+    state.journal.chapters.empty_tomb = Date.now()
+    const m = G.recruitUnique('hollis')
+    G.startCombat('dungeon', 'crypt')
+    const act = state.activity
+    const king = G.getMonster({ ...act, room: 4 })
+    expect(king.id).toBe('skeleton_king')
+    G.companyKill(G.getMonster(act), act)
+    expect(m.trust).toBe(1)
+    expect(G.questOpen(m)).toBe(false)
+    m.trust = LOYAL_AT
+    expect(G.mercLoyal(m)).toBe(true)
+    m.trust = TRUST_MAX
+    expect(G.questOpen(m)).toBe(true)
+    // It shows among the hero's goals, pointing at the crypt
+    const goal = trackedGoals().find(g => g.key === 'c:hollis')
+    expect(goal.go.focus).toBe('dungeon:crypt')
+    for (let i = 0; i < UNIQUE_MERCS.hollis.quest.n; i++) G.companyKill(king, act)
+    expect(m.questDone).toBe(true)
+    expect(mercTrade(m).guard).toBe(UNIQUE_MERCS.hollis.quest.boost.guard)
+    expect(trackedGoals().some(g => g.key === 'c:hollis')).toBe(false)
+  })
+
+  it('counts guild affairs for a quest that asks for them', () => {
+    hero()
+    state.stats.affairs = 10
+    const m = G.recruitUnique('vela')
+    m.trust = TRUST_MAX
+    for (let i = 0; i < UNIQUE_MERCS.vela.quest.n; i++) G.companyAffairSettled()
+    expect(m.questDone).toBe(true)
+  })
+
+  it('says more as trust grows, and has every line written', () => {
+    const m = { trust: 0 }
+    expect(companionTalks(m)).toEqual(['hello'])
+    m.trust = TRUST_MAX
+    expect(companionTalks(m)).toEqual(['hello', 'past', 'ask'])
+    m.questDone = true
+    expect(companionTalks(m)).toEqual(['hello', 'past', 'after'])
+    for (const id in UNIQUE_MERCS) {
+      for (const l of COMPANION_TALKS) expect(te(`company.talk.${id}.${l.id}`), id + '.' + l.id).toBe(true)
+      expect(te(`company.uniques.${id}.reward`), id).toBe(true)
+    }
   })
 })

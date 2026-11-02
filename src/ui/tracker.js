@@ -11,11 +11,15 @@ import { SKILLS } from '../game/data/skills.js'
 import { ACTIONS } from '../game/data/actions.js'
 import { MONSTERS, DUNGEONS, AREAS, monsterLevel } from '../game/data/combat.js'
 import { REGION_OF, regionPath } from '../game/data/world.js'
+import { UNIQUE_MERCS, mercIcon } from '../game/data/company.js'
+import { mercName } from './company.js'
 import { QUESTS, QUEST_STAT_ICONS, SHOP } from '../game/data/progression.js'
 import { fmt } from '../game/format.js'
 
 const AREA_OF = Object.fromEntries(AREAS.flatMap(a => a.monsters.map(m => [m.id, a])))
 const DUNGEON_OF = Object.fromEntries(DUNGEONS.map(dg => [dg.boss.id, dg]))
+// A dungeon's boss is not among the creatures of the regions
+const BOSS_NAME = id => DUNGEON_OF[id]?.boss.name || id
 const SHOP_ITEMS = new Set(SHOP.flatMap(c => c.items.map(([id]) => id)))
 const xph = (skill, a) => (a.xp * 3600) / G.actionTime(skill, a)
 
@@ -140,6 +144,14 @@ export function trackedGoals() {
   const story = G.nextGoal()
   if (story?.kind === 'ending') out.push({ key: 'story', source: 'story', from: t('tracker.sources.story'), icon: 'crown', text: t('goal.ending'), ready: true, go: { to: story.to } })
   else if (story?.kind === 'story') out.push({ key: 'story:' + story.hint, source: 'story', from: t('tracker.sources.story') + ' · ' + t(`journal.acts.${story.act}`), icon: story.icon, text: t(`journal.hints.${story.hint}`), go: { to: story.to } })
+  // A companion's own quest, once they trust the hero fully
+  for (const m of state.company?.members || []) {
+    if (!G.questOpen(m)) continue
+    const q = UNIQUE_MERCS[m.unique].quest
+    out.push({ key: 'c:' + m.id, source: 'companion', from: t('tracker.sources.companion') + ' · ' + mercName(m), icon: mercIcon(m),
+      text: q.kill ? t('quests.obj.kill', { n: q.n, monster: MONSTERS[q.kill]?.name || BOSS_NAME(q.kill) }) : t('company.questAffairs', { n: q.n }),
+      cur: m.questCount || 0, max: q.n, go: q.kill ? whereToKill(q.kill) : { to: '/guilds' } })
+  }
   const sl = state.slayer.task
   if (sl) out.push({ key: 'slayer', source: 'slayer', from: t('tracker.sources.slayer'), icon: MONSTERS[sl.monster]?.icon || 'death-skull',
     text: t('quests.obj.kill', { n: sl.total, monster: MONSTERS[sl.monster]?.name || sl.monster }), cur: sl.total - sl.left, max: sl.total, go: whereToKill(sl.monster) })

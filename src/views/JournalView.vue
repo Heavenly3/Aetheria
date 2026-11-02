@@ -5,6 +5,7 @@ import Button from 'primevue/button'
 import SelectButton from 'primevue/selectbutton'
 import { G, state } from '../game/engine.js'
 import { ACTS, CHAPTERS, CHARACTERS, MEMORIES, talksFor } from '../game/data/journal.js'
+import { UNIQUE_MERCS, companionTalks } from '../game/data/company.js'
 import GameIcon from '../components/GameIcon.vue'
 import ItemTile from '../components/ItemTile.vue'
 import SpokenText from '../components/SpokenText.vue'
@@ -41,6 +42,16 @@ function talk(p) {
   const line = cur ? others[Math.floor(Math.random() * others.length)] || cur : ids[ids.length - 1]
   talking.value = { who: p.id, line, n: (talking.value?.n || 0) + 1 }
   G.noteTalk(p.id)
+}
+
+// The companions met along the way: what they say grows with their trust
+const companions = computed(() => (state.company?.members || []).filter(m => m.unique))
+function talkCompanion(m) {
+  const ids = companionTalks(m)
+  const cur = talking.value?.who === m.id ? talking.value.line : null
+  const others = ids.filter(id => id !== cur)
+  const line = cur ? others[Math.floor(Math.random() * others.length)] || cur : ids[ids.length - 1]
+  talking.value = { who: m.id, line, n: (talking.value?.n || 0) + 1 }
 }
 
 // The first page ends with the one thing the hero remembers: where they come from
@@ -96,30 +107,56 @@ function readAll() {
     </template>
 
     <!-- The people met along the way -->
-    <div v-else-if="tab === 'people'" class="grid-wide">
-      <div v-for="p in CHARACTERS" :key="p.id" class="card person" :class="{ unknown: !G.chapterUnlocked(p.met) }" :style="{ '--c': p.tint }">
-        <div class="row">
-          <ItemTile :icon="G.chapterUnlocked(p.met) ? p.icon : 'hood'" :tint="G.chapterUnlocked(p.met) ? p.tint : '#2a2838'" size="md" :tip="false" />
-          <div class="grow" style="min-width:0">
-            <template v-if="G.chapterUnlocked(p.met)">
-              <div class="card-name">{{ $t(`journal.people.${p.id}.name`, names) }}</div>
-              <div class="card-sub">{{ $t(`journal.people.${p.id}.role`) }}</div>
-            </template>
-            <template v-else>
-              <div class="card-name">???</div>
-              <div class="card-sub">{{ $t('journal.unknownPerson') }}</div>
-            </template>
+    <template v-else-if="tab === 'people'">
+      <div class="grid-wide">
+        <div v-for="p in CHARACTERS" :key="p.id" class="card person" :class="{ unknown: !G.chapterUnlocked(p.met) }" :style="{ '--c': p.tint }">
+          <div class="row">
+            <ItemTile :icon="G.chapterUnlocked(p.met) ? p.icon : 'hood'" :tint="G.chapterUnlocked(p.met) ? p.tint : '#2a2838'" size="md" :tip="false" />
+            <div class="grow" style="min-width:0">
+              <template v-if="G.chapterUnlocked(p.met)">
+                <div class="card-name">{{ $t(`journal.people.${p.id}.name`, names) }}</div>
+                <div class="card-sub">{{ $t(`journal.people.${p.id}.role`) }}</div>
+              </template>
+              <template v-else>
+                <div class="card-name">???</div>
+                <div class="card-sub">{{ $t('journal.unknownPerson') }}</div>
+              </template>
+            </div>
+          </div>
+          <VoiceNote v-if="G.chapterUnlocked(p.met)" class="small muted person-desc" :style="{ '--voice-c': p.tint }"
+            :text="$t(`journal.people.${p.id}.desc`, names)" :voice="p.id" :who="$t(`journal.people.${p.id}.name`, names)" />
+          <div v-if="talking?.who === p.id" :key="talking.n" class="said">
+            <SpokenText :text="`“${$t(`journal.talk.${p.id}.${talking.line}`, names)}”`" :voice="p.id" />
+          </div>
+          <Button v-if="canTalk(p)" class="talk-btn" :label="$t('journal.talkBtn')" icon="pi pi-comments" size="small" text
+            :aria-label="$t('journal.talkTo', { name: $t(`journal.people.${p.id}.name`, names) })" @click="talk(p)" />
+        </div>
+      </div>
+
+      <!-- The companions met along the way who travel with the hero -->
+      <template v-if="companions.length">
+        <h2 class="section-title" style="margin-top:28px">{{ $t('journal.companions') }}</h2>
+        <div class="grid-wide">
+          <div v-for="m in companions" :key="m.id" class="card person" :style="{ '--c': UNIQUE_MERCS[m.unique].tint }">
+            <div class="row">
+              <ItemTile :icon="UNIQUE_MERCS[m.unique].icon" :tint="UNIQUE_MERCS[m.unique].tint" size="md" :tip="false" />
+              <div class="grow" style="min-width:0">
+                <div class="card-name">{{ $t(`company.uniques.${m.unique}.name`) }}</div>
+                <div class="card-sub">{{ $t(`company.uniques.${m.unique}.title`) }}</div>
+              </div>
+              <span class="tag" :class="{ gold: G.mercLoyal(m) }" v-tooltip.top="$t('company.trustTip')">{{ $t('company.trust', { n: m.trust || 0 }) }}</span>
+            </div>
+            <VoiceNote class="small muted person-desc" :style="{ '--voice-c': UNIQUE_MERCS[m.unique].tint }"
+              :text="$t(`company.uniques.${m.unique}.bio`)" :voice="m.unique" :who="$t(`company.uniques.${m.unique}.name`)" />
+            <div v-if="talking?.who === m.id" :key="talking.n" class="said">
+              <SpokenText :text="`“${$t(`company.talk.${m.unique}.${talking.line}`, { ...names, hero: state.name })}”`" :voice="m.unique" />
+            </div>
+            <Button class="talk-btn" :label="$t('journal.talkBtn')" icon="pi pi-comments" size="small" text
+              :aria-label="$t('journal.talkTo', { name: $t(`company.uniques.${m.unique}.name`) })" @click="talkCompanion(m)" />
           </div>
         </div>
-        <VoiceNote v-if="G.chapterUnlocked(p.met)" class="small muted person-desc" :style="{ '--voice-c': p.tint }"
-          :text="$t(`journal.people.${p.id}.desc`, names)" :voice="p.id" :who="$t(`journal.people.${p.id}.name`, names)" />
-        <div v-if="talking?.who === p.id" :key="talking.n" class="said">
-          <SpokenText :text="`“${$t(`journal.talk.${p.id}.${talking.line}`, names)}”`" :voice="p.id" />
-        </div>
-        <Button v-if="canTalk(p)" class="talk-btn" :label="$t('journal.talkBtn')" icon="pi pi-comments" size="small" text
-          :aria-label="$t('journal.talkTo', { name: $t(`journal.people.${p.id}.name`, names) })" @click="talk(p)" />
-      </div>
-    </div>
+      </template>
+    </template>
 
     <!-- Memories of past lives, one per ascension -->
     <template v-else>

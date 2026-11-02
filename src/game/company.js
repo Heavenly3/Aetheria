@@ -2,7 +2,10 @@
    COMPANY — the companions the hero hires: who they are, who goes along, and what they do in a
    boss fight or a dungeon. Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
-import { MERC_ROLES, PARTY_SLOTS, MERC_SPEED, HURT_TIME, MERC_MAX_LVL, UNIQUE_MERCS, UNIQUE_IDS, hireCost, wageOf, mercXpNeed, mercPower, mercTrade } from './data/company.js'
+import {
+  MERC_ROLES, PARTY_SLOTS, MERC_SPEED, HURT_TIME, MERC_MAX_LVL, UNIQUE_MERCS, UNIQUE_IDS, TRUST_MAX, TRUST_KILL, TRUST_BOSS, LOYAL_AT, LOYAL_POWER,
+  hireCost, wageOf, mercXpNeed, mercPower, mercTrade,
+} from './data/company.js'
 import { MECHS } from './data/fighting.js'
 import { monsterLevel } from './data/combat.js'
 import { rollName } from './data/journal.js'
@@ -125,7 +128,7 @@ export const company = {
     act.mercTimer -= MERC_SPEED
     let total = 0, breaking = 0
     for (const p of party) {
-      const r = mercTrade(p), pow = mercPower(p.lvl, hl)
+      const r = mercTrade(p), pow = mercPower(p.lvl, hl) * (this.mercLoyal(p) ? LOYAL_POWER : 1)
       if (r.heal && this.s.hp < this.maxHp()) this.heal(Math.max(1, Math.round(this.maxHp() * r.heal * pow)))
       if (Math.random() >= 0.8) continue
       const dmg = rand(1, Math.max(1, Math.round(ps.maxHit * r.dmg * pow)))
@@ -139,10 +142,13 @@ export const company = {
     this.emit('hit', { who: 'merc', dmg: total })
     return act.mHp <= 0 ? 'kill' : null
   },
-  // Every creature that falls with them along teaches them something
+  // Every creature that falls with them along teaches them something and earns a little trust
   companyKill(m, act) {
     const xp = monsterLevel(m)
     for (const p of this.partyOf(act)) {
+      p.trust = Math.min(TRUST_MAX, (p.trust || 0) + (m.boss ? TRUST_BOSS : TRUST_KILL))
+      const q = UNIQUE_MERCS[p.unique]?.quest
+      if (q?.kill === (m.echoOf || m.id) && this.questOpen(p)) this.questStep(p, act)
       if (p.lvl >= MERC_MAX_LVL) continue
       p.xp += xp
       while (p.lvl < MERC_MAX_LVL && p.xp >= mercXpNeed(p.lvl)) {
@@ -151,6 +157,22 @@ export const company = {
         this.note(act, 'mercLevel', { who: p.id, lvl: p.lvl })
       }
     }
+  },
+  /* ---------- trust and a companion's own quest ---------- */
+  mercLoyal(m) { return (m?.trust || 0) >= LOYAL_AT },
+  // A companion met along the way asks for help once they trust the hero fully
+  questOpen(m) { return !!UNIQUE_MERCS[m?.unique]?.quest && (m.trust || 0) >= TRUST_MAX && !m.questDone },
+  questStep(m, act = null) {
+    const q = UNIQUE_MERCS[m.unique].quest
+    m.questCount = (m.questCount || 0) + 1
+    if (m.questCount < q.n) return
+    m.questDone = true
+    if (act) this.note(act, 'mercQuest', { who: m.id })
+    this.emit('companionQuest', m)
+  },
+  // An affair settled counts for a companion whose quest asks for affairs, while in the company
+  companyAffairSettled() {
+    for (const m of this.s.company?.members || []) if (UNIQUE_MERCS[m.unique]?.quest.affairs && this.questOpen(m)) this.questStep(m)
   },
   // When the hero falls, the party is hurt for a while
   companyFell(act) {

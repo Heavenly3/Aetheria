@@ -1820,7 +1820,7 @@ export default {
       goldH: "oro/h",
       taken: "recibido/s",
     },
-    notes: { mercInterrupt: "¡{name} interrumpe su habilidad!", mercCleanse: "{name} te quita {status}", mercLevel: "{name} sube al nivel {n}",
+    notes: { mercQuest: "¡{name} cumple su misión!", mercInterrupt: "¡{name} interrumpe su habilidad!", mercCleanse: "{name} te quita {status}", mercLevel: "{name} sube al nivel {n}",
       mechInterrupted: "¡Interrumpes su {mech}!", mechMissed: "{mech} falla", mechBuff: "{mech}: se hace más fuerte un rato", stole: "Te ha robado {gold} de oro. ¡Derrótalo antes de que huya!", fled: "Ha huido con {gold} de oro", recovered: "Recuperas {gold} de oro",
       mechCharge: "Está cargando: {mech}", mechHit: "{mech} te alcanza: {dmg}", mechGuarded: "Resistes {mech}: solo {dmg}", mechBroken: "Rompes su {mech}", mechHealed: "{mech}: se cura",
       ability: "Usaste {ability}",
@@ -2342,7 +2342,7 @@ export default {
       dragons: "Cualquier dragón",
     },
   },
-  tracker: { needLevel: "Primero necesitas {skill} {lvl}: esto te lleva a subirla.", tough: "Las criaturas que lo sueltan aún son duras para ti.", title: "Seguimiento", label: "Objetivo", readyLabel: "Listo", intro: "Todo lo que tienes en marcha: misiones de la historia, el encargo del cazador, contratos del gremio, pedidos de la taberna y tareas diarias. Elige uno y vas directo a donde se hace.", handIn: "Hecho: entrégala", ready: "Listo", go: "Ir allí", missing: "Falta:", more: "y {n} más", all: "Todos los objetivos", empty: "No tienes nada en marcha. Empieza una misión o acepta una tarea y aparecerá aquí.", sources: { story: "Historia", slayer: "Encargo del cazador", guild: "Contrato del gremio", order: "Pedido de la taberna", daily: "Tarea diaria", weekly: "Tarea semanal" } },
+  tracker: { needLevel: "Primero necesitas {skill} {lvl}: esto te lleva a subirla.", tough: "Las criaturas que lo sueltan aún son duras para ti.", title: "Seguimiento", label: "Objetivo", readyLabel: "Listo", intro: "Todo lo que tienes en marcha: misiones de la historia, el encargo del cazador, contratos del gremio, pedidos de la taberna y tareas diarias. Elige uno y vas directo a donde se hace.", handIn: "Hecho: entrégala", ready: "Listo", go: "Ir allí", missing: "Falta:", more: "y {n} más", all: "Todos los objetivos", empty: "No tienes nada en marcha. Empieza una misión o acepta una tarea y aparecerá aquí.", sources: { companion: "Acompañante", story: "Historia", slayer: "Encargo del cazador", guild: "Contrato del gremio", order: "Pedido de la taberna", daily: "Tarea diaria", weekly: "Tarea semanal" } },
   backup: {
     saveFailed: "No se pudo guardar la partida: el almacenamiento del navegador está lleno o bloqueado. Descarga una copia en Ajustes → Partida para no perder nada.",
     openFailed: "No se pudo abrir esa partida. Si tiene copias automáticas, puedes recuperar una desde su ranura.",
@@ -2762,6 +2762,7 @@ export default {
   },
 
   journal: {
+    companions: "Tu compañía",
     noteBy: "Nota de {astrologer}",
     omenNotes: {
       stars: "Las lluvias de estrellas son éter que vuelve a casa. Los libros antiguos dicen que la Corona se forjó justo con esta luz.",
@@ -3540,6 +3541,21 @@ export default {
   },
 
   company: {
+    trust: "Confianza {n}",
+    trustTip: "La confianza crece con cada criatura que derrotáis juntos, más si es un jefe. A 50 te son leales y pelean mejor; los acompañantes encontrados en el camino te piden ayuda a 100.",
+    loyal: "Leal",
+    questLater: "Te pedirá ayuda cuando confíe del todo en ti.",
+    questNow: "Su misión: {task} ({n}/{max})",
+    questDone: "Misión cumplida: {reward}",
+    questAffairs: "Resuelve {n} asuntos del gremio con su compañía",
+    questToast: "{name} ha encontrado lo que buscaba. Su oficio se vuelve más fuerte.",
+    talk: {
+      maelis: { hello: "El cenagal habla si te quedas quieto el tiempo suficiente. Casi siempre se queja. Hoy dice que hueles a camino.", past: "A mí me mandaban a los enfermos, antes de que el agua se pudriera. Luego el agua se pudrió y ya no vino nadie. Seguí cociendo igual.", ask: "La gran naga bebe del estanque más viejo del pantano, y el cenagal no ha dejado de llorar desde entonces. Llévame hasta ella. Tres veces, si hace falta para callarla.", after: "¿Lo oyes? Nada. El cenagal duerme por primera vez en años. Te debo más que una poción, {hero}." },
+      hollis: { hello: "Ponte detrás de mí. No, más cerca. Mantengo el escudo arriba me lo agradezcas o no.", past: "Treinta años guardando aquella cripta, y la noche que me dormí, alguien salió de ella. El rey que debía estar dentro, quizá. O algo vestido con él.", ask: "El rey esqueleto sigue sentado en esa cripta, en un trono que no es suyo. Ayúdame a tumbarlo. Tres veces, hasta estar seguro de que no se levanta.", after: "Le pedí a la herrera que arreglara la grieta. Curioso. Aguanta mejor que antes. Quizá eso les pasa a las cosas que se rompen y aun así se guardan." },
+      seren: { hello: "Viento del norte. Nieve al anochecer. Y tú, caminando derecho hacia ella, como siempre.", past: "Éramos doce en la guardia. El frío se los llevó uno a uno, y yo seguí contando tormentas porque alguien tenía que hacerlo.", ask: "La reina del invierno manda las tormentas que se llevaron a mi guardia. Quiero mirarla a los ojos cuando dispare. Tres veces. Después dejaré de contar.", after: "Las tormentas ya solo son tormentas. Creí que me sentiría más ligera. Me siento más fría, y está bien. El frío lo entiendo." },
+      ardan: { hello: "Paz en tu camino. El mío fue largo y terminó en un sitio extraño, y aun así aquí estoy, a tu lado.", past: "Dentro de la herida no hay arriba ni abajo, solo voces. Recé hasta que me escucharon. Se me volvió blanco el pelo; no sé cuál de los dos ganó.", ask: "El guardián de la grieta no deja sanar nada, ni a un lado ni al otro. Me gustaría intentar una plegaria más. Sonará más fuerte si estás tú. Tres veces, para estar seguros.", after: "Las voces están más calladas. No se han ido. Más calladas. Es lo máximo que ha conseguido nunca una plegaria, y agradezco que estuvieras allí." },
+      vela: { hello: "No me mires así. El gremio me manda donde hago falta, y por lo visto eso es donde estés tú.", past: "Fui ladrona antes que agente. El gremio me pilló con la mano en su propio cofre y me ofreció un trabajo en vez de una soga.", ask: "Alguien del gremio está vendiendo nuestros secretos. Resuelve cinco asuntos conmigo cerca y veré quién se pone nervioso.", after: "Lo encontré. No hace falta que sepas quién. Solo que el gremio te debe una, y yo también, que es más raro." },
+    },
     title: "Compañía",
     intro: "Acompañantes que contratas para siempre. Hasta {n} van contigo a cada jefe y mazmorra, cada uno con su oficio, y crecen con cada combate.",
     inParty: "Te acompañan: {n} de {max}",
@@ -3563,11 +3579,11 @@ export default {
     empty: "Nadie va contigo. Contrata acompañantes en Preparación.",
     met: "Encontrados en el camino", join: "Unirse",
     uniques: {
-      maelis: { name: "Maelis", title: "Bruja del pantano", bio: "Lleva más tiempo cociendo brebajes en el Pantano Pútrido del que recuerdan las ranas. Cuando el cenagal despertó, fue ella quien lo escuchó, y no ha dejado de hacerlo.", hint: "Espera en lo hondo del Pantano Pútrido, adonde lleva la historia en su segundo acto." },
-      hollis: { name: "Hollis", title: "El Escudo Roto", bio: "Custodió la cripta olvidada de los viejos reyes hasta que la tumba apareció vacía. Su escudo se agrietó aquella noche; lo conservó igual, para recordar lo que no supo guardar.", hint: "Vigila una tumba que encontrarás en el tercer acto de la historia." },
-      seren: { name: "Seren", title: "Vigía del Norte", bio: "La última de las vigías de los picos helados. Cuenta las tormentas y lo que camina dentro de ellas, y nunca falla dos veces.", hint: "Mantiene la guardia del norte, en lo alto de los picos helados del cuarto acto." },
-      ardan: { name: "Ardan", title: "Peregrino de la Grieta", bio: "Entró en la herida del mundo para rezar por ella y salió con la fe entera y el pelo blanco.", hint: "Vaga más allá de la puerta del Vacío, en el último acto de la historia." },
-      vela: { name: "Vela", title: "Agente del gremio", bio: "El gremio la envía allí donde las preguntas no son bienvenidas. Responde ante quien se ha ganado la confianza del gremio, y ahora mismo eres tú.", hint: "Se une cuando hayas resuelto diez asuntos para tu gremio." },
+      maelis: { name: "Maelis", title: "Bruja del pantano", bio: "Lleva más tiempo cociendo brebajes en el Pantano Pútrido del que recuerdan las ranas. Cuando el cenagal despertó, fue ella quien lo escuchó, y no ha dejado de hacerlo.", hint: "Espera en lo hondo del Pantano Pútrido, adonde lleva la historia en su segundo acto.", reward: "sus hechizos rompen curaciones cuatro veces más" },
+      hollis: { name: "Hollis", title: "El Escudo Roto", bio: "Custodió la cripta olvidada de los viejos reyes hasta que la tumba apareció vacía. Su escudo se agrietó aquella noche; lo conservó igual, para recordar lo que no supo guardar.", hint: "Vigila una tumba que encontrarás en el tercer acto de la historia.", reward: "su escudo reparado recibe más de cada golpe cargado" },
+      seren: { name: "Seren", title: "Vigía del Norte", bio: "La última de las vigías de los picos helados. Cuenta las tormentas y lo que camina dentro de ellas, y nunca falla dos veces.", hint: "Mantiene la guardia del norte, en lo alto de los picos helados del cuarto acto.", reward: "interrumpe nueve habilidades de cada diez" },
+      ardan: { name: "Ardan", title: "Peregrino de la Grieta", bio: "Entró en la herida del mundo para rezar por ella y salió con la fe entera y el pelo blanco.", hint: "Vaga más allá de la puerta del Vacío, en el último acto de la historia.", reward: "cura más y quita estados antes" },
+      vela: { name: "Vela", title: "Agente del gremio", bio: "El gremio la envía allí donde las preguntas no son bienvenidas. Responde ante quien se ha ganado la confianza del gremio, y ahora mismo eres tú.", hint: "Se une cuando hayas resuelto diez asuntos para tu gremio.", reward: "sus golpes pegan más fuerte" },
     },
     roles: {
       squire: { name: "Escudero", desc: "Atrae los golpes del enemigo y recibe parte de cada golpe cargado por ti." },

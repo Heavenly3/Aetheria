@@ -6,6 +6,8 @@ import { G, state } from '../game/engine.js'
 import { MERC_ROLES, MERC_ROLE_IDS, UNIQUE_MERCS, UNIQUE_IDS, wageOf, mercXpNeed, mercPower, mercIcon, mercTint } from '../game/data/company.js'
 import { mercName } from '../ui/company.js'
 import { modText } from '../i18n/mods.js'
+import { useI18n } from 'vue-i18n'
+import { DUNGEONS, BOSSES } from '../game/data/combat.js'
 import { fmt, fmtClock } from '../game/format.js'
 import { throttled } from '../ui/throttled.js'
 import GameIcon from './GameIcon.vue'
@@ -13,6 +15,7 @@ import ItemTile from './ItemTile.vue'
 import HelpTip from './HelpTip.vue'
 
 // The hired company: who goes along, how they grow, and who else could be taken on
+const { t } = useI18n()
 const members = computed(() => state.company.members)
 const party = computed(() => state.company.party)
 // With every place taken, the others cannot be switched on until someone steps out
@@ -22,6 +25,15 @@ const recruits = computed(() => MERC_ROLE_IDS.filter(r => !members.value.some(m 
 // Companions met along the way: the ones waiting to join, and the ones still out there
 const waiting = computed(() => (void state.journal.chapters, void state.stats.affairs, G.uniquesWaiting()))
 const unmet = computed(() => UNIQUE_IDS.filter(id => !G.uniqueOpen(id) && !G.companyMember(id)))
+// A companion's own quest: waiting for full trust, under way, or done
+function questText(m) {
+  const q = UNIQUE_MERCS[m.unique].quest
+  if (m.questDone) return t('company.questDone', { reward: t(`company.uniques.${m.unique}.reward`) })
+  if (!G.questOpen(m)) return t('company.questLater')
+  const task = q.kill ? t('quests.obj.kill', { n: q.n, monster: bossName(q.kill) }) : t('company.questAffairs', { n: q.n })
+  return t('company.questNow', { task, n: m.questCount || 0, max: q.n })
+}
+const bossName = id => DUNGEONS.find(d => d.boss.id === id)?.boss.name || BOSSES.find(b => b.id === id)?.name || id
 const perkText = id => Object.entries(UNIQUE_MERCS[id].perk).map(([k, v]) => modText(k, v)).join(' · ')
 const hireCost = computed(() => G.mercHireCost())
 // Hurt companions count down in real time
@@ -61,6 +73,11 @@ function dismiss(m) {
           <div v-if="m.unique" class="small ok-text"><GameIcon name="sparkles" :size="11" /> {{ perkText(m.unique) }}</div>
           <div class="bar thin" style="margin-top:6px" role="progressbar" :aria-label="$t('company.xp')" aria-valuemin="0" :aria-valuemax="mercXpNeed(m.lvl)" :aria-valuenow="m.xp"><i :style="{ width: (m.xp / mercXpNeed(m.lvl)) * 100 + '%' }" /></div>
           <div class="small faint tnum" style="margin-top:3px">{{ $t('company.stats', { p: power(m), w: fmt(wageOf(m.lvl)) }) }}</div>
+          <div class="row wrap small" style="gap:6px;margin-top:6px">
+            <span class="tag" :class="{ gold: G.mercLoyal(m) }" v-tooltip.top="$t('company.trustTip')">{{ $t('company.trust', { n: m.trust || 0 }) }}</span>
+            <span v-if="G.mercLoyal(m)" class="tag ok">{{ $t('company.loyal') }}</span>
+            <span v-if="m.unique" :class="m.questDone ? 'ok-text' : G.questOpen(m) ? 'gold-text' : 'faint'">{{ questText(m) }}</span>
+          </div>
         </div>
         <div class="stack actions">
           <label class="row small" :class="{ faint: full && !party.includes(m.id) }" :for="'party-' + m.id" style="gap:8px;cursor:pointer" v-tooltip.left="full && !party.includes(m.id) ? $t('company.full', { n: slots }) : null">{{ $t('company.goes') }}
