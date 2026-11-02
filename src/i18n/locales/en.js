@@ -381,7 +381,7 @@ export default {
     intro: "Pick a region to see its places, its dungeon and its bosses. Every fight happens where it belongs.",
     zoomIn: "Zoom in", zoomOut: "Zoom out", showAll: "Show the whole realm", toHero: "Go to my hero", full: "Full screen", exitFull: "Leave full screen",
     mapHelp: "Map of the realm. Drag or use the arrow keys to move, the wheel or + and − to zoom.",
-    zoomHint: "Zoom in to see dungeons, bosses and places", dragHint: "Drag to move · wheel or pinch to zoom",
+    zoomHint: "Zoom in to see dungeons and bosses", dragHint: "Drag to move · wheel or pinch to zoom",
     landmarks: { town: "Town", tower: "Endless Tower", weekly: "Weekly boss arena" },
     map: "Map of the realm", list: "Regions",
     level: "Level {n}+", locked: "Needs the quest {quest}", here: "You are here",
