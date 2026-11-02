@@ -9,7 +9,7 @@ import { TITLES, TITLE_MAP, EXTRA_AVATARS, EXTRA_TINTS } from './data/cosmetics.
 
 export const collectionState = () => ({
   // kills: lifetime count per creature, kept through ascension (killsBy restarts with each life)
-  bestiary: { kills: {}, drops: {}, claimed: {} },
+  bestiary: { kills: {}, drops: {}, claimed: {}, moves: {} },
   // title: chosen title id · owned: cosmetics bought in festival shops, as 'kind:id'
   cosmetics: { title: null, owned: {} },
 })

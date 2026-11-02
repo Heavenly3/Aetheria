@@ -49,7 +49,7 @@ import { festivals, festivalsState } from './festivals.js'
 import { TOWER_AFFIXES, AFFIX_TOKENS, affixOf, guardianOf, guardianReward, rivalBest } from './data/tower.js'
 import { guildRoster } from './data/guilds.js'
 import { t } from '../i18n/index.js'
-import { TRAITS, ELITE_LOOT, ENERGY } from './data/fighting.js'
+import { TRAITS, ELITE_LOOT, ENERGY, CREATURE_BUFFS } from './data/fighting.js'
 import { weatherAt, skyTotals } from './data/weather.js'
 import { FEATURES } from './features.js'
 import { OMEN_MAP } from './data/omens.js'
@@ -1279,7 +1279,9 @@ export const G = {
     if (fell === 'monster') return this.killMonster(m)
     if (fell === 'player') return this.die(m)
     if (this.shouldRetreat(act)) return this.retreat(m)
-    if (this.bossMechTick(act, m, dt) === 'player') return this.die(m)
+    const moved = this.bossMechTick(act, m, dt)
+    if (moved === 'player') return this.die(m)
+    if (moved === 'fled') return this.monsterFled(m)
     if (this.shouldRetreat(act)) return this.retreat(m)
     const ps = this.playerStats(m)
     const mr = this.monsterRolls(m)
@@ -1317,7 +1319,7 @@ export const G = {
     }
 
     if (!this.hasStatus(act, 'monster', 'stun') && !act.mech?.charge) act.mTimer += dt / (1 + this.slowOf(act, 'monster'))
-    const mSpeed = m.speed * this.phaseOf(act).speed
+    const mSpeed = m.speed * this.phaseOf(act).speed * (act.mb?.frenzy ? CREATURE_BUFFS.frenzy.speed : 1)
     if (act.mTimer >= mSpeed) {
       act.mTimer -= mSpeed
       if (Math.random() < 1 / (1 + act.mercs.length)) {
@@ -1355,6 +1357,12 @@ export const G = {
     this.festivalKill(m)
     this.addStreak()
     act.runKills++
+    // A thief that falls gives back what it took
+    if (act.stolen > 0) {
+      st.gold += act.stolen
+      this.note(act, 'recovered', { gold: act.stolen })
+      act.stolen = 0
+    }
     if (this.tracker) this.tracker.kills[m.id] = (this.tracker.kills[m.id] || 0) + 1
     // Elites pay far better: more gold, likelier drops and a little stardust
     const elite = !!act.elite

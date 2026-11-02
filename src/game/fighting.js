@@ -1,6 +1,6 @@
 /* =========================================================
    FIGHTING — weapon pace, critical hits, dodging and blocking, statuses,
-   creature traits and elites. The combat loop in engine.js calls into these.
+   creature traits, elites, and the moves creatures and bosses charge up. The combat loop in engine.js calls into these.
    Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
 import { ECHO } from './data/echoes.js'
@@ -13,6 +13,7 @@ import {
   ABILITIES, ABILITY_MAP, ABILITY_SKILL, BUFFS, ENERGY, ENERGY_MAX, BAR_SIZE, defaultBar,
   BOSS_PHASES, STREAK_STEP, STREAK_BONUS, STREAK_MAX, COMBAT_SKILLS, ARMOUR_K, ARMOUR_CAP,
   MECHS, GUARD_TAKEN, BREAK_SHARE, GUARD_STANCE, BOSS_MECHS, REGEN_CAP,
+  CREATURE_MOVES, ELITE_MOVES, CREATURE_BUFFS, FLEE_TIME,
 } from './data/fighting.js'
 
 const eliteCache = new Map()
@@ -132,6 +133,9 @@ export const fighting = {
   spawn(act) {
     this.endBrace(act)
     act.mech = null
+    act.mb = {}
+    act.stolen = 0
+    act.flee = 0
     act.elite = null
     if (this.rollSuperior(act)) act.elite = 'superior'
     else if (act.kind === 'area' && Math.random() < ELITE_CHANCE + this.mod('eliteChance') + this.regionEffect(this.getMonster({ ...act, elite: null }), 'elite')) act.elite = ELITE_IDS[Math.floor(Math.random() * ELITE_IDS.length)]
@@ -168,7 +172,12 @@ export const fighting = {
     const hitTaken = this.hitChance(mr.accRoll, ps.defRoll) * (1 - this.dodgeChance())
     const reduction = this.damageReduction()
     const avgTaken = (ref.maxHit / 2) * (1 - this.blockChance() / 2) * (1 - reduction)
-    const takenPerSec = (hitTaken * avgTaken) / ref.speed
+    let takenPerSec = (hitTaken * avgTaken) / ref.speed
+    // Big moves add their share: one strike each time the move comes round
+    for (const id of this.monsterMechs(ref, null)) {
+      const d = MECHS[id]
+      if (d.hit) takenPerSec += ((d.roll ? hitTaken * 0.75 : 1) * ref.maxHit * d.hit * (1 - reduction)) / d.every
+    }
     const maxHp = this.maxHp()
     // Regeneration eats into the damage dealt
     const net = dps - this.regenPerSec(ref, {})
@@ -258,7 +267,7 @@ export const fighting = {
     let dmg = hit ? rand(1, ps.maxHit) : 0 // a landed blow always does at least 1
     const crit = hit && Math.random() < this.critChance() + (ab?.crit || 0) + this.buffValue(act, 'crit')
     if (crit) dmg = Math.floor(dmg * this.critMult())
-    if (hit) dmg = Math.max(1, Math.round(dmg * (ab ? ab.mult : 1) * (1 + this.buffValue(act, 'dmg')) * (1 - this.traitValue(m, 'armour') - this.phaseOf(act).armour) * (1 - this.weakenOf(act, 'player'))))
+    if (hit) dmg = Math.max(1, Math.round(dmg * (ab ? ab.mult : 1) * (1 + this.buffValue(act, 'dmg')) * (1 - this.traitValue(m, 'armour') - this.phaseOf(act).armour - this.creatureBuff(act, 'armour')) * (1 - this.creatureBuff(act, 'fade')) * (1 - this.weakenOf(act, 'player'))))
     const dealt = Math.min(act.kind === 'weekly' ? this.weeklyIncoming(act, dmg, type) : dmg, act.mHp)
     act.mHp -= dealt
     this.track(act, 'dealt', dealt)
@@ -297,18 +306,60 @@ export const fighting = {
     return null
   },
 
-  /* ================= boss mechanics ================= */
+  /* ================= big moves: bosses and creatures ================= */
   // A braced stance goes back to the one the hero chose
   endBrace(act) {
     if (act?.mech?.braceFrom) { this.s.combatStyle = act.mech.braceFrom; act.mech.braceFrom = null }
   },
   // An echo uses its boss's big moves
   bossMechs(m) { return m?.boss ? BOSS_MECHS[m.echoOf || m.id] || [] : [] },
+  // A boss's big moves, or a creature's own move and its elite's (only out in the regions and dungeons).
+  // act: the fight it is in, or null for the creature as it is listed
+  monsterMechs(m, act = this.s.activity) {
+    if (!m) return []
+    if (m.boss) return this.bossMechs(m)
+    if (act && !['area', 'dungeon'].includes(act.kind)) return []
+    const list = CREATURE_MOVES[m.id] ? [CREATURE_MOVES[m.id]] : []
+    const extra = act?.elite && ELITE_MOVES[act.elite]
+    if (extra && !list.includes(extra)) list.push(extra)
+    return list
+  },
+  // Creature moves show in the bestiary once seen; a boss's are known from the start
+  moveKnown(m, id) { return !MECHS[id]?.creature || !!this.s.bestiary.moves?.[m.id]?.includes(id) },
+  learnMove(m, id) {
+    const b = this.s.bestiary, seen = ((b.moves ||= {})[m.id] ||= [])
+    if (!seen.includes(id)) seen.push(id)
+  },
+  creatureBuff(act, key) {
+    let v = 0
+    for (const id in act?.mb || {}) v += CREATURE_BUFFS[id][key] || 0
+    return v
+  },
+  // Stunning or slowing a creature cuts off the move it is charging
+  interruptMove(act) {
+    const c = act?.mech?.charge
+    if (!c || !MECHS[c.id].cut) return
+    act.mech.charge = null
+    this.s.stats.interrupts = (this.s.stats.interrupts || 0) + 1
+    this.note(act, 'mechInterrupted', { id: c.id })
+    this.emit('interrupt', { id: c.id })
+    this.endBrace(act)
+  },
+  // A thief that got away: the gold goes with it and the next creature steps up
+  monsterFled(m) {
+    const act = this.s.activity
+    this.note(act, 'fled', { gold: act.stolen })
+    this.emit('fled', { monster: m, gold: act.stolen })
+    act.stolen = 0
+    act.respawn = 1.5
+  },
   // A guarding stance or a defensive boon takes big strikes far better
   isGuarded(act) { return this.stance().def > 0 || this.buffValue(act, 'ward') > 0 || this.buffValue(act, 'dodge') > 0 },
-  // Charges and lands the boss's big moves; returns 'player' if the hero fell to one
+  // Charges and lands the big moves; returns 'player' if the hero fell to one, 'fled' if a thief got away
   bossMechTick(act, m, dt) {
-    const list = act.kind === 'weekly' ? [] : this.bossMechs(m)
+    for (const id in act.mb || {}) { act.mb[id] -= dt; if (act.mb[id] <= 0) delete act.mb[id] }
+    if (act.stolen > 0) { act.flee -= dt; if (act.flee <= 0) return 'fled' }
+    const list = act.kind === 'weekly' ? [] : this.monsterMechs(m, act)
     if (!list.length) return null
     const mc = (act.mech ||= { timers: {}, charge: null })
     if (mc.charge) {
@@ -316,6 +367,8 @@ export const fighting = {
       return mc.charge.left <= 0 ? this.resolveMech(act, m) : null
     }
     for (const id of list) {
+      // A thief steals only once
+      if (MECHS[id].steal && act.stolen > 0) continue
       // The first use of each comes a little sooner than the rest
       // An echo winds them up more often
       const every = MECHS[id].every * (m.echo ? ECHO.mechEvery : 1)
@@ -323,6 +376,7 @@ export const fighting = {
       if (mc.timers[id] > 0) continue
       mc.timers[id] = every
       mc.charge = { id, left: MECHS[id].charge, total: MECHS[id].charge, dealt: 0 }
+      if (MECHS[id].creature) this.learnMove(m, id)
       // Tactics: brace with a guarding stance until it lands
       if (MECHS[id].hit && this.s.tactics?.brace && !this.isGuarded(act)) {
         mc.braceFrom = this.s.combatStyle
@@ -341,14 +395,28 @@ export const fighting = {
     if (def.heal) {
       if (c.dealt >= m.hp * BREAK_SHARE) this.note(act, 'mechBroken', { id: c.id })
       else { act.mHp = Math.min(m.hp, act.mHp + Math.round(m.hp * def.heal)); this.note(act, 'mechHealed', { id: c.id }) }
+    } else if (def.buff) {
+      (act.mb ||= {})[def.buff] = CREATURE_BUFFS[def.buff].time
+      this.note(act, 'mechBuff', { id: c.id })
+    } else if (def.steal) {
+      const gold = Math.min(this.s.gold, rand(m.gold[0], m.gold[1]) * def.steal)
+      if (gold > 0) {
+        this.s.gold -= gold
+        act.stolen = (act.stolen || 0) + gold
+        act.flee = FLEE_TIME
+        this.note(act, 'stole', { gold })
+      }
+    } else if (def.roll && Math.random() >= this.hitChance(this.monsterRolls(m).accRoll, this.playerStats(m).defRoll)) {
+      this.note(act, 'mechMissed', { id: c.id })
     } else {
       const guarded = this.isGuarded(act)
-      const raw = m.maxHit * def.hit * this.phaseOf(act).maxHit * (guarded ? GUARD_TAKEN : 1)
+      const raw = m.maxHit * def.hit * (def.roll ? 0.5 + Math.random() * 0.5 : 1) * this.phaseOf(act).maxHit * (guarded ? GUARD_TAKEN : 1)
       const dmg = Math.max(1, Math.round(raw * (1 - this.damageReduction()) * (1 - this.weakenOf(act, 'monster'))))
       this.s.hp -= dmg
       this.track(act, 'taken', dmg)
       this.emit('hit', { who: 'monster', dmg, mech: c.id })
       if (def.status && !guarded) this.addStatus(act, 'player', def.status, dmg)
+      if (def.drain) act.mHp = Math.min(m.hp, act.mHp + Math.round(dmg * def.drain))
       this.note(act, guarded ? 'mechGuarded' : 'mechHit', { id: c.id, dmg })
       this.autoEat()
       if (this.s.hp <= 0) fell = 'player'
@@ -427,6 +495,7 @@ export const fighting = {
     if (cur && def.stacks) Object.assign(cur, { t: def.time, n: Math.min(def.stacks, cur.n + 1), power: Math.max(cur.power, power) })
     else act.fx[side][id] = { t: def.time, n: 1, power, tick: 0 }
     this.emit('status', { side, id })
+    if (side === 'monster' && (id === 'stun' || id === 'slow')) this.interruptMove(act)
   },
   hasStatus(act, side, id) { return !!act.fx?.[side]?.[id] },
   // Slow stretches the time between attacks; weaken lowers damage

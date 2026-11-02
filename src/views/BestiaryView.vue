@@ -7,7 +7,7 @@ import { G } from '../game/engine.js'
 import { monsterLevel } from '../game/data/combat.js'
 import { ITEMS } from '../game/data/items.js'
 import { BESTIARY, KNOWLEDGE, HUNT_BONUS, killsFor } from '../game/data/bestiary.js'
-import { TRAITS, traitsOf } from '../game/data/fighting.js'
+import { TRAITS, MECHS, traitsOf } from '../game/data/fighting.js'
 import { tip } from '../ui/tips.js'
 import { fmt } from '../game/format.js'
 import { modText } from '../i18n/mods.js'
@@ -99,8 +99,12 @@ function claim(g) { if (G.claimGroup(g.id)) { play('quest'); G.toast(g.icon, 'be
             <span v-if="m.weak"><i class="pi pi-bullseye" /> {{ $t(`combat.types.${m.weak}`) }}</span>
             <span v-if="G.knows(m, 'hunted')" class="ok-text">+{{ Math.round(HUNT_BONUS * 100) }}% {{ $t('bestiary.vsThis') }}</span>
           </div>
-          <div v-if="G.knowledge(m) && traitsOf(m.id).length" class="row wrap traits">
+          <div v-if="G.knowledge(m) && (traitsOf(m.id).length || G.monsterMechs(m, null).length)" class="row wrap traits">
             <span v-for="tr in traitsOf(m.id)" :key="tr" class="tag" v-tooltip.top="() => tip($t(`fighting.traits.${tr}.name`), $t(`fighting.traits.${tr}.desc`))"><GameIcon :name="TRAITS[tr].icon" :size="11" /> {{ $t(`fighting.traits.${tr}.name`) }}</span>
+            <template v-for="id in G.monsterMechs(m, null)" :key="id">
+              <span v-if="G.moveKnown(m, id)" class="tag hue" :style="{ '--hue': MECHS[id].color }" v-tooltip.top="() => tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
+              <span v-else class="tag" v-tooltip.top="$t('fighting.unknownMoveTip')"><i class="pi pi-question-circle" style="font-size:10px" /> {{ $t('fighting.unknownMove') }}</span>
+            </template>
           </div>
 
           <div v-if="G.knowledge(m)" class="drops">

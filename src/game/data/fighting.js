@@ -188,6 +188,50 @@ export const MECHS = {
   spray: { icon: 'death-juice', color: '#8bc34a', every: 15, charge: 2.5, hit: 1.2, status: 'poison' },
   mend: { icon: 'healing-shield', color: '#62c17e', every: 30, charge: 4, heal: 0.05 },
 }
+/*
+  Creature moves: every creature has a move of its own (elites one more), worked like a boss's big
+  move but smaller and sooner. Stunning or slowing a creature while it charges one cuts it off (cut).
+  On top of strikes and mending:
+  - roll: the strike can miss and lands for half to all of its power, like a normal blow
+  - buff: a boon the creature gives itself (CREATURE_BUFFS) · drain: share of the strike it heals
+  - steal: takes this many times its gold drop (once) and runs off after FLEE_TIME unless it falls first
+*/
+const MOVE = (icon, color, every, charge, effect) => ({ icon, color, every, charge, cut: true, creature: true, ...effect })
+Object.assign(MECHS, {
+  frenzy: MOVE('sprint', '#e0a64b', 18, 1.5, { buff: 'frenzy' }),
+  howl: MOVE('wolf-head', '#e0a64b', 18, 2, { buff: 'frenzy' }),
+  harden: MOVE('shield', '#9fb3c8', 20, 1.5, { buff: 'harden' }),
+  fade: MOVE('ghost', '#b8a6e0', 20, 1.5, { buff: 'fade' }),
+  steal: MOVE('robber-hand', '#e2b65a', 20, 2, { steal: 3 }),
+  regrow: MOVE('sprout', '#62c17e', 22, 3, { heal: 0.12 }),
+  pounce: MOVE('blood', '#e0554b', 16, 2.5, { hit: 1.6, roll: true, status: 'bleed' }),
+  spit: MOVE('death-juice', '#8bc34a', 16, 2, { hit: 1.3, roll: true, status: 'poison' }),
+  bite: MOVE('vampire-dracula', '#c0392b', 18, 2, { hit: 1.4, roll: true, drain: 1 }),
+  frost: MOVE('ice-spell-cast', '#7ad7ff', 18, 2.5, { hit: 1.3, roll: true, status: 'slow' }),
+  smash: MOVE('star-swirl', '#e0a64b', 20, 3, { hit: 2, roll: true, status: 'stun' }),
+  scorch: MOVE('fire', '#ff6a3c', 18, 2.5, { hit: 1.7, roll: true, status: 'burn' }),
+  radiance: MOVE('sun', '#f0d060', 18, 2.5, { hit: 1.5, roll: true, status: 'weaken' }),
+})
+// time: seconds · speed: its attack interval · armour: extra share of damage ignored · fade: share of the hero's damage that passes through it
+export const CREATURE_BUFFS = {
+  frenzy: { icon: 'sprint', color: '#e0a64b', time: 6, speed: 0.6 },
+  harden: { icon: 'shield', color: '#9fb3c8', time: 6, armour: 0.35 },
+  fade: { icon: 'ghost', color: '#b8a6e0', time: 4, fade: 0.8 },
+}
+export const FLEE_TIME = 15
+// The gentlest creatures keep it simple
+export const CREATURE_MOVES = {
+  goblin: 'steal', rat: 'frenzy', wolf: 'howl', bandit: 'steal',
+  skeleton: 'harden', golem: 'smash', troll: 'regrow',
+  snake: 'spit', scorpion: 'harden', werewolf: 'pounce',
+  specter: 'fade', vampire: 'bite', gargoyle: 'harden',
+  bear: 'pounce', ice_golem: 'frost', ogre: 'smash',
+  green_dragon: 'spit', red_dragon: 'scorch', wyvern: 'pounce',
+  minotaur: 'smash', hydra: 'regrow', demon: 'scorch',
+  void_stalker: 'fade', star_wraith: 'bite', abyssal_titan: 'smash',
+  seraph: 'radiance', astral_golem: 'harden', elder_wyrm: 'scorch',
+}
+export const ELITE_MOVES = { fierce: 'pounce', armoured: 'harden', swift: 'frenzy', ancient: 'regrow', superior: 'smash' }
 export const GUARD_TAKEN = 0.4
 export const BREAK_SHARE = 0.025
 // The stance each kind of fight braces with when the tactic is on

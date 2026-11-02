@@ -21,6 +21,8 @@ const danger = computed(() => (ml.value <= cl.value ? 'ok' : ml.value <= cl.valu
 const fighting = computed(() => state.activity?.type === 'combat' && state.activity.kind === props.kind && state.activity.target === m.value.id)
 const slayerLocked = computed(() => m.value.slayer && G.level('slayer') < m.value.slayer)
 const kills = computed(() => state.killsBy[m.value.id] || 0)
+// Its big moves (a creature's own, or a boss's), as listed outside a fight
+const moves = computed(() => (void state.bestiary.moves, G.monsterMechs(m.value, null)))
 // How the hero would fare: time per kill and the share of health lost per kill. A full fight
 // estimate per card; buff timers touch it every tick, so it is refreshed every couple of seconds
 const { t } = useI18n()
@@ -57,8 +59,11 @@ const fightTip = () => tip(t(`power.risk.${risk.value}`), t('power.riskHint'), [
       <span v-if="m.weak" v-tooltip.top="$t('combat.weakness')"><i class="pi pi-bullseye" /> {{ $t(`combat.types.${m.weak}`) }}</span>
       <span v-if="kills" v-tooltip.top="$t('combat.defeated')"><i class="pi pi-flag" /> {{ fmt(kills) }}</span>
     </div>
-    <div v-if="G.bossMechs(m).length" class="row wrap" style="gap:5px;margin-top:10px">
-      <span v-for="id in G.bossMechs(m)" :key="id" class="tag hue" :style="{ '--hue': MECHS[id].color }" v-tooltip.top="() => tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
+    <div v-if="moves.length" class="row wrap" style="gap:5px;margin-top:10px">
+      <template v-for="id in moves" :key="id">
+        <span v-if="G.moveKnown(m, id)" class="tag hue" :style="{ '--hue': MECHS[id].color }" v-tooltip.top="() => tip($t(`fighting.mechs.${id}.name`), $t(`fighting.mechs.${id}.desc`))"><GameIcon :name="MECHS[id].icon" :size="11" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
+        <span v-else class="tag" v-tooltip.top="$t('fighting.unknownMoveTip')"><i class="pi pi-question-circle" style="font-size:11px" /> {{ $t('fighting.unknownMove') }}</span>
+      </template>
     </div>
     <div class="row wrap" style="gap:5px;margin-top:10px">
       <span v-for="d in m.drops" :key="d.item" class="drop" :class="{ rare: d.chance < 0.05 }">

@@ -3,7 +3,7 @@ import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { MERCENARIES, DUNGEONS } from '../game/data/combat.js'
-import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES, MECHS, BREAK_SHARE } from '../game/data/fighting.js'
+import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES, MECHS, BREAK_SHARE, CREATURE_BUFFS, FLEE_TIME } from '../game/data/fighting.js'
 import { abilityText } from '../ui/abilities.js'
 import { pct, fmt, fmtDec } from '../game/format.js'
 import ItemTile from './ItemTile.vue'
@@ -43,9 +43,12 @@ const charge = computed(() => {
   const c = act.value?.mech?.charge
   if (!c) return null
   const def = MECHS[c.id], need = m.value.hp * BREAK_SHARE
-  return { ...c, def, left: Math.max(0, c.left), share: 1 - Math.max(0, c.left) / c.total, guarded: !def.heal && G.isGuarded(act.value), breakShare: def.heal ? Math.min(1, c.dealt / need) : 0 }
+  return { ...c, def, left: Math.max(0, c.left), share: 1 - Math.max(0, c.left) / c.total, guarded: !!def.hit && G.isGuarded(act.value), breakShare: def.heal ? Math.min(1, c.dealt / need) : 0 }
 })
-const mechs = computed(() => G.bossMechs(m.value))
+// Its moves: a creature's stay a mystery until it has used them
+const mechs = computed(() => G.monsterMechs(m.value, act.value).map(id => ({ id, known: G.moveKnown(m.value, id) })))
+// Boons it gave itself, and gold it is running off with
+const mBuffs = computed(() => Object.entries(act.value?.mb || {}).map(([id, left]) => ({ id, ...CREATURE_BUFFS[id], left: Math.ceil(left) })))
 const mechTip = id => tip(t(`fighting.mechs.${id}.name`), t(`fighting.mechs.${id}.desc`))
 const streak = computed(() => state.hunt?.streak || 0)
 const live = computed(() => (void act.value?.live?.t, G.liveStats()))
@@ -59,6 +62,12 @@ const NOTE_PARAMS = {
   mechGuarded: n => ({ mech: t(`fighting.mechs.${n.id}.name`), dmg: fmt(n.dmg) }),
   mechBroken: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
   mechHealed: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
+  mechInterrupted: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
+  mechMissed: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
+  mechBuff: n => ({ mech: t(`fighting.mechs.${n.id}.name`) }),
+  stole: n => ({ gold: fmt(n.gold) }),
+  fled: n => ({ gold: fmt(n.gold) }),
+  recovered: n => ({ gold: fmt(n.gold) }),
 }
 const noteText = n => t(`fighting.notes.${n.kind}`, NOTE_PARAMS[n.kind]?.(n) || {})
 const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))
@@ -161,14 +170,28 @@ onUnmounted(() => { off && off(); offAb && offAb(); offPhase && offPhase(); offK
         <div class="bar thin" style="margin-top:5px"><i :style="{ width: charge.share * 100 + '%' }" /></div>
         <div class="small" style="margin-top:5px">
           <template v-if="charge.def.heal">{{ $t('fighting.breakIt', { v: Math.round(charge.breakShare * 100) }) }}</template>
-          <span v-else :class="charge.guarded ? 'ok-text' : 'bad-text'">{{ charge.guarded ? $t('fighting.guarded') : $t('fighting.unguarded') }}</span>
+          <span v-else-if="charge.def.hit" :class="charge.guarded ? 'ok-text' : 'bad-text'">{{ charge.guarded ? $t('fighting.guarded') : $t('fighting.unguarded') }}</span>
         </div>
+        <div v-if="charge.def.cut" class="small muted" style="margin-top:3px"><i class="pi pi-bolt" /> {{ $t('fighting.cutIt') }}</div>
+      </div>
+      <div v-if="act.stolen > 0 && alive" class="charge" style="--c:#e2b65a">
+        <div class="row small" style="gap:6px">
+          <GameIcon name="robber-hand" :size="14" />
+          <b class="grow">{{ $t('fighting.fleeing', { s: Math.max(0, act.flee).toFixed(1), gold: fmt(act.stolen) }) }}</b>
+        </div>
+        <div class="bar thin" style="margin-top:5px"><i :style="{ width: Math.max(0, act.flee) / FLEE_TIME * 100 + '%' }" /></div>
       </div>
       <div class="small muted tnum" style="margin-top:5px">{{ alive ? `${fmt(act.mHp)} / ${fmt(m.hp)} ${$t('common.hp')}` : $t('combat.respawning') }}</div>
       <div class="bar thin" style="margin-top:8px;--c:#e0554b"><i :style="{ width: (alive ? Math.min(1, act.mTimer / m.speed) : 0) * 100 + '%' }" /></div>
       <div class="fx-row">
         <span v-for="tr in traits" :key="tr" class="trait" v-tooltip.top="traitTip(tr)"><GameIcon :name="TRAITS[tr].icon" :size="12" /> {{ $t(`fighting.traits.${tr}.name`) }}</span>
-        <span v-for="id in mechs" :key="id" class="trait mech" :style="{ '--c': MECHS[id].color }" v-tooltip.top="mechTip(id)"><GameIcon :name="MECHS[id].icon" :size="12" /> {{ $t(`fighting.mechs.${id}.name`) }}</span>
+        <template v-for="mv in mechs" :key="mv.id">
+          <span v-if="mv.known" class="trait mech" :style="{ '--c': MECHS[mv.id].color }" v-tooltip.top="mechTip(mv.id)"><GameIcon :name="MECHS[mv.id].icon" :size="12" /> {{ $t(`fighting.mechs.${mv.id}.name`) }}</span>
+          <span v-else class="trait" v-tooltip.top="$t('fighting.unknownMoveTip')"><i class="pi pi-question-circle" style="font-size:11px" /> {{ $t('fighting.unknownMove') }}</span>
+        </template>
+        <span v-for="b in mBuffs" :key="'b' + b.id" class="fx" :style="{ '--c': b.color }" v-tooltip.top="$t(`fighting.creatureBuffs.${b.id}`)">
+          <GameIcon :name="b.icon" :size="13" />{{ b.left }}
+        </span>
         <span v-for="s in statuses('monster')" :key="s.id" class="fx" :style="{ '--c': s.color }" v-tooltip.top="statusTip(s)">
           <GameIcon :name="s.icon" :size="13" />{{ s.left }}<sup v-if="s.n > 1">×{{ s.n }}</sup>
         </span>
