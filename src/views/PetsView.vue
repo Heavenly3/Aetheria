@@ -49,7 +49,7 @@ const tier = computed(() => bondTier(care.value.bond))
 const nextTier = computed(() => BOND_TIERS.find(b => b.at > care.value.bond))
 const hearts = b => Array.from({ length: 5 }, (_, i) => (b >= (i + 1) * 20 ? 'full' : b >= i * 20 + 10 ? 'half' : 'empty'))
 const power = id => (void now.value, G.petPower(id, now.value))
-const effects = (p, mult = 1) => Object.entries(p.mods).map(([k, v]) => modText(k, v * mult)).join(' · ')
+const effects = (p, mult = 1) => Object.entries(p.mods).map(([k, v]) => modText(k, v * mult))
 const patLeft = computed(() => Math.max(0, PAT_COOLDOWN - (now.value - care.value.patAt)) / 1000)
 
 /* ---------- feeding ---------- */
@@ -162,7 +162,7 @@ const sorted = computed(() => [...listed.value].sort((a, b) => (G.isCompanion(b.
       </div>
 
       <div class="comp-bonus">
-        <span class="tag ok">{{ effects(view, power(viewId)) }}</span>
+        <span v-for="e in effects(view, power(viewId))" :key="e" class="tag ok">{{ e }}</span>
         <span class="small muted">{{ isComp ? (full > 0 ? $t('pets.boostOn', { x: companionBoost(care.bond) }) : $t('pets.boostOff')) : $t('pets.resting') }}</span>
       </div>
 
@@ -251,8 +251,10 @@ const sorted = computed(() => [...listed.value].sort((a, b) => (G.isCompanion(b.
           <span v-if="G.isCompanion(p.id)" class="tag gold"><GameIcon name="paw-print" :size="12" /></span>
         </div>
         <p class="small" :class="G.hasPet(p.id) ? 'muted' : 'faint'" style="margin:10px 0 8px">{{ G.hasPet(p.id) ? p.desc : G.hasEgg(p.id) ? $t('pets.inEgg') : $t('pets.unknown') }}</p>
-        <div class="row wrap" style="gap:6px">
-          <span class="tag" :class="G.hasPet(p.id) ? 'ok' : ''">{{ effects(p, G.hasPet(p.id) ? power(p.id) : 1) }}</span>
+        <div class="row wrap pet-mods">
+          <span v-for="e in effects(p, G.hasPet(p.id) ? power(p.id) : 1)" :key="e" class="tag" :class="G.hasPet(p.id) ? 'ok' : ''">{{ e }}</span>
+        </div>
+        <div class="row pet-foot">
           <span class="grow" />
           <span v-if="G.hasPet(p.id)" class="small faint">{{ fmtDate(state.pets[p.id]) }}</span>
           <span v-else-if="p.source.festival" class="small faint">{{ $t('pets.festivalOnly') }}</span>
@@ -299,6 +301,9 @@ const sorted = computed(() => [...listed.value].sort((a, b) => (G.isCompanion(b.
 .egg.ready :deep(.tile) { animation-duration: 0.9s; }
 .pet { display: flex; flex-direction: column; color: inherit; font: inherit; text-align: start; }
 button.pet { cursor: pointer; }
+.pet-mods { gap: 6px; }
+.pet-mods .tag { white-space: normal; }
+.pet-foot { margin-top: auto; padding-top: 8px; }
 .pet.got { border-color: color-mix(in srgb, var(--c) 45%, transparent); box-shadow: 0 0 24px -12px var(--c); }
 .pet.viewing { outline: 2px solid color-mix(in srgb, var(--c) 70%, transparent); outline-offset: 2px; }
 .pet:not(.got) { filter: grayscale(0.7); border-style: dashed; }
