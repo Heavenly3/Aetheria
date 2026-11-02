@@ -10,18 +10,17 @@ export const MAP_W = 2000
 export const MAP_H = 1200
 
 // x, y: where the region sits on the board · dungeon: the one in this region · bosses: the world bosses that live here
-// terrain: how its land is drawn on the map
 export const REGIONS = {
-  meadow: { x: 330, y: 930, terrain: 'fields', dungeon: 'goblin_warren', bosses: [] },
-  forest: { x: 610, y: 790, terrain: 'trees', bosses: ['goblin_king'] },
-  caves: { x: 420, y: 520, terrain: 'hills', dungeon: 'crypt', bosses: ['troll_lord'] },
-  swamp: { x: 800, y: 470, terrain: 'marsh', dungeon: 'serpent_temple', bosses: ['kraken'] },
-  ruins: { x: 1040, y: 760, terrain: 'ruins', bosses: ['necromancer'] },
-  peaks: { x: 1130, y: 330, terrain: 'mountains', dungeon: 'frost_keep', bosses: [] },
-  lair: { x: 1400, y: 560, terrain: 'mountains', dungeon: 'dragon_vault', bosses: ['ancient_dragon'] },
-  abyss: { x: 1560, y: 900, terrain: 'hills', bosses: [] },
-  void: { x: 1760, y: 560, terrain: 'stars', dungeon: 'void_sanctum', bosses: ['void_emperor'] },
-  celestial: { x: 1720, y: 200, terrain: 'stars', bosses: ['aether_sovereign'] },
+  meadow: { x: 330, y: 930, dungeon: 'goblin_warren', bosses: [] },
+  forest: { x: 610, y: 790, bosses: ['goblin_king'] },
+  caves: { x: 420, y: 520, dungeon: 'crypt', bosses: ['troll_lord'] },
+  swamp: { x: 800, y: 470, dungeon: 'serpent_temple', bosses: ['kraken'] },
+  ruins: { x: 1040, y: 760, bosses: ['necromancer'] },
+  peaks: { x: 1130, y: 330, dungeon: 'frost_keep', bosses: [] },
+  lair: { x: 1400, y: 560, dungeon: 'dragon_vault', bosses: ['ancient_dragon'] },
+  abyss: { x: 1560, y: 900, bosses: [] },
+  void: { x: 1760, y: 560, dungeon: 'void_sanctum', bosses: ['void_emperor'] },
+  celestial: { x: 1720, y: 200, bosses: ['aether_sovereign'] },
 }
 // Places of the realm that are not regions: each one has a screen of its own
 export const LANDMARKS = [
