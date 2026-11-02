@@ -106,15 +106,22 @@ describe('the other tables', () => {
     expect(TABA_FACES.reduce((s, f) => s + f.p, 0)).toBeCloseTo(1)
   })
 
-  it('pays arm wrestling by the rival beaten', () => {
+  it('climbs the arm-wrestling ladder one rival at a time and pays by the rival beaten', () => {
     table()
     expect(G.armStart(100, 'nobody')).toBe(null)
-    G.armStart(100, 'ogre')
+    expect(G.armTop()).toBe(0)
+    expect(G.armStart(100, 'ogre')).toBe(null) // not reached yet
+    G.armStart(100, 'farmhand')
     G.armEnd(true)
-    expect(state.gold).toBe(10000 + 100 * (ARM_RIVALS.find(r => r.id === 'ogre').mult - 1))
-    expect(G.table('arm').beaten.ogre).toBe(1)
+    expect(state.gold).toBe(10000 + 100 * (ARM_RIVALS[0].mult - 1))
+    expect(G.armTop()).toBe(1)
+    expect(G.armStart(100, ARM_RIVALS[1].id)).toBeTruthy()
+    G.armEnd(false)
+    expect(G.armTop()).toBe(1) // a loss keeps the rungs already opened
+    expect(G.table('arm').recent[0]).toBe(-100)
+    const low = G.armPush()
     setLevel('strength', 90)
-    expect(G.armPush()).toBeGreaterThan(0.1)
+    expect(G.armPush()).toBeGreaterThan(low)
   })
 
   it('ends the drinking contest on a spill, a stagger of the rival or the last tankard', () => {

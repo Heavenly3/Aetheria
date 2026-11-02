@@ -128,14 +128,23 @@ export const DART_PAYS = [{ min: 100, mult: 3 }, { min: 70, mult: 2 }, { min: 45
 export const TABA_FACES = [
   { id: 'luck', p: 0.08, mult: 3 }, { id: 'flesh', p: 0.34, mult: 2 }, { id: 'belly', p: 0.08, mult: 1 }, { id: 'hollow', p: 0.5, mult: 0 },
 ]
-// Arm wrestling: three regulars, each stronger and paying more. force: how hard they push (share of
-// the bar per second); the hero pushes with every press, harder with Strength
+// Arm wrestling: a ladder of regulars, each beaten one opening the next, stronger and paying more.
+// force: how far they push the arms per second (a share of the table); the hero pushes with every
+// press, harder with Strength, and presses quicker than ARM_PRESS seconds apart do not count.
+// The top of the ladder cannot be beaten without real Strength
 export const ARM_RIVALS = [
-  { id: 'farmhand', icon: 'farmer', force: 0.32, mult: 1.6 },
-  { id: 'dwarf', icon: 'dwarf-face', force: 0.5, mult: 2.2 },
-  { id: 'ogre', icon: 'ogre', force: 0.7, mult: 3.2 },
+  { id: 'farmhand', icon: 'farmer', force: 0.17, mult: 1.5 },
+  { id: 'viking', icon: 'viking-head', force: 0.22, mult: 1.8 },
+  { id: 'dwarf', icon: 'dwarf-face', force: 0.28, mult: 2.2 },
+  { id: 'barbarian', icon: 'barbarian', force: 0.34, mult: 2.7 },
+  { id: 'ogre', icon: 'ogre', force: 0.4, mult: 3.3 },
+  { id: 'troll', icon: 'troll', force: 0.47, mult: 4 },
+  { id: 'champion', icon: 'dwarf-king', force: 0.55, mult: 5 },
 ]
 export const ARM_TIME = 15
+export const ARM_PRESS = 0.11
+// How many results each table keeps to show
+export const RECENT_KEPT = 10
 // Drinking contest: each round the hero drinks when the tankard is steady; the rival may stagger,
 // more likely with every round. A spilled round or a stagger ends it
 export const BEER_ROUNDS = 12

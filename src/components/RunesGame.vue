@@ -1,14 +1,14 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Button from 'primevue/button'
-import InputNumber from 'primevue/inputnumber'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
-import { RUNE_PAYS } from '../game/data/tavern.js'
+import { RUNE_PAYS, RUNE_SWAPS } from '../game/data/tavern.js'
 import { fmt } from '../game/format.js'
 import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
-import HelpTip from './HelpTip.vue'
+import GameTable from './GameTable.vue'
+import BetInput from './BetInput.vue'
 
 // The rune shell game: watch the marked stone while the keeper's hands swap them, then pick one
 const { t } = useI18n()
@@ -41,7 +41,7 @@ function start() {
   phase.value = 'show'
   play('dice')
   const step = G.runeSwapTime() * 1000 * (still() ? 1.4 : 1)
-  later(1100, () => {
+  later(1200, () => {
     phase.value = 'shuffle'
     r.swaps.forEach(([a, b], k) => later(k * step, () => {
       // The stones standing in slots a and b trade places
@@ -66,48 +66,61 @@ const marked = computed(() => round.value?.marked ?? -1)
 const glows = stone => stone === marked.value && (phase.value === 'show' || !!round.value?.result)
 const stoneLabel = slot => t('tavern.runes.stone', { n: slot + 1 })
 const speed = computed(() => G.runeSwapTime())
+const status = computed(() => ({ show: t('tavern.runes.watch'), shuffle: t('tavern.runes.shuffling'), pick: t('tavern.runes.pick') }[phase.value] || ''))
 </script>
 
 <template>
-  <div class="panel pad">
-    <h3 class="panel-title"><GameIcon name="rune-stone" /> {{ $t('tavern.runes.title') }} <HelpTip k="sections.runes" /></h3>
-    <div class="table">
-      <div class="stones" :style="{ '--swap': speed + 's' }">
-        <button v-for="stone in 3" :key="stone" type="button" class="stone" :class="{ glow: glows(stone - 1), lift: swapping.includes(stone - 1), pickable: phase === 'pick',
-          picked: round?.result && round.picked === slots[stone - 1] }" :style="{ left: (slots[stone - 1] * 33.33 + 16.66) + '%' }"
-          :disabled="phase !== 'pick'" :aria-label="stoneLabel(slots[stone - 1])" @click="pick(slots[stone - 1])">
-          <GameIcon name="rune-stone" :size="46" />
-        </button>
-      </div>
-      <div class="small muted status" role="status">{{ phase === 'show' ? $t('tavern.runes.watch') : phase === 'shuffle' ? $t('tavern.runes.shuffling') : phase === 'pick' ? $t('tavern.runes.pick') : '' }}</div>
+  <GameTable icon="rune-stone" :title="$t('tavern.runes.title')" help="sections.runes" :stats="game"
+    :extra="[{ label: $t('tavern.figures.hands'), value: speed.toFixed(2) + ' s' }]">
+    <template #badge><span class="tag">{{ $t('tavern.runes.badge', { x: RUNE_PAYS, n: RUNE_SWAPS }) }}</span></template>
+    <div class="stones" :style="{ '--swap': speed + 's' }">
+      <span class="cloth" />
+      <button v-for="stone in 3" :key="stone" type="button" class="stone" :class="{ glow: glows(stone - 1), lift: swapping.includes(stone - 1), pickable: phase === 'pick',
+        picked: round?.result && round.picked === slots[stone - 1] }" :style="{ left: (slots[stone - 1] * 33.33 + 16.66) + '%' }"
+        :disabled="phase !== 'pick'" :aria-label="stoneLabel(slots[stone - 1])" @click="pick(slots[stone - 1])">
+        <GameIcon name="rune-stone" :size="62" />
+      </button>
+    </div>
+    <div class="status" role="status">{{ status }}</div>
+    <div v-if="round?.result" :key="'r' + game.played" class="banner-result pop" :class="round.result.net > 0 ? 'win' : 'loss'" role="status">
+      <b>{{ $t(`tavern.runes.results.${round.result.kind}`) }}</b>
+      <span class="tnum">{{ $t('inventory.goldAmount', { n: (round.result.net > 0 ? '+' : '') + fmt(round.result.net) }) }}</span>
     </div>
 
-    <div v-if="round?.result" class="result" :class="round.result.net > 0 ? 'ok-text' : 'bad-text'" role="status">
-      {{ $t(`tavern.runes.results.${round.result.kind}`) }}
-      <b>{{ $t('inventory.goldAmount', { n: (round.result.net > 0 ? '+' : '') + fmt(round.result.net) }) }}</b>
-    </div>
-    <div v-if="!playing" class="row" style="margin-top:12px">
-      <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="runes-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" :aria-label="$t('tavern.betLabel')" />
-      <Button :label="$t('tavern.runes.start', { x: RUNE_PAYS })" icon="pi pi-eye" @click="start" />
-    </div>
-    <div class="small faint" style="margin-top:8px">{{ $t('tavern.tableStats', { n: game.played, net: (game.net >= 0 ? '+' : '') + fmt(game.net) }) }}</div>
-  </div>
+    <template #controls>
+      <template v-if="playing">
+        <div class="turn"><b>{{ status }}</b></div>
+      </template>
+      <template v-else>
+        <BetInput v-model="bet" id="runes-bet" />
+        <Button :label="$t('tavern.runes.start', { x: RUNE_PAYS })" icon="pi pi-eye" fluid @click="start" />
+      </template>
+    </template>
+  </GameTable>
 </template>
 
 <style scoped>
-.table { display: grid; gap: 8px; padding: 16px; border-radius: 14px; background: var(--well); }
-.stones { position: relative; height: 90px; }
-.stone { position: absolute; top: 12px; width: 70px; height: 70px; margin-left: -35px; border-radius: 16px; display: grid; place-items: center; color: #b9b2c8;
-  background: radial-gradient(circle at 40% 30%, #5a5468, #2a2636); border: 1px solid #1a1722; box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.7);
+.stones { position: relative; height: 150px; }
+.cloth { position: absolute; left: 4%; right: 4%; top: 50%; height: 70px; margin-top: -20px; border-radius: 50%; background: radial-gradient(ellipse, rgba(0, 0, 0, 0.35), transparent 70%); }
+.stone { position: absolute; top: 24px; width: 96px; height: 96px; margin-left: -48px; border-radius: 22px; display: grid; place-items: center; color: #b9b2c8;
+  background: radial-gradient(circle at 40% 30%, #5a5468, #2a2636); border: 1px solid #1a1722; box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.8);
   transition: left var(--swap, 0.5s) ease-in-out, transform 0.2s, box-shadow 0.3s; font: inherit; }
-.stone.lift { transform: translateY(-10px); }
-.stone.glow { color: #b8f0ff; box-shadow: 0 0 22px 2px #6fd3ff, 0 6px 12px -6px rgba(0, 0, 0, 0.7); }
+.stone.lift { transform: translateY(-14px); }
+.stone.glow { color: #b8f0ff; box-shadow: 0 0 28px 4px #6fd3ff, 0 8px 16px -8px rgba(0, 0, 0, 0.8); }
 .stone.pickable { cursor: pointer; }
-.stone.pickable:hover { transform: translateY(-4px); box-shadow: 0 0 0 2px var(--gold), 0 6px 12px -6px rgba(0, 0, 0, 0.7); }
-.stone.picked { outline: 2px solid var(--gold); outline-offset: 3px; }
-.stone:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-.status { text-align: center; min-height: 18px; }
-.result { margin-top: 12px; font-weight: 700; display: flex; flex-wrap: wrap; gap: 6px; animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.3); }
+.stone.pickable:hover { transform: translateY(-6px); box-shadow: 0 0 0 2px var(--gold), 0 8px 16px -8px rgba(0, 0, 0, 0.8); }
+.stone.picked { outline: 2px solid var(--gold); outline-offset: 4px; }
+.stone:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.status { text-align: center; min-height: 22px; font-weight: 700; color: var(--ink-2); }
+.turn { padding: 10px 12px; border-radius: 10px; background: var(--panel-solid); border: 1px solid var(--line-hi); }
+.banner-result { justify-self: center; display: grid; justify-items: center; gap: 2px; padding: 10px 22px; border-radius: 12px; background: var(--panel-solid); border: 1px solid var(--line-hi); }
+.banner-result b { font-family: var(--font-display); font-size: 19px; }
+.banner-result.win { border-color: color-mix(in srgb, var(--ok) 55%, transparent); color: var(--tag-ok); }
+.banner-result.loss { border-color: color-mix(in srgb, var(--danger) 55%, transparent); color: var(--tag-bad); }
+:root[data-theme="light"] .banner-result.win { color: var(--ok); }
+:root[data-theme="light"] .banner-result.loss { color: var(--danger); }
+.pop { animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.3); }
 @keyframes pop { 0% { opacity: 0; transform: translateY(6px) scale(0.92); } 100% { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .result { animation: none; } .stone { transition: left var(--swap, 0.5s) linear; } }
+@media (max-width: 600px) { .stone { width: 72px; height: 72px; margin-left: -36px; } .stone :deep(svg) { width: 46px; height: 46px; } }
+@media (prefers-reduced-motion: reduce) { .pop { animation: none; } .stone { transition: left var(--swap, 0.5s) linear; } }
 </style>

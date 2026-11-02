@@ -10,7 +10,6 @@ import TabPanel from 'primevue/tabpanel'
 import Button from 'primevue/button'
 import Select from 'primevue/select'
 import SelectButton from 'primevue/selectbutton'
-import InputNumber from 'primevue/inputnumber'
 import Badge from 'primevue/badge'
 import { useConfirm } from 'primevue/useconfirm'
 import { G, state } from '../game/engine.js'
@@ -25,6 +24,7 @@ import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
 import CardsGame from '../components/CardsGame.vue'
+import DiceGame from '../components/DiceGame.vue'
 import DartsGame from '../components/DartsGame.vue'
 import TabaGame from '../components/TabaGame.vue'
 import ArmGame from '../components/ArmGame.vue'
@@ -114,9 +114,6 @@ const nextDay = computed(() => {
 function deliver(i) { if (G.deliverOrder(i)) { play('quest'); G.toast('scroll-unfurled', 'tavern.delivered', {}, 'success') } }
 
 /* ---------------- Bar ---------------- */
-const bet = ref(100)
-const lastRoll = ref(null)
-const rolling = ref(false)
 const drink = computed(() => (t.value.drink ? DRINKS.find(d => d.id === t.value.drink.id) : null))
 // The bar: patrons waiting to be served, and the hero's own brews
 const patrons = computed(() => (now.value, G.ensurePatrons()))
@@ -133,19 +130,6 @@ function serve(p) {
 function serveAll() { const r = G.serveAll(); if (r.n) { play('coin'); G.toast('beer-horn', 'tavern.servedAll', { n: r.n, gold: fmt(r.gold) }, 'success') } }
 function drinkOwn(d) { if (G.drinkOwn(d.id)) { play('coin'); G.toast(d.icon, 'tavern.drank', { drink: '@drink:' + d.id }, 'success') } }
 function buyDrink(d) { if (G.buyDrink(d.id)) { play('coin'); G.toast(d.icon, 'tavern.drank', { drink: '@drink:' + d.id }, 'success') } }
-function roll() {
-  if (rolling.value) return
-  rolling.value = true
-  play('dice')
-  setTimeout(() => {
-    const r = G.rollDice(bet.value)
-    rolling.value = false
-    if (!r) return G.toast('perspective-dice-six-faces-random', 'tavern.badBet', {}, 'warn')
-    lastRoll.value = r
-    play(r.delta > 0 ? (r.kind === 'jackpot' ? 'rare' : 'coin') : r.delta < 0 ? 'bad' : 'dice')
-  }, 550)
-}
-const FACES = ['', 'dice-six-faces-one', 'dice-six-faces-two', 'dice-six-faces-three', 'dice-six-faces-four', 'dice-six-faces-five', 'dice-six-faces-six']
 function mystery() {
   const got = G.openMystery()
   if (!got) return
@@ -417,32 +401,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
           </div>
           <div class="game-stage" role="tabpanel">
             <CardsGame v-if="table === 'cards'" />
-            <div v-else-if="table === 'dice'" class="panel pad">
-              <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
-              <div class="dice-table">
-                <div class="dice-side">
-                  <div class="small muted">{{ $t('tavern.you') }}</div>
-                  <div class="dice" :class="{ rolling }">
-                    <GameIcon v-for="(v, i) in lastRoll?.p || [6, 6]" :key="i" :name="FACES[v]" :size="44" />
-                  </div>
-                </div>
-                <div class="vs">{{ $t('tavern.vs') }}</div>
-                <div class="dice-side">
-                  <div class="small muted">{{ G.journalNames().keeper }}</div>
-                  <div class="dice" :class="{ rolling }">
-                    <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
-                  </div>
-                </div>
-              </div>
-              <div v-if="lastRoll && !rolling" class="roll-result" :class="lastRoll.delta > 0 ? 'ok-text' : lastRoll.delta < 0 ? 'bad-text' : 'muted'">
-                {{ $t('tavern.roll.' + lastRoll.kind) }} <b v-if="lastRoll.delta">{{ $t('inventory.goldAmount', { n: (lastRoll.delta > 0 ? '+' : '') + fmt(lastRoll.delta) }) }}</b>
-              </div>
-              <div class="row" style="margin-top:12px">
-                <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="dice-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" />
-                <Button :label="$t('tavern.rollDice')" icon="pi pi-sync" :loading="rolling" @click="roll" />
-              </div>
-              <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
-            </div>
+            <DiceGame v-else-if="table === 'dice'" />
             <DartsGame v-else-if="table === 'darts'" />
             <TabaGame v-else-if="table === 'taba'" />
             <ArmGame v-else-if="table === 'arm'" />
@@ -475,13 +434,10 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 .table-btn.on { border-color: var(--gold); color: var(--ink); box-shadow: 0 0 18px -10px var(--gold); }
 .table-btn.on .gi { color: var(--gold); }
 .table-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-.game-stage { max-width: 680px; }
-.dice-table { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 14px; border-radius: 14px; background: var(--well); }
-.dice-side { text-align: center; }
-.dice { display: flex; justify-content: center; gap: 8px; color: var(--ink); margin-top: 6px; }
-.dice.rolling { animation: shakeDice 0.18s infinite; }
-@keyframes shakeDice { 25% { transform: rotate(-8deg) translateY(-2px); } 75% { transform: rotate(8deg) translateY(2px); } }
-.vs { font-family: var(--font-display); color: var(--gold); }
-.roll-result { text-align: center; margin-top: 10px; font-size: 15px; }
+/* Phones: the tables become a strip that scrolls sideways */
+@media (max-width: 600px) {
+  .tables { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 104px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .tables::-webkit-scrollbar { display: none; }
+}
 @media (max-width: 900px) { .up-card { width: 100%; order: 4; } }
 </style>

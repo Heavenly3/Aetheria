@@ -321,6 +321,7 @@ export const systems = {
     if (delta > 0) this.s.stats.goldEarned += delta
     const dc = this.s.tavern.dice
     dc.played++; if (delta > 0) dc.won++; dc.net += delta
+    dc.recent = [delta, ...(dc.recent || [])].slice(0, 10)
     this.rollPet(src => src.dice)
     return { p, h, delta, kind }
   },

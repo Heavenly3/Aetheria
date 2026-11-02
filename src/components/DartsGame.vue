@@ -1,13 +1,12 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Button from 'primevue/button'
-import InputNumber from 'primevue/inputnumber'
 import { G, state } from '../game/engine.js'
-import { DART_RINGS, DART_THROWS } from '../game/data/tavern.js'
+import { DART_RINGS, DART_THROWS, DART_PAYS } from '../game/data/tavern.js'
 import { fmt } from '../game/format.js'
 import { play } from '../game/sound.js'
-import GameIcon from './GameIcon.vue'
-import HelpTip from './HelpTip.vue'
+import GameTable from './GameTable.vue'
+import BetInput from './BetInput.vue'
 
 // Darts: the aim sways over the board and the dart flies to where it is when thrown.
 // A steadier hand (Ranged) sways less and slower
@@ -93,60 +92,67 @@ function onKey(e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault()
 </script>
 
 <template>
-  <div class="panel pad">
-    <h3 class="panel-title"><GameIcon name="archery-target" /> {{ $t('tavern.darts.title') }} <HelpTip k="sections.darts" /></h3>
+  <GameTable icon="archery-target" :title="$t('tavern.darts.title')" help="sections.darts" :stats="game"
+    :extra="[{ label: $t('tavern.figures.best'), value: game.best || 0 }, { label: $t('tavern.figures.steady'), value: Math.round(steady * 100) + '%' }]">
+    <svg class="board" :class="{ shake }" viewBox="-1.2 -1.2 2.4 2.4" role="img" :aria-label="$t('tavern.darts.board')"
+      :tabindex="playing ? 0 : -1" @click="shoot" @keydown="onKey">
+      <circle r="1.17" class="rim" />
+      <circle r="1.03" class="rim-in" />
+      <path v-for="s in sectors" :key="s.key" :d="s.d" :fill="s.fill" />
+      <circle :r="DART_RINGS[1].r" fill="#356b3d" />
+      <circle :r="DART_RINGS[0].r" fill="#a8322a" />
+      <line v-for="(w, i) in wires" :key="'w' + i" :x1="w.x * DART_RINGS[1].r" :y1="w.y * DART_RINGS[1].r" :x2="w.x" :y2="w.y" class="wire" />
+      <circle v-for="ring in DART_RINGS" :key="'c' + ring.r" :r="ring.r" class="wire ring" />
 
-    <div class="board-wrap">
-      <svg class="board" :class="{ shake }" viewBox="-1.2 -1.2 2.4 2.4" role="img" :aria-label="$t('tavern.darts.board')"
-        :tabindex="playing ? 0 : -1" @click="shoot" @keydown="onKey">
-        <circle r="1.17" class="rim" />
-        <circle r="1.03" class="rim-in" />
-        <path v-for="s in sectors" :key="s.key" :d="s.d" :fill="s.fill" />
-        <circle :r="DART_RINGS[1].r" fill="#356b3d" />
-        <circle :r="DART_RINGS[0].r" fill="#a8322a" />
-        <line v-for="(w, i) in wires" :key="'w' + i" :x1="w.x * DART_RINGS[1].r" :y1="w.y * DART_RINGS[1].r" :x2="w.x" :y2="w.y" class="wire" />
-        <circle v-for="ring in DART_RINGS" :key="'c' + ring.r" :r="ring.r" class="wire ring" />
+      <!-- Darts already thrown, and their points floating up -->
+      <g v-for="m in marks" :key="m.id" :transform="`translate(${m.x},${m.y})`">
+        <g class="stuck"><line x1="0" y1="0" x2="0.07" y2="0.16" class="shaft" /><path d="M0.05,0.12 L0.12,0.13 L0.09,0.2 Z" class="fletch" /><circle r="0.022" class="tip" /></g>
+        <text y="-0.08" class="pts" :class="{ big: m.pts >= 25 }">+{{ m.pts }}</text>
+      </g>
+      <!-- The dart in the air -->
+      <g v-if="flight" :transform="`translate(${flight.x},${flight.y}) scale(${flight.s})`">
+        <line x1="0" y1="0" x2="0.07" y2="0.16" class="shaft" /><path d="M0.05,0.12 L0.12,0.13 L0.09,0.2 Z" class="fletch" />
+      </g>
+      <!-- The aim -->
+      <g v-if="playing && !flying" :transform="`translate(${aim.x},${aim.y})`" class="aim">
+        <circle r="0.09" /><path d="M-0.15,0 H-0.05 M0.05,0 H0.15 M0,-0.15 V-0.05 M0,0.05 V0.15" />
+      </g>
+    </svg>
 
-        <!-- Darts already thrown, and their points floating up -->
-        <g v-for="m in marks" :key="m.id" :transform="`translate(${m.x},${m.y})`">
-          <g class="stuck"><line x1="0" y1="0" x2="0.07" y2="0.16" class="shaft" /><path d="M0.05,0.12 L0.12,0.13 L0.09,0.2 Z" class="fletch" /><circle r="0.022" class="tip" /></g>
-          <text y="-0.08" class="pts" :class="{ big: m.pts >= 25 }">+{{ m.pts }}</text>
-        </g>
-        <!-- The dart in the air -->
-        <g v-if="flight" :transform="`translate(${flight.x},${flight.y}) scale(${flight.s})`">
-          <line x1="0" y1="0" x2="0.07" y2="0.16" class="shaft" /><path d="M0.05,0.12 L0.12,0.13 L0.09,0.2 Z" class="fletch" />
-        </g>
-        <!-- The aim -->
-        <g v-if="playing && !flying" :transform="`translate(${aim.x},${aim.y})`" class="aim">
-          <circle r="0.09" /><path d="M-0.15,0 H-0.05 M0.05,0 H0.15 M0,-0.15 V-0.05 M0,0.05 V0.15" />
-        </g>
-      </svg>
-      <div class="scores">
-        <span v-for="i in DART_THROWS" :key="i + '-' + (round?.throws[i - 1] ?? 'x')" class="score" :class="{ done: round?.throws[i - 1] !== undefined }">{{ round?.throws[i - 1] ?? '·' }}</span>
-        <b v-if="round" :key="'t' + round.throws.length" class="tnum total">{{ round.throws.reduce((s, v) => s + v, 0) }}</b>
+    <!-- The three darts of the round and their total -->
+    <div class="scores">
+      <span v-for="i in DART_THROWS" :key="i + '-' + (round?.throws[i - 1] ?? 'x')" class="score" :class="{ done: round?.throws[i - 1] !== undefined }">
+        <small>{{ $t('tavern.darts.dart', { n: i }) }}</small><b class="tnum">{{ round?.throws[i - 1] ?? '—' }}</b>
+      </span>
+      <span class="score sum"><small>{{ $t('tavern.darts.total') }}</small><b :key="'t' + (round?.throws.length || 0)" class="tnum">{{ round ? round.throws.reduce((s, v) => s + v, 0) : '—' }}</b></span>
+    </div>
+    <div v-if="round?.result" :key="'r' + round.result.total + marks.length" class="banner-result pop" :class="round.result.net > 0 ? 'win' : round.result.net < 0 ? 'loss' : 'even'" role="status">
+      <b>{{ $t('tavern.darts.result', { n: round.result.total }) }}</b>
+      <span class="tnum">{{ round.result.net ? $t('inventory.goldAmount', { n: (round.result.net > 0 ? '+' : '') + fmt(round.result.net) }) : $t('tavern.cards.betBack') }}</span>
+    </div>
+
+    <template #controls>
+      <template v-if="playing">
+        <div class="small muted">{{ $t('tavern.darts.left', { n: DART_THROWS - round.throws.length }) }}</div>
+        <Button :label="$t('tavern.darts.throw')" icon="pi pi-send" fluid :disabled="!!flying" @click="shoot" />
+        <div class="small faint">{{ $t('tavern.darts.keys') }}</div>
+      </template>
+      <template v-else>
+        <BetInput v-model="bet" id="darts-bet" />
+        <Button :label="round ? $t('tavern.darts.again') : $t('tavern.darts.start')" icon="pi pi-bullseye" fluid @click="start" />
+      </template>
+    </template>
+    <template #side>
+      <div class="pays">
+        <span class="small muted">{{ $t('tavern.darts.pays') }}</span>
+        <div v-for="p in DART_PAYS" :key="p.min" class="pay small"><span>{{ $t('tavern.darts.payLine', { n: p.min }) }}</span><b>×{{ p.mult }}</b></div>
       </div>
-    </div>
-
-    <div v-if="round?.result" :key="'r' + round.result.total + marks.length" class="result" :class="round.result.net > 0 ? 'ok-text' : round.result.net < 0 ? 'bad-text' : 'muted'" role="status">
-      {{ $t('tavern.darts.result', { n: round.result.total }) }}
-      <b v-if="round.result.net">{{ $t('inventory.goldAmount', { n: (round.result.net > 0 ? '+' : '') + fmt(round.result.net) }) }}</b>
-    </div>
-
-    <div v-if="playing" class="row" style="margin-top:12px">
-      <span class="small muted grow">{{ $t('tavern.darts.left', { n: DART_THROWS - round.throws.length }) }}</span>
-      <Button :label="$t('tavern.darts.throw')" icon="pi pi-send" :disabled="!!flying" @click="shoot" />
-    </div>
-    <div v-else class="row" style="margin-top:12px">
-      <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="darts-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" :aria-label="$t('tavern.darts.betLabel')" />
-      <Button :label="round ? $t('tavern.darts.again') : $t('tavern.darts.start')" icon="pi pi-bullseye" @click="start" />
-    </div>
-    <div class="small faint" style="margin-top:8px">{{ $t('tavern.darts.stats', { s: Math.round(steady * 100), best: game.best, n: game.played, net: (game.net >= 0 ? '+' : '') + fmt(game.net) }) }}</div>
-  </div>
+    </template>
+  </GameTable>
 </template>
 
 <style scoped>
-.board-wrap { display: flex; align-items: center; gap: 16px; padding: 14px; border-radius: 14px; background: var(--well); }
-.board { width: min(240px, 62%); aspect-ratio: 1; cursor: crosshair; flex-shrink: 0; overflow: visible; }
+.board { width: min(340px, 100%); aspect-ratio: 1; margin: 0 auto; cursor: crosshair; overflow: visible; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5)); }
 .board:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 50%; }
 .rim { fill: #4a2f1c; stroke: #2a1a10; stroke-width: 0.02; }
 .rim-in { fill: #1f1a15; }
@@ -161,16 +167,30 @@ function onKey(e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault()
 .aim circle { fill: none; stroke: #fff6dc; stroke-width: 0.02; }
 .aim path { stroke: #fff6dc; stroke-width: 0.02; }
 .board.shake { animation: shake 0.35s ease-out; }
-.scores { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
-.score { min-width: 44px; padding: 4px 10px; border-radius: 8px; background: var(--tint-1); border: 1px solid var(--line); text-align: center; font-weight: 800; color: var(--faint); }
-.score.done { color: var(--ink); border-color: var(--line-hi); animation: bump 0.3s ease-out; }
-.total { font-size: 22px; color: var(--gold-hi); animation: bump 0.3s ease-out; }
-.result { margin-top: 12px; font-weight: 700; animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.3); }
+.scores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.score { display: grid; justify-items: center; gap: 2px; padding: 8px 6px; border-radius: 10px; background: var(--panel-solid); border: 1px solid var(--line); }
+.score small { color: var(--muted); font-size: 11.5px; }
+.score b { font-size: 20px; color: var(--faint); }
+.score.done { border-color: var(--line-hi); }
+.score.done b { color: var(--ink); animation: bump 0.3s ease-out; }
+.score.sum { border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); }
+.score.sum b { color: var(--gold-hi); animation: bump 0.3s ease-out; }
+.banner-result { justify-self: center; display: grid; justify-items: center; gap: 2px; padding: 10px 22px; border-radius: 12px; background: var(--panel-solid); border: 1px solid var(--line-hi); }
+.banner-result b { font-family: var(--font-display); font-size: 19px; }
+.banner-result.win { border-color: color-mix(in srgb, var(--ok) 55%, transparent); color: var(--tag-ok); }
+.banner-result.loss { border-color: color-mix(in srgb, var(--danger) 55%, transparent); color: var(--tag-bad); }
+.banner-result.even { color: var(--muted); }
+:root[data-theme="light"] .banner-result.win { color: var(--ok); }
+:root[data-theme="light"] .banner-result.loss { color: var(--danger); }
+.pays { display: grid; gap: 4px; }
+.pay { display: flex; justify-content: space-between; padding: 4px 10px; border-radius: 8px; background: var(--panel-solid); border: 1px solid var(--line); }
+.pay b { color: var(--gold-hi); }
+.pop { animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.3); }
 @keyframes rise { 0% { opacity: 0; transform: translateY(0.04px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-0.25px); } }
 @keyframes thunk { 0% { transform: scale(1.5); } 60% { transform: scale(0.92); } 100% { transform: scale(1); } }
 @keyframes pulse { 50% { opacity: 0.6; } }
 @keyframes shake { 20% { transform: translate(2px, -1px); } 40% { transform: translate(-2px, 1px); } 60% { transform: translate(1px, 1px); } 80% { transform: translate(-1px, 0); } }
 @keyframes bump { 40% { transform: scale(1.2); } }
 @keyframes pop { 0% { opacity: 0; transform: translateY(6px) scale(0.92); } 100% { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .pts, .stuck, .aim, .board.shake, .score.done, .total, .result { animation: none; } .pts { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pts, .stuck, .aim, .board.shake, .score b, .pop { animation: none; } .pts { opacity: 1; } }
 </style>

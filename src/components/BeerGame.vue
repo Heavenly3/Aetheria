@@ -1,13 +1,14 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Button from 'primevue/button'
-import InputNumber from 'primevue/inputnumber'
 import { G, state } from '../game/engine.js'
 import { BEER_ROUNDS } from '../game/data/tavern.js'
 import { fmt } from '../game/format.js'
 import { play } from '../game/sound.js'
 import GameIcon from './GameIcon.vue'
-import HelpTip from './HelpTip.vue'
+import ItemTile from './ItemTile.vue'
+import GameTable from './GameTable.vue'
+import BetInput from './BetInput.vue'
 
 // The drinking contest: drink while the tankard is steady, round after round, until the rival staggers
 const bet = ref(Math.min(100, Math.max(10, G.maxBet())))
@@ -31,6 +32,8 @@ function frame(now) {
 onMounted(() => { last = performance.now(); raf = requestAnimationFrame(frame) })
 onUnmounted(() => cancelAnimationFrame(raf))
 const steady = computed(() => Math.abs(sway.value) <= zone.value)
+// How many the rival has downed: as many as the hero, except when the hero spilled
+const rivalDrank = computed(() => n.value)
 
 function start() {
   G.tableClear('beer')
@@ -48,53 +51,72 @@ function onKey(e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault()
 </script>
 
 <template>
-  <div class="panel pad">
-    <h3 class="panel-title"><GameIcon name="beer-horn" /> {{ $t('tavern.beer.title') }} <HelpTip k="sections.beer" /></h3>
-    <div class="table" :tabindex="playing ? 0 : -1" :aria-label="$t('tavern.beer.area')" @keydown="onKey" @click="drink">
-      <div class="gauge">
-        <span class="steady" :style="{ left: (50 - zone * 50) + '%', width: zone * 100 + '%' }" />
-        <span class="needle" :class="{ ok: steady }" :style="{ left: (50 + sway * 50) + '%' }" />
+  <GameTable icon="beer-horn" :title="$t('tavern.beer.title')" help="sections.beer" :stats="game" :extra="[{ label: $t('tavern.figures.best'), value: game.best || 0 }]">
+    <div class="contest">
+      <div class="drinker">
+        <ItemTile :icon="state.avatar" :tint="state.tint || '#6a3fbf'" size="md" :tip="false" />
+        <b>{{ state.name }}</b>
+        <div class="tally" :aria-label="$t('tavern.beer.drunk', { n })">
+          <GameIcon v-for="i in n" :key="i" name="beer-horn" :size="16" class="drunk" />
+        </div>
       </div>
-      <div class="mug-wrap">
-        <span :key="gulp" class="mug" :class="{ gulp: gulp && !still() }" :style="{ transform: `rotate(${sway * 28}deg)` }"><GameIcon name="beer-horn" :size="64" /></span>
+      <div class="stage" :tabindex="playing ? 0 : -1" :aria-label="$t('tavern.beer.area')" @keydown="onKey" @click="drink">
+        <div class="gauge">
+          <span class="steady" :style="{ left: (50 - zone * 50) + '%', width: zone * 100 + '%' }" />
+          <span class="needle" :class="{ ok: steady }" :style="{ left: (50 + sway * 50) + '%' }" />
+        </div>
+        <span :key="gulp" class="mug" :class="{ gulp: gulp && !still() }" :style="{ transform: `rotate(${sway * 28}deg)` }"><GameIcon name="beer-horn" :size="110" /></span>
+        <span class="small muted tnum">{{ playing ? $t('tavern.beer.round', { n: n + 1, max: BEER_ROUNDS }) : $t('tavern.beer.none', { max: BEER_ROUNDS }) }}</span>
       </div>
-      <div class="tally" :aria-label="$t('tavern.beer.drunk', { n })">
-        <GameIcon v-for="i in n" :key="i" name="beer-horn" :size="16" class="drunk" />
-        <span v-if="!n" class="faint small">{{ $t('tavern.beer.none', { max: BEER_ROUNDS }) }}</span>
+      <div class="drinker">
+        <ItemTile icon="viking-head" tint="#7a2a32" size="md" :tip="false" />
+        <b>{{ $t('tavern.beer.rival') }}</b>
+        <div class="tally"><GameIcon v-for="i in rivalDrank" :key="i" name="beer-horn" :size="16" class="drunk" /></div>
       </div>
     </div>
 
-    <div v-if="round?.result" class="result" :class="round.result.net > 0 ? 'ok-text' : round.result.net < 0 ? 'bad-text' : 'muted'" role="status">
-      {{ $t(`tavern.beer.results.${round.result.kind}`, { keeper: G.journalNames().keeper, n }) }}
-      <b>{{ round.result.net ? $t('inventory.goldAmount', { n: (round.result.net > 0 ? '+' : '') + fmt(round.result.net) }) : $t('tavern.cards.betBack') }}</b>
+    <div v-if="round?.result" :key="'r' + game.played" class="banner-result pop" :class="round.result.net > 0 ? 'win' : round.result.net < 0 ? 'loss' : 'even'" role="status">
+      <b>{{ $t(`tavern.beer.results.${round.result.kind}`, { keeper: G.journalNames().keeper, n }) }}</b>
+      <span class="tnum">{{ round.result.net ? $t('inventory.goldAmount', { n: (round.result.net > 0 ? '+' : '') + fmt(round.result.net) }) : $t('tavern.cards.betBack') }}</span>
     </div>
 
-    <div v-if="playing" class="row" style="margin-top:12px">
-      <span class="small muted grow">{{ $t('tavern.beer.round', { n: n + 1, max: BEER_ROUNDS }) }}</span>
-      <Button :label="$t('tavern.beer.drink')" icon="pi pi-check" @click="drink" />
-    </div>
-    <div v-else class="row" style="margin-top:12px">
-      <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="beer-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" :aria-label="$t('tavern.betLabel')" />
-      <Button :label="$t('tavern.beer.start')" icon="pi pi-flag" @click="start" />
-    </div>
-    <div class="small faint" style="margin-top:8px">{{ $t('tavern.tableStats', { n: game.played, net: (game.net >= 0 ? '+' : '') + fmt(game.net) }) }} · {{ $t('tavern.beer.best', { n: game.best || 0 }) }}</div>
-  </div>
+    <template #controls>
+      <template v-if="playing">
+        <Button :label="$t('tavern.beer.drink')" icon="pi pi-check" fluid size="large" :class="{ steady }" @click="drink" />
+        <div class="small faint">{{ $t('tavern.beer.hint') }}</div>
+      </template>
+      <template v-else>
+        <BetInput v-model="bet" id="beer-bet" />
+        <Button :label="$t('tavern.beer.start')" icon="pi pi-flag" fluid @click="start" />
+      </template>
+    </template>
+  </GameTable>
 </template>
 
 <style scoped>
-.table { display: grid; gap: 12px; padding: 16px; border-radius: 14px; background: var(--well); cursor: pointer; }
-.table:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-.gauge { position: relative; height: 14px; border-radius: 8px; background: color-mix(in srgb, var(--danger) 30%, var(--panel-solid)); }
-.steady { position: absolute; top: 0; bottom: 0; border-radius: 8px; background: color-mix(in srgb, var(--ok) 65%, var(--panel-solid)); transition: left 0.3s, width 0.3s; }
-.needle { position: absolute; top: -4px; width: 4px; height: 22px; margin-left: -2px; border-radius: 2px; background: var(--ink); }
-.needle.ok { background: var(--gold-hi); box-shadow: 0 0 8px var(--gold); }
-.mug-wrap { display: grid; place-items: center; height: 84px; }
-.mug { color: #e8b84a; transform-origin: 50% 90%; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4)); }
-.mug.gulp :deep(svg) { animation: gulp 0.35s ease-out; }
-.tally { display: flex; flex-wrap: wrap; gap: 3px; min-height: 18px; justify-content: center; }
+.contest { display: grid; grid-template-columns: 120px minmax(0, 1fr) 120px; align-items: center; gap: 14px; }
+.drinker { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.drinker b { font-size: 13.5px; }
+.tally { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; min-height: 18px; max-width: 110px; }
 .drunk { color: #e8b84a; animation: pop 0.3s ease-out; }
-.result { margin-top: 12px; font-weight: 700; display: flex; flex-wrap: wrap; gap: 6px; animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.3); }
-@keyframes gulp { 40% { transform: translateY(-10px) scale(1.1); } }
+.stage { display: grid; justify-items: center; gap: 14px; cursor: pointer; border-radius: 12px; padding: 4px; }
+.stage:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.gauge { position: relative; width: 100%; height: 16px; border-radius: 9px; background: color-mix(in srgb, var(--danger) 35%, var(--panel-solid)); }
+.steady { position: absolute; top: 0; bottom: 0; border-radius: 9px; background: color-mix(in srgb, var(--ok) 70%, var(--panel-solid)); transition: left 0.3s, width 0.3s; }
+.needle { position: absolute; top: -5px; width: 5px; height: 26px; margin-left: -2.5px; border-radius: 3px; background: var(--ink); }
+.needle.ok { background: var(--gold-hi); box-shadow: 0 0 10px var(--gold); }
+.mug { color: #e8b84a; transform-origin: 50% 90%; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45)); }
+.mug.gulp :deep(svg) { animation: gulp 0.35s ease-out; }
+.banner-result { justify-self: center; display: grid; justify-items: center; gap: 2px; padding: 10px 22px; border-radius: 12px; background: var(--panel-solid); border: 1px solid var(--line-hi); }
+.banner-result b { font-family: var(--font-display); font-size: 19px; }
+.banner-result.win { border-color: color-mix(in srgb, var(--ok) 55%, transparent); color: var(--tag-ok); }
+.banner-result.loss { border-color: color-mix(in srgb, var(--danger) 55%, transparent); color: var(--tag-bad); }
+.banner-result.even { color: var(--muted); }
+:root[data-theme="light"] .banner-result.win { color: var(--ok); }
+:root[data-theme="light"] .banner-result.loss { color: var(--danger); }
+.pop { animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.3); }
+@keyframes gulp { 40% { transform: translateY(-12px) scale(1.1); } }
 @keyframes pop { 0% { opacity: 0; transform: translateY(6px) scale(0.92); } 100% { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .drunk, .result { animation: none; } .steady { transition: none; } }
+@media (max-width: 600px) { .contest { grid-template-columns: 1fr 1fr; } .stage { grid-column: 1 / -1; grid-row: 1; } .mug :deep(svg) { width: 80px; height: 80px; } }
+@media (prefers-reduced-motion: reduce) { .drunk, .pop { animation: none; } .steady { transition: none; } }
 </style>

@@ -7,7 +7,7 @@
    ========================================================= */
 import {
   CARD_RANKS, CARD_SUITS, BLACKJACK, KEEPER_STANDS, NATURAL_PAYS, DART_RINGS, DART_THROWS, DART_PAYS, TABA_FACES, ARM_RIVALS,
-  BEER_ROUNDS, beerRivalFails, MORRIS_LINES, MORRIS_LINKS, MORRIS_MAX_MOVES, MORRIS_PAYS, RUNE_SWAPS, RUNE_PAYS,
+  RECENT_KEPT, BEER_ROUNDS, beerRivalFails, MORRIS_LINES, MORRIS_LINKS, MORRIS_MAX_MOVES, MORRIS_PAYS, RUNE_SWAPS, RUNE_PAYS,
 } from './data/tavern.js'
 
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a }
@@ -78,6 +78,7 @@ export const tavernGames = {
     if (net > 0) this.s.stats.goldEarned += net
     game.net += net
     game.played++
+    game.recent = [net, ...(game.recent || [])].slice(0, RECENT_KEPT)
     if (net > 0) game.won = (game.won || 0) + 1
     this.rollPet(src => src.dice)
     return net
@@ -187,9 +188,18 @@ export const tavernGames = {
   },
 
   /* ---------- arm wrestling ---------- */
-  armStart(bet, rival) { return ARM_RIVALS.some(r => r.id === rival) ? this.tableStart('arm', bet, { rival }) : null },
+  // The highest rung of the ladder open to the hero: the one after the strongest rival beaten
+  armTop() {
+    const t = this.table('arm')
+    const beaten = ARM_RIVALS.reduce((top, r, i) => (t.beaten?.[r.id] ? i + 1 : top), 0)
+    return Math.min(ARM_RIVALS.length - 1, beaten)
+  },
+  armStart(bet, rival) {
+    const i = ARM_RIVALS.findIndex(r => r.id === rival)
+    return i >= 0 && i <= this.armTop() ? this.tableStart('arm', bet, { rival }) : null
+  },
   // How far each press moves the arms towards the hero's side: more with Strength
-  armPush() { return 0.06 + 0.06 * Math.min(1, this.level('strength') / 99) },
+  armPush() { return 0.04 + 0.04 * Math.min(1, this.level('strength') / 99) },
   armEnd(won) {
     if (!this.tableOpen('arm')) return null
     const t = this.table('arm'), r = t.round, rival = ARM_RIVALS.find(x => x.id === r.rival)
