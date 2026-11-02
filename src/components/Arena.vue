@@ -3,7 +3,8 @@ import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
 import { DUNGEONS } from '../game/data/combat.js'
-import { MERC_ROLES } from '../game/data/company.js'
+import { mercIcon, mercTint } from '../game/data/company.js'
+import { mercName, mercNameOf } from '../ui/company.js'
 import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES, MECHS, BREAK_SHARE, CREATURE_BUFFS, FLEE_TIME } from '../game/data/fighting.js'
 import { abilityText } from '../ui/abilities.js'
 import { pct, fmt, fmtDec } from '../game/format.js'
@@ -70,9 +71,9 @@ const NOTE_PARAMS = {
   stole: n => ({ gold: fmt(n.gold) }),
   fled: n => ({ gold: fmt(n.gold) }),
   recovered: n => ({ gold: fmt(n.gold) }),
-  mercInterrupt: n => ({ name: n.name }),
-  mercCleanse: n => ({ name: n.name, status: t(`fighting.statuses.${n.status}.name`).toLowerCase() }),
-  mercLevel: n => ({ name: n.name, n: n.lvl }),
+  mercInterrupt: n => ({ name: mercNameOf(n.who) }),
+  mercCleanse: n => ({ name: mercNameOf(n.who), status: t(`fighting.statuses.${n.status}.name`).toLowerCase() }),
+  mercLevel: n => ({ name: mercNameOf(n.who), n: n.lvl }),
 }
 const noteText = n => t(`fighting.notes.${n.kind}`, NOTE_PARAMS[n.kind]?.(n) || {})
 const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))
@@ -148,9 +149,9 @@ onUnmounted(() => { off && off(); offAb && offAb(); offPhase && offPhase(); offK
       </div>
       <!-- The company at the hero's side -->
       <div v-if="party.length" class="party">
-        <span v-for="p in party" :key="p.id" class="party-member" v-tooltip.top="() => tip(p.name, $t(`company.roles.${p.role}.desc`), [{ text: $t('company.level', { n: p.lvl }), kind: 'muted' }])">
-          <ItemTile :icon="MERC_ROLES[p.role].icon" :tint="MERC_ROLES[p.role].tint" size="sm" :tip="false" />
-          <span class="small">{{ p.name }}</span>
+        <span v-for="p in party" :key="p.id" class="party-member" v-tooltip.top="() => tip(mercName(p), $t(`company.roles.${p.role}.desc`), [{ text: $t('company.level', { n: p.lvl }), kind: 'muted' }])">
+          <ItemTile :icon="mercIcon(p)" :tint="mercTint(p)" size="sm" :tip="false" />
+          <span class="small">{{ mercName(p) }}</span>
         </span>
       </div>
       <div v-for="s in splats.filter(x => x.target === 'player')" :key="s.id" class="splat" :class="{ miss: s.miss, soft: s.soft, fx: s.fx, cast: s.cast }" :style="s.color ? { background: s.color } : null">{{ s.text }}</div>

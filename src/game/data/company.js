@@ -29,3 +29,21 @@ export const wageOf = lvl => 20 + lvl * 8
 export const mercXpNeed = lvl => 40 * lvl
 // How much of their trade's power they bring: grows with their level, up to the hero's own
 export const mercPower = (lvl, heroLevel) => 0.4 + 0.6 * Math.min(1, lvl / Math.max(1, heroLevel))
+
+/*
+  Companions met along the way: each joins for free once their moment comes (a page of the story,
+  or the guild's trust), is better at their trade (boost) and brings a gift of their own even away
+  from the fights (perk: modifiers, while they are in the company)
+*/
+export const UNIQUE_MERCS = {
+  maelis: { role: 'mage', icon: 'warlock-hood', tint: '#4a6a3a', unlock: { chapter: 'living_mire' }, boost: { dmg: 0.4, breaker: 3 }, perk: { 'xp.herblore': 0.05 } },
+  hollis: { role: 'squire', icon: 'visored-helm', tint: '#5a6a7a', unlock: { chapter: 'empty_tomb' }, boost: { draw: 3, guard: 0.45 }, perk: { 'speed.smithing': 0.05 } },
+  seren: { role: 'archer', icon: 'woman-elf-face', tint: '#3a6a7a', unlock: { chapter: 'northern_watch' }, boost: { interrupt: 0.75 }, perk: { 'speed.woodcutting': 0.05 } },
+  ardan: { role: 'cleric', icon: 'monk-face', tint: '#8a6a2a', unlock: { chapter: 'beyond_the_gate' }, boost: { heal: 0.03, cleanse: 5 }, perk: { 'xp.prayer': 0.1 } },
+  vela: { role: 'archer', icon: 'hooded-assassin', tint: '#5a3a6a', unlock: { affairs: 10 }, boost: { dmg: 0.45, interrupt: 0.6 }, perk: { thieving: 0.05 } },
+}
+export const UNIQUE_IDS = Object.keys(UNIQUE_MERCS)
+// What a companion brings to a fight: their trade, sharpened if they are one of the companions met along the way
+export const mercTrade = m => ({ ...MERC_ROLES[m.role], ...(UNIQUE_MERCS[m.unique]?.boost || {}) })
+export const mercIcon = m => UNIQUE_MERCS[m.unique]?.icon || MERC_ROLES[m.role].icon
+export const mercTint = m => UNIQUE_MERCS[m.unique]?.tint || MERC_ROLES[m.role].tint

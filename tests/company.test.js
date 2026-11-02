@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { G, state, newHero, setLevel } from './helpers.js'
-import { MERC_ROLES, PARTY_SLOTS, HURT_TIME, wageOf, mercXpNeed } from '../src/game/data/company.js'
+import { MERC_ROLES, PARTY_SLOTS, HURT_TIME, UNIQUE_MERCS, wageOf, mercXpNeed, mercTrade } from '../src/game/data/company.js'
+import { CHAPTER_MAP } from '../src/game/data/journal.js'
 import { MECHS } from '../src/game/data/fighting.js'
 import { te } from '../src/i18n/index.js'
 import { SKILLS } from '../src/game/data/skills.js'
@@ -94,5 +95,36 @@ describe('the company', () => {
     G.ascend()
     expect(G.companyMember('mage')?.role).toBe('mage')
     expect(state.company.party).toEqual(['mage'])
+  })
+
+  it('meets companions along the story and the guild, who join for free and bring a gift', () => {
+    hero()
+    for (const [id, u] of Object.entries(UNIQUE_MERCS)) {
+      if (u.unlock.chapter) expect(CHAPTER_MAP[u.unlock.chapter], id).toBeTruthy()
+      for (const k of ['name', 'title', 'bio', 'hint']) expect(te(`company.uniques.${id}.${k}`), id).toBe(true)
+    }
+    expect(G.uniquesWaiting()).toEqual([])
+    expect(G.recruitUnique('maelis')).toBe(null)
+    state.journal.chapters.living_mire = Date.now()
+    expect(G.uniquesWaiting()).toEqual(['maelis'])
+    const gold = state.gold, xp = G.mod('xp.herblore')
+    const m = G.recruitUnique('maelis')
+    expect(state.gold).toBe(gold)
+    expect(mercTrade(m).breaker).toBe(UNIQUE_MERCS.maelis.boost.breaker)
+    expect(G.mod('xp.herblore')).toBeCloseTo(xp + 0.05)
+    // A hired mage can still join alongside her
+    expect(G.hireMerc('mage')).toBeTruthy()
+    state.stats.affairs = 10
+    expect(G.uniquesWaiting()).toEqual(['vela'])
+  })
+
+  it('takes a third companion along with the War Banner', () => {
+    hero()
+    G.hireMerc('squire'); G.hireMerc('archer'); G.hireMerc('mage')
+    expect(G.partySlots()).toBe(PARTY_SLOTS)
+    expect(G.toggleParty('mage')).toBe(false)
+    state.ascension.upgrades.war_banner = 1
+    expect(G.partySlots()).toBe(PARTY_SLOTS + 1)
+    expect(G.toggleParty('mage')).toBe(true)
   })
 })

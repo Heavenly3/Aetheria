@@ -210,7 +210,7 @@ export default {
     farmYield: '+{v} harvest per plot', offline: '+{v} h of offline progress', maxHp: '+{v} max HP', blessing: 'Blessings last {v}% longer',
     speedSkill: '+{v}% {skill} speed', xpSkill: '+{v}% {skill} XP', doubleSkill: '+{v}% double {skill} resources',
     speedGroup: '+{v}% {group} speed', xpGroup: '+{v}% {group} XP', doubleGroup: '+{v}% double {group} products',
-    petChance: '+{v}% pet chance', enchantChance: '+{v}% enchant success', startSkills: 'Gathering and artisan skills start at level {v}', startGold: '+{v} starting gold',
+    petChance: '+{v}% pet chance', enchantChance: '+{v}% enchant success', startSkills: 'Gathering and artisan skills start at level {v}', partySlots: '+{v} companion in your company', startGold: '+{v} starting gold',
   },
 
   roles: {
@@ -1739,7 +1739,7 @@ export default {
 
   power: {
     noBonus: "No bonuses yet",
-    src: { role: "Role", talents: "Talents", extra: "Drink, prayer and grace", pets: "Pets", ascension: "Ascension", sets: "Equipment sets", bestiary: "Compendium creatures", festival: "Festival", omens: "Omens", weather: "Weather", streak: "Hunting streak", guild: "Guild perk", codex: "Compendium pages" },
+    src: { role: "Role", talents: "Talents", extra: "Drink, prayer and grace", pets: "Pets", ascension: "Ascension", sets: "Equipment sets", bestiary: "Compendium creatures", festival: "Festival", omens: "Omens", weather: "Weather", streak: "Hunting streak", guild: "Guild perk", codex: "Compendium pages", company: "Companions" },
     base: { weapon: "Weapon", agility: "Agility level {n}", shield: "Shield", noShield: "No shield: you cannot block", armour: "Armour ({n} defence)" },
     why: { crit: "Your weapon's crit chance plus every bonus; up to 75%.", speed: "Seconds between attacks: your weapon's pace, made faster by every attack speed bonus.", dodge: "Agility and dodge bonuses; up to 25%.", block: "Only with a shield: 12% plus block bonuses, up to 40%. A block stops half the blow.", reduction: "The defence on your gear soaks part of every blow, plus reduction bonuses; up to 40%." },
     reduction: "Damage reduction", tipEffect: "If worn: power {power} · damage/s {dps} · damage taken {taken}",
@@ -3557,6 +3557,14 @@ export default {
     full: "Only {n} can come along",
     regionHint: "Your company comes along to bosses and dungeons. Choose who in Preparation.",
     empty: "Nobody is set to come along. Hire companions in Preparation.",
+    met: "Met along the way", join: "Join",
+    uniques: {
+      maelis: { name: "Maelis", title: "Witch of the Mire", bio: "She has brewed in the Putrid Swamp longer than the frogs remember. When the mire woke, she was the one who listened to it, and she has not stopped listening since.", hint: "Waits deep in the Putrid Swamp, where the story leads in its second act." },
+      hollis: { name: "Hollis", title: "The Broken Shield", bio: "He guarded the forgotten crypt for the old kings until the tomb was found empty. His shield cracked that night; he kept it anyway, as a reminder of what he failed to keep.", hint: "Keeps watch over a tomb you will find in the third act of the story." },
+      seren: { name: "Seren", title: "Northern Watcher", bio: "Last of the watchers on the frozen peaks. She counts the storms and the things that walk inside them, and never misses twice.", hint: "Holds the northern watch, high in the frozen peaks of the fourth act." },
+      ardan: { name: "Ardan", title: "Pilgrim of the Rift", bio: "He walked into the wound in the world to pray for it, and walked out again with his faith intact and his hair white.", hint: "Wanders beyond the gate of the Void, in the last act of the story." },
+      vela: { name: "Vela", title: "Agent of the Guild", bio: "The guild sends her where questions are not welcome. She answers to whoever has earned the guild’s trust, and right now that is you.", hint: "Joins when you have settled ten affairs for your guild." },
+    },
     roles: {
       squire: { name: "Squire", desc: "Draws the enemy’s blows and takes part of every charged strike for you." },
       archer: { name: "Archer", desc: "Steady damage, and often cuts off a creature’s move the moment it starts." },
@@ -3930,7 +3938,7 @@ export default {
     upgrades: {
       echoes: 'Echoes of Knowledge', memory: 'Muscle Memory', ancestry: 'Ancestry', dreams: 'Timeless Dreams', quickened: 'Quickened Soul',
       gilded: 'Gilded Soul', keen_eye: 'Keen Eye', inheritance: 'Inheritance', beast_bond: 'Beast Bond', bountiful: 'Bountiful',
-      battle_echo: 'Battle Echo', ironbound: 'Ironbound Spirit', undying: 'Undying', forgemaster: 'Forgemaster', warlord: 'Eternal Warlord',
+      battle_echo: 'Battle Echo', ironbound: 'Ironbound Spirit', undying: 'Undying', forgemaster: 'Forgemaster', war_banner: 'War Banner', warlord: 'Eternal Warlord',
     },
   },
 }

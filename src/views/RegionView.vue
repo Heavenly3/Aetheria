@@ -4,7 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import { G, state } from '../game/engine.js'
 import { AREAS, MONSTERS } from '../game/data/combat.js'
-import { MERC_ROLES } from '../game/data/company.js'
+import { mercIcon, mercTint } from '../game/data/company.js'
+import { mercName } from '../ui/company.js'
 import { ECHO_BONUS } from '../game/data/echoes.js'
 import { QUESTS } from '../game/data/progression.js'
 import { AREA_MAP, regionDungeon, regionBosses, regionEchoes, regionOfActivity, regionPath } from '../game/data/world.js'
@@ -148,9 +149,9 @@ const party = computed(() => state.company.party.map(id => G.companyMember(id)).
           <p class="small muted" style="margin-top:0">{{ $t('company.regionHint') }}</p>
           <div v-if="party.length" class="stack" style="gap:8px">
             <div v-for="p in party" :key="p.id" class="merc row">
-              <ItemTile :icon="MERC_ROLES[p.role].icon" :tint="MERC_ROLES[p.role].tint" size="sm" :tip="false" />
+              <ItemTile :icon="mercIcon(p)" :tint="mercTint(p)" size="sm" :tip="false" />
               <div class="grow">
-                <b>{{ p.name }}</b>
+                <b>{{ mercName(p) }}</b>
                 <div class="small muted">{{ $t(`company.roles.${p.role}.name`) }} · {{ $t('company.level', { n: p.lvl }) }}</div>
               </div>
               <span v-if="G.mercHurt(p)" class="tag bad">{{ $t('company.hurtShort') }}</span>

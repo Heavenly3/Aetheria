@@ -2,7 +2,7 @@ import { t, te } from './index.js'
 import { SKILLS } from '../game/data/skills.js'
 
 // Modifiers that are flat values instead of percentages
-const FLAT = new Set(['maxHp', 'farmYield', 'offline', 'startSkills', 'startGold'])
+const FLAT = new Set(['maxHp', 'farmYield', 'offline', 'startSkills', 'startGold', 'partySlots'])
 
 // Human-readable text for a modifier key and value, e.g. ('speed.mining', 0.1) -> "+10% Mining speed".
 // Negative values (bad weather) flip the sign written in the text

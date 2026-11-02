@@ -210,7 +210,7 @@ export default {
     farmYield: '+{v} cosecha por parcela', offline: '+{v} h de progreso sin conexión', maxHp: '+{v} PV máximos', blessing: 'Bendiciones un {v}% más largas',
     speedSkill: '+{v}% velocidad de {skill}', xpSkill: '+{v}% XP de {skill}', doubleSkill: '+{v}% recursos dobles en {skill}',
     speedGroup: '+{v}% velocidad de {group}', xpGroup: '+{v}% XP de {group}', doubleGroup: '+{v}% productos dobles de {group}',
-    petChance: '+{v}% probabilidad de mascota', enchantChance: '+{v}% éxito al encantar', startSkills: 'Las habilidades de recolección y artesanía empiezan a nivel {v}', startGold: '+{v} de oro inicial',
+    petChance: '+{v}% probabilidad de mascota', enchantChance: '+{v}% éxito al encantar', startSkills: 'Las habilidades de recolección y artesanía empiezan a nivel {v}', partySlots: '+{v} acompañante en tu compañía', startGold: '+{v} de oro inicial',
   },
 
   roles: {
@@ -1739,7 +1739,7 @@ export default {
 
   power: {
     noBonus: "Aún sin bonificaciones",
-    src: { role: "Rol", talents: "Talentos", extra: "Bebida, plegaria y gracia", pets: "Mascotas", ascension: "Renacimiento", sets: "Conjuntos", bestiary: "Criaturas del compendio", festival: "Festival", omens: "Prodigios", weather: "Clima", streak: "Racha de caza", guild: "Ventaja del gremio", codex: "Páginas del compendio" },
+    src: { role: "Rol", talents: "Talentos", extra: "Bebida, plegaria y gracia", pets: "Mascotas", ascension: "Renacimiento", sets: "Conjuntos", bestiary: "Criaturas del compendio", festival: "Festival", omens: "Prodigios", weather: "Clima", streak: "Racha de caza", guild: "Ventaja del gremio", codex: "Páginas del compendio", company: "Acompañantes" },
     base: { weapon: "Arma", agility: "Agilidad nivel {n}", shield: "Escudo", noShield: "Sin escudo: no puedes bloquear", armour: "Armadura ({n} de defensa)" },
     why: { crit: "La probabilidad de crítico de tu arma más cada bonificación; hasta un 75%.", speed: "Segundos entre ataques: el ritmo de tu arma, más rápido con cada bonificación de velocidad de ataque.", dodge: "Agilidad y bonificaciones de esquiva; hasta un 25%.", block: "Solo con escudo: 12% más las bonificaciones de bloqueo, hasta un 40%. Un bloqueo para la mitad del golpe.", reduction: "La defensa de tu equipo absorbe parte de cada golpe, más las bonificaciones de reducción; hasta un 40%." },
     reduction: "Reducción de daño", tipEffect: "Si lo llevas: poder {power} · daño/s {dps} · daño recibido {taken}",
@@ -3557,6 +3557,14 @@ export default {
     full: "Solo pueden ir {n}",
     regionHint: "Tu compañía va contigo a jefes y mazmorras. Elige quién en Preparación.",
     empty: "Nadie va contigo. Contrata acompañantes en Preparación.",
+    met: "Encontrados en el camino", join: "Unirse",
+    uniques: {
+      maelis: { name: "Maelis", title: "Bruja del pantano", bio: "Lleva más tiempo cociendo brebajes en el Pantano Pútrido del que recuerdan las ranas. Cuando el cenagal despertó, fue ella quien lo escuchó, y no ha dejado de hacerlo.", hint: "Espera en lo hondo del Pantano Pútrido, adonde lleva la historia en su segundo acto." },
+      hollis: { name: "Hollis", title: "El Escudo Roto", bio: "Custodió la cripta olvidada de los viejos reyes hasta que la tumba apareció vacía. Su escudo se agrietó aquella noche; lo conservó igual, para recordar lo que no supo guardar.", hint: "Vigila una tumba que encontrarás en el tercer acto de la historia." },
+      seren: { name: "Seren", title: "Vigía del Norte", bio: "La última de las vigías de los picos helados. Cuenta las tormentas y lo que camina dentro de ellas, y nunca falla dos veces.", hint: "Mantiene la guardia del norte, en lo alto de los picos helados del cuarto acto." },
+      ardan: { name: "Ardan", title: "Peregrino de la Grieta", bio: "Entró en la herida del mundo para rezar por ella y salió con la fe entera y el pelo blanco.", hint: "Vaga más allá de la puerta del Vacío, en el último acto de la historia." },
+      vela: { name: "Vela", title: "Agente del gremio", bio: "El gremio la envía allí donde las preguntas no son bienvenidas. Responde ante quien se ha ganado la confianza del gremio, y ahora mismo eres tú.", hint: "Se une cuando hayas resuelto diez asuntos para tu gremio." },
+    },
     roles: {
       squire: { name: "Escudero", desc: "Atrae los golpes del enemigo y recibe parte de cada golpe cargado por ti." },
       archer: { name: "Arquera", desc: "Daño constante, y a menudo interrumpe la habilidad de una criatura nada más empezar." },
@@ -3930,7 +3938,7 @@ export default {
     upgrades: {
       echoes: 'Ecos del saber', memory: 'Memoria muscular', ancestry: 'Linaje', dreams: 'Sueños eternos', quickened: 'Alma acelerada',
       gilded: 'Alma dorada', keen_eye: 'Ojo avizor', inheritance: 'Herencia', beast_bond: 'Vínculo animal', bountiful: 'Abundancia',
-      battle_echo: 'Eco de batalla', ironbound: 'Espíritu de hierro', undying: 'Inmortal', forgemaster: 'Maestro forjador', warlord: 'Señor de la guerra eterno',
+      battle_echo: 'Eco de batalla', ironbound: 'Espíritu de hierro', undying: 'Inmortal', forgemaster: 'Maestro forjador', war_banner: 'Estandarte de guerra', warlord: 'Señor de la guerra eterno',
     },
   },
 }

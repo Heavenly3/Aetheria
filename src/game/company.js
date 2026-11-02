@@ -2,7 +2,7 @@
    COMPANY — the companions the hero hires: who they are, who goes along, and what they do in a
    boss fight or a dungeon. Mixed into G (engine.js); `this` is the engine.
    ========================================================= */
-import { MERC_ROLES, PARTY_SLOTS, MERC_SPEED, HURT_TIME, MERC_MAX_LVL, hireCost, wageOf, mercXpNeed, mercPower } from './data/company.js'
+import { MERC_ROLES, PARTY_SLOTS, MERC_SPEED, HURT_TIME, MERC_MAX_LVL, UNIQUE_MERCS, UNIQUE_IDS, hireCost, wageOf, mercXpNeed, mercPower, mercTrade } from './data/company.js'
 import { MECHS } from './data/fighting.js'
 import { monsterLevel } from './data/combat.js'
 import { rollName } from './data/journal.js'
@@ -20,7 +20,7 @@ export const company = {
   mercHireCost() { return hireCost(this.combatLevel()) },
   hireMerc(role) {
     const c = this.s.company
-    if (!MERC_ROLES[role] || c.members.some(m => m.role === role)) return null
+    if (!MERC_ROLES[role] || c.members.some(m => m.role === role && !m.unique)) return null
     const cost = this.mercHireCost()
     if (this.s.gold < cost) { this.toast('two-coins', 'company.noGold', { n: cost }, 'warn'); return null }
     this.s.gold -= cost
@@ -30,9 +30,35 @@ export const company = {
     while (c.members.some(m => m.name === name))
     const mem = { id: role, role, name, she, lvl: 1, xp: 0, hurtUntil: 0 }
     c.members.push(mem)
-    if (c.party.length < PARTY_SLOTS) c.party.push(mem.id)
+    if (c.party.length < this.partySlots()) c.party.push(mem.id)
     this.emit('hired', mem)
     return mem
+  },
+  // How many can come along: two, and one more with the War Banner of rebirth
+  partySlots() { return PARTY_SLOTS + this.ascensionMods('partySlots') },
+  /* ---------- companions met along the way ---------- */
+  uniqueOpen(id) {
+    const u = UNIQUE_MERCS[id].unlock
+    if (u.chapter) return this.chapterUnlocked(u.chapter)
+    if (u.affairs) return (this.s.stats.affairs || 0) >= u.affairs
+    return false
+  },
+  // The ones whose moment has come and who are not in the company yet
+  uniquesWaiting() { return UNIQUE_IDS.filter(id => this.uniqueOpen(id) && !this.companyMember(id)) },
+  recruitUnique(id) {
+    const c = this.s.company
+    if (!UNIQUE_MERCS[id] || !this.uniqueOpen(id) || this.companyMember(id)) return null
+    const mem = { id, role: UNIQUE_MERCS[id].role, unique: id, name: null, lvl: 1, xp: 0, hurtUntil: 0 }
+    c.members.push(mem)
+    if (c.party.length < this.partySlots()) c.party.push(id)
+    this.emit('hired', mem)
+    return mem
+  },
+  // What the companions met along the way bring even away from the fights
+  companyMods(key) {
+    let v = 0
+    for (const m of this.s.company?.members || []) v += UNIQUE_MERCS[m.unique]?.perk[key] || 0
+    return v
   },
   dismissMerc(id) {
     const c = this.s.company
@@ -43,7 +69,7 @@ export const company = {
   toggleParty(id) {
     const c = this.s.company
     if (c.party.includes(id)) { c.party = c.party.filter(p => p !== id); return true }
-    if (!this.companyMember(id) || c.party.length >= PARTY_SLOTS) return false
+    if (!this.companyMember(id) || c.party.length >= this.partySlots()) return false
     c.party.push(id)
     return true
   },
@@ -62,11 +88,11 @@ export const company = {
   partyOf(act) { return (act?.party || []).map(id => this.companyMember(id)).filter(Boolean) },
   // The share of the enemy's blows that falls on the hero rather than on the party
   heroDrawShare(act) {
-    const others = this.partyOf(act).reduce((s, m) => s + MERC_ROLES[m.role].draw, 0)
+    const others = this.partyOf(act).reduce((s, m) => s + mercTrade(m).draw, 0)
     return 1 / (1 + others)
   },
   // A squire steps in front of a charged strike and takes part of it
-  partyGuard(act) { return this.partyOf(act).reduce((v, m) => Math.max(v, MERC_ROLES[m.role].guard || 0), 0) },
+  partyGuard(act) { return this.partyOf(act).reduce((v, m) => Math.max(v, mercTrade(m).guard || 0), 0) },
   // The party's turn: blows, healing, cutting off moves, lifting statuses; 'kill' if the enemy fell to them
   companyTick(act, m, dt, ps) {
     const party = this.partyOf(act)
@@ -76,22 +102,22 @@ export const company = {
     const c = act.mech?.charge
     if (c && MECHS[c.id].cut && !c.archer) {
       c.archer = true
-      const archer = party.find(p => MERC_ROLES[p.role].interrupt)
-      if (archer && Math.random() < MERC_ROLES[archer.role].interrupt) {
-        this.note(act, 'mercInterrupt', { name: archer.name })
+      const archer = party.find(p => mercTrade(p).interrupt)
+      if (archer && Math.random() < mercTrade(archer).interrupt) {
+        this.note(act, 'mercInterrupt', { who: archer.id })
         this.interruptMove(act)
       }
     }
     // A cleric lifts a bleed, poison or burn every so often
-    const cleric = party.find(p => MERC_ROLES[p.role].cleanse)
+    const cleric = party.find(p => mercTrade(p).cleanse)
     if (cleric) {
       act.cleanseT = (act.cleanseT || 0) + dt
       const fx = act.fx?.player || {}
       const id = CLEANSED.find(k => fx[k])
-      if (id && act.cleanseT >= MERC_ROLES[cleric.role].cleanse) {
+      if (id && act.cleanseT >= mercTrade(cleric).cleanse) {
         act.cleanseT = 0
         delete fx[id]
-        this.note(act, 'mercCleanse', { name: cleric.name, status: id })
+        this.note(act, 'mercCleanse', { who: cleric.id, status: id })
       }
     }
     act.mercTimer = (act.mercTimer || 0) + dt
@@ -99,7 +125,7 @@ export const company = {
     act.mercTimer -= MERC_SPEED
     let total = 0, breaking = 0
     for (const p of party) {
-      const r = MERC_ROLES[p.role], pow = mercPower(p.lvl, hl)
+      const r = mercTrade(p), pow = mercPower(p.lvl, hl)
       if (r.heal && this.s.hp < this.maxHp()) this.heal(Math.max(1, Math.round(this.maxHp() * r.heal * pow)))
       if (Math.random() >= 0.8) continue
       const dmg = rand(1, Math.max(1, Math.round(ps.maxHit * r.dmg * pow)))
@@ -122,7 +148,7 @@ export const company = {
       while (p.lvl < MERC_MAX_LVL && p.xp >= mercXpNeed(p.lvl)) {
         p.xp -= mercXpNeed(p.lvl)
         p.lvl++
-        this.note(act, 'mercLevel', { name: p.name, lvl: p.lvl })
+        this.note(act, 'mercLevel', { who: p.id, lvl: p.lvl })
       }
     }
   },

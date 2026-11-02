@@ -32,5 +32,6 @@ export const UPGRADES = [
   up('undying',     'war',     'glass-heart',        4, 10, 'ironbound', { maxHp: 5 }),
   up('forgemaster', 'war',     'anvil-impact',       4, 12, 'battle_echo', { enchantChance: 0.05 }),
   up('warlord',     'war',     'crowned-skull',      3, 18, 'undying',   { meleeAcc: 0.05, rangedAcc: 0.05, magicAcc: 0.05 }),
+  up('war_banner',  'war',     'swords-emblem',      1, 25, 'ironbound', { partySlots: 1 }),
 ]
 export const UPGRADE_MAP = Object.fromEntries(UPGRADES.map(u => [u.id, u]))
