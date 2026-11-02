@@ -442,7 +442,14 @@ export default {
 
   tactics: {
     brace: "Guard against big attacks",
-    braceHint: "When a boss charges a big blow, your hero switches to a guarding stance until it lands, then goes back.",
+    braceHint: "When a boss or a creature charges a big blow, your hero switches to a guarding stance until it lands, then goes back.",
+    interrupt: "Interrupt their moves",
+    interruptHint: "When a creature charges a move, your hero answers at once with an ability that stuns or slows. It is kept, with the energy it needs, until then.",
+    noInterrupt: "Your bar has no ability that stuns or slows. Add one in Abilities.",
+    lowHp: "Defend below {n}% health",
+    lowHpHint: "Uses Second wind, Mana shield or Evasion first when your health runs low.",
+    breakHeal: "Break their healing",
+    breakHealHint: "When an enemy channels a healing, your hero uses the hardest-hitting ability to break it.",
     title: "Tactics",
     intro: "Rules your hero follows on their own during a fight.",
     retreat: "Retreat before falling",

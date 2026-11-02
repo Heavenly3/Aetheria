@@ -22,11 +22,12 @@ const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1))
 
 // bar: the abilities chosen for each style, in priority order; auto: whether they fire on their own
 // hunt: kills in a row without dying, and the best run ever
-// stances: the last stance picked for each kind of fight · tactics: when to pull out of a fight
+// stances: the last stance picked for each kind of fight · tactics: when to pull out of a fight, and
+// the rules abilities follow (interrupt a creature's move, defend at low health, break a healing)
 export const fightingState = () => ({
   abilities: { bar: defaultBar(), auto: true }, hunt: { streak: 0, best: 0 },
   stances: { melee: 'attack', ranged: 'ranged', magic: 'magic' },
-  tactics: { retreat: false, retreatPct: 25, stopOnTask: false, brace: true },
+  tactics: { retreat: false, retreatPct: 25, stopOnTask: false, brace: true, interrupt: true, lowHp: true, lowHpPct: 40, breakHeal: true },
 })
 // Combat XP per point of damage: melee and ranged, and magic (whose spells also pay a little per cast)
 const XP_PER_DMG = { melee: 4, ranged: 4, magic: 2 }
@@ -240,17 +241,48 @@ export const fighting = {
   // while an earlier ability is off cooldown but still charging, later ones keep its energy aside
   readyAbility(act) {
     if (this.s.abilities?.auto === false) return null
-    const type = this.styleType(), energy = act.energy || 0
-    let reserve = 0
-    for (const id of this.abilityBar(type)) {
-      const a = ABILITY_MAP[id]
-      if (!a || !this.abilityUnlocked(a, type) || (act.cd?.[id] || 0) > 0) continue
+    const type = this.styleType(), energy = act.energy || 0, t = this.s.tactics || {}
+    const bar = this.abilityBar(type).map(id => ABILITY_MAP[id]).filter(a => a && this.abilityUnlocked(a, type))
+    const ready = a => !(act.cd?.[a.id] > 0) && energy >= a.cost
+    const charge = act.mech?.charge && MECHS[act.mech.charge.id]
+    // The tactics come first: cut off a creature's move, defend at low health, break a healing
+    if (charge?.cut && t.interrupt !== false) { const a = bar.find(a => ready(a) && this.interrupts(a)); if (a) return a }
+    if (t.lowHp !== false && this.s.hp <= this.maxHp() * (t.lowHpPct ?? 40) / 100) {
+      const a = bar.find(a => ready(a) && this.defends(a) && !(a.buff && act.hb?.[a.buff]))
+      if (a) return a
+    }
+    if (charge?.heal && t.breakHeal !== false) {
+      const a = bar.filter(a => ready(a) && a.mult > 0).sort((x, y) => y.mult * y.hits - x.mult * x.hits)[0]
+      if (a) return a
+    }
+    // Then the bar in order. Against a creature whose moves can be cut off, an interrupt is kept
+    // for them, with the energy it needs
+    const keepFor = t.interrupt !== false && this.monsterMechs(this.getMonster(act), act).some(id => MECHS[id].cut)
+      ? bar.filter(a => this.interrupts(a) && !(act.cd?.[a.id] > 0)) : []
+    const keep = keepFor.reduce((n, a) => Math.max(n, a.cost), 0)
+    let reserve = keep
+    for (const a of bar) {
+      if (act.cd?.[a.id] > 0 || keepFor.includes(a)) continue
       if (a.heal && this.s.hp > this.maxHp() * 0.7) continue // healing waits until it is needed
       if (a.buff && act.hb?.[a.buff]) continue
       if (energy - a.cost >= reserve) return a
       reserve = Math.max(reserve, a.cost)
     }
     return null
+  },
+  // Abilities that stun or slow cut off a creature's move; the ones that heal or shield defend
+  interrupts(a) { return a.fx.includes('stun') || a.fx.includes('slow') },
+  defends(a) { return a.heal > 0 || a.buff === 'ward' || a.buff === 'evasion' },
+  // The moment a creature starts charging a move, the hero answers at once with an interrupt if the tactic allows
+  reactToCharge(act, m, ps, mr) {
+    const c = act.mech?.charge
+    if (!c || c.reacted) return null
+    c.reacted = true
+    if (!MECHS[c.id].cut || this.s.tactics?.interrupt === false || this.s.abilities?.auto === false) return null
+    const type = this.styleType(), energy = act.energy || 0
+    const a = this.abilityBar(type).map(id => ABILITY_MAP[id])
+      .find(a => a && this.abilityUnlocked(a, type) && this.interrupts(a) && !(act.cd?.[a.id] > 0) && energy >= a.cost)
+    return a ? this.useAbility(act, m, ps, mr, a) : null
   },
   // Cooldowns and the hero's boons run down with time
   tickAbilities(act, dt) {
@@ -287,22 +319,25 @@ export const fighting = {
   // The hero's turn: an ability if one is ready, else a normal attack that builds energy
   heroTurn(act, m, ps, mr) {
     const ab = this.readyAbility(act)
-    if (ab) {
-      act.energy -= ab.cost
-      ;(act.cd ||= {})[ab.id] = ab.cd
-      if (ab.heal) this.heal(Math.round(this.maxHp() * ab.heal))
-      if (ab.buff) (act.hb ||= {})[ab.buff] = { t: BUFFS[ab.buff].time }
-      this.emit('ability', { id: ab.id })
-      this.note(act, 'ability', { id: ab.id })
-      for (let i = 0; i < (ab.mult > 0 ? ab.hits : 0); i++) {
-        const r = this.heroHit(act, m, ps, mr, ab, i === 0)
-        if (r === 'kill' || r === 'end') return r
-      }
-      return null
-    }
+    if (ab) return this.useAbility(act, m, ps, mr, ab)
     const r = this.heroHit(act, m, ps, mr)
     if (r === 'kill' || r === 'end') return r
     this.gainEnergy(act, ENERGY.attack + (r ? ENERGY.crit : 0))
+    return null
+  },
+
+  // Spends energy on an ability and lands its hits; 'kill' or 'end' when the fight must stop
+  useAbility(act, m, ps, mr, ab) {
+    act.energy -= ab.cost
+    ;(act.cd ||= {})[ab.id] = ab.cd
+    if (ab.heal) this.heal(Math.round(this.maxHp() * ab.heal))
+    if (ab.buff) (act.hb ||= {})[ab.buff] = { t: BUFFS[ab.buff].time }
+    this.emit('ability', { id: ab.id })
+    this.note(act, 'ability', { id: ab.id })
+    for (let i = 0; i < (ab.mult > 0 ? ab.hits : 0); i++) {
+      const r = this.heroHit(act, m, ps, mr, ab, i === 0)
+      if (r === 'kill' || r === 'end') return r
+    }
     return null
   },
 

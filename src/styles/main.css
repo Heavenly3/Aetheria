@@ -419,6 +419,7 @@ body.cue-flash::after { content: ''; position: fixed; inset: 0; pointer-events: 
 
 /* Gold badges keep their numbers readable on parchment */
 :root[data-theme="light"] .nav-badge { background: #8a5d12; }
+:root[data-theme="light"] .warn-text { color: color-mix(in srgb, var(--warn) 55%, #000); }
 :root[data-theme="light"] .p-button-danger:not(.p-button-outlined):not(.p-button-text) { background: var(--danger); border-color: var(--danger); }
 
 /* Text tinted with a data colour (difficulty, rarity…); darkened on parchment so it stays readable */

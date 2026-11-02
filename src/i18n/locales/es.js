@@ -442,7 +442,14 @@ export default {
 
   tactics: {
     brace: "Ponerse en guardia ante los grandes golpes",
-    braceHint: "Cuando un jefe carga un gran golpe, tu héroe cambia a una postura de guardia hasta que llega y luego vuelve a la suya.",
+    braceHint: "Cuando un jefe o una criatura carga un gran golpe, tu héroe cambia a una postura de guardia hasta que llega y luego vuelve a la suya.",
+    interrupt: "Interrumpir sus habilidades",
+    interruptHint: "Cuando una criatura carga una habilidad, tu héroe responde al momento con una que aturde o ralentiza. Hasta entonces la guarda, con la energía que necesita.",
+    noInterrupt: "Tu barra no tiene ninguna habilidad que aturda o ralentice. Añade una en Habilidades.",
+    lowHp: "Defenderse por debajo del {n}% de vida",
+    lowHpHint: "Usa antes Segundo aliento, Escudo de maná o Evasión cuando te queda poca vida.",
+    breakHeal: "Romper sus curaciones",
+    breakHealHint: "Cuando un enemigo canaliza una curación, tu héroe usa la habilidad que más daño hace para romperla.",
     title: "Tácticas",
     intro: "Reglas que tu héroe sigue por su cuenta durante el combate.",
     retreat: "Retirarse antes de caer",

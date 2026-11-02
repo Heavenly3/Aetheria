@@ -11,7 +11,7 @@ import { G, state } from '../game/engine.js'
 import { COMBAT_STYLES, SPELLS, STYLE_TYPES, stancesOf } from '../game/data/combat.js'
 import { PRAYERS, PRAYER_DRAIN } from '../game/data/extras.js'
 import { ITEMS, SLOTS } from '../game/data/items.js'
-import { ABILITY_SKILL } from '../game/data/fighting.js'
+import { ABILITY_SKILL, ABILITY_MAP } from '../game/data/fighting.js'
 import { fmt, fmtDec, fmtClock } from '../game/format.js'
 import { tm } from '../i18n/index.js'
 import GameIcon from './GameIcon.vue'
@@ -116,6 +116,8 @@ function useSet(i) {
 }
 const setSummary = lo => Object.keys(SLOTS).map(k => lo.equipment[k]).filter(Boolean)
 const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
+// Whether the bar of the current style holds an ability that can cut off a creature's move
+const hasInterrupt = computed(() => (void state.abilities, G.abilityBar().some(id => ABILITY_MAP[id] && G.abilityUnlocked(ABILITY_MAP[id]) && G.interrupts(ABILITY_MAP[id]))))
 </script>
 
 <template>
@@ -248,6 +250,28 @@ const styleOf = lo => COMBAT_STYLES[lo.style] || COMBAT_STYLES.attack
         <label class="row" for="tac-brace" style="gap:10px;cursor:pointer">
           <span class="grow"><b>{{ $t('tactics.brace') }}</b><span class="small muted block">{{ $t('tactics.braceHint') }}</span></span>
           <ToggleSwitch v-model="state.tactics.brace" inputId="tac-brace" />
+        </label>
+      </div>
+      <!-- Rules the abilities follow -->
+      <div class="tactic">
+        <label class="row" for="tac-interrupt" style="gap:10px;cursor:pointer">
+          <span class="grow"><b>{{ $t('tactics.interrupt') }}</b><span class="small muted block">{{ $t('tactics.interruptHint') }}</span></span>
+          <ToggleSwitch v-model="state.tactics.interrupt" inputId="tac-interrupt" />
+        </label>
+        <div v-if="state.tactics.interrupt !== false && !hasInterrupt" class="small warn-text" style="margin-top:8px"><i class="pi pi-info-circle" /> {{ $t('tactics.noInterrupt') }}</div>
+      </div>
+      <div class="tactic">
+        <label class="row" for="tac-lowhp" style="gap:10px;cursor:pointer">
+          <span class="grow"><b>{{ $t('tactics.lowHp', { n: state.tactics.lowHpPct ?? 40 }) }}</b><span class="small muted block">{{ $t('tactics.lowHpHint') }}</span></span>
+          <ToggleSwitch v-model="state.tactics.lowHp" inputId="tac-lowhp" />
+        </label>
+        <Slider v-if="state.tactics.lowHp !== false" :modelValue="state.tactics.lowHpPct ?? 40" @update:modelValue="v => (state.tactics.lowHpPct = v)" :min="20" :max="70" :step="5"
+          style="margin-top:12px" :aria-label="$t('tactics.lowHp', { n: state.tactics.lowHpPct ?? 40 })" />
+      </div>
+      <div class="tactic">
+        <label class="row" for="tac-break" style="gap:10px;cursor:pointer">
+          <span class="grow"><b>{{ $t('tactics.breakHeal') }}</b><span class="small muted block">{{ $t('tactics.breakHealHint') }}</span></span>
+          <ToggleSwitch v-model="state.tactics.breakHeal" inputId="tac-break" />
         </label>
       </div>
       <div class="tactic">

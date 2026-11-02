@@ -1285,6 +1285,12 @@ export const G = {
     if (this.shouldRetreat(act)) return this.retreat(m)
     const ps = this.playerStats(m)
     const mr = this.monsterRolls(m)
+    // A move just started: the hero may answer it at once
+    if (act.mech?.charge && !act.mech.charge.reacted) {
+      const r = this.reactToCharge(act, m, ps, mr)
+      if (r === 'end') return
+      if (r === 'kill') return this.killMonster(m)
+    }
     const regen = this.regenPerSec(m, act)
     if (regen) act.mHp = Math.min(m.hp, act.mHp + regen * dt)
 
