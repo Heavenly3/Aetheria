@@ -151,7 +151,7 @@ const sellAtShop = () => router.push({ path: '/shop', query: { sell: selected.va
 
 <style scoped>
 .inv-layout { display: grid; grid-template-columns: 1fr 360px; gap: 18px; align-items: start; }
-.detail { position: sticky; top: 90px; max-height: calc(100vh - 110px); overflow-y: auto; }
+.detail { position: sticky; top: calc(var(--topbar-h, 76px) + 14px); max-height: calc(100vh - var(--topbar-h, 76px) - 34px); overflow-y: auto; }
 .detail-name { font-family: var(--font-display); font-size: 20px; line-height: 1.15; }
 .myth-tag { color: var(--m); border-color: color-mix(in srgb, var(--m) 50%, transparent); background: color-mix(in srgb, var(--m) 12%, transparent); }
 .myth-box { margin-top: 10px; padding: 8px 12px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--m) 45%, transparent); background: color-mix(in srgb, var(--m) 8%, transparent); color: var(--ink); font-size: 13.5px; }

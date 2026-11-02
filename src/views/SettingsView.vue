@@ -157,7 +157,7 @@ function openAll() { G.openAllScreens(); G.toast('open-book', 'settings.allScree
 
 <style scoped>
 .set-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 20px; align-items: start; }
-.set-nav { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 4px; }
+.set-nav { position: sticky; top: calc(var(--topbar-h, 76px) + 14px); display: flex; flex-direction: column; gap: 4px; }
 .set-tab { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; background: none; color: var(--ink-2); font: inherit; text-align: start; cursor: pointer; }
 .set-tab i { width: 18px; color: var(--muted); }
 .set-tab b { display: block; font-size: 14px; }

@@ -54,6 +54,16 @@ const router = useRouter()
 const toast = useToast()
 const drawer = ref(false)
 const menu = ref()
+// The top bar's height, for panels that stick right under it
+const topbar = ref()
+let barSize
+watch(topbar, el => {
+  barSize?.disconnect()
+  if (!el || typeof ResizeObserver === 'undefined') return
+  barSize = new ResizeObserver(() => document.documentElement.style.setProperty('--topbar-h', el.offsetHeight + 'px'))
+  barSize.observe(el)
+})
+onUnmounted(() => barSize?.disconnect())
 
 // Keyboard and screen reader users land on the new screen, not back at the top of the menu
 const content = ref()
@@ -296,7 +306,7 @@ function startAdventure() {
       </aside>
 
       <main class="main">
-        <header class="topbar">
+        <header ref="topbar" class="topbar">
           <div class="topbar-title">{{ title }}<HelpTip v-if="screenHelp" :k="screenHelp" :params="{ skill: title }" class="screen-help" /></div>
           <div class="chips">
             <button class="chip search-chip" :aria-label="$t('search.label')" v-tooltip.bottom="$t('search.tip')" @click="searching = true"><i class="pi pi-search" /></button>
@@ -517,6 +527,6 @@ function startAdventure() {
 @keyframes pulseDot { 50% { transform: scale(1.3); } }
 .hero-meta { display: flex; flex-direction: column; gap: 2px; text-align: start; min-width: 110px; line-height: 1.15; }
 .hero-meta b { font-size: 14px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-@media (max-width: 900px) { .hero-meta { display: none; } }
+@media (max-width: 1280px) { .hero-meta { display: none; } }
 .key { font: 12px ui-monospace, monospace; padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line-hi); background: var(--tint-2); color: var(--ink); }
 </style>

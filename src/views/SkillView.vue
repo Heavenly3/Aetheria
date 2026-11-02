@@ -191,7 +191,7 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
 
 <style scoped>
 .graceful { margin-top: 26px; }
-.filters { position: sticky; top: 76px; z-index: 5; margin: 20px 0 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+.filters { margin: 20px 0 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
   background: var(--glass); backdrop-filter: blur(18px); }
 .search { min-width: 220px; }
 .sort { min-width: 170px; }
@@ -208,5 +208,4 @@ const clear = () => Object.assign(f, { q: '', group: 'all', mat: 'all', status: 
 .pips { display: flex; gap: 4px; margin-top: 8px; max-width: 320px; }
 .pips i { flex: 1; height: 5px; border-radius: 5px; background: var(--tint-3); }
 .pips i.on { background: var(--gold-grad); }
-@media (max-width: 900px) { .filters { position: static; } }
 </style>

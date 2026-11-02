@@ -255,7 +255,7 @@ function sellJunk() {
 :deep(.shop-qty) { width: 100%; }
 :deep(.qty-input) { width: 100%; text-align: center; }
 .sell-layout { display: grid; grid-template-columns: 1fr 340px; gap: 18px; align-items: start; }
-.detail { position: sticky; top: 90px; }
+.detail { position: sticky; top: calc(var(--topbar-h, 76px) + 14px); }
 .detail-name { font-family: var(--font-display); font-size: 20px; line-height: 1.15; }
 .warn-line { color: var(--warn); margin: 8px 0 0; }
 .market { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; }
