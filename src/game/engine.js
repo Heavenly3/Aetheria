@@ -42,6 +42,7 @@ import { THREAT_EFFECT } from './data/realm.js'
 const REGION_GOLD = THREAT_EFFECT.gold, REGION_LOOT = THREAT_EFFECT.loot
 import { slayer } from './slayer.js'
 import { company, companyState } from './company.js'
+import { tavernGames } from './tavernGames.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
 import { farm } from './farm.js'
@@ -1703,6 +1704,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, company, guilds, affairs, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records, mythics)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, company, tavernGames, guilds, affairs, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records, mythics)
 
 export { SKILLS, ITEMS }

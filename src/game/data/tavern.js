@@ -104,3 +104,17 @@ export const MYSTERY_CHEST = { tokens: 10, loot: [L('gem_chest', 0.25), L('coin_
 /* ---------------- Daily orders ---------------- */
 export const ORDERS_PER_DAY = 3
 export const ORDER_SKILLS = ['mining', 'woodcutting', 'fishing', 'cooking', 'smithing', 'fletching', 'crafting', 'herblore', 'runecrafting']
+
+/* ---------- table games ---------- */
+// Seven Crowns: cards worth 1 to 4 crowns; get closer to seven than the keeper without going over.
+// The keeper draws until six or more and a tie gives the bet back; seven exactly wins a bonus on top.
+// Played well it comes out about even; played carelessly the house wins
+export const CROWN_DECK = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4]
+export const CROWNS = 7
+export const KEEPER_STANDS = 6
+export const CROWNS_BONUS = 0.25
+// Darts: three darts; rings by distance from the centre (share of the board's radius) and their points.
+// The total sets the payout as a multiple of the bet
+export const DART_THROWS = 3
+export const DART_RINGS = [{ r: 0.07, pts: 50 }, { r: 0.18, pts: 25 }, { r: 0.42, pts: 10 }, { r: 0.7, pts: 5 }, { r: 1, pts: 2 }]
+export const DART_PAYS = [{ min: 100, mult: 3 }, { min: 70, mult: 2 }, { min: 45, mult: 1 }]

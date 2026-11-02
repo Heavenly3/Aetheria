@@ -24,13 +24,15 @@ import { GUEST_MAP, REP_STEP, repMult } from '../game/data/bar.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
+import CrownsGame from '../components/CrownsGame.vue'
+import DartsGame from '../components/DartsGame.vue'
 import KeeperTalk from '../components/KeeperTalk.vue'
 
 const { t: $tr } = useI18n()
 const confirm = useConfirm()
 // The tracker can ask for a tab in the address (?tab=orders)
 const route = useRoute()
-const TABS = ['staff', 'expeditions', 'orders', 'bar']
+const TABS = ['staff', 'expeditions', 'orders', 'bar', 'games']
 const tab = ref(TABS.includes(route.query.tab) ? route.query.tab : 'staff')
 watch(() => route.query.tab, v => { if (TABS.includes(v)) tab.value = v })
 const now = ref(Date.now())
@@ -177,6 +179,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
         <Tab value="expeditions">{{ $t('tavern.tabs.expeditions') }}</Tab>
         <Tab value="orders">{{ $t('tavern.tabs.orders') }} <Badge v-if="readyOrders" :value="readyOrders" size="small" style="margin-inline-start:6px" /></Tab>
         <Tab value="bar">{{ $t('tavern.tabs.bar') }}</Tab>
+        <Tab value="games">{{ $t('tavern.tabs.games') }}</Tab>
       </TabList>
       <TabPanels style="background:transparent;padding:18px 0 0">
         <!-- STAFF -->
@@ -376,34 +379,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
           </div>
           <p class="small faint">{{ $t('tavern.oneDrink') }}</p>
 
-          <div class="two-col" style="margin-top:20px">
-            <div class="panel pad">
-              <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
-              <p class="small muted" style="margin-top:0">{{ $t('tavern.diceRules') }}</p>
-              <div class="dice-table">
-                <div class="dice-side">
-                  <div class="small muted">{{ $t('tavern.you') }}</div>
-                  <div class="dice" :class="{ rolling }">
-                    <GameIcon v-for="(v, i) in lastRoll?.p || [6, 6]" :key="i" :name="FACES[v]" :size="44" />
-                  </div>
-                </div>
-                <div class="vs">{{ $t('tavern.vs') }}</div>
-                <div class="dice-side">
-                  <div class="small muted">{{ $t('tavern.barkeep') }}</div>
-                  <div class="dice" :class="{ rolling }">
-                    <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
-                  </div>
-                </div>
-              </div>
-              <div v-if="lastRoll && !rolling" class="roll-result" :class="lastRoll.delta > 0 ? 'ok-text' : lastRoll.delta < 0 ? 'bad-text' : 'muted'">
-                {{ $t('tavern.roll.' + lastRoll.kind) }} <b v-if="lastRoll.delta">{{ $t('inventory.goldAmount', { n: (lastRoll.delta > 0 ? '+' : '') + fmt(lastRoll.delta) }) }}</b>
-              </div>
-              <div class="row" style="margin-top:12px">
-                <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="dice-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" />
-                <Button :label="$t('tavern.rollDice')" icon="pi pi-sync" :loading="rolling" @click="roll" />
-              </div>
-              <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
-            </div>
+          <div style="margin-top:20px;max-width:620px">
             <div class="panel pad">
               <h3 class="panel-title"><GameIcon name="open-treasure-chest" /> {{ $t('tavern.mysteryTitle') }} <HelpTip k="sections.mystery" /></h3>
               <p class="small muted" style="margin-top:0">{{ $t('tavern.mysteryIntro', { n: MYSTERY_CHEST.tokens }) }}</p>
@@ -413,6 +389,41 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               <Button :label="$t('tavern.mysteryOpen', { n: MYSTERY_CHEST.tokens })" icon="pi pi-box" fluid :disabled="t.tokens < MYSTERY_CHEST.tokens" @click="mystery" />
               <p class="small faint" style="margin-bottom:0">{{ $t('tavern.tokensHint') }}</p>
             </div>
+          </div>
+        </TabPanel>
+
+        <!-- GAMES -->
+        <TabPanel value="games">
+          <div class="games">
+      <div class="panel pad">
+        <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
+        <p class="small muted" style="margin-top:0">{{ $t('tavern.diceRules') }}</p>
+        <div class="dice-table">
+          <div class="dice-side">
+            <div class="small muted">{{ $t('tavern.you') }}</div>
+            <div class="dice" :class="{ rolling }">
+              <GameIcon v-for="(v, i) in lastRoll?.p || [6, 6]" :key="i" :name="FACES[v]" :size="44" />
+            </div>
+          </div>
+          <div class="vs">{{ $t('tavern.vs') }}</div>
+          <div class="dice-side">
+            <div class="small muted">{{ $t('tavern.barkeep') }}</div>
+            <div class="dice" :class="{ rolling }">
+              <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
+            </div>
+          </div>
+        </div>
+        <div v-if="lastRoll && !rolling" class="roll-result" :class="lastRoll.delta > 0 ? 'ok-text' : lastRoll.delta < 0 ? 'bad-text' : 'muted'">
+          {{ $t('tavern.roll.' + lastRoll.kind) }} <b v-if="lastRoll.delta">{{ $t('inventory.goldAmount', { n: (lastRoll.delta > 0 ? '+' : '') + fmt(lastRoll.delta) }) }}</b>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="dice-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" />
+          <Button :label="$t('tavern.rollDice')" icon="pi pi-sync" :loading="rolling" @click="roll" />
+        </div>
+        <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
+      </div>
+            <CrownsGame />
+            <DartsGame />
           </div>
         </TabPanel>
       </TabPanels>
@@ -432,6 +443,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 .report { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed var(--line); }
 .report:last-child { border-bottom: 0; }
 .report > .gi { color: var(--gold); margin-top: 2px; }
+.games { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; align-items: start; }
 .dice-table { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 14px; border-radius: 14px; background: var(--well); }
 .dice-side { text-align: center; }
 .dice { display: flex; justify-content: center; gap: 8px; color: var(--ink); margin-top: 6px; }
