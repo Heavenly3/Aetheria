@@ -57,7 +57,7 @@ export const tavernGames = {
     const b = this.takeBet(bet)
     if (!b) return null
     const deck = freshDeck()
-    g.round = { bet: b, deck, you: [deck.pop(), deck.pop()], keeper: [deck.pop(), deck.pop()], doubled: false, result: null }
+    g.round = { id: Date.now(), bet: b, deck, you: [deck.pop(), deck.pop()], keeper: [deck.pop(), deck.pop()], doubled: false, result: null }
     if (natural(g.round.you) || natural(g.round.keeper)) this.cardsSettle()
     return g.round
   },

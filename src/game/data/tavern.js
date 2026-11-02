@@ -106,10 +106,15 @@ export const ORDERS_PER_DAY = 3
 export const ORDER_SKILLS = ['mining', 'woodcutting', 'fishing', 'cooking', 'smithing', 'fletching', 'crafting', 'herblore', 'runecrafting']
 
 /* ---------- table games ---------- */
-// Blackjack against the tavern keeper: a fresh deck each hand, the keeper draws to 17, a natural
-// blackjack pays 3 to 2 and a tie gives the bet back. Doubling is allowed on the first two cards
+// The King's Twenty-One, the old card game of the realm, against the tavern keeper: a fresh deck of
+// coins, cups, swords and staves each hand, the keeper draws to 17, twenty-one in two cards pays 3 to 2
+// and a tie gives the bet back. Doubling is allowed on the first two cards
 export const CARD_RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-export const CARD_SUITS = ['♠', '♥', '♦', '♣']
+export const CARD_SUITS = ['coins', 'cups', 'swords', 'staves']
+export const SUIT_LOOK = {
+  coins: { icon: 'two-coins', color: '#a8741c' }, cups: { icon: 'trophy-cup', color: '#a8322a' },
+  swords: { icon: 'broadsword', color: '#34506e' }, staves: { icon: 'wizard-staff', color: '#356b3d' },
+}
 export const BLACKJACK = 21
 export const KEEPER_STANDS = 17
 export const NATURAL_PAYS = 1.5

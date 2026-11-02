@@ -53,6 +53,8 @@ describe('blackjack', () => {
     const r = G.cardsStart(100)
     r.result = null
     r.you = [card('5'), card('6')]; r.keeper = [card('10'), card('8')]
+    // As if the deal had just taken the bet (a natural on the first deal would have settled it already)
+    state.gold = 9900
     r.deck.push(card('10'))
     G.cardsDouble()
     expect(r.you).toHaveLength(3)

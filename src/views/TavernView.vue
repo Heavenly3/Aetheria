@@ -395,35 +395,37 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
         <!-- GAMES -->
         <TabPanel value="games">
           <div class="games">
-      <div class="panel pad">
-        <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
-        <p class="small muted" style="margin-top:0">{{ $t('tavern.diceRules') }}</p>
-        <div class="dice-table">
-          <div class="dice-side">
-            <div class="small muted">{{ $t('tavern.you') }}</div>
-            <div class="dice" :class="{ rolling }">
-              <GameIcon v-for="(v, i) in lastRoll?.p || [6, 6]" :key="i" :name="FACES[v]" :size="44" />
-            </div>
-          </div>
-          <div class="vs">{{ $t('tavern.vs') }}</div>
-          <div class="dice-side">
-            <div class="small muted">{{ G.journalNames().keeper }}</div>
-            <div class="dice" :class="{ rolling }">
-              <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
-            </div>
-          </div>
-        </div>
-        <div v-if="lastRoll && !rolling" class="roll-result" :class="lastRoll.delta > 0 ? 'ok-text' : lastRoll.delta < 0 ? 'bad-text' : 'muted'">
-          {{ $t('tavern.roll.' + lastRoll.kind) }} <b v-if="lastRoll.delta">{{ $t('inventory.goldAmount', { n: (lastRoll.delta > 0 ? '+' : '') + fmt(lastRoll.delta) }) }}</b>
-        </div>
-        <div class="row" style="margin-top:12px">
-          <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="dice-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" />
-          <Button :label="$t('tavern.rollDice')" icon="pi pi-sync" :loading="rolling" @click="roll" />
-        </div>
-        <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
-      </div>
             <CardsGame />
-            <DartsGame />
+            <div class="games-side">
+              <div class="panel pad">
+                <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
+                <p class="small muted" style="margin-top:0">{{ $t('tavern.diceRules', { keeper: G.journalNames().keeper }) }}</p>
+                <div class="dice-table">
+                  <div class="dice-side">
+                    <div class="small muted">{{ $t('tavern.you') }}</div>
+                    <div class="dice" :class="{ rolling }">
+                      <GameIcon v-for="(v, i) in lastRoll?.p || [6, 6]" :key="i" :name="FACES[v]" :size="44" />
+                    </div>
+                  </div>
+                  <div class="vs">{{ $t('tavern.vs') }}</div>
+                  <div class="dice-side">
+                    <div class="small muted">{{ G.journalNames().keeper }}</div>
+                    <div class="dice" :class="{ rolling }">
+                      <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
+                    </div>
+                  </div>
+                </div>
+                <div v-if="lastRoll && !rolling" class="roll-result" :class="lastRoll.delta > 0 ? 'ok-text' : lastRoll.delta < 0 ? 'bad-text' : 'muted'">
+                  {{ $t('tavern.roll.' + lastRoll.kind) }} <b v-if="lastRoll.delta">{{ $t('inventory.goldAmount', { n: (lastRoll.delta > 0 ? '+' : '') + fmt(lastRoll.delta) }) }}</b>
+                </div>
+                <div class="row" style="margin-top:12px">
+                  <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="dice-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" />
+                  <Button :label="$t('tavern.rollDice')" icon="pi pi-sync" :loading="rolling" @click="roll" />
+                </div>
+                <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
+              </div>
+              <DartsGame />
+            </div>
           </div>
         </TabPanel>
       </TabPanels>
@@ -443,7 +445,10 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 .report { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed var(--line); }
 .report:last-child { border-bottom: 0; }
 .report > .gi { color: var(--gold); margin-top: 2px; }
-.games { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; align-items: start; }
+/* The card table on one side, the dice and the darts stacked on the other */
+.games { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.games-side { display: grid; gap: 16px; }
+@media (max-width: 1000px) { .games { grid-template-columns: 1fr; } }
 .dice-table { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 14px; border-radius: 14px; background: var(--well); }
 .dice-side { text-align: center; }
 .dice { display: flex; justify-content: center; gap: 8px; color: var(--ink); margin-top: 6px; }
