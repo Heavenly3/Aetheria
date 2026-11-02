@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { G, state, newHero, setLevel } from './helpers.js'
-import { DART_THROWS } from '../src/game/data/tavern.js'
+import { DART_THROWS, TABA_FACES, ARM_RIVALS, RUNE_PAYS } from '../src/game/data/tavern.js'
 import { handValue } from '../src/game/tavernGames.js'
 
 function table() {
@@ -94,5 +94,73 @@ describe('darts', () => {
     const low = G.dartsSteady()
     setLevel('ranged', 80)
     expect(G.dartsSteady()).toBeGreaterThan(low)
+  })
+})
+
+describe('the other tables', () => {
+  it('throws the knucklebone and pays by its face', () => {
+    table()
+    const r = G.tabaThrow(100)
+    expect(['luck', 'flesh', 'belly', 'hollow']).toContain(r.face)
+    expect(state.gold).toBe(10000 + r.result.net)
+    expect(TABA_FACES.reduce((s, f) => s + f.p, 0)).toBeCloseTo(1)
+  })
+
+  it('pays arm wrestling by the rival beaten', () => {
+    table()
+    expect(G.armStart(100, 'nobody')).toBe(null)
+    G.armStart(100, 'ogre')
+    G.armEnd(true)
+    expect(state.gold).toBe(10000 + 100 * (ARM_RIVALS.find(r => r.id === 'ogre').mult - 1))
+    expect(G.table('arm').beaten.ogre).toBe(1)
+    setLevel('strength', 90)
+    expect(G.armPush()).toBeGreaterThan(0.1)
+  })
+
+  it('ends the drinking contest on a spill, a stagger of the rival or the last tankard', () => {
+    table()
+    G.beerStart(100)
+    expect(G.beerDrink(false).result.kind).toBe('spill')
+    G.tableClear('beer')
+    G.beerStart(100)
+    let r
+    do r = G.beerDrink(true)
+    while (!r.result)
+    expect(['win', 'tie']).toContain(r.result.kind)
+    expect(G.beerZone(5)).toBeLessThan(G.beerZone(0))
+  })
+
+  it('plays three men’s morris: no centre first, the keeper blocks, a line wins', () => {
+    table()
+    G.morrisStart(100)
+    expect(G.morrisTargets(null)).not.toContain(4)
+    const r = G.table('morris').round
+    G.morrisPlay(null, 0)
+    expect(r.board.filter(v => v === 'keeper')).toHaveLength(1)
+    // Two in a row for the hero: the keeper takes the third spot (its mind not wandering this time)
+    r.board = ['you', 'you', null, null, 'keeper', null, null, null, null]
+    r.placed = { you: 2, keeper: 1 }
+    const real = Math.random
+    Math.random = () => 0.5
+    G.morrisPlay(null, 8)
+    Math.random = real
+    expect(r.board[2]).toBe('keeper')
+    // A line of three wins
+    G.tableClear('morris'); G.table('morris').round = null
+    G.morrisStart(100)
+    const q = G.table('morris').round
+    q.board = ['you', 'you', null, 'keeper', 'keeper', null, null, null, null]
+    q.placed = { you: 2, keeper: 2 }
+    G.morrisPlay(null, 2)
+    expect(q.result.kind).toBe('win')
+  })
+
+  it('follows the marked rune through the swaps', () => {
+    table()
+    const r = G.runesStart(100)
+    const end = G.runesEnd(r)
+    G.runesPick(end)
+    expect(r.result.kind).toBe('win')
+    expect(state.gold).toBe(10000 + 100 * (RUNE_PAYS - 1))
   })
 })

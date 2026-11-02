@@ -123,3 +123,30 @@ export const NATURAL_PAYS = 1.5
 export const DART_THROWS = 3
 export const DART_RINGS = [{ r: 0.07, pts: 50 }, { r: 0.18, pts: 25 }, { r: 0.42, pts: 10 }, { r: 0.7, pts: 5 }, { r: 1, pts: 2 }]
 export const DART_PAYS = [{ min: 100, mult: 3 }, { min: 70, mult: 2 }, { min: 45, mult: 1 }]
+// Knucklebone: one throw of the bone; the face it lands on sets the payout as a multiple of the bet
+// (luck pays three times, flesh twice, belly gives the bet back, the hollow loses it). About even
+export const TABA_FACES = [
+  { id: 'luck', p: 0.08, mult: 3 }, { id: 'flesh', p: 0.34, mult: 2 }, { id: 'belly', p: 0.08, mult: 1 }, { id: 'hollow', p: 0.5, mult: 0 },
+]
+// Arm wrestling: three regulars, each stronger and paying more. force: how hard they push (share of
+// the bar per second); the hero pushes with every press, harder with Strength
+export const ARM_RIVALS = [
+  { id: 'farmhand', icon: 'farmer', force: 0.32, mult: 1.6 },
+  { id: 'dwarf', icon: 'dwarf-face', force: 0.5, mult: 2.2 },
+  { id: 'ogre', icon: 'ogre', force: 0.7, mult: 3.2 },
+]
+export const ARM_TIME = 15
+// Drinking contest: each round the hero drinks when the tankard is steady; the rival may stagger,
+// more likely with every round. A spilled round or a stagger ends it
+export const BEER_ROUNDS = 12
+export const beerRivalFails = round => Math.min(0.9, 0.06 + 0.07 * round)
+// Three men's morris against the keeper: three pieces each, placed then moved along the lines,
+// three in a row wins; the centre cannot be taken with the first piece. Long games end in a draw
+export const MORRIS_LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+export const MORRIS_LINKS = [[1, 3, 4], [0, 2, 4], [1, 5, 4], [0, 6, 4], [0, 1, 2, 3, 5, 6, 7, 8], [2, 8, 4], [3, 7, 4], [6, 8, 4], [5, 7, 4]]
+export const MORRIS_MAX_MOVES = 40
+export const MORRIS_PAYS = 2
+// The rune shell game: three stones, one marked; the keeper swaps them and the hero picks one.
+// Runecrafting slows the hands down
+export const RUNE_SWAPS = 7
+export const RUNE_PAYS = 2.6

@@ -26,6 +26,11 @@ import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
 import CardsGame from '../components/CardsGame.vue'
 import DartsGame from '../components/DartsGame.vue'
+import TabaGame from '../components/TabaGame.vue'
+import ArmGame from '../components/ArmGame.vue'
+import BeerGame from '../components/BeerGame.vue'
+import MorrisGame from '../components/MorrisGame.vue'
+import RunesGame from '../components/RunesGame.vue'
 import KeeperTalk from '../components/KeeperTalk.vue'
 
 const { t: $tr } = useI18n()
@@ -34,6 +39,15 @@ const confirm = useConfirm()
 const route = useRoute()
 const TABS = ['staff', 'expeditions', 'orders', 'bar', 'games']
 const tab = ref(TABS.includes(route.query.tab) ? route.query.tab : 'staff')
+// The game tables, and the one open
+const TABLES = [
+  { id: 'cards', icon: 'crown' }, { id: 'dice', icon: 'perspective-dice-six-faces-random' }, { id: 'darts', icon: 'archery-target' },
+  { id: 'taba', icon: 'crossed-bones' }, { id: 'arm', icon: 'biceps' }, { id: 'beer', icon: 'beer-horn' },
+  { id: 'morris', icon: 'stone-block' }, { id: 'runes', icon: 'rune-stone' },
+]
+const TABLE_STORE = 'aetheria-tavern-table'
+const table = ref((() => { try { const v = localStorage.getItem(TABLE_STORE); return TABLES.some(g => g.id === v) ? v : 'cards' } catch { return 'cards' } })())
+watch(table, v => { try { localStorage.setItem(TABLE_STORE, v) } catch { /* storage unavailable */ } })
 watch(() => route.query.tab, v => { if (TABS.includes(v)) tab.value = v })
 const now = ref(Date.now())
 let timer
@@ -394,37 +408,47 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 
         <!-- GAMES -->
         <TabPanel value="games">
-          <div class="games">
-            <CardsGame />
-            <div class="games-side">
-              <div class="panel pad">
-                <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
-                <div class="dice-table">
-                  <div class="dice-side">
-                    <div class="small muted">{{ $t('tavern.you') }}</div>
-                    <div class="dice" :class="{ rolling }">
-                      <GameIcon v-for="(v, i) in lastRoll?.p || [6, 6]" :key="i" :name="FACES[v]" :size="44" />
-                    </div>
-                  </div>
-                  <div class="vs">{{ $t('tavern.vs') }}</div>
-                  <div class="dice-side">
-                    <div class="small muted">{{ G.journalNames().keeper }}</div>
-                    <div class="dice" :class="{ rolling }">
-                      <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
-                    </div>
+          <!-- The tables: one game at a time, the last one chosen remembered on this device -->
+          <div class="tables" role="tablist" :aria-label="$t('tavern.tabs.games')">
+            <button v-for="g in TABLES" :key="g.id" type="button" role="tab" class="table-btn" :class="{ on: table === g.id }" :aria-selected="table === g.id" @click="table = g.id">
+              <GameIcon :name="g.icon" :size="20" />
+              <span>{{ $t(`tavern.tables.${g.id}`) }}</span>
+            </button>
+          </div>
+          <div class="game-stage" role="tabpanel">
+            <CardsGame v-if="table === 'cards'" />
+            <div v-else-if="table === 'dice'" class="panel pad">
+              <h3 class="panel-title"><GameIcon name="perspective-dice-six-faces-random" /> {{ $t('tavern.diceTitle') }} <HelpTip k="sections.dice" /></h3>
+              <div class="dice-table">
+                <div class="dice-side">
+                  <div class="small muted">{{ $t('tavern.you') }}</div>
+                  <div class="dice" :class="{ rolling }">
+                    <GameIcon v-for="(v, i) in lastRoll?.p || [6, 6]" :key="i" :name="FACES[v]" :size="44" />
                   </div>
                 </div>
-                <div v-if="lastRoll && !rolling" class="roll-result" :class="lastRoll.delta > 0 ? 'ok-text' : lastRoll.delta < 0 ? 'bad-text' : 'muted'">
-                  {{ $t('tavern.roll.' + lastRoll.kind) }} <b v-if="lastRoll.delta">{{ $t('inventory.goldAmount', { n: (lastRoll.delta > 0 ? '+' : '') + fmt(lastRoll.delta) }) }}</b>
+                <div class="vs">{{ $t('tavern.vs') }}</div>
+                <div class="dice-side">
+                  <div class="small muted">{{ G.journalNames().keeper }}</div>
+                  <div class="dice" :class="{ rolling }">
+                    <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
+                  </div>
                 </div>
-                <div class="row" style="margin-top:12px">
-                  <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="dice-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" />
-                  <Button :label="$t('tavern.rollDice')" icon="pi pi-sync" :loading="rolling" @click="roll" />
-                </div>
-                <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
               </div>
-              <DartsGame />
+              <div v-if="lastRoll && !rolling" class="roll-result" :class="lastRoll.delta > 0 ? 'ok-text' : lastRoll.delta < 0 ? 'bad-text' : 'muted'">
+                {{ $t('tavern.roll.' + lastRoll.kind) }} <b v-if="lastRoll.delta">{{ $t('inventory.goldAmount', { n: (lastRoll.delta > 0 ? '+' : '') + fmt(lastRoll.delta) }) }}</b>
+              </div>
+              <div class="row" style="margin-top:12px">
+                <InputNumber v-model="bet" :min="10" :max="Math.max(10, G.maxBet())" inputId="dice-bet" size="small" class="grow" :suffix="' ' + $t('common.gold')" />
+                <Button :label="$t('tavern.rollDice')" icon="pi pi-sync" :loading="rolling" @click="roll" />
+              </div>
+              <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
             </div>
+            <DartsGame v-else-if="table === 'darts'" />
+            <TabaGame v-else-if="table === 'taba'" />
+            <ArmGame v-else-if="table === 'arm'" />
+            <BeerGame v-else-if="table === 'beer'" />
+            <MorrisGame v-else-if="table === 'morris'" />
+            <RunesGame v-else />
           </div>
         </TabPanel>
       </TabPanels>
@@ -444,10 +468,14 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 .report { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed var(--line); }
 .report:last-child { border-bottom: 0; }
 .report > .gi { color: var(--gold); margin-top: 2px; }
-/* The card table on one side, the dice and the darts stacked on the other */
-.games { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
-.games-side { display: grid; gap: 16px; }
-@media (max-width: 1000px) { .games { grid-template-columns: 1fr; } }
+.tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.table-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: border-color 0.15s, color 0.15s, transform 0.15s; }
+.table-btn:hover { border-color: var(--line-hi); color: var(--ink); }
+.table-btn.on { border-color: var(--gold); color: var(--ink); box-shadow: 0 0 18px -10px var(--gold); }
+.table-btn.on .gi { color: var(--gold); }
+.table-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.game-stage { max-width: 680px; }
 .dice-table { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 14px; border-radius: 14px; background: var(--well); }
 .dice-side { text-align: center; }
 .dice { display: flex; justify-content: center; gap: 8px; color: var(--ink); margin-top: 6px; }
