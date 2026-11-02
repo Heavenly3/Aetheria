@@ -91,6 +91,7 @@ const MAX = 1.8
 const fit = () => Math.min(size.w / MAP_W, size.h / MAP_H)
 const minS = () => fit() * 0.95
 const DETAIL = 0.72
+const OPEN_ZOOM = 0.9
 // A view kept between visits, as the board point at the centre and the zoom
 let saved = null
 
@@ -199,9 +200,9 @@ function measure() {
 }
 onMounted(() => {
   measure()
+  // The first time, it opens close in on the hero (or where the story goes next), not on the whole realm
   if (saved) centreOn(saved.x, saved.y, saved.s, false)
-  else if (size.w < 700) { const r = REGIONS[focusRegion()]; centreOn(r.x, r.y, 0.75, false) }
-  else { view.s = fit(); clamp() }
+  else { const r = REGIONS[focusRegion()]; centreOn(r.x, r.y, OPEN_ZOOM, false) }
   ro = new ResizeObserver(measure)
   ro.observe(box.value)
   window.addEventListener('pointermove', onMove)
