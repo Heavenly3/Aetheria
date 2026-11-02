@@ -163,12 +163,6 @@ export const BOSSES = [
 ]
 BOSSES.forEach(b => (b.boss = true))
 
-export const MERCENARIES = [
-  { id: 'squire', icon: 'checked-shield', cost: 250,  maxHit: 5 },
-  { id: 'archer', icon: 'bowman',         cost: 1500, maxHit: 11 },
-  { id: 'mage',   icon: 'wizard-face',    cost: 6000, maxHit: 20 },
-]
-MERCENARIES.forEach(m => named(m, `mercs.${m.id}.name`, `mercs.${m.id}.desc`))
 
 /* ---------- Slayer ---------- */
 export const SLAYER_SHOP = [

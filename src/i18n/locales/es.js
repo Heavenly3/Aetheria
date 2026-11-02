@@ -365,7 +365,7 @@ export default {
     faintedThieving: 'Te han pillado y te has desmayado. Toca descansar.', queueSkipMaterials: 'Se salta {action}: faltan materiales',
     outOfMaterials: 'Sin materiales para {action}', noSeeds: 'No tienes {item}', needBow: 'Necesitas un arco equipado. Fabrícalo con troncos en Flechería (Arcos) o cómpralo en la tienda.',
     noArrows: 'No tienes flechas equipadas. Fabrícalas en Flechería (astiles, plumas y puntas forjadas en Herrería) o compra flechas de bronce en la tienda.', spellLevel: '{spell} requiere Magia {lvl}', noRunes: 'No tienes runas para {spell}',
-    bossLocked: 'Completa antes la misión necesaria', mercGold: 'No tienes oro para los mercenarios', areaLocked: 'Esta zona está bloqueada',
+    bossLocked: 'Completa antes la misión necesaria', areaLocked: 'Esta zona está bloqueada',
     dungeonLocked: 'Esta mazmorra está bloqueada', diedDungeon: 'Has caído en {dungeon}, sala {room}. Pierdes {gold} de oro.',
     diedTower: 'Has caído en el piso {floor} (récord {best}). Pierdes {gold} de oro.', died: 'Derrotado por {monster}. Pierdes {gold} de oro.',
     slayerDone: 'Encargo completado: +{pts} puntos de cazador', queueSkip: 'Se salta {action}', queueDone: 'Cola terminada',
@@ -374,7 +374,7 @@ export default {
 
   prep: {
     title: "Preparación", open: "Abrir la preparación",
-    tabs: { style: "Estilo", abilities: "Habilidades", supplies: "Suministros", tactics: "Tácticas", loadouts: "Equipamientos" },
+    tabs: { style: "Estilo", abilities: "Habilidades", supplies: "Suministros", tactics: "Tácticas", loadouts: "Equipos", company: "Compañía" },
     food: "{n} de comida", noFood: "Sin comida", ability: "1 habilidad", abilities: "{n} habilidades",
   },
   world: {
@@ -435,9 +435,8 @@ export default {
     prayerLabel: 'Plegaria (gasta {n} huesos por minuto)', noPrayer: 'Sin plegaria', bonesLeft: 'Quedan {n} huesos', potionActive: '{name} activa',
     recommended: 'Recomendado: nivel {n}+', questReq: 'Misión: {quest}', areaLocked: 'Zona bloqueada',
     dungeonIntro: 'Recorre varias salas seguidas y derrota al jefe final para abrir su cofre. Al terminar, la mazmorra vuelve a empezar sola hasta que te retires o caigas.',
-    roomTip: 'Sala {n}: {monster}', bossTip: 'Jefe: {monster}', chest: 'Cofre:', enter: 'Entrar', mercsTitle: 'Mercenarios',
-    mercsIntro: 'Contrata aliados antes de enfrentarte a un jefe. Atacan contigo y reparten los golpes del enemigo. Se pagan al empezar el combate y te acompañan hasta que te retires.',
-    hireCost: 'Coste de contratación:', respawnIn: 'Reaparece en {n} s',
+    roomTip: 'Sala {n}: {monster}', bossTip: 'Jefe: {monster}', chest: 'Cofre:', enter: 'Entrar',
+    respawnIn: 'Reaparece en {n} s',
   },
 
   tactics: {
@@ -1560,7 +1559,7 @@ export default {
       sets: { title: 'Bonus de conjunto', body: 'Llevar varias piezas del mismo conjunto añade bonificaciones extra. Cuantas más piezas, más bonificaciones.' },
       effects: { title: 'Efectos activos', body: 'Pociones, bendiciones, prodigios, festivales y otras mejoras que te afectan ahora mismo, con el tiempo que les queda.' },
       skills: { title: 'Habilidades', body: 'Tu nivel en cada habilidad. Pulsa una para abrirla y empezar a entrenar.' },
-      mercs: { title: 'Mercenarios', body: 'Contrata ayuda para un combate contra un jefe. Atacan a tu lado y atraen parte de sus golpes. Les pagas cada vez que empiezas el combate.' },
+      mercs: { title: 'Compañía', body: 'Acompañantes contratados para siempre. Hasta dos van contigo a cada jefe y mazmorra y cobran un sueldo cada vez. Los escuderos te protegen, las arqueras interrumpen, los magos rompen curaciones y los clérigos te curan. Suben de nivel peleando, y si caes necesitan diez minutos para recuperarse.' },
       supplies: { title: 'Provisiones', body: 'Comida, poción y plegaria que tu héroe usa solo durante el combate.' },
       slayerTask: { title: 'Encargo actual', body: 'El monstruo que debes cazar y cuántos quedan. Las bajas cuentan en cualquier sitio. Puedes saltarte un encargo que no te guste en la tienda del cazador.' },
       slayerRecord: { title: 'Historial del cazador', body: 'Tus puntos, encargos terminados y racha. Cada décimo encargo seguido da cinco veces los puntos.' },
@@ -1819,7 +1818,8 @@ export default {
       goldH: "oro/h",
       taken: "recibido/s",
     },
-    notes: { mechInterrupted: "¡Interrumpes su {mech}!", mechMissed: "{mech} falla", mechBuff: "{mech}: se hace más fuerte un rato", stole: "Te ha robado {gold} de oro. ¡Derrótalo antes de que huya!", fled: "Ha huido con {gold} de oro", recovered: "Recuperas {gold} de oro",
+    notes: { mercInterrupt: "¡{name} interrumpe su habilidad!", mercCleanse: "{name} te quita {status}", mercLevel: "{name} sube al nivel {n}",
+      mechInterrupted: "¡Interrumpes su {mech}!", mechMissed: "{mech} falla", mechBuff: "{mech}: se hace más fuerte un rato", stole: "Te ha robado {gold} de oro. ¡Derrótalo antes de que huya!", fled: "Ha huido con {gold} de oro", recovered: "Recuperas {gold} de oro",
       mechCharge: "Está cargando: {mech}", mechHit: "{mech} te alcanza: {dmg}", mechGuarded: "Resistes {mech}: solo {dmg}", mechBroken: "Rompes su {mech}", mechHealed: "{mech}: se cura",
       ability: "Usaste {ability}",
       phase: "¡El jefe está {phase}!",
@@ -3535,10 +3535,34 @@ export default {
     void_sanctum: { name: 'Santuario del Vacío', desc: 'El corazón de la grieta, custodiado por su guardián.' },
   },
 
-  mercs: {
-    squire: { name: 'Escudero', desc: 'Absorbe golpes y ataca con fiabilidad.' },
-    archer: { name: 'Arquera élfica', desc: 'Daño constante desde la retaguardia.' },
-    mage: { name: 'Archimago', desc: 'Hechizos devastadores contra jefes.' },
+  company: {
+    title: "Compañía",
+    intro: "Acompañantes que contratas para siempre. Hasta {n} van contigo a cada jefe y mazmorra, cada uno con su oficio, y crecen con cada combate.",
+    inParty: "Te acompañan: {n} de {max}",
+    wages: "Sueldo por combate: {n} de oro",
+    wagesEach: "Sueldo en cada combate:",
+    level: "Nivel {n}",
+    xp: "Experiencia para el siguiente nivel",
+    stats: "{p}% del poder de su oficio · sueldo {w} de oro",
+    goes: "Va contigo",
+    dismiss: "Despedir",
+    sure: "¿Despedir para siempre?",
+    none: "Todavía no has contratado a nadie.",
+    recruits: "Buscan trabajo",
+    hire: "Contratar · {n}",
+    hurt: "Herido: {t}",
+    hurtShort: "Herido",
+    noGold: "Necesitas {n} de oro para contratarlo",
+    cantPay: "Tu compañía pide {n} de oro de sueldo; se queda atrás",
+    full: "Solo pueden ir {n}",
+    regionHint: "Tu compañía va contigo a jefes y mazmorras. Elige quién en Preparación.",
+    empty: "Nadie va contigo. Contrata acompañantes en Preparación.",
+    roles: {
+      squire: { name: "Escudero", desc: "Atrae los golpes del enemigo y recibe parte de cada golpe cargado por ti." },
+      archer: { name: "Arquera", desc: "Daño constante, y a menudo interrumpe la habilidad de una criatura nada más empezar." },
+      mage: { name: "Mago", desc: "Hechizos fuertes que cuentan el doble para romper las curaciones del enemigo." },
+      cleric: { name: "Clérigo", desc: "Cura tus heridas cada turno y quita el sangrado, el veneno y las quemaduras." },
+    },
   },
 
   slayerShop: {

@@ -365,7 +365,7 @@ export default {
     faintedThieving: 'You were caught and passed out. Taking a break.', queueSkipMaterials: 'Skipped {action}: missing materials',
     outOfMaterials: 'Out of materials for {action}', noSeeds: 'You have no {item}', needBow: 'You need a bow equipped. Make one from logs in Fletching (Bows) or buy one in the shop.',
     noArrows: 'You have no arrows equipped. Make them in Fletching (shafts, feathers and arrowtips forged in Smithing) or buy bronze arrows in the shop.', spellLevel: '{spell} needs Magic level {lvl}', noRunes: 'Not enough runes for {spell}',
-    bossLocked: 'Finish the required quest first', mercGold: 'Not enough gold for the mercenaries', areaLocked: 'This area is locked',
+    bossLocked: 'Finish the required quest first', areaLocked: 'This area is locked',
     dungeonLocked: 'This dungeon is locked', diedDungeon: 'You fell in {dungeon}, room {room}. Lost {gold} gold.',
     diedTower: 'You fell on floor {floor} (record {best}). Lost {gold} gold.', died: 'Defeated by {monster}. Lost {gold} gold.',
     slayerDone: 'Task complete: +{pts} slayer points', queueSkip: 'Skipped {action}', queueDone: 'Queue finished',
@@ -374,7 +374,7 @@ export default {
 
   prep: {
     title: "Preparation", open: "Open the preparation",
-    tabs: { style: "Style", abilities: "Abilities", supplies: "Supplies", tactics: "Tactics", loadouts: "Loadouts" },
+    tabs: { style: "Style", abilities: "Abilities", supplies: "Supplies", tactics: "Tactics", loadouts: "Loadouts", company: "Company" },
     food: "{n} food", noFood: "No food", ability: "1 ability", abilities: "{n} abilities",
   },
   world: {
@@ -435,9 +435,8 @@ export default {
     prayerLabel: 'Prayer (uses {n} bones per minute)', noPrayer: 'No prayer', bonesLeft: '{n} bones left', potionActive: '{name} active',
     recommended: 'Recommended: level {n}+', questReq: 'Quest: {quest}', areaLocked: 'Area locked',
     dungeonIntro: 'Fight through several rooms in a row and beat the final boss to open its chest. Once cleared, the dungeon starts again on its own until you retreat or fall.',
-    roomTip: 'Room {n}: {monster}', bossTip: 'Boss: {monster}', chest: 'Chest:', enter: 'Enter', mercsTitle: 'Mercenaries',
-    mercsIntro: 'Hire allies before facing a boss. They attack alongside you and share the hits. You pay them when the fight starts and they stay until you retreat.',
-    hireCost: 'Hiring cost:', respawnIn: 'Respawns in {n} s',
+    roomTip: 'Room {n}: {monster}', bossTip: 'Boss: {monster}', chest: 'Chest:', enter: 'Enter',
+    respawnIn: 'Respawns in {n} s',
   },
 
   tactics: {
@@ -1560,7 +1559,7 @@ export default {
       sets: { title: 'Set bonuses', body: 'Wearing several pieces of the same set adds extra bonuses. The more pieces, the more bonuses.' },
       effects: { title: 'Active effects', body: 'Potions, blessings, omens, festivals and other boosts working on you right now, with the time they have left.' },
       skills: { title: 'Skills', body: 'Your level in every skill. Click one to open it and start training.' },
-      mercs: { title: 'Mercenaries', body: 'Hire helpers for a boss fight. They attack alongside you and draw some of its blows. You pay them each time you start the fight.' },
+      mercs: { title: 'Company', body: 'Companions hired for good. Up to two come along to every boss fight and dungeon and are paid a wage each time. Squires shield you, archers cut off moves, mages break healing and clerics mend you. They level up as they fight, and if you fall they need ten minutes to recover.' },
       supplies: { title: 'Supplies', body: 'Food, potion and prayer your hero uses on their own during a fight.' },
       slayerTask: { title: 'Current task', body: 'The monster you must hunt and how many are left. Kills anywhere count. You can skip a task you do not like in the slayer shop.' },
       slayerRecord: { title: 'Slayer record', body: 'Your points, finished tasks and streak. Every tenth task in a row gives five times the points.' },
@@ -1819,7 +1818,8 @@ export default {
       goldH: "gold/h",
       taken: "taken/s",
     },
-    notes: { mechInterrupted: "You cut off its {mech}!", mechMissed: "{mech} misses you", mechBuff: "{mech}: it grows stronger for a while", stole: "It stole {gold} gold. Defeat it before it runs off!", fled: "It ran off with {gold} gold", recovered: "You got back {gold} gold",
+    notes: { mercInterrupt: "{name} cuts off its move!", mercCleanse: "{name} lifts your {status}", mercLevel: "{name} reaches level {n}",
+      mechInterrupted: "You cut off its {mech}!", mechMissed: "{mech} misses you", mechBuff: "{mech}: it grows stronger for a while", stole: "It stole {gold} gold. Defeat it before it runs off!", fled: "It ran off with {gold} gold", recovered: "You got back {gold} gold",
       mechCharge: "It charges: {mech}", mechHit: "{mech} lands for {dmg}", mechGuarded: "You guard against {mech}: only {dmg}", mechBroken: "You break its {mech}", mechHealed: "{mech}: it heals",
       ability: "You used {ability}",
       phase: "The boss is now {phase}!",
@@ -3535,10 +3535,34 @@ export default {
     void_sanctum: { name: 'Void Sanctum', desc: 'The heart of the rift, guarded by its warden.' },
   },
 
-  mercs: {
-    squire: { name: 'Squire', desc: 'Soaks up hits and strikes reliably.' },
-    archer: { name: 'Elven Archer', desc: 'Steady damage from the back line.' },
-    mage: { name: 'Archmage', desc: 'Devastating spells against bosses.' },
+  company: {
+    title: "Company",
+    intro: "Companions you hire for good. Up to {n} come along to every boss fight and dungeon, each with a trade of their own, and they grow with every fight.",
+    inParty: "Going along: {n} of {max}",
+    wages: "Wages per fight: {n} gold",
+    wagesEach: "Wages for each fight:",
+    level: "Level {n}",
+    xp: "Experience to the next level",
+    stats: "{p}% of their trade’s power · wage {w} gold",
+    goes: "Goes along",
+    dismiss: "Dismiss",
+    sure: "Dismiss for good?",
+    none: "Nobody hired yet.",
+    recruits: "Looking for work",
+    hire: "Hire · {n}",
+    hurt: "Hurt: {t}",
+    hurtShort: "Hurt",
+    noGold: "You need {n} gold to hire them",
+    cantPay: "Your company wants {n} gold in wages; they stay behind",
+    full: "Only {n} can come along",
+    regionHint: "Your company comes along to bosses and dungeons. Choose who in Preparation.",
+    empty: "Nobody is set to come along. Hire companions in Preparation.",
+    roles: {
+      squire: { name: "Squire", desc: "Draws the enemy’s blows and takes part of every charged strike for you." },
+      archer: { name: "Archer", desc: "Steady damage, and often cuts off a creature’s move the moment it starts." },
+      mage: { name: "Mage", desc: "Strong spells that count double towards breaking an enemy’s healing." },
+      cleric: { name: "Cleric", desc: "Mends your wounds every turn and lifts bleeding, poison and burns." },
+    },
   },
 
   slayerShop: {

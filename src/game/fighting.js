@@ -445,7 +445,7 @@ export const fighting = {
       this.note(act, 'mechMissed', { id: c.id })
     } else {
       const guarded = this.isGuarded(act)
-      const raw = m.maxHit * def.hit * (def.roll ? 0.5 + Math.random() * 0.5 : 1) * this.phaseOf(act).maxHit * (guarded ? GUARD_TAKEN : 1)
+      const raw = m.maxHit * def.hit * (def.roll ? 0.5 + Math.random() * 0.5 : 1) * this.phaseOf(act).maxHit * (guarded ? GUARD_TAKEN : 1) * (1 - this.partyGuard(act))
       const dmg = Math.max(1, Math.round(raw * (1 - this.damageReduction()) * (1 - this.weakenOf(act, 'monster'))))
       this.s.hp -= dmg
       this.track(act, 'taken', dmg)

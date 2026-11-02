@@ -7,6 +7,7 @@ import { G, state } from '../game/engine.js'
 import { fmt } from '../game/format.js'
 import CombatSettings from './CombatSettings.vue'
 import AbilityPanel from './AbilityPanel.vue'
+import CompanyPanel from './CompanyPanel.vue'
 import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'
 
@@ -23,6 +24,7 @@ const tabs = computed(() => [
   { value: 'abilities', label: t('prep.tabs.abilities'), icon: 'pi pi-star' },
   { value: 'supplies', label: t('prep.tabs.supplies'), icon: 'pi pi-heart' },
   { value: 'tactics', label: t('prep.tabs.tactics'), icon: 'pi pi-flag' },
+  { value: 'company', label: t('prep.tabs.company'), icon: 'pi pi-users' },
   { value: 'loadouts', label: t('prep.tabs.loadouts'), icon: 'pi pi-shield' },
 ])
 
@@ -56,6 +58,7 @@ const summary = computed(() => [
       <template #option="{ option }"><i :class="option.icon" /> <span>{{ option.label }}</span></template>
     </SelectButton>
     <AbilityPanel v-if="tab === 'abilities'" />
+    <CompanyPanel v-else-if="tab === 'company'" />
     <CombatSettings v-else :section="tab" />
   </Dialog>
 </template>
@@ -70,4 +73,6 @@ const summary = computed(() => [
 .prep-text { display: grid; min-width: 0; line-height: 1.25; }
 .prep-text .small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .prep-tabs { width: 100%; }
+/* Phones: two rows of three, so every label fits */
+@media (max-width: 600px) { .prep-tabs { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 </style>

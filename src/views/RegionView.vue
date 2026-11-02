@@ -1,10 +1,10 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Button from 'primevue/button'
-import ToggleButton from 'primevue/togglebutton'
 import { G, state } from '../game/engine.js'
-import { AREAS, MERCENARIES, MONSTERS } from '../game/data/combat.js'
+import { AREAS, MONSTERS } from '../game/data/combat.js'
+import { MERC_ROLES } from '../game/data/company.js'
 import { ECHO_BONUS } from '../game/data/echoes.js'
 import { QUESTS } from '../game/data/progression.js'
 import { AREA_MAP, regionDungeon, regionBosses, regionEchoes, regionOfActivity, regionPath } from '../game/data/world.js'
@@ -43,9 +43,9 @@ const regionName = rid => AREAS.find(a => a.id === rid)?.name
 
 const inDungeon = dgId => state.activity?.type === 'combat' && state.activity.kind === 'dungeon' && state.activity.target === dgId
 const dungeonLocked = dg => !!dg.reqQuest && !G.questDone(dg.reqQuest)
-const hire = ref({ squire: false, archer: false, mage: false })
-const hireCost = computed(() => MERCENARIES.filter(m => hire.value[m.id]).reduce((s, m) => s + m.cost, 0))
-const fightBoss = b => G.startCombat('boss', b.id, { mercs: MERCENARIES.filter(m => hire.value[m.id]).map(m => m.id) })
+const fightBoss = b => G.startCombat('boss', b.id)
+// The companions set to come along (chosen in Preparation)
+const party = computed(() => state.company.party.map(id => G.companyMember(id)).filter(Boolean))
 </script>
 
 <template>
@@ -142,20 +142,22 @@ const fightBoss = b => G.startCombat('boss', b.id, { mercs: MERCENARIES.filter(m
             </MonsterCard>
           </template>
         </div>
+        <!-- The company that comes along -->
         <div class="panel pad mercs">
-          <h3 class="panel-title">{{ $t('combat.mercsTitle') }} <HelpTip k="sections.mercs" /></h3>
-          <p class="small muted" style="margin-top:0">{{ $t('combat.mercsIntro') }}</p>
-          <div class="stack" style="gap:8px">
-            <div v-for="mc in MERCENARIES" :key="mc.id" class="merc row">
-              <ItemTile :icon="mc.icon" tint="#6a3fbf" size="sm" :tip="false" />
+          <h3 class="panel-title">{{ $t('company.title') }} <HelpTip k="sections.mercs" /></h3>
+          <p class="small muted" style="margin-top:0">{{ $t('company.regionHint') }}</p>
+          <div v-if="party.length" class="stack" style="gap:8px">
+            <div v-for="p in party" :key="p.id" class="merc row">
+              <ItemTile :icon="MERC_ROLES[p.role].icon" :tint="MERC_ROLES[p.role].tint" size="sm" :tip="false" />
               <div class="grow">
-                <b>{{ mc.name }}</b>
-                <div class="small muted">{{ $t('combat.maxHit', { v: mc.maxHit }) }}</div>
+                <b>{{ p.name }}</b>
+                <div class="small muted">{{ $t(`company.roles.${p.role}.name`) }} · {{ $t('company.level', { n: p.lvl }) }}</div>
               </div>
-              <ToggleButton v-model="hire[mc.id]" :onLabel="fmt(mc.cost)" :offLabel="fmt(mc.cost)" onIcon="pi pi-check" offIcon="pi pi-wallet" size="small" />
+              <span v-if="G.mercHurt(p)" class="tag bad">{{ $t('company.hurtShort') }}</span>
             </div>
+            <div class="small">{{ $t('company.wagesEach') }} <b class="gold-text">{{ $t('inventory.goldAmount', { n: fmt(G.partyWages()) }) }}</b></div>
           </div>
-          <div class="small" style="margin-top:12px">{{ $t('combat.hireCost') }} <b class="gold-text">{{ $t('inventory.goldAmount', { n: fmt(hireCost) }) }}</b></div>
+          <p v-else class="small faint" style="margin:0">{{ $t('company.empty') }}</p>
           <p v-if="G.echoesOpen() && echoes.length" class="small faint" style="margin:10px 0 0">{{ $t('echoes.intro', { xp: ECHO_BONUS.xp * 100, gold: ECHO_BONUS.gold * 100 }) }}</p>
         </div>
       </div>

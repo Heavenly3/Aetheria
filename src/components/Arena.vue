@@ -2,7 +2,8 @@
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { G, state } from '../game/engine.js'
-import { MERCENARIES, DUNGEONS } from '../game/data/combat.js'
+import { DUNGEONS } from '../game/data/combat.js'
+import { MERC_ROLES } from '../game/data/company.js'
 import { STATUSES, TRAITS, ELITES, ELITE_LOOT, ABILITY_MAP, BUFFS, ENERGY_MAX, BOSS_PHASES, MECHS, BREAK_SHARE, CREATURE_BUFFS, FLEE_TIME } from '../game/data/fighting.js'
 import { abilityText } from '../ui/abilities.js'
 import { pct, fmt, fmtDec } from '../game/format.js'
@@ -51,6 +52,7 @@ const mechs = computed(() => G.monsterMechs(m.value, act.value).map(id => ({ id,
 const mBuffs = computed(() => Object.entries(act.value?.mb || {}).map(([id, left]) => ({ id, ...CREATURE_BUFFS[id], left: Math.ceil(left) })))
 const mechTip = id => tip(t(`fighting.mechs.${id}.name`), t(`fighting.mechs.${id}.desc`))
 const streak = computed(() => state.hunt?.streak || 0)
+const party = computed(() => G.partyOf(act.value))
 const live = computed(() => (void act.value?.live?.t, G.liveStats()))
 const NOTE_PARAMS = {
   ability: n => ({ ability: t(`abilities.list.${n.id}`) }),
@@ -68,6 +70,9 @@ const NOTE_PARAMS = {
   stole: n => ({ gold: fmt(n.gold) }),
   fled: n => ({ gold: fmt(n.gold) }),
   recovered: n => ({ gold: fmt(n.gold) }),
+  mercInterrupt: n => ({ name: n.name }),
+  mercCleanse: n => ({ name: n.name, status: t(`fighting.statuses.${n.status}.name`).toLowerCase() }),
+  mercLevel: n => ({ name: n.name, n: n.lvl }),
 }
 const noteText = n => t(`fighting.notes.${n.kind}`, NOTE_PARAMS[n.kind]?.(n) || {})
 const buffs = computed(() => Object.entries(act.value?.hb || {}).map(([id, b]) => ({ id, ...BUFFS[id], left: Math.ceil(b.t) })))
@@ -141,9 +146,11 @@ onUnmounted(() => { off && off(); offAb && offAb(); offPhase && offPhase(); offK
           <GameIcon :name="s.icon" :size="13" />{{ s.left }}<sup v-if="s.n > 1">×{{ s.n }}</sup>
         </span>
       </div>
-      <div v-if="act.mercs?.length" class="row" style="justify-content:center;margin-top:10px;gap:6px">
-        <span v-for="mid in act.mercs" :key="mid" v-tooltip.top="MERCENARIES.find(x => x.id === mid).name">
-          <ItemTile :icon="MERCENARIES.find(x => x.id === mid).icon" tint="#6a3fbf" size="sm" :tip="false" />
+      <!-- The company at the hero's side -->
+      <div v-if="party.length" class="party">
+        <span v-for="p in party" :key="p.id" class="party-member" v-tooltip.top="() => tip(p.name, $t(`company.roles.${p.role}.desc`), [{ text: $t('company.level', { n: p.lvl }), kind: 'muted' }])">
+          <ItemTile :icon="MERC_ROLES[p.role].icon" :tint="MERC_ROLES[p.role].tint" size="sm" :tip="false" />
+          <span class="small">{{ p.name }}</span>
         </span>
       </div>
       <div v-for="s in splats.filter(x => x.target === 'player')" :key="s.id" class="splat" :class="{ miss: s.miss, soft: s.soft, fx: s.fx, cast: s.cast }" :style="s.color ? { background: s.color } : null">{{ s.text }}</div>
@@ -269,6 +276,8 @@ onUnmounted(() => { off && off(); offAb && offAb(); offPhase && offPhase(); offK
 .live { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-size: 12.5px; color: var(--muted); padding-top: 10px; border-top: 1px solid var(--line); }
 .live b { color: var(--ink); }
 .live-title { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); cursor: help; }
+.party { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.party-member { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; border-radius: 10px; background: var(--tint-1); border: 1px solid var(--line); }
 .notes { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 12px; color: var(--ink-2); max-width: 520px; justify-self: center; width: 100%; }
 .notes li { display: flex; gap: 8px; }
 .ab-row { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }

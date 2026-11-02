@@ -4,7 +4,7 @@ import { ITEMS, SLOTS, CROPS, GEMS, POTION_DURATION } from './data/items.js'
 import { ACTIONS, findAction, QUALITIES, qualityChances, withQuality, FISH_INFO } from './data/actions.js'
 import { BAITS, WATERS, MASTERY_LUCK } from './data/fishing.js'
 import {
-  PLAYER_ATTACK_SPEED, COMBAT_STYLES, SPELLS, MONSTERS, AREAS, BOSSES, MERCENARIES,
+  COMBAT_STYLES, SPELLS, MONSTERS, AREAS, BOSSES,
   TOWER_SHOP, towerMonster, DUNGEONS,
 } from './data/combat.js'
 import { QUESTS, ACHIEVEMENTS, ROOMS, BLESSINGS, BLESSING_DURATION, PRESTIGE, QUEST_STATS } from './data/progression.js'
@@ -41,6 +41,7 @@ import { ECHOES } from './data/echoes.js'
 import { THREAT_EFFECT } from './data/realm.js'
 const REGION_GOLD = THREAT_EFFECT.gold, REGION_LOOT = THREAT_EFFECT.loot
 import { slayer } from './slayer.js'
+import { company, companyState } from './company.js'
 import { church, churchState } from './church.js'
 import { bar } from './bar.js'
 import { farm } from './farm.js'
@@ -149,6 +150,7 @@ export function newState(profile = {}) {
     ...relicForgeState(),
     ...journalState(),
     ...fightingState(),
+    ...companyState(),
     ...guildsState(),
     ...codexState(),
     ...crownState(),
@@ -1227,15 +1229,10 @@ export const G = {
     if (cur && cur.type === 'combat' && cur.kind === kind && cur.target === target && kind !== 'tower') return this.stop()
     const blocker = this.attackBlocker()
     if (blocker) return this.toast('crossed-swords', blocker.key, blocker.params, 'warn')
-    let mercs = []
     if (kind === 'boss') {
       const b = BOSS_MAP[target]
       if (b.reqQuest && !this.questDone(b.reqQuest)) return this.toast('padlock', 'msg.bossLocked', {}, 'warn')
       if (b.echo && !this.echoesOpen()) return this.toast('padlock', 'echoes.locked', {}, 'warn')
-      mercs = (opts.mercs || []).filter(id => MERCENARIES.some(x => x.id === id))
-      const cost = mercs.reduce((s, id) => s + MERCENARIES.find(x => x.id === id).cost, 0)
-      if (this.s.gold < cost) return this.toast('two-coins', 'msg.mercGold', {}, 'warn')
-      this.s.gold -= cost
     }
     if (kind === 'area') {
       const m = MONSTERS[target]
@@ -1253,8 +1250,10 @@ export const G = {
     }
     const floor = kind === 'tower' ? Math.max(1, Math.floor(this.s.tower.best / 10) * 10 + 1) : null
     if (this.s.hp <= 0) this.s.hp = 1
-    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, mercs, runKills: 0, clears: 0, elite: null, fx: null, energy: 0, cd: {}, hb: {}, phase: 0 }
+    const act = { type: 'combat', kind, target, floor, room: 0, mHp: 0, pTimer: 0, mTimer: 0, mercTimer: 0, respawn: 0, party: [], runKills: 0, clears: 0, elite: null, fx: null, energy: 0, cd: {}, hb: {}, phase: 0 }
     this.startTracking(act)
+    // The hired company comes along to bosses and dungeons
+    if (kind === 'boss' || kind === 'dungeon') this.bringParty(act)
     this.spawn(act)
     if (kind === 'weekly') this.beginWeeklyAttempt(act)
     this.s.activity = act
@@ -1310,25 +1309,13 @@ export const G = {
       this.checkPhase(act, m)
     }
 
-    if (act.mercs.length) {
-      act.mercTimer += dt
-      if (act.mercTimer >= PLAYER_ATTACK_SPEED) {
-        act.mercTimer -= PLAYER_ATTACK_SPEED
-        let total = 0
-        act.mercs.forEach(id => { const mc = MERCENARIES.find(x => x.id === id); if (Math.random() < 0.75) total += rand(0, mc.maxHit) })
-        const mercDealt = Math.min(total, act.mHp)
-        act.mHp -= mercDealt
-        this.track(act, 'dealt', mercDealt)
-        this.emit('hit', { who: 'merc', dmg: total })
-        if (act.mHp <= 0) return this.killMonster(m)
-      }
-    }
+    if (this.companyTick(act, m, dt, ps) === 'kill') return this.killMonster(m)
 
     if (!this.hasStatus(act, 'monster', 'stun') && !act.mech?.charge) act.mTimer += dt / (1 + this.slowOf(act, 'monster'))
     const mSpeed = m.speed * this.phaseOf(act).speed * (act.mb?.frenzy ? CREATURE_BUFFS.frenzy.speed : 1)
     if (act.mTimer >= mSpeed) {
       act.mTimer -= mSpeed
-      if (Math.random() < 1 / (1 + act.mercs.length)) {
+      if (Math.random() < this.heroDrawShare(act)) {
         // Agility dodges the blow; a shield may block half of it
         if (Math.random() < this.dodgeChance() + this.buffValue(act, 'dodge')) { this.emit('hit', { who: 'monster', dmg: 0, dodged: true }); return }
         const hit = Math.random() < this.hitChance(mr.accRoll, ps.defRoll)
@@ -1363,6 +1350,7 @@ export const G = {
     this.festivalKill(m)
     this.addStreak()
     act.runKills++
+    this.companyKill(m, act)
     // A thief that falls gives back what it took
     if (act.stolen > 0) {
       st.gold += act.stolen
@@ -1459,6 +1447,7 @@ export const G = {
     const act = this.s.activity
     this.s.stats.deaths++
     if (act.kind !== 'weekly') this.loseStreak()
+    this.companyFell(act)
     this.s.hp = this.maxHp()
     // Falling to the weekly boss only ends the attempt
     const lost = act.kind === 'weekly' || act.kind === 'festival' ? 0 : Math.floor(this.s.gold * this.diff().death)
@@ -1713,6 +1702,6 @@ export const G = {
   },
 }
 
-Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, guilds, affairs, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records, mythics)
+Object.assign(G, systems, meta, ascension, collection, omens, companions, weekly, relicForge, journal, fighting, company, guilds, affairs, codex, slayer, church, bar, farm, thief, festivals, crown, routines, techniques, realm, unlocks, echoes, records, mythics)
 
 export { SKILLS, ITEMS }
