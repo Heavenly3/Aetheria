@@ -11,7 +11,8 @@ import GameIcon from './GameIcon.vue'
 import ItemTile from './ItemTile.vue'
 
 // Getting ready for a fight: one button that sums up the setup and opens it in a window.
-// The tab last opened is remembered on this device.
+// The tab last opened is remembered on this device. Classes given to it go on the button.
+defineOptions({ inheritAttrs: false })
 const STORE = 'aetheria-prep-tab'
 const { t } = useI18n()
 const open = ref(false)
@@ -37,7 +38,7 @@ const summary = computed(() => [
 </script>
 
 <template>
-  <button class="prep-btn" type="button" aria-haspopup="dialog" :aria-label="$t('prep.open') + '. ' + summary" @click="open = true">
+  <button v-bind="$attrs" class="prep-btn" type="button" aria-haspopup="dialog" :aria-label="$t('prep.open') + '. ' + summary" @click="open = true">
     <span class="prep-bits">
       <span><GameIcon :name="TYPE_ICONS[type]" :size="15" /></span>
       <span :class="{ off: !food }"><ItemTile v-if="food" :item="food" size="xs" :tip="false" /><GameIcon v-else name="meat" :size="15" /></span>
