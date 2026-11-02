@@ -24,7 +24,7 @@ import { GUEST_MAP, REP_STEP, repMult } from '../game/data/bar.js'
 import ItemTile from '../components/ItemTile.vue'
 import GameIcon from '../components/GameIcon.vue'
 import HelpTip from '../components/HelpTip.vue'
-import CrownsGame from '../components/CrownsGame.vue'
+import CardsGame from '../components/CardsGame.vue'
 import DartsGame from '../components/DartsGame.vue'
 import KeeperTalk from '../components/KeeperTalk.vue'
 
@@ -407,7 +407,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
           </div>
           <div class="vs">{{ $t('tavern.vs') }}</div>
           <div class="dice-side">
-            <div class="small muted">{{ $t('tavern.barkeep') }}</div>
+            <div class="small muted">{{ G.journalNames().keeper }}</div>
             <div class="dice" :class="{ rolling }">
               <GameIcon v-for="(v, i) in lastRoll?.h || [1, 1]" :key="i" :name="FACES[v]" :size="44" />
             </div>
@@ -422,7 +422,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
         </div>
         <div class="small faint" style="margin-top:8px">{{ $t('tavern.diceStats', { max: fmt(info.maxBet), n: t.dice.played, net: (t.dice.net >= 0 ? '+' : '') + fmt(t.dice.net) }) }}</div>
       </div>
-            <CrownsGame />
+            <CardsGame />
             <DartsGame />
           </div>
         </TabPanel>

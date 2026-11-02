@@ -1608,7 +1608,7 @@ export default {
       board: { title: 'Hiring board', body: 'Candidates you can hire. Rarer ones work faster and may have useful traits. The board refreshes over time.' },
       reports: { title: 'Expedition reports', body: 'What your staff brought back from their expeditions.' },
       drinks: { title: 'Drinks', body: 'Buy a drink for a temporary bonus: faster actions, more XP, more loot or harder hits.' },
-      crowns: { title: "Seven Crowns", body: "A card game against the tavern keeper. Each card is worth 1 to 4 crowns. Draw as many as you dare and stand before going over seven; the keeper then draws until six or more. Closer to seven wins, a tie gives the bet back, and seven exactly pays a bonus." },
+      cards: { title: "Blackjack", body: "Cards against the tavern keeper. Get closer to 21 than they do without going over: number cards count their number, face cards 10 and aces 1 or 11. Hit for another card, stand to keep your hand, or double down on your first two cards for one more card and twice the bet. The keeper draws until 17. Blackjack pays 3 to 2." },
       darts: { title: "Darts", body: "Three darts at a board while your aim sways. The centre is worth 50, the next ring 25, then 10, 5 and 2. A high total pays two or three times the bet. Training Ranged makes the aim sway less and slower." },
       dice: { title: 'Dice', body: 'You and the house roll two dice each. Roll higher to win your bet, lower to lose it; a double six pays three times your bet.' },
       mystery: { title: 'Mystery chest', body: 'Pay tavern tokens for a chest with a random reward. The chances of each reward are shown.' },
@@ -3367,7 +3367,7 @@ export default {
   },
 
   tavern: {
-    crowns: { title: "Seven Crowns", rules: "Cards worth 1 to 4 crowns. Draw to get closer to {n} than the keeper without going over, then stand. The keeper draws until {k} or more; a tie gives your bet back, and {n} exactly pays {b}% more.", hidden: "The keeper’s next card", draw: "Draw", stand: "Stand", deal: "Deal", again: "Another hand", bet: "Your bet: {n} gold", betLabel: "Bet for Seven Crowns", results: { seven: "Seven crowns!", win: "You win the hand", tie: "A tie: your bet comes back", lose: "The keeper wins", bust: "Too many crowns: you go over" } },
+    cards: { title: "Blackjack", rules: "Get closer to 21 than {keeper} without going over. Face cards are worth 10 and aces 1 or 11. {keeper} draws until {n}. Blackjack pays 3 to 2, and a tie gives your bet back.", yourHand: "Your hand", keeperHand: "{keeper}’s hand", value: "Value: {n}", valueHidden: "Value: {n} + ?", hidden: "Face-down card", hit: "Hit", stand: "Stand", double: "Double down", deal: "Deal", again: "Another hand", bet: "Your bet: {n} gold", betLabel: "Bet for blackjack", betBack: "Bet returned", results: { natural: "Blackjack!", win: "You win", keeperBust: "{keeper} goes over 21. You win", push: "A tie", lose: "{keeper} wins", bust: "You go over 21", keeperNatural: "{keeper} has blackjack" } },
     darts: { title: "Darts", rules: "{n} darts at a swaying aim: throw when it crosses the centre. Your total pays {pays}. Ranged training steadies your hand.", board: "Dartboard. Press Enter or Space to throw", throw: "Throw", start: "Step up", again: "Again", left: "Darts left: {n}", betLabel: "Bet for darts", result: "Total: {n} points", stats: "Steady hand {s}% · best {best} · {n} rounds · balance {net} gold" },
     gameStats: "{n} hands · balance {net} gold",
     patrons: "Patrons",
@@ -3404,7 +3404,7 @@ export default {
     drinks: 'Drinks', underEffect: 'Under the effect of <b>{name}</b>: {desc}', minutes: '{n} min', drank: 'You drink <b>{drink}</b> for 30 min',
     oneDrink: 'Only one drink can be active: ordering another replaces it.', diceTitle: "Griffin's Dice",
     diceRules: 'You and the barkeep each roll two dice. Roll higher to win your bet; double six pays triple. On a tie you get your bet back.',
-    you: 'You', vs: 'VS', barkeep: 'Barkeep', roll: { jackpot: 'Double six! You win triple', win: 'You win', lose: 'You lose', tie: 'Tie: you get your bet back' },
+    you: 'You', vs: 'VS', roll: { jackpot: 'Double six! You win triple', win: 'You win', lose: 'You lose', tie: 'Tie: you get your bet back' },
     rollDice: 'Roll', badBet: 'Bet between 10 and the tavern maximum, without going over your gold',
     diceStats: 'Max bet {max} · {n} games · balance {net} gold', mysteryTitle: 'Mystery chest', mysteryIntro: 'Trade {n} tavern tokens for a chest with random prizes.',
     mysteryOpen: 'Open · {n} tokens', mysteryGot: 'Mystery chest: <b>{items}</b>', tokensHint: 'You earn tokens by delivering daily orders.',

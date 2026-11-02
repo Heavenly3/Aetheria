@@ -1,38 +1,73 @@
 import { describe, it, expect } from 'vitest'
 import { G, state, newHero, setLevel } from './helpers.js'
-import { CROWNS, DART_THROWS } from '../src/game/data/tavern.js'
+import { DART_THROWS } from '../src/game/data/tavern.js'
+import { handValue } from '../src/game/tavernGames.js'
 
 function table() {
   newHero()
   state.gold = 10000
 }
 
-describe('Seven Crowns', () => {
-  it('takes the bet, deals one card each and pays by the rules', () => {
-    table()
-    expect(G.crownsStart(5)).toBe(null)
-    const r = G.crownsStart(100)
-    expect(state.gold).toBe(9900)
-    expect(r.you).toHaveLength(1)
-    expect(r.keeper).toHaveLength(1)
-    expect(G.crownsStart(100)).toBe(null) // one hand at a time
-    G.crownsStand()
-    const { kind, net } = r.result
-    expect(['seven', 'win', 'tie', 'lose']).toContain(kind)
-    expect(state.gold).toBe(10000 + net)
-    expect(G.crownsSum(r.keeper)).toBeGreaterThanOrEqual(6)
+const card = (r, s = '♠') => ({ r, s })
+
+describe('blackjack', () => {
+  it('counts faces as ten and aces as one or eleven', () => {
+    expect(handValue([card('K'), card('A')])).toBe(21)
+    expect(handValue([card('A'), card('A'), card('9')])).toBe(21)
+    expect(handValue([card('10'), card('5'), card('A')])).toBe(16)
+    expect(handValue([card('Q'), card('J'), card('2')])).toBe(22)
   })
 
-  it('busts a hand that goes over seven', () => {
+  it('takes the bet, deals two cards each and lets the keeper draw to 17', () => {
     table()
-    const r = G.crownsStart(100)
-    r.deck.push(4, 4)
-    G.crownsDraw(); G.crownsDraw()
-    expect(G.crownsSum(r.you)).toBeGreaterThan(CROWNS)
-    expect(r.result.kind).toBe('bust')
+    expect(G.cardsStart(5)).toBe(null)
+    const r = G.cardsStart(100)
     expect(state.gold).toBe(9900)
-    G.crownsClear()
-    expect(G.tavernGames().crowns.round).toBe(null)
+    expect(r.you).toHaveLength(2)
+    expect(G.cardsStart(100)).toBe(null) // one hand at a time
+    if (!r.result) G.cardsStand()
+    expect(['natural', 'keeperNatural', 'win', 'keeperBust', 'push', 'lose']).toContain(r.result.kind)
+    if (!['natural', 'keeperNatural'].includes(r.result.kind)) expect(handValue(r.keeper)).toBeGreaterThanOrEqual(17)
+    expect(state.gold).toBe(10000 + r.result.net)
+  })
+
+  it('pays a natural three to two and loses a hand that goes over', () => {
+    table()
+    let r = G.cardsStart(100)
+    r.result = null
+    r.you = [card('A'), card('K')]; r.keeper = [card('9'), card('7')]
+    G.cardsSettle()
+    expect(r.result.kind).toBe('natural')
+    expect(r.result.net).toBe(150)
+    G.cardsClear()
+    r = G.cardsStart(100)
+    r.result = null
+    r.you = [card('10'), card('9')]; r.keeper = [card('10'), card('7')]
+    r.deck.push(card('5'))
+    G.cardsHit()
+    expect(r.result.kind).toBe('bust')
+  })
+
+  it('doubles the bet for exactly one more card', () => {
+    table()
+    const r = G.cardsStart(100)
+    r.result = null
+    r.you = [card('5'), card('6')]; r.keeper = [card('10'), card('8')]
+    r.deck.push(card('10'))
+    G.cardsDouble()
+    expect(r.you).toHaveLength(3)
+    expect(r.bet).toBe(200)
+    expect(r.result.kind).toBe('win')
+    expect(state.gold).toBe(10000 + 200)
+  })
+
+  it('carries over the record of Seven Crowns and gives back a hand left open', () => {
+    table()
+    state.tavern.games = { crowns: { played: 4, won: 2, net: 50, round: { bet: 300, result: null } }, darts: { played: 0, best: 0, net: 0, round: null } }
+    const g = G.tavernGames()
+    expect(g.crowns).toBeUndefined()
+    expect(g.cards).toMatchObject({ played: 4, won: 2, net: 50, round: null })
+    expect(state.gold).toBe(10300)
   })
 })
 

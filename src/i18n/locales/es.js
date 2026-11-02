@@ -1608,7 +1608,7 @@ export default {
       board: { title: 'Tablón de contratación', body: 'Candidatos que puedes contratar. Los más raros trabajan más rápido y pueden tener rasgos útiles. El tablón se renueva con el tiempo.' },
       reports: { title: 'Informes de expedición', body: 'Lo que tu personal ha traído de sus expediciones.' },
       drinks: { title: 'Bebidas', body: 'Compra una bebida para un bonus temporal: acciones más rápidas, más XP, más botín o golpes más fuertes.' },
-      crowns: { title: "Siete Coronas", body: "Un juego de cartas contra el tabernero. Cada carta vale de 1 a 4 coronas. Roba las que te atrevas y plántate antes de pasarte de siete; después el tabernero roba hasta tener seis o más. Gana quien quede más cerca de siete, el empate devuelve la apuesta y siete exacto paga un extra." },
+      cards: { title: "Blackjack", body: "Cartas contra el tabernero. Acércate más a 21 que él sin pasarte: las cartas valen su número, las figuras 10 y el as 1 u 11. Pide otra carta, plántate con tu mano o dobla con tus dos primeras cartas por una carta más y el doble de apuesta. El tabernero pide hasta 17. El blackjack paga 3 a 2." },
       darts: { title: "Dardos", body: "Tres dardos contra una diana mientras tu mira oscila. El centro vale 50, el anillo siguiente 25, y luego 10, 5 y 2. Un total alto paga dos o tres veces la apuesta. Entrenar A distancia hace que la mira se mueva menos y más despacio." },
       dice: { title: 'Dados', body: 'Tú y la casa tiráis dos dados cada uno. Si sacas más, ganas lo apostado; si sacas menos, lo pierdes; un doble seis paga el triple.' },
       mystery: { title: 'Cofre misterioso', body: 'Paga fichas de la taberna por un cofre con una recompensa al azar. Se muestran las probabilidades de cada recompensa.' },
@@ -3367,7 +3367,7 @@ export default {
   },
 
   tavern: {
-    crowns: { title: "Siete Coronas", rules: "Cartas de 1 a 4 coronas. Roba para quedarte más cerca de {n} que el tabernero sin pasarte, y plántate. El tabernero roba hasta tener {k} o más; si empatáis recuperas la apuesta, y {n} exacto paga un {b}% más.", hidden: "La próxima carta del tabernero", draw: "Robar", stand: "Plantarse", deal: "Repartir", again: "Otra mano", bet: "Tu apuesta: {n} de oro", betLabel: "Apuesta para Siete Coronas", results: { seven: "¡Siete coronas!", win: "Ganas la mano", tie: "Empate: recuperas la apuesta", lose: "Gana el tabernero", bust: "Demasiadas coronas: te pasas" } },
+    cards: { title: "Blackjack", rules: "Acércate más a 21 que {keeper} sin pasarte. Las figuras valen 10 y el as 1 u 11. {keeper} pide hasta tener {n}. El blackjack paga 3 a 2, y el empate te devuelve la apuesta.", yourHand: "Tu mano", keeperHand: "Mano de {keeper}", value: "Valor: {n}", valueHidden: "Valor: {n} + ?", hidden: "Carta boca abajo", hit: "Pedir", stand: "Plantarse", double: "Doblar", deal: "Repartir", again: "Otra mano", bet: "Tu apuesta: {n} de oro", betLabel: "Apuesta para el blackjack", betBack: "Apuesta devuelta", results: { natural: "¡Blackjack!", win: "Ganas", keeperBust: "{keeper} se pasa de 21. Ganas", push: "Empate", lose: "Gana {keeper}", bust: "Te pasas de 21", keeperNatural: "{keeper} tiene blackjack" } },
     darts: { title: "Dardos", rules: "{n} dardos con la mira oscilando: lanza cuando cruce el centro. Tu total paga {pays}. Entrenar A distancia te da más pulso.", board: "Diana. Pulsa Intro o Espacio para lanzar", throw: "Lanzar", start: "Al tablero", again: "Otra ronda", left: "Dardos restantes: {n}", betLabel: "Apuesta para los dardos", result: "Total: {n} puntos", stats: "Pulso {s}% · récord {best} · {n} rondas · saldo {net} de oro" },
     gameStats: "{n} manos · saldo {net} de oro",
     patrons: "Clientes",
@@ -3404,7 +3404,7 @@ export default {
     drinks: 'Bebidas', underEffect: 'Bajo los efectos de <b>{name}</b>: {desc}', minutes: '{n} min', drank: 'Bebes <b>{drink}</b> durante 30 min',
     oneDrink: 'Solo puedes tener una bebida activa: si pides otra, sustituye a la anterior.', diceTitle: 'Dados del Grifo',
     diceRules: 'Tú y el tabernero tiráis dos dados. Si sacas más, ganas tu apuesta; con doble seis, el triple. Empate: recuperas lo apostado.',
-    you: 'Tú', vs: 'VS', barkeep: 'Tabernero', roll: { jackpot: '¡Doble seis! Ganas el triple', win: 'Ganas', lose: 'Pierdes', tie: 'Empate: recuperas tu apuesta' },
+    you: 'Tú', vs: 'VS', roll: { jackpot: '¡Doble seis! Ganas el triple', win: 'Ganas', lose: 'Pierdes', tie: 'Empate: recuperas tu apuesta' },
     rollDice: 'Tirar', badBet: 'Apuesta entre 10 y el máximo de la taberna, sin superar tu oro',
     diceStats: 'Apuesta máxima {max} · {n} partidas · saldo {net} de oro', mysteryTitle: 'Cofre misterioso', mysteryIntro: 'Cambia {n} fichas de taberna por un cofre con premios al azar.',
     mysteryOpen: 'Abrir · {n} fichas', mysteryGot: 'Cofre misterioso: <b>{items}</b>', tokensHint: 'Consigues fichas entregando pedidos diarios.',
