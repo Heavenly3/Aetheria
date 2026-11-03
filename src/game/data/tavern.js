@@ -67,6 +67,7 @@ export const EXPEDITION_DURATIONS = [
   { hours: 1, mult: 1 },
   { hours: 4, mult: 4.5 },
   { hours: 8, mult: 10 },
+  { hours: 12, mult: 16 },
 ]
 const L = (item, chance, a = 1, b = a) => ({ item, chance, qty: [a, b] })
 export const EXPEDITIONS = [
@@ -88,6 +89,57 @@ EXPEDITIONS.push({ id: 'treasure', icon: 'treasure-map', power: 30, gold: 1500, 
   loot: [L('gem_chest', 0.35), L('coin_pouch', 0.6, 2, 5), L('uncut_ruby', 0.2), L('uncut_diamond', 0.1), L('starlight_shard', 0.05), L('stardust', 0.5, 10, 30)] })
 EXPEDITIONS.forEach(e => named(e, `expeditions.${e.id}`))
 export const INJURY_TIME = 1800
+
+/* ---------------- Expedition crews ---------------- */
+// How many set out together: two at first, one more at the third and fifth tavern levels
+export const crewSize = tavernLevel => 2 + Math.floor((tavernLevel - 1) / 2)
+// Every hand after the first adds to the crew's level, and to what they carry home
+export const CREW_LEVEL_EACH = 3
+export const CREW_HAUL_EACH = 0.25
+// What each trade brings on the road. chance: added to success · loot: more of every find ·
+// rare: the rarest finds turn up more often · shield: nobody comes home hurt
+export const TRIP_ROLES = {
+  adventurer: { chance: 0.05 },
+  squire: { chance: 0.04, shield: true },
+  archer: { loot: 0.25 },
+  mage: { rare: 0.6 },
+  cleric: { chance: 0.1 },
+}
+// What happens along the way: one event for every four hours out (at least one). A mishap is turned
+// away by someone of the trade in `by`, who then earns a little more trust
+export const TRIP_EVENTS = {
+  cache:    { icon: 'open-treasure-chest', good: true, loot: 0.3 },
+  merchant: { icon: 'shop',                good: true, gold: 0.5 },
+  ruins:    { icon: 'stone-tower',         good: true, rare: 1 },
+  shrine:   { icon: 'candle-light',        good: true, chance: 0.08 },
+  camp:     { icon: 'campfire',            good: true, xp: 0.5 },
+  ambush:   { icon: 'goblin-camp',   chance: -0.12, by: ['squire'] },
+  wolves:   { icon: 'wolf-head',     loot: -0.25,   by: ['archer', 'adventurer'] },
+  spirits:  { icon: 'floating-ghost', gold: -0.35,  by: ['mage'] },
+  fever:    { icon: 'herbs-bundle',  chance: -0.08, by: ['cleric'] },
+}
+export const tripEventCount = hours => Math.max(1, Math.round(hours / 4))
+// A companion on the ground they know best does better there
+export const HOME_CHANCE = 0.1
+export const HOME_LOOT = 0.25
+// Trust a companion earns from a trip, and for turning a mishap away
+export const TRUST_TRIP = 3
+export const TRUST_TRIP_FAIL = 1
+export const TRUST_SAVE = 1
+export const REPORTS_KEPT = 12
+
+/* ---------------- Staff growth ---------------- */
+// At these levels a worker sheds a bad trait, or picks up a good one if they have none
+export const VETERAN_LEVELS = [25, 50, 75]
+// Raising a worker to the next rarity: the level they must have reached and the tokens it takes;
+// the gold is this many hours of their new wage
+export const PROMOTIONS = {
+  rare:      { lvl: 15, tokens: 3 },
+  epic:      { lvl: 35, tokens: 8 },
+  legendary: { lvl: 55, tokens: 20 },
+}
+export const PROMOTE_HOURS = 12
+export const RARITY_ORDER = ['common', 'rare', 'epic', 'legendary']
 
 /* ---------------- Bar: drinks ---------------- */
 export const DRINK_DURATION = 1800

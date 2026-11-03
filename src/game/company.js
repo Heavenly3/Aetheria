@@ -65,6 +65,7 @@ export const company = {
   },
   dismissMerc(id) {
     const c = this.s.company
+    this.leaveTrip({ k: 'c', id })
     c.members = c.members.filter(m => m.id !== id)
     c.party = c.party.filter(p => p !== id)
   },
@@ -76,8 +77,8 @@ export const company = {
     c.party.push(id)
     return true
   },
-  // Who would come along now: in the party and not hurt
-  partyReady() { return this.s.company.party.map(id => this.companyMember(id)).filter(m => m && !this.mercHurt(m)) },
+  // Who would come along now: in the party, not hurt and not away on an expedition
+  partyReady() { return this.s.company.party.map(id => this.companyMember(id)).filter(m => m && !this.mercHurt(m) && !this.memberAway(m.id)) },
   partyWages() { return this.partyReady().reduce((s, m) => s + wageOf(m.lvl), 0) },
   // At the start of a boss fight or a dungeon: the party comes along if the wages can be paid
   bringParty(act) {
@@ -149,13 +150,17 @@ export const company = {
       p.trust = Math.min(TRUST_MAX, (p.trust || 0) + (m.boss ? TRUST_BOSS : TRUST_KILL))
       const q = UNIQUE_MERCS[p.unique]?.quest
       if (q?.kill === (m.echoOf || m.id) && this.questOpen(p)) this.questStep(p, act)
-      if (p.lvl >= MERC_MAX_LVL) continue
-      p.xp += xp
-      while (p.lvl < MERC_MAX_LVL && p.xp >= mercXpNeed(p.lvl)) {
-        p.xp -= mercXpNeed(p.lvl)
-        p.lvl++
-        this.note(act, 'mercLevel', { who: p.id, lvl: p.lvl })
-      }
+      this.mercGainXp(p, xp, act)
+    }
+  },
+  // Experience from a fight (noted in it) or from a trip
+  mercGainXp(p, xp, act = null) {
+    if (p.lvl >= MERC_MAX_LVL) return
+    p.xp += xp
+    while (p.lvl < MERC_MAX_LVL && p.xp >= mercXpNeed(p.lvl)) {
+      p.xp -= mercXpNeed(p.lvl)
+      p.lvl++
+      if (act) this.note(act, 'mercLevel', { who: p.id, lvl: p.lvl })
     }
   },
   /* ---------- trust and a companion's own quest ---------- */

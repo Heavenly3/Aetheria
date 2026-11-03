@@ -35,18 +35,19 @@ export const mercPower = (lvl, heroLevel) => 0.4 + 0.6 * Math.min(1, lvl / Math.
   or the guild's trust), is better at their trade (boost) and brings a gift of their own even away
   from the fights (perk: modifiers, while they are in the company). Once they trust the hero fully
   they ask for help with something of their own (quest: a boss to defeat with them along, or affairs to
-  settle while they are in the company); done, their trade grows again (quest.boost)
+  settle while they are in the company); done, their trade grows again (quest.boost). Each also
+  knows one stretch of the world better than anyone (home): their expeditions there go better
 */
 export const UNIQUE_MERCS = {
-  maelis: { role: 'mage', icon: 'warlock-hood', tint: '#4a6a3a', unlock: { chapter: 'living_mire' }, boost: { dmg: 0.4, breaker: 3 }, perk: { 'xp.herblore': 0.05 },
+  maelis: { role: 'mage', home: 'swamp', icon: 'warlock-hood', tint: '#4a6a3a', unlock: { chapter: 'living_mire' }, boost: { dmg: 0.4, breaker: 3 }, perk: { 'xp.herblore': 0.05 },
     quest: { kill: 'naga', n: 3, boost: { breaker: 4 } } },
-  hollis: { role: 'squire', icon: 'visored-helm', tint: '#5a6a7a', unlock: { chapter: 'empty_tomb' }, boost: { draw: 3, guard: 0.45 }, perk: { 'speed.smithing': 0.05 },
+  hollis: { role: 'squire', home: 'caves', icon: 'visored-helm', tint: '#5a6a7a', unlock: { chapter: 'empty_tomb' }, boost: { draw: 3, guard: 0.45 }, perk: { 'speed.smithing': 0.05 },
     quest: { kill: 'skeleton_king', n: 3, boost: { guard: 0.6 } } },
-  seren: { role: 'archer', icon: 'woman-elf-face', tint: '#3a6a7a', unlock: { chapter: 'northern_watch' }, boost: { interrupt: 0.75 }, perk: { 'speed.woodcutting': 0.05 },
+  seren: { role: 'archer', home: 'peaks', icon: 'woman-elf-face', tint: '#3a6a7a', unlock: { chapter: 'northern_watch' }, boost: { interrupt: 0.75 }, perk: { 'speed.woodcutting': 0.05 },
     quest: { kill: 'winter_queen', n: 3, boost: { interrupt: 0.9 } } },
-  ardan: { role: 'cleric', icon: 'monk-face', tint: '#8a6a2a', unlock: { chapter: 'beyond_the_gate' }, boost: { heal: 0.03, cleanse: 5 }, perk: { 'xp.prayer': 0.1 },
+  ardan: { role: 'cleric', home: 'dragons', icon: 'monk-face', tint: '#8a6a2a', unlock: { chapter: 'beyond_the_gate' }, boost: { heal: 0.03, cleanse: 5 }, perk: { 'xp.prayer': 0.1 },
     quest: { kill: 'rift_warden', n: 3, boost: { heal: 0.04, cleanse: 4 } } },
-  vela: { role: 'archer', icon: 'hooded-assassin', tint: '#5a3a6a', unlock: { affairs: 10 }, boost: { dmg: 0.45, interrupt: 0.6 }, perk: { thieving: 0.05 },
+  vela: { role: 'archer', home: 'treasure', icon: 'hooded-assassin', tint: '#5a3a6a', unlock: { affairs: 10 }, boost: { dmg: 0.45, interrupt: 0.6 }, perk: { thieving: 0.05 },
     quest: { affairs: 5, n: 5, boost: { dmg: 0.55 } } },
 }
 export const UNIQUE_IDS = Object.keys(UNIQUE_MERCS)

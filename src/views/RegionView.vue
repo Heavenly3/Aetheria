@@ -155,6 +155,7 @@ const party = computed(() => state.company.party.map(id => G.companyMember(id)).
                 <div class="small muted">{{ $t(`company.roles.${p.role}.name`) }} · {{ $t('company.level', { n: p.lvl }) }}</div>
               </div>
               <span v-if="G.mercHurt(p)" class="tag bad">{{ $t('company.hurtShort') }}</span>
+              <span v-else-if="G.memberAway(p.id)" class="tag arcane">{{ $t('company.away') }}</span>
             </div>
             <div class="small">{{ $t('company.wagesEach') }} <b class="gold-text">{{ $t('inventory.goldAmount', { n: fmt(G.partyWages()) }) }}</b></div>
           </div>

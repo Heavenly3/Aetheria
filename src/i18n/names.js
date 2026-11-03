@@ -7,7 +7,7 @@ import { findAction } from '../game/data/actions.js'
 import { MONSTERS, BOSSES, DUNGEONS, AREAS } from '../game/data/combat.js'
 import { QUESTS, ACHIEVEMENTS, ROOMS, BLESSINGS } from '../game/data/progression.js'
 import { ROLES } from '../game/data/character.js'
-import { SPECIALTIES, RARITIES, EXPEDITIONS, DRINKS, TAVERN_LEVELS } from '../game/data/tavern.js'
+import { SPECIALTIES, RARITIES, TRAITS, EXPEDITIONS, DRINKS, TAVERN_LEVELS } from '../game/data/tavern.js'
 import { PRAYERS } from '../game/data/extras.js'
 import { OMENS, BOONS, WISHES } from '../game/data/omens.js'
 import { PET_MAP } from '../game/data/pets.js'
@@ -59,6 +59,9 @@ registerNames('set', id => SET_MAP[id]?.name ?? id)
 registerNames('slot', id => SLOTS[id]?.name ?? id)
 registerNames('spec', id => SPECIALTIES[id]?.name ?? id)
 registerNames('rarity', id => RARITIES[id]?.name ?? id)
+registerNames('trait', id => TRAITS[id]?.name ?? id)
+// An expedition crew: names joined, with companions met along the way (#id) named in the reader's language
+registerNames('crew', list => list.split('|').map(x => (x.startsWith('#') ? t(`company.uniques.${x.slice(1)}.name`) : x)).join(', '))
 registerNames('role', id => ROLES[id]?.name ?? id)
 registerNames('tavern', id => TAVERN_LEVELS[Number(id) - 1]?.name ?? id)
 registerNames('action', ref => { const [skill, id] = ref.split('/'); return findAction(skill, id)?.name ?? id })

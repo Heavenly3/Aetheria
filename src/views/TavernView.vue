@@ -9,14 +9,13 @@ import TabPanels from 'primevue/tabpanels'
 import TabPanel from 'primevue/tabpanel'
 import Button from 'primevue/button'
 import Select from 'primevue/select'
-import SelectButton from 'primevue/selectbutton'
 import Badge from 'primevue/badge'
 import { useConfirm } from 'primevue/useconfirm'
 import { G, state } from '../game/engine.js'
 import { ITEMS } from '../game/data/items.js'
 import { SKILLS } from '../game/data/skills.js'
-import { SPECIALTIES, RARITIES, TRAITS, TAVERN_LEVELS, EXPEDITIONS, EXPEDITION_DURATIONS, DRINKS, MYSTERY_CHEST } from '../game/data/tavern.js'
-import { fmt, fmtTime, fmtClock, pct } from '../game/format.js'
+import { SPECIALTIES, RARITIES, TRAITS, TAVERN_LEVELS, EXPEDITIONS, DRINKS, MYSTERY_CHEST, VETERAN_LEVELS } from '../game/data/tavern.js'
+import { fmt, fmtTime, fmtClock } from '../game/format.js'
 import { play } from '../game/sound.js'
 import { chanceNote } from '../ui/tips.js'
 import { GUEST_MAP, REP_STEP, repMult } from '../game/data/bar.js'
@@ -32,6 +31,7 @@ import BeerGame from '../components/BeerGame.vue'
 import MorrisGame from '../components/MorrisGame.vue'
 import RunesGame from '../components/RunesGame.vue'
 import KeeperTalk from '../components/KeeperTalk.vue'
+import ExpeditionsPanel from '../components/ExpeditionsPanel.vue'
 
 const { t: $tr } = useI18n()
 const confirm = useConfirm()
@@ -69,6 +69,20 @@ function upgrade() { if (G.upgradeTavern()) { play('quest'); G.toast('beer-horn'
 const STATUS_CLS = { idle: '', working: 'ok', nomat: 'bad', unpaid: 'bad', expedition: 'arcane', injured: 'bad' }
 const boardIn = computed(() => Math.max(0, (t.value.boardAt - now.value) / 1000))
 const effPct = w => Math.round(G.workerEff(w) * 100)
+const summary = computed(() => (void now.value, G.staffSummary()))
+const tripOf = w => G.tripOf({ k: 'w', uid: w.uid })
+// The next veteran level ahead of a worker, if any
+const nextVet = w => VETERAN_LEVELS.find(l => G.workerLevel(w) < l) || null
+function promote(w) {
+  const p = G.promotion(w)
+  if (G.promote(w.uid)) { play('rare'); G.toast('upgrade', 'tavern.promoted', { name: w.name, rarity: '@rarity:' + p.rarity }, 'success') }
+}
+const promoteTip = w => {
+  const p = G.promotion(w)
+  if (!p) return ''
+  const need = $tr('tavern.promoteNeeds', { lvl: p.lvl, tokens: p.tokens, gold: fmt(p.gold) })
+  return p.blocker === 'tavern' ? need + ' ' + $tr('tavern.promoteTavern', { name: '' + TAVERN_LEVELS[p.tavern - 1].name }) : need
+}
 function hire(i) {
   const c = t.value.board[i]
   if (G.hire(i)) { play('coin'); G.toast(SPECIALTIES[c.spec].icon, 'tavern.joined', { name: c.name }, 'success') }
@@ -90,20 +104,6 @@ const taskAction = w => (w.task ? G.getAction(SPECIALTIES[w.spec].skill, w.task.
 const taskProgress = w => {
   const a = taskAction(w)
   return a ? Math.min(1, w.task.progress / (a.time / G.workerEff(w))) : 0
-}
-
-/* ---------------- Expeditions ---------------- */
-const adventurers = computed(() => t.value.workers.filter(w => w.spec === 'adventurer'))
-const sendWho = ref(null)
-const durIdx = ref(0)
-const durOpts = computed(() => EXPEDITION_DURATIONS.map((d, i) => ({ label: $tr('time.hours', { n: d.hours }), value: i })))
-const whoOpts = computed(() => adventurers.value.map(w => ({
-  value: w.uid, label: `${w.name} · ${$tr('common.lvlShort', { n: G.workerLevel(w) })}`, disabled: !!w.exp || w.injured > 0,
-})))
-const who = computed(() => adventurers.value.find(w => w.uid === sendWho.value) || null)
-function send(ex) {
-  if (!who.value) return G.toast('crossed-swords', 'tavern.pickAdventurer', {}, 'warn')
-  if (G.sendExpedition(who.value.uid, ex.id, durIdx.value)) { G.toast(ex.icon, 'tavern.departs', { name: who.value.name, exp: '@exp:' + ex.id }, 'success'); sendWho.value = null }
 }
 
 /* ---------------- Orders ---------------- */
@@ -137,6 +137,8 @@ function mystery() {
   G.toast('open-treasure-chest', 'tavern.mysteryGot', { items: Object.entries(got).map(([k, n]) => `${n}× ${ITEMS[k].name}`).join(', ') }, 'success')
 }
 const expName = id => EXPEDITIONS.find(e => e.id === id)?.name || id
+// The expedition tab shows a count of crews out
+const tripsOut = computed(() => t.value.trips?.length || 0)
 const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o.item) >= o.qty).length)
 </script>
 
@@ -174,7 +176,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
     <Tabs v-model:value="tab" style="margin-top:18px">
       <TabList>
         <Tab value="staff">{{ $t('tavern.tabs.staff') }}</Tab>
-        <Tab value="expeditions">{{ $t('tavern.tabs.expeditions') }}</Tab>
+        <Tab value="expeditions">{{ $t('tavern.tabs.expeditions') }} <Badge v-if="tripsOut" :value="tripsOut" size="small" severity="secondary" style="margin-inline-start:6px" /></Tab>
         <Tab value="orders">{{ $t('tavern.tabs.orders') }} <Badge v-if="readyOrders" :value="readyOrders" size="small" style="margin-inline-start:6px" /></Tab>
         <Tab value="bar">{{ $t('tavern.tabs.bar') }}</Tab>
         <Tab value="games">{{ $t('tavern.tabs.games') }}</Tab>
@@ -182,7 +184,15 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
       <TabPanels style="background:transparent;padding:18px 0 0">
         <!-- STAFF -->
         <TabPanel value="staff">
-          <div class="section-title" style="margin-top:0">{{ $t('tavern.yourStaff') }} <HelpTip k="sections.staff" /></div>
+          <div class="row wrap staff-head">
+            <div class="section-title grow" style="margin:0">{{ $t('tavern.yourStaff') }} <HelpTip k="sections.staff" /></div>
+            <div v-if="t.workers.length" class="staff-sum" role="list" :aria-label="$t('tavern.summary')">
+              <span v-for="k in ['working', 'idle', 'stuck', 'away', 'injured']" v-show="summary[k]" :key="k" role="listitem" class="sum" :class="k">
+                <b class="tnum">{{ summary[k] }}</b> {{ $t('tavern.sum.' + k) }}
+              </span>
+              <span role="listitem" class="sum"><b class="tnum">{{ fmt(G.wagesPerHour()) }}</b> {{ $t('tavern.sum.wages') }}</span>
+            </div>
+          </div>
           <div v-if="!t.workers.length" class="panel pad muted">{{ $t('tavern.noStaff') }}</div>
           <div class="grid-wide">
             <div v-for="w in t.workers" :key="w.uid" class="card worker" :style="{ '--c': RARITIES[w.rarity].color }">
@@ -205,9 +215,9 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
               <div class="row wrap" style="gap:5px">
                 <span v-for="tr in w.traits" :key="tr" class="tag" :class="TRAITS[tr].good ? 'ok' : 'bad'" v-tooltip.top="TRAITS[tr].desc">{{ TRAITS[tr].name }}</span>
               </div>
-              <template v-if="w.exp">
-                <div class="small" v-html="$t('tavern.onExpedition', { exp: expName(w.exp.id), time: fmtClock(w.exp.t) })" />
-                <div class="bar" style="--c:#6fc3b8"><i :style="{ width: (1 - w.exp.t / w.exp.total) * 100 + '%' }" /></div>
+              <template v-if="tripOf(w)">
+                <div class="small" v-html="$t('tavern.onExpedition', { exp: expName(tripOf(w).exp), time: fmtClock(Math.max(0, tripOf(w).t)) })" />
+                <div class="bar" style="--c:#6fc3b8"><i :style="{ width: (1 - tripOf(w).t / tripOf(w).total) * 100 + '%' }" /></div>
               </template>
               <div v-else-if="w.injured > 0" class="small bad-text">{{ $t('tavern.recovering', { time: fmtClock(w.injured) }) }}</div>
               <template v-else-if="SPECIALTIES[w.spec].skill">
@@ -220,6 +230,12 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
                 </div>
               </template>
               <div v-else class="small muted">{{ $t('tavern.adventurerHint') }}</div>
+              <div class="growth small">
+                <span class="row" style="gap:6px"><GameIcon name="star-medal" :size="13" class="gold-text" />
+                  {{ nextVet(w) ? $t('tavern.nextVet', { n: nextVet(w) }) : $t('tavern.veteran') }}</span>
+                <Button v-if="G.promotion(w)" :label="$t('tavern.promote', { rarity: RARITIES[G.promotion(w).rarity].name })" icon="pi pi-angle-double-up" size="small" severity="secondary" outlined
+                  :disabled="!!G.promotion(w).blocker" v-tooltip.top="promoteTip(w)" @click="promote(w)" />
+              </div>
               <div class="row small faint">
                 <span class="grow">{{ $t('tavern.made', { n: fmt(w.made || 0) }) }}</span>
                 <Button :label="$t('tavern.fire')" icon="pi pi-user-minus" size="small" text severity="danger" @click="fire(w)" />
@@ -255,48 +271,7 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 
         <!-- EXPEDITIONS -->
         <TabPanel value="expeditions">
-          <div class="panel pad" style="margin-bottom:16px">
-            <div class="row wrap">
-              <div class="grow" style="min-width:220px">
-                <label class="small muted" for="exp-who">{{ $t('tavern.adventurer') }}</label>
-                <Select inputId="exp-who" v-model="sendWho" :options="whoOpts" optionLabel="label" optionValue="value" optionDisabled="disabled" :placeholder="$t('tavern.pickAdventurer')"
-                  :emptyMessage="$t('tavern.noAdventurers')" appendTo="self" class="w-full" />
-              </div>
-              <div>
-                <div class="small muted">{{ $t('inventory.duration') }}</div>
-                <SelectButton v-model="durIdx" :options="durOpts" optionLabel="label" optionValue="value" :allowEmpty="false" />
-              </div>
-            </div>
-            <p class="small faint" style="margin-bottom:0">{{ $t('tavern.expeditionHint') }}</p>
-          </div>
-          <div class="grid-wide">
-            <div v-for="ex in EXPEDITIONS" :key="ex.id" class="card">
-              <div class="row">
-                <ItemTile :icon="ex.icon" tint="#3f7a6a" size="md" :tip="false" />
-                <div class="grow"><div class="card-name">{{ ex.name }}</div><div class="card-sub">{{ $t('tavern.power', { n: ex.power }) }}<template v-if="ex.map"> · {{ $t('tavern.needsMap', { n: G.qty('treasure_map') }) }}</template></div></div>
-                <span v-if="who" class="tag" :class="G.expeditionChance(who, ex) >= 0.7 ? 'ok' : G.expeditionChance(who, ex) < 0.4 ? 'bad' : ''">{{ $t('tavern.successChance', { v: pct(G.expeditionChance(who, ex)) }) }}</span>
-              </div>
-              <div class="row wrap" style="gap:5px;margin-top:10px">
-                <span class="tag gold">{{ $t('inventory.goldAmount', { n: fmt(ex.gold * EXPEDITION_DURATIONS[durIdx].mult) }) }}</span>
-                <ItemTile v-for="l in ex.loot" :key="l.item" :item="l.item" size="sm" />
-              </div>
-              <Button :label="$t('tavern.send')" icon="pi pi-send" size="small" fluid style="margin-top:12px" :disabled="!who || (ex.map && !G.qty('treasure_map'))" @click="send(ex)" />
-            </div>
-          </div>
-          <div class="section-title">{{ $t('tavern.reports') }} <HelpTip k="sections.reports" /></div>
-          <div class="panel pad">
-            <div v-if="!t.reports.length" class="small muted">{{ $t('tavern.noReports') }}</div>
-            <div v-for="(r, i) in t.reports" :key="i" class="report">
-              <GameIcon :name="r.icon" :size="18" />
-              <div class="grow">
-                <b>{{ r.name }}</b> · {{ expName(r.exp) }} <span class="tag" :class="r.ok ? 'ok' : 'bad'">{{ r.ok ? $t('tavern.success') : $t('tavern.failure') }}</span>
-                <div class="row wrap small muted" style="gap:4px 10px;margin-top:4px">
-                  <span class="gold-text">+{{ $t('inventory.goldAmount', { n: fmt(r.gold) }) }}</span>
-                  <span v-for="(n, k) in r.items" :key="k" class="row" style="gap:4px"><ItemTile :item="k" size="xs" />{{ n }}× {{ ITEMS[k].name }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ExpeditionsPanel :now="now" />
         </TabPanel>
 
         <!-- ORDERS -->
@@ -424,9 +399,17 @@ const readyOrders = computed(() => t.value.orders.filter(o => !o.done && G.qty(o
 .cost-i.miss { color: var(--danger); }
 .worker, .cand { display: flex; flex-direction: column; gap: 10px; }
 .w-full { width: 100%; }
-.report { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed var(--line); }
-.report:last-child { border-bottom: 0; }
-.report > .gi { color: var(--gold); margin-top: 2px; }
+.staff-head { gap: 10px 16px; margin-bottom: 14px; }
+.staff-sum { display: flex; flex-wrap: wrap; gap: 6px; }
+.sum { display: inline-flex; align-items: baseline; gap: 5px; padding: 4px 10px; border-radius: 999px; background: var(--tint-1); border: 1px solid var(--line); font-size: 12.5px; color: var(--muted); }
+.sum b { color: var(--ink); font-size: 14px; }
+.sum.working b { color: var(--tag-ok); }
+.sum.stuck b, .sum.injured b { color: var(--tag-bad); }
+.sum.away b { color: #6fc3b8; }
+:root[data-theme="light"] .sum.working b { color: var(--ok); }
+:root[data-theme="light"] .sum.stuck b, :root[data-theme="light"] .sum.injured b { color: var(--danger); }
+:root[data-theme="light"] .sum.away b { color: #2f7a70; }
+.growth { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 8px 10px; border-radius: 10px; background: var(--tint-1); border: 1px solid var(--line); }
 .tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .table-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border-radius: 12px; border: 1px solid var(--line);
   background: var(--panel); color: var(--muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: border-color 0.15s, color 0.15s, transform 0.15s; }

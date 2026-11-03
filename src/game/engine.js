@@ -186,7 +186,7 @@ function replaceState(next) {
   const ex = extraState()
   state.tavern = { ...ex.tavern, ...(state.tavern || {}) }
   state.tavern.dice = { ...ex.tavern.dice, ...(state.tavern.dice || {}) }
-  ;['board', 'workers', 'orders', 'reports'].forEach(k => { if (!Array.isArray(state.tavern[k])) state.tavern[k] = [] })
+  ;['board', 'workers', 'orders', 'reports', 'trips'].forEach(k => { if (!Array.isArray(state.tavern[k])) state.tavern[k] = [] })
   if (!Array.isArray(state.queue)) state.queue = []
   if (!Array.isArray(state.history)) state.history = []
   if (!Array.isArray(state.loadouts)) state.loadouts = []
@@ -403,6 +403,7 @@ export const G = {
     this.ensureChurch()
     this.ensureFarm()
     this.ensureThief()
+    this.ensureTrips()
     const fm = st.mastery.fishing
     if (fm) for (const w of WATERS) if (!fm[w.id]) { const best = Math.max(0, ...Object.keys(w.fish).map(id => fm[id] || 0)); if (best) fm[w.id] = best }
     if (st.activity?.type === 'skill' && st.activity.skill === 'fishing' && !findAction('fishing', st.activity.action)) st.activity = null

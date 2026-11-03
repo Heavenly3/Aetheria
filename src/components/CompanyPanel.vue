@@ -68,6 +68,7 @@ function dismiss(m) {
             <span v-if="m.unique" class="tag gold">{{ $t(`company.uniques.${m.unique}.title`) }}</span>
             <span class="small muted">{{ $t(`company.roles.${m.role}.name`) }} · {{ $t('company.level', { n: m.lvl }) }}</span>
             <span v-if="G.mercHurt(m)" class="tag bad"><i class="pi pi-heart" /> {{ $t('company.hurt', { t: fmtClock(hurtLeft(m)) }) }}</span>
+            <span v-if="G.memberAway(m.id)" class="tag arcane"><GameIcon name="treasure-map" :size="11" /> {{ $t('company.away') }}</span>
           </div>
           <div class="small muted">{{ $t(`company.roles.${m.role}.desc`) }}</div>
           <div v-if="m.unique" class="small ok-text"><GameIcon name="sparkles" :size="11" /> {{ perkText(m.unique) }}</div>

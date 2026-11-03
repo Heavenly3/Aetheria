@@ -11,7 +11,10 @@ import { DUNGEONS } from './data/combat.js'
 import {
   SPECIALTIES, RARITIES, TRAITS, WORKER_NAMES, WAGE_BASE, HIRE_FEE_HOURS, BOARD_REFRESH, TAVERN_LEVELS,
   EXPEDITIONS, EXPEDITION_DURATIONS, INJURY_TIME, DRINKS, DRINK_DURATION, MYSTERY_CHEST, ORDERS_PER_DAY, ORDER_SKILLS,
+  crewSize as crewSizeAt, CREW_LEVEL_EACH, CREW_HAUL_EACH, TRIP_ROLES, TRIP_EVENTS, tripEventCount, HOME_CHANCE, HOME_LOOT,
+  TRUST_TRIP, TRUST_TRIP_FAIL, TRUST_SAVE, REPORTS_KEPT, VETERAN_LEVELS, PROMOTIONS, PROMOTE_HOURS, RARITY_ORDER,
 } from './data/tavern.js'
+import { UNIQUE_MERCS, TRUST_MAX, HURT_TIME } from './data/company.js'
 import { PRAYERS, PRAYER_DRAIN, PRAYER_BONES, GRACE_COSTS, GRACE_SPEED } from './data/extras.js'
 import { AVATARS } from './data/character.js'
 import { AUDIO_DEFAULTS } from './data/audio.js'
@@ -35,7 +38,7 @@ export const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMont
 
 export const LOADOUT_SLOTS = 5
 export const extraState = () => ({
-  tavern: { level: 1, board: [], boardAt: 0, workers: [], tokens: 0, orders: [], ordersDay: '', drink: null, uid: 0, reports: [], dice: { played: 0, won: 0, net: 0 }, patrons: [], patronAt: 0, rep: 0 },
+  tavern: { level: 1, board: [], boardAt: 0, workers: [], trips: [], tokens: 0, orders: [], ordersDay: '', drink: null, uid: 0, reports: [], dice: { played: 0, won: 0, net: 0 }, patrons: [], patronAt: 0, rep: 0 },
   queue: [],
   locked: {},
   loadouts: Array(LOADOUT_SLOTS).fill(null),
@@ -130,7 +133,7 @@ export const systems = {
     const c = tv.board[i]
     if (!c || this.freeSlots() <= 0 || this.s.gold < this.hireFee(c)) return false
     this.s.gold -= this.hireFee(c)
-    tv.workers.push({ ...c, uid: (tv.uid = (tv.uid || 0) + 1), task: null, status: 'idle', injured: 0, exp: null, made: 0 })
+    tv.workers.push({ ...c, uid: (tv.uid = (tv.uid || 0) + 1), task: null, status: 'idle', injured: 0, exp: null, made: 0, vet: VETERAN_LEVELS.filter(l => this.workerLevel(c) >= l).length })
     tv.board.splice(i, 1)
     this.log(SPECIALTIES[c.spec].icon, 'log.hired', { name: c.name, spec: '@spec:' + c.spec, rarity: '@rarity:' + c.rarity })
     return true
@@ -139,6 +142,7 @@ export const systems = {
     const tv = this.s.tavern
     const w = tv.workers.find(x => x.uid === uid)
     if (!w) return false
+    this.leaveTrip({ k: 'w', uid })
     tv.workers = tv.workers.filter(x => x.uid !== uid)
     this.log('beer-horn', 'log.fired', { name: w.name })
     return true
@@ -164,7 +168,7 @@ export const systems = {
   updateWorkers(dt) {
     for (const w of this.s.tavern.workers) {
       if (w.injured > 0) { w.injured = Math.max(0, w.injured - dt); if (w.injured <= 0 && !w.task && !w.exp) w.status = 'idle'; continue }
-      if (w.exp) { w.exp.t -= dt; if (w.exp.t <= 0) this.resolveExpedition(w); continue }
+      if (w.exp) continue
       if (!w.task) continue
       const skill = SPECIALTIES[w.spec].skill
       const a = findAction(skill, w.task.action)
@@ -191,7 +195,7 @@ export const systems = {
     if (!(Object.keys(a.in).length && Math.random() < this.traitSum(w, 'preserve'))) Object.entries(a.in).forEach(([k, q]) => this.removeItem(k, q))
     const lvl = this.workerLevel(w)
     w.xp = Math.min(XP_TABLE[99], w.xp + a.xp * (1 + this.traitSum(w, 'xp')) * this.diff().xp)
-    if (this.workerLevel(w) > lvl) this.log(SPECIALTIES[w.spec].icon, 'log.workerLevel', { name: w.name, level: this.workerLevel(w), skill: '@skill:' + skill })
+    this.workerGrew(w, lvl)
     this.s.stats.workerActions = (this.s.stats.workerActions || 0) + 1
     const clumsy = this.traitSum(w, 'clumsy')
     if (a.fail && Math.random() < clamp(0.55 - (lvl - a.lvl) * 0.012 + clumsy, 0.05, 0.6)) return
@@ -210,45 +214,245 @@ export const systems = {
   workersBusy() { return this.s.tavern.workers.some(w => (w.task && w.status === 'working') || w.exp || w.injured > 0) },
 
   /* ---------- expeditions ---------- */
-  expeditionChance(w, ex) { return clamp(0.55 + (this.workerLevel(w) - ex.power) * 0.02 + this.traitSum(w, 'expSuccess'), 0.05, 0.97) },
-  sendExpedition(uid, expId, durIdx) {
-    const w = this.s.tavern.workers.find(x => x.uid === uid)
+  // A crew is a list of hands: { k: 'w', uid } for an adventurer on the staff, { k: 'c', id } for a
+  // member of the company. Each trip keeps its crew until it comes home
+  ensureTrips() {
+    const tv = this.s.tavern
+    if (!Array.isArray(tv.trips)) tv.trips = []
+    // Saves from before crews: an adventurer out alone becomes a trip of one
+    for (const w of tv.workers) {
+      if (!w.exp?.id) continue
+      const trip = { uid: (tv.uid = (tv.uid || 0) + 1), exp: w.exp.id, hours: w.exp.hours, mult: w.exp.mult, t: w.exp.t, total: w.exp.total, crew: [{ k: 'w', uid: w.uid }], repeat: false }
+      tv.trips.push(trip)
+      w.exp = { trip: trip.uid }
+    }
+  },
+  crewSize() { return crewSizeAt(this.s.tavern.level) },
+  hand(ref) { return ref.k === 'w' ? this.s.tavern.workers.find(w => w.uid === ref.uid) || null : this.companyMember(ref.id) },
+  handKey: ref => (ref.k === 'w' ? 'w' + ref.uid : 'c' + ref.id),
+  handLevel(ref) { const h = this.hand(ref); return !h ? 0 : ref.k === 'w' ? this.workerLevel(h) : h.lvl },
+  handTrade(ref) { return ref.k === 'w' ? 'adventurer' : this.hand(ref)?.role },
+  tripOf(ref) { const key = this.handKey(ref); return this.s.tavern.trips?.find(t => t.crew.some(c => this.handKey(c) === key)) || null },
+  memberAway(id) { return !!this.tripOf({ k: 'c', id }) },
+  // Who could set out now: adventurers on the staff and the company, neither away, hurt nor working a trip
+  crewChoices() {
+    const out = []
+    for (const w of this.s.tavern.workers) if (w.spec === 'adventurer') out.push({ k: 'w', uid: w.uid })
+    for (const m of this.s.company?.members || []) out.push({ k: 'c', id: m.id })
+    return out
+  },
+  handFree(ref) {
+    const h = this.hand(ref)
+    if (!h || this.tripOf(ref)) return false
+    return ref.k === 'w' ? !(h.injured > 0) : !this.mercHurt(h)
+  },
+  // What the crew brings: their level, the bonuses of their trades and the companions on home ground
+  crewBonus(crew, ex) {
+    const levels = crew.map(r => this.handLevel(r))
+    const b = { level: Math.max(0, ...levels) + CREW_LEVEL_EACH * Math.max(0, crew.length - 1), chance: 0, loot: 0, rare: 0, shield: false, home: [] }
+    for (const r of crew) {
+      const tr = TRIP_ROLES[this.handTrade(r)] || {}
+      b.chance += tr.chance || 0
+      b.loot += tr.loot || 0
+      b.rare += tr.rare || 0
+      if (tr.shield) b.shield = true
+      const h = this.hand(r)
+      if (r.k === 'w') { b.chance += this.traitSum(h, 'expSuccess'); b.loot += this.traitSum(h, 'expLoot') }
+      if (r.k === 'c' && UNIQUE_MERCS[h?.unique]?.home === ex.id) { b.chance += HOME_CHANCE; b.loot += HOME_LOOT; b.home.push(h.id) }
+    }
+    return b
+  },
+  expeditionChance(crew, ex, extra = 0) {
+    if (!Array.isArray(crew)) crew = [{ k: 'w', uid: crew.uid }]
+    if (!crew.length) return 0
+    const b = this.crewBonus(crew, ex)
+    return clamp(0.55 + (b.level - ex.power) * 0.02 + b.chance + extra, 0.05, 0.97)
+  },
+  // Gold a trip would bring back if it goes well
+  tripGold(crew, ex, durIdx) { return Math.round(ex.gold * EXPEDITION_DURATIONS[durIdx].mult * (1 + CREW_HAUL_EACH * Math.max(0, crew.length - 1))) },
+  sendExpedition(crew, expId, durIdx, repeat = false) {
+    if (!Array.isArray(crew)) crew = [{ k: 'w', uid: crew }]
+    const tv = this.s.tavern
     const ex = EXPEDITIONS.find(x => x.id === expId)
     const dur = EXPEDITION_DURATIONS[durIdx]
-    if (!w || !ex || !dur || w.spec !== 'adventurer' || w.exp || w.injured > 0) return false
+    const keys = new Set(crew.map(r => this.handKey(r)))
+    if (!ex || !dur || !crew.length || crew.length > this.crewSize() || keys.size !== crew.length) return false
+    if (!crew.every(r => this.handFree(r) && (r.k === 'c' || this.hand(r).spec === 'adventurer'))) return false
     if (ex.map) { if (this.qty('treasure_map') <= 0) return false; this.removeItem('treasure_map', 1) }
-    w.task = null
-    w.exp = { id: expId, hours: dur.hours, mult: dur.mult, t: dur.hours * 3600, total: dur.hours * 3600 }
-    w.status = 'expedition'
+    this.ensureTrips()
+    const trip = { uid: (tv.uid = (tv.uid || 0) + 1), exp: expId, hours: dur.hours, mult: dur.mult, durIdx, t: dur.hours * 3600, total: dur.hours * 3600, crew: crew.map(r => ({ ...r })), repeat: !!repeat }
+    tv.trips.push(trip)
+    for (const r of crew) if (r.k === 'w') { const w = this.hand(r); w.task = null; w.exp = { trip: trip.uid }; w.status = 'expedition' }
+    return trip
+  },
+  // Calling a crew home early: they come back empty-handed
+  recallTrip(uid) {
+    const tv = this.s.tavern
+    const trip = tv.trips?.find(t => t.uid === uid)
+    if (!trip) return false
+    this.endTrip(trip)
     return true
   },
-  recallExpedition(uid) {
-    const w = this.s.tavern.workers.find(x => x.uid === uid)
-    if (w && w.exp) { w.exp = null; w.status = 'idle' }
+  // Back compatibility: recall the trip an adventurer is on
+  recallExpedition(uid) { const trip = this.tripOf({ k: 'w', uid }); return trip ? this.recallTrip(trip.uid) : false },
+  setTripRepeat(uid, on) { const trip = this.s.tavern.trips?.find(t => t.uid === uid); if (trip) trip.repeat = !!on },
+  endTrip(trip) {
+    const tv = this.s.tavern
+    tv.trips = tv.trips.filter(t => t.uid !== trip.uid)
+    for (const r of trip.crew) if (r.k === 'w') { const w = this.hand(r); if (w) { w.exp = null; if (w.status === 'expedition') w.status = 'idle' } }
   },
-  resolveExpedition(w) {
-    const ex = EXPEDITIONS.find(x => x.id === w.exp.id)
-    const { mult, hours } = w.exp
-    w.exp = null
-    w.status = 'idle'
-    const ok = Math.random() < this.expeditionChance(w, ex)
-    const items = {}
-    const rolls = Math.round(hours * 3 * (ok ? 1 : 0.25))
-    const lootMult = 1 + this.traitSum(w, 'expLoot')
-    for (let i = 0; i < rolls; i++) ex.loot.forEach(l => {
-      if (Math.random() < l.chance * lootMult) { const n = rand(l.qty[0], l.qty[1]); items[l.item] = (items[l.item] || 0) + n }
+  // A worker leaving or a companion dismissed drops out of their trip; a trip with no one left ends
+  leaveTrip(ref) {
+    const trip = this.tripOf(ref)
+    if (!trip) return
+    const key = this.handKey(ref)
+    trip.crew = trip.crew.filter(c => this.handKey(c) !== key)
+    if (!trip.crew.length) this.endTrip(trip)
+  },
+  updateTrips(dt) {
+    const tv = this.s.tavern
+    if (!tv.trips?.length) return
+    for (const trip of [...tv.trips]) {
+      trip.t -= dt
+      if (trip.t <= 0) this.resolveTrip(trip)
+    }
+  },
+  // Events along the way, then the outcome: loot, gold, XP and trust for everyone who went
+  rollTripEvents(trip) {
+    const trades = trip.crew.map(r => this.handTrade(r))
+    const ids = Object.keys(TRIP_EVENTS)
+    return Array.from({ length: tripEventCount(trip.hours) }, () => {
+      const id = pick(ids)
+      const ev = TRIP_EVENTS[id]
+      const saver = !ev.good && trip.crew.find((r, i) => ev.by?.includes(trades[i]))
+      return saver ? { id, saved: this.handKey(saver) } : { id }
     })
+  },
+  resolveTrip(trip, events = this.rollTripEvents(trip)) {
+    const ex = EXPEDITIONS.find(x => x.id === trip.exp)
+    const crew = trip.crew.filter(r => this.hand(r))
+    this.endTrip(trip)
+    if (!ex || !crew.length) return null
+    const b = this.crewBonus(crew, ex)
+    const fx = { chance: 0, loot: 0, gold: 0, rare: 0, xp: 0 }
+    for (const e of events) if (!e.saved) for (const k of Object.keys(fx)) fx[k] += TRIP_EVENTS[e.id][k] || 0
+    const ok = Math.random() < this.expeditionChance(crew, ex, fx.chance)
+    const haul = 1 + CREW_HAUL_EACH * (crew.length - 1)
+    const items = {}
+    const rolls = Math.round(trip.hours * 3 * haul * (ok ? 1 : 0.25))
+    const lootMult = Math.max(0.2, 1 + b.loot + fx.loot)
+    const rarest = Math.min(...ex.loot.map(l => l.chance))
+    const find = l => { const n = rand(l.qty[0], l.qty[1]); items[l.item] = (items[l.item] || 0) + n }
+    for (let i = 0; i < rolls; i++) ex.loot.forEach(l => {
+      const rare = l.chance <= 0.1 ? 1 + b.rare : 1
+      if (Math.random() < l.chance * lootMult * rare) find(l)
+    })
+    // Old ruins always hold one of the rarest finds of the place
+    if (ok) for (let i = 0; i < fx.rare; i++) find(ex.loot.find(l => l.chance === rarest))
     Object.entries(items).forEach(([k, n]) => this.addItem(k, n))
-    const gold = this.addGold(ex.gold * mult * (ok ? 1 : 0.3), true)
-    w.xp = Math.min(XP_TABLE[99], w.xp + Math.round(150 * mult * (1 + ex.power / 10) * (ok ? 1 : 0.5) * (1 + this.traitSum(w, 'xp'))))
-    if (!ok && !this.traitSum(w, 'noInjury')) { w.injured = INJURY_TIME; w.status = 'injured' }
+    const gold = this.addGold(ex.gold * trip.mult * haul * (ok ? 1 : 0.3) * Math.max(0.2, 1 + fx.gold), true)
+    const xpBase = 150 * trip.mult * (1 + ex.power / 10) * (ok ? 1 : 0.5) * (1 + fx.xp)
+    const hurt = !ok && !b.shield
+    const saves = {}
+    for (const e of events) if (e.saved) saves[e.saved] = (saves[e.saved] || 0) + 1
+    for (const r of crew) {
+      const h = this.hand(r)
+      if (r.k === 'w') {
+        const before = this.workerLevel(h)
+        h.xp = Math.min(XP_TABLE[99], h.xp + Math.round(xpBase * (1 + this.traitSum(h, 'xp'))))
+        this.workerGrew(h, before)
+        if (hurt && !this.traitSum(h, 'noInjury')) { h.injured = INJURY_TIME; h.status = 'injured' }
+      } else {
+        h.trust = Math.min(TRUST_MAX, (h.trust || 0) + (ok ? TRUST_TRIP : TRUST_TRIP_FAIL) + TRUST_SAVE * (saves[this.handKey(r)] || 0))
+        this.mercGainXp(h, Math.round((10 + ex.power / 2) * trip.hours * (ok ? 1 : 0.5) * (1 + fx.xp)))
+        if (hurt) h.hurtUntil = Date.now() + HURT_TIME
+      }
+    }
     this.s.stats.expeditions = (this.s.stats.expeditions || 0) + 1
-    const rep = { t: Date.now(), name: w.name, exp: ex.id, icon: ex.icon, ok, gold, items }
-    this.s.tavern.reports.unshift(rep)
-    this.s.tavern.reports.length = Math.min(this.s.tavern.reports.length, 12)
-    this.log(ex.icon, ok ? 'log.expeditionOk' : 'log.expeditionFail', { name: w.name, exp: '@exp:' + ex.id, gold })
+    const names = crew.map(r => this.handName(r))
+    const crewParam = '@crew:' + names.join('|')
+    const rep = {
+      t: Date.now(), name: crewParam, exp: ex.id, icon: ex.icon, ok, gold, items, hours: trip.hours,
+      crew: crew.map(r => ({ ...r, name: this.handName(r) })), events, home: b.home, hurt,
+    }
+    const tv = this.s.tavern
+    tv.reports.unshift(rep)
+    tv.reports.length = Math.min(tv.reports.length, REPORTS_KEPT)
+    this.log(ex.icon, ok ? 'log.expeditionOk' : 'log.expeditionFail', { name: rep.name, exp: '@exp:' + ex.id, gold })
     this.emit('expedition', rep)
-    this.emit('notify', msg(ok ? 'notify.expeditionOk' : 'notify.expeditionFail', { name: w.name, exp: '@exp:' + ex.id }))
+    this.emit('notify', msg(ok ? 'notify.expeditionOk' : 'notify.expeditionFail', { name: rep.name, exp: '@exp:' + ex.id }))
+    // Sent to keep going: the same crew sets out again if everyone is fit and the trip can be paid for
+    if (trip.repeat) {
+      const again = this.sendExpedition(crew, ex.id, trip.durIdx ?? EXPEDITION_DURATIONS.findIndex(d => d.hours === trip.hours), true)
+      if (!again) this.emit('notify', msg('notify.tripStopped', { exp: '@exp:' + ex.id }))
+    }
+    return rep
+  },
+  // A name for the report: a worker's own, a companion met along the way's, or a hired hand's
+  handName(ref) {
+    const h = this.hand(ref)
+    if (!h) return '?'
+    return ref.k === 'w' ? h.name : h.unique ? '#' + h.unique : h.name
+  },
+
+  /* ---------- staff growth ---------- */
+  // Levels crossed since `before`: at each veteran level a worker sheds a bad trait, or learns a good one
+  workerGrew(w, before) {
+    const lvl = this.workerLevel(w)
+    const skill = SPECIALTIES[w.spec].skill
+    if (lvl > before && skill) this.log(SPECIALTIES[w.spec].icon, 'log.workerLevel', { name: w.name, level: lvl, skill: '@skill:' + skill })
+    const due = VETERAN_LEVELS.filter(l => lvl >= l).length
+    while ((w.vet || 0) < due) {
+      w.vet = (w.vet || 0) + 1
+      const bad = w.traits.find(tr => !TRAITS[tr]?.good)
+      if (bad) {
+        w.traits = w.traits.filter(tr => tr !== bad)
+        this.log('star-medal', 'log.workerShed', { name: w.name, trait: '@trait:' + bad })
+        continue
+      }
+      const learn = Object.keys(TRAITS).filter(tr => TRAITS[tr].good && !w.traits.includes(tr))
+      if (!learn.length) continue
+      const tr = pick(learn)
+      w.traits.push(tr)
+      this.log('star-medal', 'log.workerLearned', { name: w.name, trait: '@trait:' + tr })
+    }
+  },
+  // The next rarity up, what it asks and whether the worker can take it now
+  promotion(w) {
+    const next = RARITY_ORDER[RARITY_ORDER.indexOf(w.rarity) + 1]
+    if (!next) return null
+    const p = PROMOTIONS[next]
+    const gold = Math.round(this.workerWage({ ...w, rarity: next }) * PROMOTE_HOURS)
+    const blocker = this.workerLevel(w) < p.lvl ? 'level' : this.s.tavern.level < RARITIES[next].tavern ? 'tavern'
+      : this.s.gold < gold ? 'gold' : this.s.tavern.tokens < p.tokens ? 'tokens' : null
+    return { rarity: next, lvl: p.lvl, tokens: p.tokens, gold, tavern: RARITIES[next].tavern, blocker }
+  },
+  // Promoted: better at the work, dearer, and with room for another good trait if the new rarity allows
+  promote(uid) {
+    const w = this.s.tavern.workers.find(x => x.uid === uid)
+    const p = w && this.promotion(w)
+    if (!p || p.blocker) return false
+    this.s.gold -= p.gold
+    this.s.tavern.tokens -= p.tokens
+    w.rarity = p.rarity
+    if (w.traits.length < RARITIES[p.rarity].traits) {
+      const learn = Object.keys(TRAITS).filter(tr => TRAITS[tr].good && !w.traits.includes(tr))
+      if (learn.length) w.traits.push(pick(learn))
+    }
+    this.log('upgrade', 'log.promoted', { name: w.name, rarity: '@rarity:' + p.rarity })
+    return true
+  },
+  // At a glance: how the staff stands
+  staffSummary() {
+    const out = { working: 0, idle: 0, away: 0, injured: 0, stuck: 0 }
+    for (const w of this.s.tavern.workers) {
+      if (w.exp) out.away++
+      else if (w.injured > 0) out.injured++
+      else if (w.status === 'working') out.working++
+      else if (w.task) out.stuck++
+      else out.idle++
+    }
+    return out
   },
 
   /* ---------- daily orders ---------- */
@@ -477,6 +681,7 @@ export const systems = {
   updateSystems(dt) {
     const st = this.s
     this.updateWorkers(dt)
+    this.updateTrips(dt)
     if (st.tavern.drink) { st.tavern.drink.t -= dt; if (st.tavern.drink.t <= 0) st.tavern.drink = null }
     this.updateOmens(dt)
     this.updatePrayer(dt)

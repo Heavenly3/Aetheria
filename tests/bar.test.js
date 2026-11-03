@@ -79,7 +79,7 @@ describe('tavern bar', () => {
     state.tavern.workers = [{ uid: 1, name: 'Ash', spec: 'adventurer', rarity: 'common', level: 1, xp: 0, traits: [], status: 'idle', exp: null, injured: 0 }]
     expect(G.sendExpedition(1, ex.id, 0)).toBe(false)
     G.addItem('treasure_map', 1)
-    expect(G.sendExpedition(1, ex.id, 0)).toBe(true)
+    expect(G.sendExpedition(1, ex.id, 0)).toBeTruthy()
     expect(G.qty('treasure_map')).toBe(0)
     // Maps turn up while thieving from the better-off
     expect(findAction('thieving', 'guard').extra.some(e => e.item === 'treasure_map')).toBe(true)
