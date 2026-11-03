@@ -15,7 +15,7 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
 </p>
 
-**Aetheria** is a fantasy idle RPG that runs in the browser. Train 21 skills, fight your way from the Dawn Meadows to the top of the sky, join a guild and settle its affairs, raise pets, chase ultra rare finds and follow a story told in chapters, with voices for every character. Your hero keeps working while you are away.
+**Aetheria** is a fantasy idle RPG that runs in the browser. Train 21 skills, fight your way across a map of the realm from the Dawn Meadows to the top of the sky with a company of companions at your side, join a guild and settle its affairs, raise pets, chase ultra rare finds and follow a story told in chapters, with voices for every character. Your hero keeps working while you are away.
 
 No download, no account, no ads. It installs as an app on desktop and phones, keeps working offline, and your saves never leave your device unless you choose to share them.
 
@@ -26,7 +26,9 @@ No download, no account, no ads. It installs as an app on desktop and phones, ke
 ## Highlights
 
 - **21 skills** for gathering, crafting and fighting, each with mastery, prestige and a twist of its own.
-- **Deep combat:** thirteen stances, abilities, weapon statuses, creature traits, elites, boss phases and mechanics, dungeons, an endless tower, slayer tasks and a weekly boss.
+- **Deep combat:** a map of the realm, thirteen stances, abilities with tactics rules, weapon statuses, creatures with moves of their own, elites, boss phases and mechanics, dungeons, an endless tower, slayer tasks and a weekly boss.
+- **A company at your side:** companions who fight with you, five of them met along the story with a quest and a voice of their own, and who set out on expeditions while you are busy.
+- **A tavern to run:** staff who work and grow, expedition crews, a bar, and eight table games from the King's Twenty-One to an arm-wrestling ladder.
 - **A story with voices:** six acts, three endings, a journal you can read aloud and characters you can talk to, every one with a voice of their own.
 - **Guilds with real puzzles:** affairs followed up out in the realm and settled by deduction, ciphers, light beams, astrolabes, scales and rites.
 - **Make the hero yours:** six classes, seven origins, four difficulties, attributes, talents, titles and portraits.
@@ -52,8 +54,8 @@ No download, no account, no ads. It installs as an app on desktop and phones, ke
     <td><img src="docs/screenshots/ascension.png" alt="Past lives on the Rebirth screen"></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/skill.png" alt="Smithing with an action in progress"></td>
-    <td><img src="docs/screenshots/title.png" alt="Title screen"></td>
+    <td><img src="docs/screenshots/map.png" alt="The world map, zoomed in on the north of the realm"></td>
+    <td><img src="docs/screenshots/tavern.png" alt="Planning an expedition crew at the tavern"></td>
   </tr>
 </table>
 
@@ -87,18 +89,24 @@ No download, no account, no ads. It installs as an app on desktop and phones, ke
 <details>
 <summary><b>Combat</b></summary>
 
-- **10 areas, 7 world bosses, 6 dungeons**, an endless tower, slayer tasks, prayers and mercenaries.
+- **10 areas, 7 world bosses, 6 dungeons**, an endless tower, slayer tasks, prayers and a company of companions.
+- **World map:** every region on one board that can be dragged, zoomed and opened full screen. Each region has its own page with its places, dungeon and bosses, and fights happen there. The map marks where the hero is fighting and where the story, quests, the slayer task and guild work are waiting. Combat setup lives in a Preparation window opened from any place where you fight.
 - **Weapons and armour:** every weapon has its own attack speed, crit chance and sometimes a status it leaves (bleeding, burns, poison, stuns, slows or weakness). Agility dodges, shields block and armour soaks part of every blow.
 - **Stances:** thirteen across melee, ranged and magic. Each trades accuracy, damage, speed or defence and shares the XP its own way, and the combat screen compares them all against the creature you face.
 - **Abilities:** six per style, unlocked by level. Attacks build energy, and up to three abilities fire on their own in priority order.
 - **Creatures:** traits (venom, armour, regeneration, life drain, frenzy, evasion), rare elites with far better loot, and **hunting streaks** that add up to +25% combat XP and loot.
+- **Creature moves:** every creature past the first meadow charges a move of its own (a bleeding, poisoned, burning or stunning strike, a frenzy, hardened armour, fading out of reach, regrowing, or a thief that runs off with gold). Elites bring one more. Stunning or slowing a creature while it charges cuts the move off.
 - **Bosses:** each has its own big moves (crushing blows, fire breath, frost novas, venom sprays, mending), charged with a warning before they land. A guarding stance takes them far better, and damage dealt while a boss mends breaks the heal. Bosses turn enraged and then desperate as they weaken, and **speak in their own voice** when the fight begins, at each phase and when they fall.
 - **Echoes:** once the story has an ending, every world boss returns stronger; beating each echo adds a lasting bonus to every life.
 - **Endless tower:** weekly twists on every block of floors, named guardians every tenth floor, and the best climbers of the realm's guilds racing the hero to the top.
 - **Slayer:** three hunts to pick from, Superior creatures, sigils for the slayer helm, perks, blocked creatures and streak rewards.
 - **Weekly boss:** a different boss every week, the same for every player, with a mechanic of its own, wounds that last all week and an exclusive trophy.
 - **A realm that reacts:** every region grows restless with time and calms down with every creature hunted there. Overrun regions are stronger and richer, and calming them pays a bounty.
-- **Tactics and loadouts:** retreat before falling, stop when the slayer task is done, guard during boss charges, and five saved loadouts with their stance and ability bar.
+- **Tactics and loadouts:** retreat before falling, stop when the slayer task is done, guard during boss and creature charges, and five saved loadouts with their stance and ability bar. Ability rules answer a creature's move with a stun or a slow, defend below a chosen health and break an enemy's healing with the hardest hitter.
+- **The company:** companions hired for good, one of each trade. Up to two come along to every boss fight and dungeon for a wage, three with the War Banner of rebirth:
+  - **squires** draw blows and take part of charged strikes, **archers** cut off creatures' moves, **mages** break healings and **clerics** mend the hero and lift bleeding, poison and burns;
+  - they level up with every kill, earn trust, fight better once loyal and stay through rebirth;
+  - **five companions met along the way** join through the story and the guild, each better at their trade, with a bonus outside the fights, a quest of their own at full trust and a voice in the journal.
 - **Endgame beyond the Abyss:** the Void Rift and the Celestial Spire, aether gear and boss-only uniques.
 
 </details>
@@ -132,7 +140,10 @@ No download, no account, no ads. It installs as an app on desktop and phones, ke
     - **echo:** a rite of runes that sounds and grows, sung back from memory.
 
     Every enigma is made for your save and always has an answer. A guild mate can help for marks, and wrong answers cost time.
-- **Tavern:** staff with specialities, rarities, traits and levels who work for a wage, expeditions, daily orders, dice, a mystery chest, a bar with patrons and special guests, and brews of your own.
+- **Tavern:** staff with specialities, rarities, traits and levels who work for a wage, daily orders, a mystery chest, a bar with patrons and special guests, and brews of your own.
+  - **Staff growth:** workers grow seasoned at levels 25, 50 and 75, shedding a bad trait or learning a good one, and can be promoted to the next rarity.
+  - **Expeditions:** crews of adventurers and companions sent out for one to twelve hours. Every trade helps on the road, events along the way can be turned away by the right trade, companions do better on ground they know, and a trip can repeat on its own.
+  - **Table games:** the King's Twenty-One against the keeper, dice, darts, knucklebone, a ladder of seven arm-wrestling rivals, a drinking contest, three men's morris and the rune shell game, all played for gold up to the tavern's limit.
 - **Thieving:** heat, jail, the fence and four heists that play out in stages.
 - **Farming:** plots that grow in real time, compost, seasons, pests, bountiful harvests, hybrids crossed from two parent crops, and a farmyard with a coop, a beehive, a scarecrow and a well.
 - **Fishing waters:** five waters with their own fish, bait, and a scene with the line, the bobber and the latest catches.
@@ -247,9 +258,11 @@ Every push runs lint, the translation check, the tests and a build. A tag such a
 
 - `engine.js`: reactive state and core logic (XP, actions, combat, quests, prestige, offline simulation).
 - `loop.js`: game loop, offline progress, autosave and one tab per game.
-- `systems.js`: tavern, staff, expeditions, orders, queue, loadouts, prayers, market, events and history.
+- `systems.js`: tavern, staff and their growth, expedition crews, orders, queue, loadouts, prayers, market, events and history.
+- `company.js`: the company of companions, their part in fights, trust and quests.
+- `tavernGames.js`: the tavern's table games.
 - `meta.js`: pet rolls, enchanting and daily / weekly tasks.
-- `fighting.js`: weapon pace, crits, statuses, traits, elites, abilities, boss phases and mechanics, streaks and combat power.
+- `fighting.js`: weapon pace, crits, statuses, traits, elites, abilities and their rules, boss phases, boss and creature moves, streaks and combat power.
 - `guilds.js` and `affairs.js`: guilds, entry trials, contracts, ranks, perks, the shop and guild affairs. The enigmas themselves are pure generators in `data/enigmas.js`.
 - `ascension.js`: rebirth, its upgrade tree, trials and past lives.
 - `mythics.js`: ultra rare finds and their luck streak.
